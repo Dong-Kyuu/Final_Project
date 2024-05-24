@@ -19,7 +19,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler{
 	public void onAuthenticationSuccess(HttpServletRequest request,HttpServletResponse response,
 					Authentication authentication) throws IOException{
 			logger.info("로그인 성공:LoginSucessHandler");
-			String url = "../table/freelist";
+			String url = "../dashboard";
 			response.sendRedirect(url);
 			logger.info(url);
 	}
