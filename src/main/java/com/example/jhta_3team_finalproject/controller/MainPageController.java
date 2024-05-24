@@ -12,6 +12,9 @@ public class MainPageController {
         return "redirect:/user/login";
     }
 
-
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "/dashboard/blank-page";
+    }
 
 }
