@@ -39,7 +39,7 @@ public class TableController {
         if(endpage > maxpage)
             endpage = maxpage;
 
-        List<Board> freeboardlist = TS.getBoardList(page, limit); // 리스트를 받아옴
+        List<Board> boardlist = TS.getBoardList(page, limit); // 리스트를 받아옴
 
         mv.setViewName("table/Free_table");
         mv.addObject("page", page);
@@ -47,7 +47,7 @@ public class TableController {
         mv.addObject("startpage", startpage);
         mv.addObject("endpage", endpage);
         mv.addObject("listcount", listcount);
-        mv.addObject("boardlist", freeboardlist);
+        mv.addObject("boardlist", boardlist);
         mv.addObject("limit", limit);
 
         return mv;

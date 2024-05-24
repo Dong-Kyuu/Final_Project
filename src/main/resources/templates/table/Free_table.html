@@ -60,10 +60,10 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <th:block th:with = "num=${listcount - (page - 1)*limit}">
-                          <th:block th:each	= "b, iterStat : ${boardlist}">
+                      <th:block th:with = "num=${listcount -(page -1)*limit}">
+                          <th:block th:each	= "b, iterStat:${boardlist}">
                               <tr>
-                                  <td><span th:text = "${num - (iterStat.index)}"></span></td>
+                                  <td><span th:text = "${num -(iterStat.index)}"></span></td>
                                   <td>
                                       <div>
                                           <th:block th:each	= "i : ${#numbers.sequence(1, b.BOARD_RE_LEV * 2,1)}">&nbsp;&nbsp;</th:block>
@@ -90,7 +90,7 @@
                                 <li class				= "page-item">
                                     <a class			= "page-link"
                                        th:classappend	= "${page<=1} ? 'gray' : ''"
-                                       th:href			= "${page>1} ? 'list?page=' + ${page-1} : ''"
+                                       th:href			= "${page>1} ? 'list?page=' + ${page -1} : ''"
                                     >이전&nbsp;</a>
                                 </li>
 

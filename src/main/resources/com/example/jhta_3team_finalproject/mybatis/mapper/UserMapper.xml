@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.UserMapper">
+
+    <select id="isId" resultType="user">
+        SELECT * FROM users WHERE id = #{id}
+    </select>
+    <insert id="join" >
+        insert  into users
+            (id,name,email,department,password)
+        values ( #{id}, #{name},#{email}, #{department},#{password})
+    </insert>
+</mapper>
