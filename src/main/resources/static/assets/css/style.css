@@ -11287,7 +11287,8 @@ code {
 
 .page-title {
   color: #343a40;
-  font-size: 1.125rem;
+  font-size: 1.5rem;
+  font-weight: bold;
   margin-bottom: 0; }
   .page-title .page-title-icon {
     display: inline-block;
