@@ -3526,7 +3526,7 @@ progress {
   font-weight: 400;
   line-height: 1;
   color: #212529;
-  background-color: color(white);
+  background-color: color-white;
   background-clip: padding-box;
   border: 1px solid #ced4da;
   -webkit-appearance: none;
@@ -11031,27 +11031,27 @@ input:focus {
 /* Fonts */
 @font-face {
   font-family: 'ubuntu-light';
-  src: url("../fonts/Ubuntu/Ubuntu-Light.eot");
+  src: url("../assets/fonts/Ubuntu/Ubuntu-Light.eot");
   /* IE9 Compat Modes */
-  src: url("../fonts/Ubuntu/Ubuntu-Light.woff2") format("woff2"), url("../fonts/Ubuntu/Ubuntu-Light.woff") format("woff"), url("../fonts/Ubuntu/Ubuntu-Light.ttf") format("truetype"); }
+  src: url("../assets/fonts/Ubuntu/Ubuntu-Light.woff2") format("woff2"), url("../assets/fonts/Ubuntu/Ubuntu-Light.woff") format("woff"), url("../assets/fonts/Ubuntu/Ubuntu-Light.ttf") format("truetype"); }
 
 @font-face {
   font-family: 'ubuntu-regular';
-  src: url("../fonts/Ubuntu/Ubuntu-Regular.eot");
+  src: url("../assets/fonts/Ubuntu/Ubuntu-Regular.eot");
   /* IE9 Compat Modes */
-  src: url("../fonts/Ubuntu/Ubuntu-Regular.woff2") format("woff2"), url("../fonts/Ubuntu/Ubuntu-Regular.woff") format("woff"), url("../fonts/Ubuntu/Ubuntu-Regular.ttf") format("truetype"); }
+  src: url("../assets/fonts/Ubuntu/Ubuntu-Regular.woff2") format("woff2"), url("../assets/fonts/Ubuntu/Ubuntu-Regular.woff") format("woff"), url("../assets/fonts/Ubuntu/Ubuntu-Regular.ttf") format("truetype"); }
 
 @font-face {
   font-family: 'ubuntu-medium';
-  src: url("../fonts/Ubuntu/Ubuntu-Medium.eot");
+  src: url("../assets/fonts/Ubuntu/Ubuntu-Medium.eot");
   /* IE9 Compat Modes */
-  src: url("../fonts/Ubuntu/Ubuntu-Medium.woff2") format("woff2"), url("../fonts/Ubuntu/Ubuntu-Medium.woff") format("woff"), url("../fonts/Ubuntu/Ubuntu-Medium.ttf") format("truetype"); }
+  src: url("../assets/fonts/Ubuntu/Ubuntu-Medium.woff2") format("woff2"), url("../assets/fonts/Ubuntu/Ubuntu-Medium.woff") format("woff"), url("../assets/fonts/Ubuntu/Ubuntu-Medium.ttf") format("truetype"); }
 
 @font-face {
   font-family: 'ubuntu-bold';
-  src: url("../fonts/Ubuntu/Ubuntu-Bold.eot");
+  src: url("../assets/fonts/Ubuntu/Ubuntu-Bold.eot");
   /* IE9 Compat Modes */
-  src: url("../fonts/Ubuntu/Ubuntu-Bold.woff2") format("woff2"), url("../fonts/Ubuntu/Ubuntu-Bold.woff") format("woff"), url("../fonts/Ubuntu/Ubuntu-Bold.ttf") format("truetype"); }
+  src: url("../assets/fonts/Ubuntu/Ubuntu-Bold.woff2") format("woff2"), url("../assets/fonts/Ubuntu/Ubuntu-Bold.woff") format("woff"), url("assets/fonts/Ubuntu/Ubuntu-Bold.ttf") format("truetype"); }
 
 .text-twitter {
   color: #2caae1; }
@@ -11268,7 +11268,7 @@ html {
   overflow: hidden; }
 
 pre {
-  background: color(gray-lighter);
+  background: color-gray-lighter;
   padding: 15px;
   font-size: 14px; }
 
@@ -11287,8 +11287,7 @@ code {
 
 .page-title {
   color: #343a40;
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.125rem;
   margin-bottom: 0; }
   .page-title .page-title-icon {
     display: inline-block;
@@ -13702,9 +13701,18 @@ dl {
     border-color: #ebedf2; }
 
 .auth .brand-logo {
-  margin-bottom: 2rem; }
+  margin-bottom: 2rem;
+  justify-content: center;
+  align-items: center;
+}
   .auth .brand-logo img {
-    width: 150px;}
+    width: 150px;
+    height: auto;
+  }
+
+.logo-center {
+  margin : 0 auto;
+}
 
   .brand-logo img {
     height : 140px !important;

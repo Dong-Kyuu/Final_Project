@@ -1,0 +1,8 @@
+th:first-of-type {
+    max-width : 30px;
+}
+
+.write-button   {
+    margin-top : 50px;
+    float : right;
+}

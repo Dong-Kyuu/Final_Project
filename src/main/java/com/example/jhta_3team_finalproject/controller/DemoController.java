@@ -3,13 +3,9 @@ package com.example.jhta_3team_finalproject.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+
 @Controller
 public class DemoController {
-	
-	@GetMapping("/")
-	public String home() {
-		return "redirect:/adminpage";
-	}
 
 	@GetMapping("/1")
 	public String mainpage1() {
@@ -50,6 +46,12 @@ public class DemoController {
 	public String mainpage8() {
 		return "/partials/_navbar";
 	}
+
+	@GetMapping("/9")
+	public String mainpage9() {
+		return "/pages/ui-features/buttons";
+	}
+
 
 	@GetMapping("error/403error")
 	public String error_403() {
