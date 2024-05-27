@@ -13,7 +13,6 @@ import org.springframework.security.web.authentication.rememberme.JdbcTokenRepos
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import com.example.jhta_3team_finalproject.security.CustomAccessDeniedHandler;
-import com.example.jhta_3team_finalproject.security.CustomUserDetailsService;
 import com.example.jhta_3team_finalproject.security.LoginFailHandler;
 import com.example.jhta_3team_finalproject.security.LoginSuccessHandler;
 
