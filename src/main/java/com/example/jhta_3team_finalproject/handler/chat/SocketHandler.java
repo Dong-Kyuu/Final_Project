@@ -41,7 +41,7 @@ public class SocketHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 
-        Resource resource = resourceLoader.getResource("classpath:/static/img");
+        Resource resource = resourceLoader.getResource("classpath:/static/image");
         FILE_UPLOAD_PATH = resource.getURI().getPath();
         // 메시지 발송
         String msg = message.getPayload(); // JSON형태의 String메시지를 받는다.
@@ -52,13 +52,13 @@ public class SocketHandler extends TextWebSocketHandler {
         String userName = (String) obj.get("userName"); // 유저의 아이디를 얻는다.
 
         log.info(rN);
-        log.info(userName);
         log.info(content);
+        log.info(userName);
 
         // 상태를 저장하기 위해 vo에 값을 넣어주고 insert
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setChat_room_num(rN);
-        chatMessage.setUserName(userName);
+        chatMessage.setSender_id(userName);
         chatMessage.setMessage_content(content);
         chatMessage.setRead_count(1);
 
@@ -163,7 +163,7 @@ public class SocketHandler extends TextWebSocketHandler {
         // 포문으로 연속 메시지를 보낸다. list 크기 만큼 돌린다.
         for (int i = 0; i < chatMessageList.size(); i++) {
             String content = chatMessageList.get(i).getMessage_content();
-            String userDBName = chatMessageList.get(i).getUserName();
+            String userDBName = chatMessageList.get(i).getSender_id();
             log.info("{} 번째", i);
             // 세션등록이 끝나면 발급받은 세션 ID 값의 메시지를 발송한다.
             JSONObject obj = new JSONObject();

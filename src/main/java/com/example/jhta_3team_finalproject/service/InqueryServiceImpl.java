@@ -34,8 +34,12 @@ public class InqueryServiceImpl implements InqueryService {
     @Cacheable(value = "inqueryBoardPage")
     public List<InqueryBoard> getBoardList(int page, int limit) {
         HashMap<String, Integer> map = new HashMap<String, Integer>();
-        int startrow = (page - 1) * limit + 1;
-        int endrow = startrow + limit - 1;
+        //Oracle
+        //int startrow = (page - 1) * limit + 1;
+        //int endrow = startrow + limit - 1;
+        //Mysql
+        int startrow = (page - 1) * limit;
+        int endrow = startrow + limit;
         map.put("start", startrow);
         map.put("end", endrow);
 

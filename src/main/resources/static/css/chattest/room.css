@@ -1,0 +1,116 @@
+
+
+input[type=text]{
+    width:85%;
+    border:0.5px solid #E0E0E0;
+    border-radius:4px;
+    margin:8px 0;
+    outline:none;
+    padding:8px;
+   
+    transition:.5s;
+  }
+  
+  input[type=text]:focus{
+    border-color:dodgerBlue;
+    box-shadow:0 0 8px 0 dodgerBlue;
+  }
+  
+  
+  /*button*/
+
+ .btn{
+ flex-direction:row-reverse;
+  border-radius: 4px;
+  background-color: #5ca1e1;
+  border: none;
+  color: #fff;
+  text-align: center;
+  font-size: 32px;
+  width: 180px;
+  transition: all 0.5s;
+  cursor: pointer;
+  box-shadow: 0 10px 20px -8px rgba(0, 0, 0,.7);
+}
+
+.btn{
+  
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.btn:after {
+  content: '»';
+  position: absolute;
+  opacity: 0;  
+  top: 53px;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.btn:hover{
+  padding-right: 24px;
+  padding-left:8px;
+}
+
+.btn:hover:after {
+  opacity: 1;
+  right: 10px;
+}
+
+
+.gobutton{
+	height:80px;
+	margin-left:10px;
+	 flex-direction:row-reverse;
+  border-radius: 4px;
+  background-color: #5ca1e1;
+  border: none;
+  color: #fff;
+  text-align: center;
+  font-size: 30px;
+  width: 100%;
+  transition: all 0.5s;
+  cursor: pointer;
+  
+
+}
+.gobutton{  
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+.gobutton:after{
+	 content: '»';
+  position: absolute;
+  opacity: 0;  
+  top: 20px;
+  right: -20px;
+  transition: 0.5s;
+}
+.gobutton:hover{
+	background-color:#909fad;
+  padding-right: 24px;
+  padding-left:8px;
+}
+.gobutton:hover:after{
+  opacity: 1;
+  right: 10px;
+}
+.zz{
+	background-color:white;
+	border:0;
+	outline:0;
+	bottom: 4px;
+	margin-bottom: 10px;
+}
+.icon-logo_jv{
+	font-size:1em;
+}
+
+p{
+	
+}

@@ -2,16 +2,12 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.chattestviewer.chat.mybatis.ChatMapper">
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.ChatMapper">
     <!-- 채팅 추가 -->
     <insert id="createMessage" parameterType="chatMessage">
-<!--        <selectKey resultType="int" order="BEFORE" keyProperty="message_num">-->
-<!--            SELECT IFNULL(MAX(message_num),0)+1 FROM com_message-->
-<!--        </selectKey>-->
         INSERT INTO
-            com_message(message_num, chat_room_num, sender_num, userName,
-                        message_content, read_count, send_time)
-        VALUES(NULL, #{chat_room_num}, 1, #{userName}, #{message_content}, #{read_count}, now())
+        com_message(message_num, chat_room_num, sender_id, message_content, read_count, send_time)
+             VALUES(NULL, #{chat_room_num}, #{sender_id}, #{message_content}, #{read_count}, now())
     </insert>
 
     <!-- 채팅방의 채팅 기록 가져오기, 유저 기준으로도 추가 예정 -->
@@ -25,7 +21,7 @@
 <!--        <selectKey resultType="int" order="BEFORE" keyProperty="chat_room_num">-->
 <!--            SELECT IFNULL(MAX(chat_room_num),0)+1 FROM com_chat_room-->
 <!--        </selectKey>-->
-        INSERT INTO com_chat_room
+        INSERT INTO com_chat_room(chat_room_num, room_name, chat_session_id, room_create_date)
         VALUES (NULL, #{room_name}, #{chat_session_id}, now())
     </insert>
 

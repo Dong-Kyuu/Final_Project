@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- Mapper 인터페이스의 패키지명과 이름을 namespace로 설정합니다. -->
-<mapper namespace="com.naver.myhome.mybatis.mapper.InqCommentMapper">
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.InqCommentMapper">
 
 	<select id="getListCount" resultType="int">
 		select count(*)
@@ -12,14 +12,14 @@
 	</select>
 
 	<insert id="commentsInsert" parameterType="inqueryComment">
-		<selectKey resultType="int" order="BEFORE" keyProperty="num">
-			select nvl(max(num),0)+1 from inquery_comm
-		</selectKey>
+<!--		<selectKey resultType="int" order="BEFORE" keyProperty="num">-->
+<!--			select nvl(max(num),0)+1 from inquery_comm-->
+<!--		</selectKey>-->
 		insert into inquery_comm
 		(num, id, content, reg_date, comment_board_num,
 		comment_re_lev, comment_re_seq, comment_re_ref)
 		values
-		(#{num}, #{id}, #{content}, sysdate, #{comment_board_num},
+		(NULL, #{id}, #{content}, NOW(), #{comment_board_num},
 		#{comment_re_lev}, #{comment_re_seq}, #{comment_re_ref})
 	</insert>
 
@@ -27,8 +27,8 @@
 	<select id="getCommentList" parameterType="map" resultType="inqueryComment">
 		select num, inquery_comm.id, content, reg_date,
 		comment_re_lev, comment_re_seq, comment_re_ref
-		from     inquery_comm join member
-		on       inquery_comm.id = member.id
+		from     inquery_comm join users
+		on       inquery_comm.id = users.id
 		<where>
 			comment_board_num = #{comment_board_num}
 		</where>
@@ -55,13 +55,13 @@
 
 	<insert id="commentReply">
 		<selectKey resultType="int" order="BEFORE" keyProperty="num">
-			select nvl(max(num),0)+1 from inquery_comm
+			select IFNULL(MAX(num),0)+1 from inquery_comm
 		</selectKey>
 		insert into inquery_comm
 		(num, id, content, reg_date, comment_board_num,
 		comment_re_lev, comment_re_seq, comment_re_ref)
 		values
-		(#{num}, #{id}, #{content}, sysdate, #{comment_board_num},
+		(#{num}, #{id}, #{content}, NOW(), #{comment_board_num},
 		#{comment_re_lev}, #{comment_re_seq}, #{comment_re_ref})
 	</insert>
 </mapper>

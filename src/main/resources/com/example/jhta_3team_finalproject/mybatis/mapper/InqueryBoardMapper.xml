@@ -3,29 +3,31 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- Mapper 인터페이스의 패키지명과 이름을 namespace 로 설정합니다. -->
-<mapper namespace="com.naver.myhome.mybatis.mapper.InqueryBoardMapper">
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.InqueryBoardMapper">
 
 	 <select id="getListCount" resultType="int">
 	 	select count(*) from inquery_board
 	 </select>
 
 	  <select id="getBoardList" resultType="inqueryBoard">
-	  	select *
-	  	from ( select rownum rnum, b.*
-	  		   from (select inquery_board.*, nvl(cnt, 0) cnt
+	  	select a.*
+	  	from (
+		       select @rownum:=@rownum+1 AS rnum, b.*
+	  		   from (select inquery_board.*, NULLIF(cnt, 0) cnt
 	  		   		 from inquery_board left outer join (select comment_board_num, count(*) cnt
 	  		   		 								from inquery_comm
 	  		   		 								group by comment_board_num) c
 	  		   		 on inquery_board.inq_num = c.comment_board_num
-	  		   		 order by inq_re_ref desc, inq_re_seq asc) b
-	  		   where rownum &lt;= #{end}  		 
-	  		 )
-	  	where rnum &gt;= #{start} and rnum &lt;= #{end}
+	  		   		 order by inq_re_ref desc, inq_re_seq asc) b, (SELECT @rownum:=0) TMP
+		  	   where (@ROWNUM:=0) &lt;= #{end}
+		  ) a
+		  limit #{start}, #{end}
+<!--	  	where rnum &gt;= #{start} and rnum &lt;= #{end}-->
 	  </select>
 
 	   <insert id="insertBoard">
 	   		<selectKey resultType="int" order="BEFORE" keyProperty="inq_num">
-	   			select nvl(max(inq_num),0)+1 from inquery_board
+				select IFNULL(MAX(inq_num),0)+1 from inquery_board
 	   		</selectKey>
 		   insert into inquery_board
 		   (inq_num,
@@ -40,7 +42,7 @@
 		   #{inq_content}, #{inq_file}, #{inq_original},
 		   #{inq_num}, #{inq_re_lev}, #{inq_re_seq},
 		   #{inq_readcount},
-		   sysdate)
+		   NOW())
 	   </insert>
 	   
 	   <update id="setReadCountUpdate">

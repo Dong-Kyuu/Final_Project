@@ -9,7 +9,7 @@ function getList(state){//현재 선택한 댓글 정렬방식을 저장합니�
 	    option=state;
 	    $.ajax({
 			type: "post",
-			url : "/myhome/inqcomment/list",
+			url : "/inqcomment/list",
 			data: {"comment_board_num" : $("#comment_board_num").val(), state:state},
 			dataType: "json",
 			beforeSend : function(xhr) {
@@ -51,7 +51,7 @@ function getList(state){//현재 선택한 댓글 정렬방식을 저장합니�
 						// 2024-04-08 답변 프로필 임시 처리
 						// 2024-05-09 '/myhome/image/customer/profile.png'로 변경
 						//let src = 'image/profile.png';
-						let src = '/myhome/image/customer/profile.png';
+						let src = '/image/customer/profile.png';
 						if(profile){
 							//src = 'resource/fileupload/inquery/' + profile;
 						}
@@ -157,7 +157,7 @@ function del(num){//num : 댓글 번호
 	
 	$.ajax({
 		type: 'post',
-		url: '/myhome/inqcomment/delete',
+		url: '/inqcomment/delete',
 		data: {num:num},
 		beforeSend : function(xhr) {
 			//데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
@@ -235,7 +235,7 @@ $(function() {
 		
 		$.ajax({
 			type : 'post',
-			url : '/myhome/inqcomment/add', // 원문 등록
+			url : '/inqcomment/add', // 원문 등록
 			beforeSend : function(xhr) {
 				//데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
 				xhr.setRequestHeader(header, token);
@@ -279,7 +279,7 @@ $(function() {
 		const num = $(this).attr('data-id');
 		$.ajax({
 			type : 'post',
-			url: '/myhome/inqcomment/update',
+			url: '/inqcomment/update',
 			data: {num: num, content: content},
 			beforeSend : function(xhr) {
 				//데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
@@ -325,7 +325,7 @@ $(function() {
 		
 		$.ajax({
 			type: 'post',
-			url: '/myhome/inqcomment/reply',
+			url: '/inqcomment/reply',
 			data: {
 				id: $("#comment_id").val(),
 				content: content,

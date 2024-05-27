@@ -6,7 +6,8 @@
     <title>title</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <style>
         #memberList::-webkit-scrollbar {
             display: none

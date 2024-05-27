@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 
     <meta charset="UTF-8">
     <title>Room</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <link th:href="@{/css/chat.css}" rel="stylesheet"/>
-    <link rel="stylesheet" th:href="@{/css/animation.css}">
-    <link rel="stylesheet" th:href="@{/css/fontello.css}">
-    <link rel="stylesheet" th:href="@{/css/fontello-embedded.css}">
-<!--    <link rel="stylesheet" href=".${path}/resources/css/fontello-codes.css">-->
+    <link th:href="@{/css/chattest/chat.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/chattest/animation.css}">
+    <link rel="stylesheet" th:href="@{/css/chattest/fontello.css}">
+    <link rel="stylesheet" th:href="@{/css/chattest/fontello-embedded.css}">
+    <!--    <link rel="stylesheet" href=".${path}/resources/css/fontello-codes.css">-->
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <style>
         body {
             background-color: #2c7ac9;
@@ -533,15 +536,18 @@
 </head>
 <!--<c:set var="name" value="${member.id}"/>-->
 <script type="text/javascript">
+    let token = $("meta[name='_csrf']").attr("content");
+    let header = $("meta[name='_csrf_header']").attr("content");
+
     var ws;
     window.onload = function () {
         // <c:choose>
         //     <c:when test="${name eq 'admin'}">
-                //getRoom();
+        //getRoom();
         //      </c:when>
         //      <c:otherwise>
-                // var id = '<c:out value="${name}"/>';
-                //getRoomUser(id);
+        // var id = '<c:out value="${name}"/>';
+        //getRoomUser(id);
         //     </c:otherwise>
         // </c:choose>
         getRoom();
@@ -549,7 +555,7 @@
     }
 
     function getRoom() {
-        commonAjax('/getRoom', "", 'post', function (result) {
+        commonAjax('/chat/getRoom', "", 'post', function (result) {
             createChatingRoom(result);
         });
     }
@@ -558,7 +564,7 @@
 
         var test = {ID: id};
 
-        commonAjax('/getRoomUser', test, 'post', function (result) {
+        commonAjax('/chat/getRoomUser', test, 'post', function (result) {
             createChatingRoom(result);
         });
     }
@@ -566,13 +572,12 @@
     function createRoom() {
         $("#createRoom").click(function () {
             var msg = {
-
                 roomName: $('#roomName').val(),
-                sessionId: $('#sessionId').val(),
-                description: $('#description').val()
+                sessionId: $('#sessionId').val()
+                //description: $('#description').val()
             };
 
-            commonAjax('/createRoom', msg, 'post', function (result) {
+            commonAjax('/chat/createRoom', msg, 'post', function (result) {
                 createChatingRoom(result);
             });
 
@@ -582,7 +587,7 @@
 
 
     function goRoom(number, name, sessionId) {
-        location.href = "/moveChating?roomName=" + name + "&" + "roomNumber="
+        location.href = "/chat/moveChating?roomName=" + name + "&" + "roomNumber="
             + number + "&" + "sessionId=" + sessionId;
     }
 
@@ -590,30 +595,30 @@
         if (res != null) {
             var tag = "<main class='row title'><ul><li class='num'>순서</li><li class='chatRoom'>방 이름</li><li class='sessionId'>작성자</li><li class='go'>참가</li></ul></main>";
             res.forEach(function (d, idx) {
-                    // var rn = d.chat_name.trim();
-                    var rn = d.room_name;
-                    var roomNumber = d.chat_room_num;
-                    //var description = d.description;
-                    var sessionId = d.chat_session_id;
-                    tag += "<div class='row nfl row-fadeIn-wrapper'>"
-                        + "<ul><li class='num'>"
-                        + (idx + 1)
-                        + "</li>"
-                        + "<li class='chatRoom'>"
-                        + rn
-                        + "</li>"
-                        + "<li class='sessionId'>"
-                        + sessionId
-                        + "</li>"
-                        + "<li class='go'><button type='button' class='gobutton' onclick='goRoom(\""
-                        + roomNumber + "\", \"" + rn + "\", \""
-                        + sessionId + "\")'>입장</button></li>"
-                        + "</ul>"
-                        + "<ul class='more-content'><li class='description'>"
-                        // + description
-                        + "마지막 채팅 내용 보여줄 예정"
-                        + "</li></ul></div>";
-                });
+                // var rn = d.chat_name.trim();
+                var rn = d.room_name;
+                var roomNumber = d.chat_room_num;
+                //var description = d.description;
+                var sessionId = d.chat_session_id;
+                tag += "<div class='row nfl row-fadeIn-wrapper'>"
+                    + "<ul><li class='num'>"
+                    + (idx + 1)
+                    + "</li>"
+                    + "<li class='chatRoom'>"
+                    + rn
+                    + "</li>"
+                    + "<li class='sessionId'>"
+                    + sessionId
+                    + "</li>"
+                    + "<li class='go'><button type='button' class='gobutton' onclick='goRoom(\""
+                    + roomNumber + "\", \"" + rn + "\", \""
+                    + sessionId + "\")'>입장</button></li>"
+                    + "</ul>"
+                    + "<ul class='more-content'><li class='description'>"
+                    // + description
+                    + "마지막 채팅 내용 보여줄 예정"
+                    + "</li></ul></div>";
+            });
 
             $(".wrapper").empty().append(tag);
         }
@@ -624,6 +629,10 @@
             url: url,
             data: parameter,
             type: type,
+            beforeSend: function (xhr) {
+                //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
+                xhr.setRequestHeader(header, token);
+            },
             contentType: contentType != null ? contentType
                 : 'application/x-www-form-urlencoded; charset=UTF-8',
             success: function (res) {
@@ -663,9 +672,12 @@
         <tr>
             <th>방 제목</th>
             <th>
-                <input type="text" id="sessionId" name="sessionId" value="" placeholder="세션 아이디"/>
-                <input type="text" name="roomName" id="roomName" placeholder="방제목을 지정" class="input_box" style="height:50px; max-width:1600px;  font-size: 1.5rem;
+                <th:block th:with="pinfo=${#authentication.principal}">
+                    <input type="text" name="roomName" id="roomName" placeholder="방제목을 지정" class="input_box" style="height:50px; max-width:1600px;  font-size: 1.5rem;
 					font-family: sans-serif; ">
+                    <input type="text" id="sessionId" name="sessionId" th:value="${pinfo.username}"
+                           placeholder="세션 아이디" />
+                </th:block>
             </th>
             <th rowspan="2">
                 <button id="createRoom" class="btn">방 만들기</button>
