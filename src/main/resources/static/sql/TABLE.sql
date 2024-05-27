@@ -29,3 +29,27 @@ FROM board b LEFT JOIN (SELECT board_num, COUNT(*) AS cnt
                        ON comm.board_num = b.board_num
 ORDER BY b.BOARD_RE_REF DESC, b.BOARD_RE_SEQ ASC
     LIMIT 1, 10
+
+
+SELECT *
+FROM (
+         SELECT
+             @rownum := @rownum + 1 AS rnum, b.*
+         FROM (
+             SELECT
+             board.*, COALESCE(cnt, 0) AS cnt
+             FROM
+             board
+             LEFT JOIN (
+             SELECT
+             board_num, COUNT(*) AS cnt
+             FROM
+             comments
+             GROUP BY
+             board_num
+             ) comm ON comm.board_num = board.board_num
+             ORDER BY
+             BOARD_RE_REF DESC, BOARD_RE_SEQ ASC
+             ) b, (SELECT @rownum := 0) r
+     ) temp
+WHERE rnum BETWEEN 1 AND 10;

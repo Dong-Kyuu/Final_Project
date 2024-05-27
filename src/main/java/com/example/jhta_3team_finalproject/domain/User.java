@@ -1,6 +1,14 @@
 package com.example.jhta_3team_finalproject.domain;
 
-public class User {
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+public class User implements UserDetails {
     private String id;
     private String password;
     private String email;
@@ -12,6 +20,16 @@ public class User {
     private  String created_at;
     private String updated_at;
     private String auth="ROLE_MEMBER";
+
+    public String getProfile_picture() {
+        return profile_picture;
+    }
+
+    public void setProfile_picture(String profile_picture) {
+        this.profile_picture = profile_picture;
+    }
+
+    private String profile_picture;
     @Override
     public String toString() {
         return "User{" +
@@ -44,8 +62,43 @@ public class User {
     public void setPosition(String position) {
         this.position = position;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<SimpleGrantedAuthority> roles= new ArrayList<SimpleGrantedAuthority>();
+
+        roles.add(new SimpleGrantedAuthority(this.getAuth()));
+
+        return roles;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return id;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setPassword(String password) {
