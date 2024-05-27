@@ -11,4 +11,7 @@ public interface BoardService {
 
     // 글 목록 보기
     public List<Board> getBoardList(int page, int limit);
+
+    // 글 등록
+    void insertBoard(Board board);
 }

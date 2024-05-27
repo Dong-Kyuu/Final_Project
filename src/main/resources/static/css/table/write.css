@@ -1,0 +1,16 @@
+.make-flex   {
+    display: flex !important;
+}
+
+.H-control {
+    height: 43px;
+    margin-right: 20px;
+}
+
+.W-control {
+    width: 43px !important;
+}
+
+.W-control2 {
+    width: 83% !important;
+}

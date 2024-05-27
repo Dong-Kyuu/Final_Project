@@ -12,6 +12,9 @@ public interface BoardMapper {
     // 글의 갯수 구하기
     int getListCount();
 
+    // 리스트 불러오기
     List<Board> getBoardList(HashMap<String, Integer> map);
 
+    // 글 등록하기
+    void insertBoard(Board board);
 }

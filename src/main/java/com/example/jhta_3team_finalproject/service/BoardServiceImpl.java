@@ -37,4 +37,9 @@ public class BoardServiceImpl implements BoardService {
 
 	}
 
+	// 글 등록
+	@Override
+	public void insertBoard(Board board) {
+		dao.insertBoard(board);
+	}
 }
