@@ -14,7 +14,7 @@ public class MainPageController {
 
     @GetMapping("/dashboard")
     public String dashboard() {
-        return "/dashboard/blank-page";
+        return "dashboard/blank-page";
     }
 
 }

@@ -12,4 +12,15 @@
             (id,name,email,department,password)
         values ( #{id}, #{name},#{email}, #{department},#{password})
     </insert>
+
+
+    <update id="update">
+        update  users set
+            id= #{id},
+            name=#{name},
+            email=#{email},
+            department=#{department},
+            password=#{password}
+
+    </update>
 </mapper>

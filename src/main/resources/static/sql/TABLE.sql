@@ -1,5 +1,18 @@
 select count(*) from board
-
+CREATE TABLE board (
+                       BOARD_NUM INT AUTO_INCREMENT PRIMARY KEY,
+                       BOARD_NAME VARCHAR(255) NOT NULL,
+                       BOARD_PASS VARCHAR(255) NOT NULL,
+                       BOARD_SUBJECT VARCHAR(255) NOT NULL,
+                       BOARD_CONTENT TEXT NOT NULL,
+                       BOARD_FILE VARCHAR(255),
+                       BOARD_RE_REF INT,
+                       BOARD_RE_LEV INT,
+                       BOARD_RE_SEQ INT,
+                       BOARD_READCOUNT INT DEFAULT 0,
+                       BOARD_ORIGINAL VARCHAR(255),
+                       BOARD_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 select * from board
 
 drop table comments cascade constraints purge;
