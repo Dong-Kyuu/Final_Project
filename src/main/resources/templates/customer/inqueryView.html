@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!-- Header Section Begin -->
+<th:block th:replace="~{customer/header :: headerFragment}"/>
+<!-- Header Section End -->
+<head>
+    <meta charset="UTF-8">
+    <title>1대1 문의</title>
+
+    <!-- 게시판 기본 -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script th:src="@{/js/jquery-3.7.1.js}"></script>
+    <script
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 2024-04-02 Rich Text Editor basic 구현 -->
+    <link rel="stylesheet"
+          th:href="@{/css/customer/rte_theme_default.css}"/>
+    <script type="text/javascript"
+            th:src="@{/js/customer/rte.js}"></script>
+    <script type="text/javascript"
+            th:src="@{/js/customer/all_plugins.js}"></script>
+
+    <!-- 2024-04-04 Download 버튼 변경 -->
+    <link rel="stylesheet"
+          th:href="@{/css/customer/download.css?v=1.15}"
+          type="text/css">
+    <script
+            th:src="@{/js/customer/download.js?v=1.15}"></script>
+
+    <!-- 2024-04-04 Delete 버튼 변경 -->
+    <link rel="stylesheet"
+          th:href="@{/css/customer/delete.css?v=1.46}"
+          type="text/css">
+    <script
+            th:src="@{/js/customer/delete.js?v=1.46}"></script>
+
+    <!-- view.js, css -->
+    <link rel="stylesheet"
+          th:href="@{/css/customer/view.css?v=1.16}"
+          type="text/css">
+    <script
+            th:src="@{/js/customer/view.js?v=1.16}"></script>
+</head>
+<body>
+<input type="hidden" id="loginid" th:value="${member_id}" name="loginid">
+<!-- view.js에서 사용하기 위해 추가합니다. -->
+<div class="container" style="margin-top: 100px;">
+    <table class="table">
+        <tr>
+            <th colspan="2"><h3>1대1 문의</h3></th>
+        </tr>
+
+        <tr>
+            <td>
+                <div>글쓴이</div>
+            </td>
+            <td>
+                <div th:text="${boarddata.inq_name}"></div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div>제목</div>
+            </td>
+            <td>
+                <div th:text="${boarddata.inq_subject}"></div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div>내용</div>
+            </td>
+            <td style="padding-right: 0px">
+                <div class="form-control" style="position: relative; height: 100%;"
+                     th:utext="${boarddata.inq_content}"></div>
+            </td>
+        </tr>
+
+        <!-- 원문글인 경우에만 첨부파일을 추가 할 수 있습니다. -->
+        <tr th:if="${boarddata.inq_re_lev==0}">
+            <td>
+                <div>첨부파일</div>
+            </td>
+            <!-- 파일을 첨부한 경우 -->
+            <td th:if="${boarddata.inq_file  != null}">
+                <!-- <img src="${pageContext.request.contextPath}/resource/image/customer/down.png" width="10px"> -->
+                <button class="download-btn" id="download">
+                    <svg viewBox="0 0 448 512" width="14" title="arrow-down"
+                         class="download-icon">
+                        <path
+                                d="M413.1 222.5l22.2 22.2c9.4 9.4 9.4 24.6 0 33.9L241 473c-9.4 9.4-24.6 9.4-33.9 0L12.7 278.6c-9.4-9.4-9.4-24.6 0-33.9l22.2-22.2c9.5-9.5 25-9.3 34.3.4L184 343.4V56c0-13.3 10.7-24 24-24h32c13.3 0 24 10.7 24 24v287.4l114.8-120.5c9.3-9.8 24.8-10 34.3-.4z"/>
+                    </svg>
+                    <div class="loader">
+                        <div class="loader-inner"></div>
+                    </div>
+                    <div class="loaded">
+                        <svg viewBox="0 0 512 512" width="14" title="check"
+                             class="loaded-inner">
+                            <path
+                                    d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/>
+                        </svg>
+                    </div>
+                    <span class="download-text">
+                        <form method="post" action="down">
+                            <input type="hidden" th:value="${boarddata.inq_file}" th:name="filename" />
+						    <input type="hidden" th:value="${boarddata.inq_original}" th:name="original" />
+                            <input style="color: white; background-color: #4f97e5; border: 0;" type="submit" th:value="${boarddata.inq_original}" />
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        </form>
+                    </span>
+                </button>
+            </td>
+            <!-- 파일을 첨부하지 않은 경우 -->
+            <td th:if="${#strings.isEmpty(boarddata.inq_file)}"></td>
+        </tr>
+
+        <tr>
+            <td colspan="2" class="center">
+            <th:block sec:authorize-expr="isAuthenticated()">
+                <th:block th:with="pinfo=${#authentication.principal}">
+                    <th:block th:if="${boarddata.inq_name == pinfo.username or pinfo.username == 'admin'}">
+                    <a th:href="@{'modifyView?num=' + ${boarddata.inq_num}}">
+                        <button class="btn  btn-primary">수정</button>
+                    </a>
+                    <!-- href의 주소를 #으로 설정합니다. -->
+                    <a href="#"> <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#exampleModal">삭제
+                        </button>
+                    </a>
+                    </th:block>
+                </th:block>
+            </th:block>
+                <a th:href="@{/inquery/list}">
+                    <button class="btn btn-primary">목록</button>
+                </a>
+            </td>
+        </tr>
+    </table>
+    <!-- 게시판 view end -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">글삭제</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="hidden" name="num" th:value="${param.num}"
+                               class="inq_board_num">
+                        <input th:if="${boarddata.inq_pass_exist}" type="password" class="form-control inq_board_pass"
+                               placeholder="비밀번호를 입력해주세요" name="inq_pass" required="required">
+                        <input th:if="${!boarddata.inq_pass_exist}" type="hidden" class="form-control inq_board_pass"
+                               placeholder="비밀번호를 입력해주세요" name="inq_pass">
+                        <div th:if="${boarddata.inq_pass_exist}" class="clearfix">
+                            <button type="button"
+                                    class="btn btn-danger btn-small float-right"
+                                    data-dismiss="modal">취소
+                            </button>
+                            <button type="button" id="delete" class="del-btn float-right"
+                                    aria-label="Delete" onclick="deleteClick()">
+                                <svg class="del-btn__icon" viewBox="0 0 48 48" width="48px"
+                                     height="48px" aria-hidden="true">
+                                    <clipPath id="can-clip">
+                                        <rect class="del-btn__icon-can-fill" x="5" y="24" width="14"
+                                              height="11"/>
+                                    </clipPath>
+                                    <g fill="none" stroke="#fff" stroke-linecap="round"
+                                       stroke-linejoin="round" stroke-width="2"
+                                       transform="translate(12,12)">
+                                        <g class="del-btn__icon-lid">
+                                            <polyline points="9,5 9,1 15,1 15,5"/>
+                                            <polyline points="4,5 20,5"/>
+                                        </g>
+                                        <g class="del-btn__icon-can">
+                                            <g stroke-width="0">
+                                                <polyline id="can-fill" points="6,10 7,23 17,23 18,10"/>
+                                                <use clip-path="url(#can-clip)" href="#can-fill" fill="#fff"/>
+                                            </g>
+                                            <polyline points="6,10 7,23 17,23 18,10"/>
+                                        </g>
+                                    </g>
+                                </svg>
+                                <span class="del-btn__letters" aria-hidden="true" data-anim>
+											<span class="del-btn__letter-box"> <span
+                                                    class="del-btn__letter">삭</span>
+										</span> <span class="del-btn__letter-box"> <span
+                                        class="del-btn__letter">제</span>
+										</span>
+										</span>
+                            </button>
+                        </div>
+                        <div th:if="${!boarddata.inq_pass_exist}" style="display: flex; justify-content: center;">
+                            <button type="button" id="delete" class="del-btn"
+                                    aria-label="Delete" onclick="deleteClick()" style="margin-left: 10px;">
+                                <svg class="del-btn__icon" viewBox="0 0 48 48" width="48px"
+                                     height="48px" aria-hidden="true">
+                                    <clipPath id="can-clip">
+                                        <rect class="del-btn__icon-can-fill" x="5" y="24" width="14"
+                                              height="11"/>
+                                    </clipPath>
+                                    <g fill="none" stroke="#fff" stroke-linecap="round"
+                                       stroke-linejoin="round" stroke-width="2"
+                                       transform="translate(12,12)">
+                                        <g class="del-btn__icon-lid">
+                                            <polyline points="9,5 9,1 15,1 15,5"/>
+                                            <polyline points="4,5 20,5"/>
+                                        </g>
+                                        <g class="del-btn__icon-can">
+                                            <g stroke-width="0">
+                                                <polyline id="can-fill" points="6,10 7,23 17,23 18,10"/>
+                                                <use clip-path="url(#can-clip)" href="#can-fill" fill="#fff"/>
+                                            </g>
+                                            <polyline points="6,10 7,23 17,23 18,10"/>
+                                        </g>
+                                    </g>
+                                </svg>
+                                <span class="del-btn__letters" aria-hidden="true" data-anim>
+											<span class="del-btn__letter-box"> <span
+                                                    class="del-btn__letter">삭</span>
+											</span> <span class="del-btn__letter-box"> <span
+                                        class="del-btn__letter">제</span>
+											</span>
+										</span>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-small"
+                                    data-dismiss="modal">취소
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" name="num" th:value="${param.num}"
+           id="comment_board_num">
+    <input type="hidden" name="comment_id" th:value="${#authentication.name}"
+           id="comment_id">
+    <div class="comment-area">
+        <div class="comment-head">
+            <h3 class="comment-count">
+                답변 <sup id="count"></sup>
+                <!--superscript(윗첨자) -->
+            </h3>
+            <div class="comment-order">
+                <ul class="comment-order-list">
+                </ul>
+            </div>
+        </div>
+        <!-- comment-head end-->
+        <ul class="comment-list">
+
+        </ul>
+        <div class="comment-write">
+            <div class="comment-write-area">
+                <b class="comment-write-area-name" th:text="${#authentication.name}"><!--${id}--></b> <span
+                    class="comment-write-area-count">0/200</span>
+                <textarea placeholder="답변을 남겨보세요" rows="1"
+                          class="comment-write-area-text" maxLength="200"></textarea>
+
+            </div>
+            <div class="register-box">
+                <div class="button btn-cancel">취소</div>
+                <!-- 댓글의 취소는 display:none, 등록만 보이도록 합니다. -->
+                <div class="button btn-register">등록</div>
+            </div>
+        </div>
+        <!--comment-write end-->
+    </div>
+    <!-- comment-area end-->
+</div>
+<!-- class="container" end -->
+</body>
+</html>
