@@ -69,11 +69,10 @@ public class secuityConfig {
                 .tokenRepository(tokenRepository())); //데이터 베이스에 토큰을 저장합니다
 
 
-        http.authorizeHttpRequests(
-                (au)->au
-                        .requestMatchers("/user/list", "/user/info","/user/delete")
+        http.authorizeHttpRequests((au)->au
+                        .requestMatchers("/user/list", "/user/delete")
                         .hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/user/update")
+                        .requestMatchers("/user/update","/user/info")
                         .hasAnyAuthority("ROLE_ADMIN","ROLE_MEMBER")
                         .requestMatchers("/board/**","/comment/**")
                         .hasAnyAuthority("ROLE_ADMIN","ROLE_MEMBER")

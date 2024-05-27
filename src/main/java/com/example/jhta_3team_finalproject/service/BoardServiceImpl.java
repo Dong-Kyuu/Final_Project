@@ -14,7 +14,7 @@ public class BoardServiceImpl implements BoardService {
 
 
 	private BoardMapper dao;
-	
+
 	@Autowired
 	public BoardServiceImpl(BoardMapper dao) {
 		this.dao = dao;
@@ -27,7 +27,7 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public List<Board> getBoardList(int page, int limit) {
-		
+
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		int startrow = (page-1)*limit+1;
 		int endrow = startrow+limit-1;

@@ -19,17 +19,9 @@ public class User implements UserDetails {
     private int is_approved;
     private  String created_at;
     private String updated_at;
+    private String profile_picture;
     private String auth="ROLE_MEMBER";
 
-    public String getProfile_picture() {
-        return profile_picture;
-    }
-
-    public void setProfile_picture(String profile_picture) {
-        this.profile_picture = profile_picture;
-    }
-
-    private String profile_picture;
     @Override
     public String toString() {
         return "User{" +
@@ -44,9 +36,24 @@ public class User implements UserDetails {
                 ", is_approved=" + is_approved +
                 ", created_at='" + created_at + '\'' +
                 ", updated_at='" + updated_at + '\'' +
+                ", profile_picture='" + profile_picture + '\'' +
                 '}';
     }
 
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<SimpleGrantedAuthority> roles= new ArrayList<SimpleGrantedAuthority>();
+
+        roles.add(new SimpleGrantedAuthority(this.getAuth()));
+
+        return roles;
+    }
+
+    public String getProfile_picture() {return profile_picture;}
+
+    public void setProfile_picture(String profile_picture) {this.profile_picture = profile_picture;}
     public String getUpdated_at() {
         return updated_at;
     }
@@ -63,14 +70,7 @@ public class User implements UserDetails {
         this.position = position;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<SimpleGrantedAuthority> roles= new ArrayList<SimpleGrantedAuthority>();
 
-        roles.add(new SimpleGrantedAuthority(this.getAuth()));
-
-        return roles;
-    }
 
     public String getPassword() {
         return password;
