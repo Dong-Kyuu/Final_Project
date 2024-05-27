@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>내 정보</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{../assets/vendors/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{../assets/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{../edit_css/table/list.css}">
+
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" th:href="@{../assets/css/style.css}">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" th:href="@{../assets/images/favicon.ico}" />
+</head>
+<body>
+<div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_sidebar.html -->
+        <th:block th:replace="~{HSF/_sidebar :: sidebar}"></th:block>
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h4 class="page-title"> 회원 정보 수정</h4>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/user/info}">내 정보</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">내 정보 수정</li>
+                        </ol>
+                    </nav>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title" sec:authentication="principal.name">사용자 이름 </h4>
+                                <p class="card-description"> 내 정보 수정 </p>
+                                <form class="forms-sample">
+                                    <div class="form-group">
+                                        <label for="exampleInputName1">이름</label>
+                                        <input type="text" class="form-control" id="exampleInputName1" placeholder="Name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail3">Email address</label>
+                                        <input type="email" class="form-control" id="exampleInputEmail3" placeholder="Email">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword4">Password</label>
+                                        <input type="password" class="form-control" id="exampleInputPassword4" placeholder="Password">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleSelectGender">Gender</label>
+                                        <select class="form-control" id="exampleSelectGender">
+                                            <option>Male</option>
+                                            <option>Female</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>File upload</label>
+                                        <input type="file" name="img[]" class="file-upload-default">
+                                        <div class="input-group col-xs-12">
+                                            <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
+                                            <span class="input-group-append">
+                            <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
+                          </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputCity1">City</label>
+                                        <input type="text" class="form-control" id="exampleInputCity1" placeholder="Location">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleTextarea1">Textarea</label>
+                                        <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                                    <button class="btn btn-light">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+
+        <!-- partial -->
+    </div>
+    <!-- main-panel ends -->
+</div>
+<!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script th:src="@{../assets/vendors/js/vendor.bundle.base.js}"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script th:src="@{../assets/js/off-canvas.js}"></script>
+<script th:src="@{../assets/js/hoverable-collapse.js}"></script>
+<script th:src="@{../assets/js/misc.js}"></script>
+<!-- endinject -->
+<!-- Custom js for this page -->
+<!-- End custom js for this page -->
+</body>
+</html>

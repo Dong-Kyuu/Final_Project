@@ -7,5 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserMapper {
 
     public User isId(String id);
-    public int join(User u);
+    public int join(User user);
+    public  User user_info (String id);
+    public int update(User user);
 }
