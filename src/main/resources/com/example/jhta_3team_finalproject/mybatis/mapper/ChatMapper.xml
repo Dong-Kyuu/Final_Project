@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.chattestviewer.chat.mybatis.ChatMapper">
+    <!-- 채팅 추가 -->
+    <insert id="createMessage" parameterType="chatMessage">
+<!--        <selectKey resultType="int" order="BEFORE" keyProperty="message_num">-->
+<!--            SELECT IFNULL(MAX(message_num),0)+1 FROM com_message-->
+<!--        </selectKey>-->
+        INSERT INTO
+            com_message(message_num, chat_room_num, sender_num, userName,
+                        message_content, read_count, send_time)
+        VALUES(NULL, #{chat_room_num}, 1, #{userName}, #{message_content}, #{read_count}, now())
+    </insert>
+
+    <!-- 채팅방의 채팅 기록 가져오기, 유저 기준으로도 추가 예정 -->
+    <select id="searchMessages" resultType="chatMessage">
+        SELECT * FROM com_message
+        WHERE chat_room_num = #{chat_room_num} ORDER BY message_num ASC
+    </select>
+
+    <!-- 채팅방 만들기 -->
+    <insert id="createChatRoom" parameterType="chatRoom">
+<!--        <selectKey resultType="int" order="BEFORE" keyProperty="chat_room_num">-->
+<!--            SELECT IFNULL(MAX(chat_room_num),0)+1 FROM com_chat_room-->
+<!--        </selectKey>-->
+        INSERT INTO com_chat_room
+        VALUES (NULL, #{room_name}, #{chat_session_id}, now())
+    </insert>
+
+    <!-- 방목록 가져오기 -->
+    <select id="searchRoom" resultType="chatRoom">
+        select *
+        from com_chat_room
+        ORDER BY chat_room_num ASC
+    </select>
+
+    <!-- 방목록 가져오기 - 유저 기준 -->
+    <select id="searchRoomUser" parameterType="chatRoom" resultType="chatRoom">
+        SELECT *
+        FROM com_chat_room
+        WHERE chat_session_id = #{chat_session_id}
+    </select>
+</mapper>

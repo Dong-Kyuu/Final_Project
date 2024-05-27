@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!-- Header Section Begin -->
+<th:block th:replace="~{customer/header :: headerFragment}"/>
+<!-- Header Section End -->
+<head>
+<meta charset="UTF-8">
+<title>1대1 문의 수정</title>
+<!-- 게시판 기본 -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script th:src="@{/js/jquery-3.7.1.js}"></script>
+<script th:src="@{/js/customer/modifyform.js?v=2.12}"></script>
+
+<!-- 2024-04-02 Rich Text Editor basic 구현 -->
+<link rel="stylesheet" th:href="@{/css/customer/rte_theme_default.css}" />
+<script type="text/javascript" th:src="@{/js/customer/rte.js}"></script>
+<script type="text/javascript" th:src="@{/js/customer/all_plugins.js}"></script>
+<!--<script th:inline="javascript">
+	const result = [[${result}]];
+	if(result=='passFail') {
+		alert("비밀번호가 다릅니다.")
+	}
+</script>-->
+</head>
+<body>
+
+<!-- 2024-04-02 Rich Text Editor basic UI 추가 -->
+<style>
+#div_edit_title {
+	width: 65% !important;
+	margin: auto;
+	display: block;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.form-control {
+	margin: 0px;
+}
+
+#upfile {
+	display: none
+}
+
+.header-write {
+	width: 100%; /* 헤더 요소의 너비를 화면 전체로 설정 */
+	text-align: center; /* 헤더 내의 텍스트를 가운데 정렬 */
+	/* 아래의 코드는 자식 요소들을 중앙 정렬하기 위한 Flexbox 스타일링 */
+	display: flex;
+	/* justify-content: center; */
+}
+
+nav {
+	width: 100%; /* 100%의 폭을 차지하되, 내용이 최대 너비보다 작을 때는 내용에 맞게 크기 조정 */
+}
+
+.ul {
+	list-style: none; /* 목록 스타일 제거 */
+	padding: 0; /* 패딩 제거 */
+}
+
+.li {
+	display: inline; /* 항목을 인라인으로 표시하여 가로로 배열 */
+	margin: 0; /* 여백 제거 */
+}
+
+#upfile {
+	display: none
+}
+
+a {
+	color: black;
+}
+
+ul {
+	margin-bottom: 0;
+}
+</style>
+<div id="div_edit_title" style="margin-bottom: 5%; margin-top: 5%;">
+	<h3 style="margin-bottom: 2%">1대1 문의</h3>
+	<ul>
+		<li style="font-size: 0.7rem;"><h6>문의 답변은 최대 3일까지 소요될 수 있습니다.</h6></li>
+		<li style="font-size: 0.7rem;"><h6>비밀글로 작성된 문의는 관리자와 작성자 이외에는 열람할 수 없습니다.</h6></li>
+		<li style="font-size: 0.7rem;"><h6>작성한 글은 마이페이지에서 작성한 글 목록에서 확인하실 수 있습니다.</h6></li>
+	</ul>
+</div>
+<form th:action="@{/inquery/modifyAction}" method="post" name="modifyform"
+	  enctype="multipart/form-data">
+	<input type="hidden" name="inq_num" th:value="${boarddata.inq_num}">
+	<input type="hidden" name="inq_file" th:value="${boarddata.inq_file}">
+	<div id="div_edit_title" class="form-group">
+			<input name="inq_name" id="board_name" th:value="${boarddata.inq_name}" readOnly
+				type="hidden" class="form-control">
+	</div>
+				
+	<div id="div_edit_title">
+		<header class="header-write">
+			<table style="width: 100%;">
+				<tr style="width: 100%;">
+					<td style="width: 7%; display: inline-block;">
+						<div>
+							<select class="form-select form-control" name="inq_tag" id="board_tag">
+								<option value="일반">일반</option>
+								<option value="탈퇴">탈퇴</option>
+							</select>
+						</div>
+					</td>
+					<td style="width: 78%; display: inline-block; text-align: left;">
+						<div style="width: 78%; display: inline-block; text-align: left;">
+							<input class="form-control" style="width: 50%;" name="inq_subject" 
+								id="board_subject" type="text" th:value="${boarddata.inq_subject}"
+								maxlength="100" placeholder="문의 글 제목을 작성해주세요">
+						</div>
+					</td>
+					<td style="width: 8%; display: inline-block;">
+						<div>
+							<span th:if="${boarddata.inq_pass_exist == true}">
+								<input type="checkbox" id="checkpass" checked disabled />
+								<span>비밀글</span>
+							</span>
+							<span th:if="${boarddata.inq_pass_exist == false}">
+								<input style="display: none;" type="checkbox" id="checkpass" disabled />
+								<span style="display: none;">비밀글</span>
+							</span>
+						</div>
+					</td>
+					<td style="width: 7%; display: inline-block;">
+						<div>
+							<button class="btn btn-primary" style="background-color: #4f97e5; border: 0px;" type="submit">수정</button>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</header>
+	</div>
+	
+	<div id="div_edit_title">
+		<!-- <label for="inq_content">내용</label> -->
+		<textarea class="board_content" name="inq_content" id="board_editor" th:utext="${boarddata.inq_content}"></textarea>
+	</div>
+		
+	<!-- 원문글인 경우에만 파일 첨부 수정 가능합니다. -->
+	<div th:if="${boarddata.inq_re_lev==0}" id="div_edit_title" class="form-group">
+		<label>파일첨부
+			<img th:src="@{/image/customer/attach.png}" alt="파일첨부" width="20px">
+			<input type="file" id="upfile" name="uploadfile">
+		</label>
+		<span id="filevalue" th:text="${boarddata.inq_original}"></span>
+		<img th:src="@{/image/customer/remove.png}" alt="파일삭제" width="10px" class="remove">
+	</div>
+
+	<div id="div_edit_title" class="form-group">
+		<!-- <label for="inq_pass">비밀번호</label>  -->
+		<span th:if="${boarddata.inq_pass_exist} == true">
+			<input name="inq_pass" id="board_pass"
+					type="password" maxlength="30" class="form-control" placeholder="비밀번호를 입력해주세요">
+		</span>
+		<span th:if="${boarddata.inq_pass_exist} == false">
+			<input name="inq_pass" id="board_pass" style="display: none;"
+					type="password" maxlength="30" class="form-control" placeholder="비밀번호를 입력해주세요">
+		</span>
+	</div>
+</form>  
+
+<!-- 2024-04-02 Rich Text Editor basic 구현 -->
+<script>
+	var editor1cfg = {}
+	editor1cfg.toolbar = "basic";
+	var board_editor = new RichTextEditor("#board_editor", editor1cfg);
+	board_editor.focus();
+</script>
+</body>
+</html>
