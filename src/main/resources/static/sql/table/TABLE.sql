@@ -1,5 +1,18 @@
 select count(*) from board
 
+CREATE TABLE board (
+                       BOARD_NUM INT AUTO_INCREMENT PRIMARY KEY,
+                       BOARD_NAME VARCHAR(10) NOT NULL,
+                       BOARD_ID VARCHAR(50) REFERENCES users(id),
+                       BOARD_SUBJECT VARCHAR(255) NOT NULL,
+                       BOARD_CONTENT TEXT NOT NULL,
+                       BOARD_RE_REF INT,
+                       BOARD_RE_LEV INT,
+                       BOARD_RE_SEQ INT,
+                       BOARD_READCOUNT INT DEFAULT 0,
+                       BOARD_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 select * from board
 
 drop table comments cascade constraints purge;
@@ -18,7 +31,7 @@ create sequence com_seq;
 select * from comments;
 
 
-insert into board(BOARD_NUM, BOARD_NAME, BOARD_PASS, BOARD_SUBJECT, BOARD_CONTENT, BOARD_RE_REF, BOARD_RE_LEV, BOARD_RE_SEQ, BOARD_READCOUNT)
+insert into board(BOARD_NUM, BOARD_NAME, BOARD_SUBJECT, BOARD_CONTENT, BOARD_RE_REF, BOARD_RE_LEV, BOARD_RE_SEQ, BOARD_READCOUNT)
 values (1, "김동규", "1234", "첫번째 글입니다 ㅎㅇㅎㅇ", "그냥 뻘글입니다 지나가세요", 1, 0, 0, 0)
 
 

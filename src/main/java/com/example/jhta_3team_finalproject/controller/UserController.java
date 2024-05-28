@@ -65,6 +65,12 @@ public class UserController {
         return mv;
     }
 
+   // 로그아웃
+    @RequestMapping(value = "/logout", method = RequestMethod.GET )
+    public String logout(){
+        return "member/login";
+    }
+
     //회원가입
     @RequestMapping(value = "/join", method = RequestMethod.GET)
     public String join() {

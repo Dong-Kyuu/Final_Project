@@ -3,6 +3,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>Sidebar Fragment</title>
+        <th:block th:replace="~{HSF/_navbar ::navbar}"></th:block>
     </head>
     <body>
         <nav class="sidebar sidebar-offcanvas" id="sidebar" th:fragment="sidebar">
@@ -29,17 +30,18 @@
                         <i class="mdi mdi-home menu-icon"></i>
                     </a>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+                    <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
                         <span class="menu-title"> 내 정보</span>
                         <i class="menu-arrow"></i>
                         <i class="mdi mdi-crosshairs-gps menu-icon"></i>
                     </a>
-                    <div class="collapse" id="ui-basic">
+                    <div class="collapse" id="general-pages">
                         <ul class="nav flex-column sub-menu">
                             <li class="nav-item"><a class="nav-link"
                                                     th:href="@{/user/info}">내 정보 수정</a></li>
-                            <li class="nav-item"> <a class="nav-link" >근태관리</a></li>
+                            <li class="nav-item"> <a class="nav-link" >출퇴근 관리</a></li>
 
                         </ul>
                     </div>
@@ -82,22 +84,6 @@
                         <span class="menu-title">Tables</span>
                         <i class="mdi mdi-table-large menu-icon"></i>
                     </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
-                        <span class="menu-title">Sample Pages</span>
-                        <i class="menu-arrow"></i>
-                        <i class="mdi mdi-medical-bag menu-icon"></i>
-                    </a>
-                    <div class="collapse" id="general-pages">
-                        <ul class="nav flex-column sub-menu">
-                            <li class="nav-item"> <a class="nav-link" href="pages/samples/blank-page.html"> Blank Page </a></li>
-                            <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>
-                            <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>
-                            <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
-                            <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
-                        </ul>
-                    </div>
                 </li>
                 <li class="nav-item sidebar-actions">
                     <span class="nav-link">
