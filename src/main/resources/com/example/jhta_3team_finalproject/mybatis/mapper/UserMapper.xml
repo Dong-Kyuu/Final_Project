@@ -5,17 +5,17 @@
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.UserMapper">
 
     <select id="isId" resultType="user">
-        SELECT * FROM users WHERE id = #{id}
+        SELECT * FROM mbt.users WHERE id = #{id}
     </select>
     <insert id="join" >
-        insert  into users
+        insert  into mbt.users
             (id,name,email,department,password)
         values ( #{id}, #{name},#{email}, #{department},#{password})
     </insert>
 
 
     <update id="update">
-        update  users set
+        update  mbt.users set
             id= #{id},
             name=#{name},
             email=#{email},
