@@ -22,29 +22,28 @@
     <!-- 2024-05-21, 채팅방 반응형 메뉴 버튼 구현 -->
     <link th:href="@{/css/chat/chat-skill-menu.css}" rel="stylesheet" type="text/css"/>
     <!-- 2024-05-27, 채팅방 검색 버튼 구현 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link th:href="@{/css/chat/chat-search.css}" rel="stylesheet" type="text/css"/>
+    <!-- 2024-05-28, 채팅방 타임스탬프 구현 -->
+    <link th:href="@{/css/chat/chat-timestamp.css}" rel="stylesheet" type="text/css"/>
+    <!-- 2024-05-28, 채팅방 로딩 화면 구현 -->
+    <link th:href="@{/css/chat/chat-loading.css}" rel="stylesheet" type="text/css"/>
+    <!-- CSRF Token -->
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
 
 <body>
-<button id="opener">Open Dialog1</button>
-<div class="wrapper">
-    <div class="search-box">
-        <input type="text" placeholder="Search" class="input">
-        <div class="btn">
-            <i class="fa fa-search" aria-hidden="true"></i>
-        </div>
-    </div>
-</div>
-
+<button id="opener">채팅하기</button>
 
 <div id="dialog" title="Chat">
     <div class="app-wrapp" style="left: -5px">
         <div class="app-container">
             <!-- @main page view -->
             <div class="view-main">
+
                 <div class="header-wrapp">
+<!--                    <th:block th:replace="~{chat/roomInvite :: roomInviteFragment}"/>-->
                     <div class="app-detail">
                         <div>
                             <img src="data:image/png;base64,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"
@@ -175,7 +174,7 @@
                                 <div class="chat-menu-container-mgr">
                                     <div class="list-container-mgr">
                                         <ul class="more-button-list more-button-list-mgr">
-                                            <li class="more-button-list-item" style="height: 50px;">
+                                            <li class="more-button-list-item create-chat-room" style="height: 50px;">
                                                 <i class="material-icons">file_download</i>
                                                 <span>채팅방 만들기</span>
                                             </li>
@@ -500,10 +499,19 @@
             </div>
             <!-- @send message view -->
             <div class="view-message">
-                <th:block th:replace="~{chat/invite :: inviteFragment}"/>
+                <div class="chat-room-invite-user">
+                    <th:block th:replace="~{chat/invite :: inviteFragment}"/>
+                </div>
                 <div class="status-bar">
                     <div class="back-arrow">
                         <i class="material-icons">navigate_before</i>
+                    </div>
+                    <div class="mb-3 chat-room-info">
+                        <div class="chat-room-name">관광영업부</div>
+                        <div class="chat-room-part-num">
+                            <i class="material-icons chat-room-part-icon">person</i>
+                            <span>2</span>
+                        </div>
                     </div>
                     <div class="chatroom-menu">
                         <a arial-label='Menu' class='menu-toggle' href='javascript:Display();'>
@@ -513,7 +521,12 @@
                             </svg> -->
                         </a>
                     </div>
-                    <div class="sender-name">홍길동</div>
+                    <div class="chat-search-box">
+                        <input type="text" placeholder="" class="chat-search-input">
+                        <div class="chat-search-btn">
+                            <i class="material-icons chat-search-icon">search</i>
+                        </div>
+                    </div>
                 </div>
                 <div class='darkshadow' style="width: 330px; height: 578px;"></div>
                 <nav id='nav-wrapper' style="display: none;">
@@ -543,7 +556,7 @@
                             </div>
                             <div class="activity-container">
                                 <div class="icon-container">
-                                        <span class="add-icon add-action">
+                                        <span class="add-icon add-action mgr-chat-room-users">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  style="width: 24px; height: 24px; margin-left: 15px;"
                                                  viewBox="0 0 17 17" fill="none">
@@ -667,6 +680,9 @@
                     </ul>
                 </div>
                 <div class="messages-area" data-viewport="true">
+                    <div id="loading">
+                        <div class="spinner"></div>
+                    </div>
                     <ul class="touch-y">
                         <li class="recive">
                             <div class="avatar-container">
@@ -674,7 +690,7 @@
                                             src="https://cdn-icons-png.flaticon.com/256/25/25231.png">
                                     </span>
                             </div>
-                            <p class="chat-nickname">회사 대표님</p>
+                            <p class="chat-nickname">대표님</p>
                             <div class="chat-content">
                                 자넨 해고일세
                                 <span><strong class="chat-readcount">1</strong> 12:08 PM</span>
@@ -682,16 +698,23 @@
                         </li>
                         <li class="sent">
                             <div>
+                                <span class="my-chat">
                                 와우 신난다!
                                 <br/>
                                 ...
-                                <span><strong class="chat-readcount">1</strong> 12:11 PM</span>
+                                </span>
+                                <span><strong class="my-chat-readcount">1</strong> 12:11 PM</span>
                             </div>
                         </li>
+                        <h5 class="chat-timestamp-dash">
+                            <span class="chat-timestamp-content">
+                                &nbsp;&nbsp;2024년 5월 28일 화요일&nbsp;&nbsp;
+                            </span>
+                        </h5>
                         <li class="sent">
                             <div>
                                 살려주세요..
-                                <span>1:11 PM</span>
+                                <span><strong class="my-chat-readcount">1</strong>1:11 AM</span>
                             </div>
                         </li>
                     </ul>
@@ -730,6 +753,9 @@
 
 <script>
     $(document).ready(function () {
+        let token = $("meta[name='_csrf']").attr("content");
+        let header = $("meta[name='_csrf_header']").attr("content");
+
         var distX = 0, distY = 0;
         var viewportX, viewportY;
         $(document).on('mousedown touchstart', '.touch-y', function (e) {
@@ -791,7 +817,7 @@
             return ele.closest('[data-viewport="true"]');
         }
 
-        /* 2024-05-21, 네비게이션 툴팁 처리 */
+        /** 2024-05-21, 네비게이션 툴팁 처리 */
         $(".nav-friend").tooltip();
         $(".nav-chatting").tooltip();
         $(".nav-profile").tooltip();
@@ -822,7 +848,7 @@
             $("#master-nav-items > div").eq(index).prevAll().addClass("before");
         }
 
-        /* 2024-05-21, 채팅방에서 클릭 시와 친구 리스트에서 클릭 시를 이벤트 분리 예정 */
+        /** 2024-05-21, 채팅방에서 클릭 시와 친구 리스트에서 클릭 시를 이벤트 분리 예정 */
         $(".messages-list > ul > li").bind('click', showMessages);
 
         function showMessages() {
@@ -849,10 +875,11 @@
             var date = new Date();
             var message = $('input[name=message-text]').val();
             $(".message-text").val("");
-            var messageItem = "<li class='sent goto'><div>" + message + "<span>" + getTime(date) + "</span></div></li>";
+            var messageItem = "<li class='sent goto'><div>" + message + "<span><strong class='my-chat-readcount'>1</strong> " + getTime(date) + "</span></div></li>";
             $(".messages-area > ul").append(messageItem);
             setTimeout(function () {
                 $(document).find(".goto").removeClass("goto");
+                loadingStart();
                 systemMessage(date);
                 messageScrollFix();
             }, 50);
@@ -867,16 +894,15 @@
             ]
             setTimeout(function () {
                 // var messageItem = "<li class='recive'><div>" + + "<span>" + getTime(date) + "</span></div></li>";
-
-                /* 2024-05-22, 상대방 메시지 폼 */
+                /** 2024-05-22, 상대방 메시지 폼 */
                 var messageItem = "<li class='recive'><div class='avatar-container'>"
                     + "<span class='user-avatar offline small'> <img src='https://cdn-icons-png.flaticon.com/256/25/25231.png'></span>"
-                    + "</div><p class='chat-nickname'>홍길동</p>"
+                    + "</div><p class='chat-nickname'>대표님</p>"
                     + "<div class='chat-content'>" + messages[parseInt(Math.random(1, 4) * 4)]
-                    + "<span>" + getTime(date) + "</span></div></li>";
-
+                    + "<span><strong class='chat-readcount'>1</strong> " + getTime(date) + "</span></div></li>";
                 $(".messages-area > ul").append(messageItem);
                 messageScrollFix();
+                loadingEnd();
             }, 1500);
         }
 
@@ -900,7 +926,7 @@
             }, 100);
         }
 
-        /* 2024-05-16, 채팅창 Drag UI 기능 */
+        /** 2024-05-16, 채팅창 Drag UI 기능 */
         $("#opener").on("click", function () {
             $("#dialog").dialog("open");
             //$("#dialog").dialog();
@@ -938,6 +964,7 @@
         $(".ui-corner-all").css('border-bottom-right-radius', '0');
         $(".ui-corner-all").css('border-bottom-left-radius', '0');
         $(".ui-widget-header").css('border', '0');
+        $(".ui-widget-header").css('font-family', '\'Open Sans\', sans-serif');
         //$(".ui-widget-header").css('border-bottom', '1px solid white');
         $(".ui-dialog .ui-dialog-content").css('padding', '0');
         $(".ui-widget-content").css('background', 'transparent');
@@ -947,9 +974,10 @@
         $(".ui-dialog-title").css('color', 'white');
         $(".ui-widget.ui-widget-content").css('border', '0px');
         $(".ui-widget-content").css('max-height', '578px');
+
         //$(".ui-resizable-handle").css('background', '#4f97e5');
 
-        /* 2024-05-16, profile-upfile */
+        /** 2024-05-16, profile-upfile */
         function show() {
             // 파일 이름이 있는 경우 remove 이미지를 보이게 하고
             // 파일 이름이 없는 경우 remove 이미지 보이지 않게 합니다.
@@ -968,7 +996,7 @@
 
         let check = 0; // profile upload 사진이 있는지 체크
 
-        /* 2024-05-16, 파일 변경시 처리 필요 */
+        /** 2024-05-16, 파일 변경시 처리 필요 */
         // 파일첨부를 변경하지 않으면 $('#filevalue').text()의 파일명을
         // 파라미터 'check'라는 이름으로 form에 추가하여 전송합니다.
         // if (check == 0) {
@@ -992,10 +1020,10 @@
             $(this).css('display', 'none');
         });
 
-        /* 2024-05-16, 프로필 사진 툴팁 처리 */
+        /** 2024-05-16, 프로필 사진 툴팁 처리 */
         $(".prifile-image-tooltip").tooltip();
 
-        /* 2024-05-16, 프로필 클릭 시 설정화면으로 이동 */
+        /** 2024-05-16, 프로필 클릭 시 설정화면으로 이동 */
         $(".app-detail").click(function () {
             $el = $("#master-nav ul li:eq(2)");
             $("#master-nav ul li").removeClass('active');
@@ -1008,7 +1036,7 @@
             });
         });
 
-        /* 2024-05-17, 채팅방 유저 검색 */
+        /** 2024-05-17, 채팅방 유저 검색 */
         $("#searchChatUser").on("keyup", function () {
             var value = $(this).val().toLowerCase();
             $(".activity-container .avatar-container").filter(function () {
@@ -1024,15 +1052,34 @@
             }
         });
 
-        /* 2024-05-21, 채팅방 유저 관리 화면, + 클릭 시 */
-        $(".add-action").click(function () {
+        /** 2024-05-21, 채팅방 유저 관리 화면, + 클릭 시 */
+        $(".mgr-chat-room-users").click(function () {
             //$(".invite-screen").css("display", "block");
             $(".messages-area").css("display", "none");
             $(".text-media-area").css("display", "none");
-            $(".invite-screen").fadeIn(300);
+
+            // 객체 형태로 파라미터 이름과 값을 전달합니다.
+            const $data = {
+                "type": '방 초대하기',
+            };
+            $.ajax({
+                url: "/chat/inviteAdd",
+                data: $data,
+                beforeSend: function (xhr) {
+                    //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
+                    xhr.setRequestHeader(header, token);
+                },
+                cache: false,
+                success : function(html) {
+                    console.log("done-invite-user");
+                    $(".chat-room-invite-user").empty();
+                    $(".chat-room-invite-user").append(html);
+                    $(".invite-screen").fadeIn(1000).css("display", "block");
+                }
+            })
         });
 
-        /* 2024-05-21, 채팅방 유저 관리 화면, - 클릭 시 */
+        /** 2024-05-21, 채팅방 유저 관리 화면, - 클릭 시 */
         $(".remove-action").click(function () {
             //$(".invite-screen").css("display", "block");
             $(".messages-area").css("display", "none");
@@ -1040,14 +1087,7 @@
             $(".invite-screen").fadeIn(300);
         });
 
-        /* 2024-05-21, 채팅방 유저 관리 화면, < 클릭 시 */
-        $(".invite-screen-back-arrow").click(function () {
-            $(".invite-screen").css("display", "none");
-            $(".messages-area").css("display", "block");
-            $(".text-media-area").css("display", "block");
-        });
-
-        /* 2024-05-21, 채팅방 기능 메뉴 클릭 시 */
+        /** 2024-05-21, 채팅방 기능 메뉴 클릭 시 */
         $("#send-message-file").click(function () {
             if ($("#chat-menu").css('display') == 'none') {
                 $("#chat-menu").menu();
@@ -1061,28 +1101,46 @@
             }
         });
 
-        /* 2024-05-21, 채팅방 반응형 메뉴 버튼 구현 */
+        /** 2024-05-21, 채팅방 반응형 메뉴 버튼 구현 */
         document.querySelector('.skill-menu').addEventListener('click', function () {
             document.querySelector('.list-container').classList.toggle('active');
             document.querySelector('.button-container').classList.toggle('active');
         });
 
-        /* 2024-05-21, 상대 채팅 클릭 시 다운로드, 신고하기 구현 */
+        /** 2024-05-21, 상대 채팅 클릭 시 다운로드, 신고하기 구현 */
         $(".recive").click(function () {
             document.querySelector('.list-container-chat').classList.toggle('active');
         });
 
-        /* 2024-05-22, 채팅방 반응형 메뉴 버튼 구현 */
+        /** 2024-05-22, 채팅방 반응형 메뉴 버튼 구현 */
         document.querySelector('.mgr-menu').addEventListener('click', function () {
             document.querySelector('.list-container-mgr').classList.toggle('active');
         });
 
-        /* 2024-05-27, 채팅방 검색 버튼 클릭 이벤트 구현 */
-        $(".btn").click(function(){
-            $(".input").toggleClass("active").focus;
+        /** 2024-05-27, 채팅방 검색 버튼 클릭 이벤트 구현 */
+        $(".chat-search-btn").click(function () {
+            $(".chat-search-input").toggleClass("active").focus;
             $(this).toggleClass("animate");
-            $(".input").val("");
+            $(".chat-search-input").val("");
         });
+
+        /** 2024-05-28, 로딩 화면 구현 */
+        /**
+         * 화면 로딩 시작
+         */
+        function loadingStart() {
+            const loading = document.querySelector('#loading');
+            loading.style.display = 'block';
+        }
+
+        /**
+         * 화면 로딩 종료
+         */
+        function loadingEnd() {
+            const loading = document.querySelector('#loading');
+            loading.style.display = 'none';
+        }
+
 
     });
 </script>

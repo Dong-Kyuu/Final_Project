@@ -92,6 +92,10 @@
 //    font-family: 'Open Sans', sans-serif;
 //}
 
+.app-wrapp > * {
+    font-family: 'Open Sans', sans-serif;
+}
+
 .app-wrapp {
     width: 330px;
     height: 558px;
@@ -492,6 +496,28 @@
             padding: 15px 50px 0 0;
         }
 
+        .chat-room-info {
+            display: inline-block;
+        }
+
+        .chat-room-info>.chat-room-name {
+            display: block;
+            margin-top: 9px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .chat-room-info>.chat-room-part-num {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .chat-room-info>.chat-room-part-num>.chat-room-part-icon {
+            font-size: 12px;
+            color: #a3a1a1;
+        }
+
         .chatroom-menu {
             float: right;
             color: @darkPrimaryColor;
@@ -539,6 +565,7 @@
                     margin: 3px 20px 10px;
                     max-width: 70%;
                     word-wrap: break-word;
+                    font-weight: 400;
 
                     span {
                         display: block;
@@ -611,7 +638,8 @@
                         background: @darkPrimaryColor;
                         color: @white;
                         float: right;
-                        .shadow(0 0 10px @darkPrimaryColor);
+                        .shadow(0 0 5px @darkPrimaryColor);
+                        font-weight: normal;
 
                         &:after {
                             right: -6px;
@@ -620,9 +648,15 @@
                             transform: rotate(160deg);
                             border-top: 1px solid @darkPrimaryColor;
                         }
+
+                        .my-chat {
+                            font-size: 13px;
+                            margin-top: 0;
+                            text-align: left;
+                        }
                     }
 
-                    .chat-readcount {
+                    .my-chat-readcount {
                         color: yellow;
                     }
                 }

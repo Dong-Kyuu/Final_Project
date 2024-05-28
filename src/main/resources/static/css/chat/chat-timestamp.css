@@ -1,0 +1,15 @@
+.chat-timestamp-dash {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #dbd9d9;
+    line-height: 0.1em;
+    margin: 10px 0 20px;
+}
+
+.chat-timestamp-dash .chat-timestamp-content {
+    background:#e5e7eb;
+    padding:5px 5px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Open Sans', sans-serif;
+}
