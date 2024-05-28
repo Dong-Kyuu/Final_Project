@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- SQL 맵퍼 파일은 xml이기 때문에 제일 먼저 xml선언이 온다 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Mapper 인터페이스의 패키지명과 이름을 namespace로 설정한다. -->
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.TableCommentMapper">
+    <select id="getListCount" resultType = "int">
+        select 	count(*)
+        from 	table_comments
+        where 	board_num = #{board_num}
+    </select>
+</mapper>
