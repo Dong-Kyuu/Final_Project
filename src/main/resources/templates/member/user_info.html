@@ -9,6 +9,8 @@
     <link rel="stylesheet" th:href="@{../assets/vendors/mdi/css/materialdesignicons.min.css}">
     <link rel="stylesheet" th:href="@{../assets/vendors/css/vendor.bundle.base.css}">
     <link rel="stylesheet" th:href="@{../edit_css/table/list.css}">
+    <link rel="stylesheet" th:href="@{../static/css/user/userinfo.css}">
+
 
     <!-- endinject -->
     <!-- Plugin css for this page -->
@@ -18,7 +20,7 @@
     <!-- Layout styles -->
     <link rel="stylesheet" th:href="@{../assets/css/style.css}">
     <!-- End layout styles -->
-    <link rel="shortcut icon" th:href="@{../assets/images/favicon.ico}" />
+    <link rel="shortcut icon" th:href="@{../assets/images/favicon.ico}"/>
 </head>
 <body>
 <div class="container-scroller">
@@ -32,17 +34,41 @@
         <div class="main-panel">
             <div class="content-wrapper">
                 <div class="page-header">
-                    <h4 class="page-title"> 회원 정보 수정</h4>
+                    <h4 class="page-title">  </h4>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a th:href="@{/user/info}">내 정보</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">내 정보 수정</li>
+                            <li class="breadcrumb-item active" aria-current="page"><a th:href="@{/user/updateProcess}">내
+                                정보 수정</a></li>
                         </ol>
                     </nav>
                 </div>
-
                 <div class="row">
-                    <div class="col-12 grid-margin stretch-card">
+                    <div class="col-md-4 grid-margin stretch-card">
+                        <div class="card" >
+                            <div class="card-body">
+                                <h4 class="card-title">Input size</h4>
+                                <p class="card-description"> Add classes like <code>.form-control-lg</code> and <code>.form-control-sm</code>.
+                                </p>
+                                <div class="form-group">
+                                    <label>Large input</label>
+                                    <input type="text" class="form-control form-control-lg" placeholder="Username"
+                                           aria-label="Username">
+                                </div>
+                                <div class="form-group">
+                                    <label>Default input</label>
+                                    <input type="text" class="form-control" placeholder="Username"
+                                           aria-label="Username">
+                                </div>
+                                <div class="form-group">
+                                    <label>Small input</label>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Username"
+                                           aria-label="Username">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title" sec:authentication="principal.name">사용자 이름 </h4>
@@ -50,34 +76,41 @@
                                 <form class="forms-sample">
                                     <div class="form-group">
                                         <label for="exampleInputName1">이름</label>
-                                        <input type="text" class="form-control" id="exampleInputName1" th:value="${#authentication.principal.name}">
+                                        <input type="text" class="form-control" id="exampleInputName1"
+                                               th:value="${#authentication.principal.name}">
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail3">이메일 주소</label>
-                                        <input type="email" class="form-control" id="exampleInputEmail3" th:value="${#authentication.principal.email}">
+                                        <input type="email" class="form-control" id="exampleInputEmail3"
+                                               th:value="${#authentication.principal.email}">
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputPassword4">핸드폰 번호</label>
-                                        <input type="text" class="form-control" id="exampleInputPassword4" th:value="${#authentication.principal.email}">
+                                        <input type="text" class="form-control" id="exampleInputPassword4"
+                                               th:value="${#authentication.principal.email}">
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleSelectGender">성별</label>
-                                        <input type="text" class="form-control" id="exampleSelectGender" th:value="${#authentication.principal.email}">
+                                        <input type="text" class="form-control" id="exampleSelectGender"
+                                               th:value="${#authentication.principal.email}">
 
                                     </div>
                                     <div class="form-group">
                                         <label>File upload</label>
                                         <input type="file" name="img[]" class="file-upload-default">
                                         <div class="input-group col-xs-12">
-                                            <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image">
+                                            <input type="text" class="form-control file-upload-info" disabled
+                                                   placeholder="Upload Image">
                                             <span class="input-group-append">
-                            <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
-                          </span>
+                                <button class="file-upload-browse btn btn-gradient-primary"
+                                        type="button">Upload</button>
+                              </span>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputCity1">City</label>
-                                        <input type="text" class="form-control" id="exampleInputCity1" placeholder="Location">
+                                        <input type="text" class="form-control" id="exampleInputCity1"
+                                               placeholder="Location">
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleTextarea1">Textarea</label>
@@ -85,7 +118,9 @@
                                     </div>
                                     <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
                                     <button class="btn btn-light">Cancel</button>
+
                                 </form>
+
                             </div>
                         </div>
                     </div>
@@ -93,6 +128,8 @@
 
             </div>
         </div>
+
+
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
 
@@ -101,7 +138,7 @@
     <!-- main-panel ends -->
 </div>
 <!-- page-body-wrapper ends -->
-</div>
+
 <!-- container-scroller -->
 <!-- plugins:js -->
 <script th:src="@{../assets/vendors/js/vendor.bundle.base.js}"></script>

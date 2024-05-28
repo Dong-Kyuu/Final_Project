@@ -45,15 +45,13 @@ public class secuityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         // 내가 만든 페이지로 이동합니다
-        http.formLogin((fo) -> fo.loginPage("/user/login")
+        http.
+                formLogin((fo) -> fo.loginPage("/user/login")
                 .loginProcessingUrl("/user/loginProcess")
                 .usernameParameter("id")
                 .passwordParameter("password")
                 .successHandler(loginSuccessHandler)
                 .failureHandler(loginFailHandler));
-
-
-
 
 
         http.logout((fo) -> fo.logoutSuccessUrl("/user/login")

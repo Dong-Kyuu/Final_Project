@@ -6,7 +6,7 @@
     <!-- 채팅 추가 -->
     <insert id="createMessage" parameterType="chatMessage">
         INSERT INTO
-        com_message(message_num, chat_room_num, sender_id, message_content, read_count, send_time)
+            com_message(message_num, chat_room_num, sender_id, message_content, read_count, send_time)
              VALUES(NULL, #{chat_room_num}, #{sender_id}, #{message_content}, #{read_count}, now())
     </insert>
 
