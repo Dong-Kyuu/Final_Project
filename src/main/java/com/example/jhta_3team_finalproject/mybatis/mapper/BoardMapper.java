@@ -1,6 +1,6 @@
 package com.example.jhta_3team_finalproject.mybatis.mapper;
 
-import com.example.jhta_3team_finalproject.domain.board.Board;
+import com.example.jhta_3team_finalproject.domain.Table.Board;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.HashMap;
@@ -17,4 +17,10 @@ public interface BoardMapper {
 
     // 글 등록하기
     void insertBoard(Board board);
+
+    // 조회수 증가
+    int setReadCountUpdate(int num);
+
+    // View 페이지 가져오기
+    Board getDetail(int num);
 }

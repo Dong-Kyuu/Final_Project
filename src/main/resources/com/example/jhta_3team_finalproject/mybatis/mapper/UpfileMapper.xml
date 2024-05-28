@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.UpfilesMapper">
+
+    <!-- 파일 정보 삽입 -->
+    <insert id="insertFile">
+        INSERT INTO TABLE_FILES (board_num, original_file_name, file_name, upload_date)
+        VALUES (#{board_num}, #{original_file_name}, #{file_name}, NOW())
+    </insert>
+
+    <!-- 특정 게시글의 파일 정보 조회 -->
+    <select id="getFilesbyBoardNum" resultType="com.example.jhta_3team_finalproject.domain.Table.Table_Files">
+        SELECT id, board_num, original_file_name, file_name, upload_date
+        FROM TABLE_FILES
+        WHERE board_num = #{boardNum}
+    </select>
+
+</mapper>

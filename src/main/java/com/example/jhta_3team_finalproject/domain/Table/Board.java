@@ -1,25 +1,21 @@
-package com.example.jhta_3team_finalproject.domain.board;
+package com.example.jhta_3team_finalproject.domain.Table;
 
-import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
 public class Board {
 
     private String BOARD_NAME;
-    private String BOARD_PASS;
     private String BOARD_SUBJECT;
     private String BOARD_CONTENT;
-    private String BOARD_FILE;
     private int BOARD_NUM;
     private int BOARD_RE_REF;
     private int BOARD_RE_LEV;
     private int BOARD_RE_SEQ;
     private int BOARD_READCOUNT;
-    private MultipartFile uploadfile;
-
-    private String BOARD_ORIGINAL;
     private String BOARD_DATE;
-
     private int CNT;
+
+    private List<Table_Files> files; // 파일 목록
 
     public String getBOARD_NAME() {
         return BOARD_NAME;
@@ -27,14 +23,6 @@ public class Board {
 
     public void setBOARD_NAME(String BOARD_NAME) {
         this.BOARD_NAME = BOARD_NAME;
-    }
-
-    public String getBOARD_PASS() {
-        return BOARD_PASS;
-    }
-
-    public void setBOARD_PASS(String BOARD_PASS) {
-        this.BOARD_PASS = BOARD_PASS;
     }
 
     public String getBOARD_SUBJECT() {
@@ -51,14 +39,6 @@ public class Board {
 
     public void setBOARD_CONTENT(String BOARD_CONTENT) {
         this.BOARD_CONTENT = BOARD_CONTENT;
-    }
-
-    public String getBOARD_FILE() {
-        return BOARD_FILE;
-    }
-
-    public void setBOARD_FILE(String BOARD_FILE) {
-        this.BOARD_FILE = BOARD_FILE;
     }
 
     public int getBOARD_NUM() {
@@ -101,22 +81,6 @@ public class Board {
         this.BOARD_READCOUNT = BOARD_READCOUNT;
     }
 
-    public MultipartFile getUploadfile() {
-        return uploadfile;
-    }
-
-    public void setUploadfile(MultipartFile uploadfile) {
-        this.uploadfile = uploadfile;
-    }
-
-    public String getBOARD_ORIGINAL() {
-        return BOARD_ORIGINAL;
-    }
-
-    public void setBOARD_ORIGINAL(String BOARD_ORIGINAL) {
-        this.BOARD_ORIGINAL = BOARD_ORIGINAL;
-    }
-
     public String getBOARD_DATE() {
         return BOARD_DATE;
     }
@@ -133,23 +97,28 @@ public class Board {
         this.CNT = CNT;
     }
 
+    public List<Table_Files> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<Table_Files> files) {
+        this.files = files;
+    }
+
     @Override
     public String toString() {
-        return "Freeboard{" +
+        return "Board{" +
                 "BOARD_NAME='" + BOARD_NAME + '\'' +
-                ", BOARD_PASS='" + BOARD_PASS + '\'' +
                 ", BOARD_SUBJECT='" + BOARD_SUBJECT + '\'' +
                 ", BOARD_CONTENT='" + BOARD_CONTENT + '\'' +
-                ", BOARD_FILE='" + BOARD_FILE + '\'' +
                 ", BOARD_NUM=" + BOARD_NUM +
                 ", BOARD_RE_REF=" + BOARD_RE_REF +
                 ", BOARD_RE_LEV=" + BOARD_RE_LEV +
                 ", BOARD_RE_SEQ=" + BOARD_RE_SEQ +
                 ", BOARD_READCOUNT=" + BOARD_READCOUNT +
-                ", uploadfile=" + uploadfile +
-                ", BOARD_ORIGINAL='" + BOARD_ORIGINAL + '\'' +
                 ", BOARD_DATE='" + BOARD_DATE + '\'' +
                 ", CNT=" + CNT +
+                ", files=" + files +
                 '}';
     }
 }
