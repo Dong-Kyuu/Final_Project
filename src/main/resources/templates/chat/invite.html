@@ -18,7 +18,7 @@
             <div class="w-full border-b border-blue-100">
                 <div class="p-6 flex flex-col space-y-4 invite-title">
                     
-                    <h2 class="text-2ml font-semibold text-gray-900"><i class="material-icons invite-screen-back-arrow">navigate_before</i>대화상대 초대</h2>
+                    <h2 class="text-2ml font-semibold text-gray-900"><i class="material-icons invite-screen-back-arrow">navigate_before</i>[[${type}]]</h2>
                         <!-- 				<p class="text-xs text-gray-400">An email invite will be sent on your behalf to the selected team members.</p> -->
                 </div>
             </div>
@@ -112,6 +112,13 @@
     </div>
 
     <script>
+        /** 2024-05-21, 채팅방 유저 관리 화면, < 클릭 시 */
+        $(".invite-screen-back-arrow").click(function () {
+            $(".invite-screen").css("display", "none");
+            $(".messages-area").css("display", "block");
+            $(".text-media-area").css("display", "block");
+        });
+
         function loadMembers() {
             return {
                 selectedMembers: [],

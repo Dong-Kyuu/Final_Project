@@ -27,8 +27,26 @@ public class ChatController {
     static int roomNumber = 0;
 
     @RequestMapping(value = "chatview")
-    public String test() {
+    public String chatView() {
         return "chat/chat";
+    }
+
+    @RequestMapping(value = "inviteAdd")
+    public ModelAndView inviteAdd(ModelAndView mv,
+                            @RequestParam(value = "type") String type) {
+        mv.setViewName("chat/invite");
+        mv.addObject("type", type);
+        return mv;
+    }
+
+    @RequestMapping(value = "inviteDel")
+    public String inviteDel() {
+        return "chat/invite";
+    }
+
+    @RequestMapping(value = "roomInvite")
+    public String roomInvite() {
+        return "chat/roomInvite";
     }
 
     @RequestMapping("testchat")
