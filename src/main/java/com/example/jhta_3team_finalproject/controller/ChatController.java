@@ -31,17 +31,24 @@ public class ChatController {
         return "chat/chat";
     }
 
-    @RequestMapping(value = "inviteAdd")
-    public ModelAndView inviteAdd(ModelAndView mv,
-                            @RequestParam(value = "type") String type) {
-        mv.setViewName("chat/invite");
+    @RequestMapping(value = "chatUserAddView")
+    public ModelAndView chatUserAddView(ModelAndView mv,
+                                  @RequestParam(value = "type") String type,
+                                  @RequestParam(value = "name") String name) {
+        mv.setViewName("chatUserMgr");
         mv.addObject("type", type);
+        mv.addObject("name", name);
         return mv;
     }
 
-    @RequestMapping(value = "inviteDel")
-    public String inviteDel() {
-        return "chat/invite";
+    @RequestMapping(value = "chatUserMgrView")
+    public ModelAndView chatUserMgrView(ModelAndView mv,
+                                  @RequestParam(value = "type") String type,
+                                  @RequestParam(value = "name") String name) {
+        mv.setViewName("chatUserMgr");
+        mv.addObject("type", type);
+        mv.addObject("name", name);
+        return mv;
     }
 
     @RequestMapping(value = "roomInvite")

@@ -3,7 +3,7 @@
 <th:block th:fragment="roomInviteFragment">
 <head>
     <meta charset="UTF-8" />
-    <!-- 2024-05-28, 채팅방 초대 화면 -->
+    <!-- 2024-05-28, 채팅방 생성 + 초대, 채팅방 삭제 화면 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link th:href="@{/css/chat/chat-invite.css}" rel="stylesheet" type="text/css"/>
@@ -99,7 +99,8 @@
                 <div
                     class="absolute bottom-0 w-full h-24 flex justify-center items-center bg-white border-t border-blue-100">
                     <div class="py-2 px-4 bg-gray-200 text-white rounded inline-block outline-none cursor-default"
-                        :class="{'bg-blue-500 cursor-pointer hover:bg-blue-600' : selectedMembers.length > 0}">
+                        :class="{'bg-blue-500 cursor-pointer hover:bg-blue-600' : selectedMembers.length > 0}"
+                        style="margin-bottom: 10px;">
                         <span>초대</span>
                         <span x-show="selectedMembers.length !== 0" x-text="selectedMembers.length"></span>
                         <span x-text="selectedMembers.length > 0 ? '명' : ''"></span>

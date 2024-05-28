@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<th:block th:fragment="inviteFragment">
+<th:block th:fragment="chatUserMgrFragment">
 <head>
     <meta charset="UTF-8" />
-    <!-- 2024-05-28, 채팅방 초대 화면 -->
+    <!-- 2024-05-28, 채팅방 인원 초대, 관리 화면 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link th:href="@{/css/chat/chat-invite.css}" rel="stylesheet" type="text/css"/>
@@ -18,7 +18,7 @@
             <div class="w-full border-b border-blue-100">
                 <div class="p-6 flex flex-col space-y-4 invite-title">
                     
-                    <h2 class="text-2ml font-semibold text-gray-900"><i class="material-icons invite-screen-back-arrow">navigate_before</i>[[${type}]]</h2>
+                    <h2 class="text-2ml font-semibold text-gray-900"><i class="material-icons invite-screen-back-arrow">navigate_before</i>[[${name}]]</h2>
                         <!-- 				<p class="text-xs text-gray-400">An email invite will be sent on your behalf to the selected team members.</p> -->
                 </div>
             </div>
@@ -99,7 +99,8 @@
                 <div
                     class="absolute bottom-0 w-full h-24 flex justify-center items-center bg-white border-t border-blue-100">
                     <div class="py-2 px-4 bg-gray-200 text-white rounded inline-block outline-none cursor-default"
-                        :class="{'bg-blue-500 cursor-pointer hover:bg-blue-600' : selectedMembers.length > 0}">
+                        :class="{'bg-blue-500 cursor-pointer hover:bg-blue-600' : selectedMembers.length > 0}"
+                        style="margin-bottom: 10px;">
                         <span>초대</span>
                         <span x-show="selectedMembers.length !== 0" x-text="selectedMembers.length"></span>
                         <span x-text="selectedMembers.length > 0 ? '명' : ''"></span>
