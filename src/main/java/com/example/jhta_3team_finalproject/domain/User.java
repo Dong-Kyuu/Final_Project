@@ -20,6 +20,7 @@ public class User implements UserDetails {
     private  String created_at;
     private String updated_at;
     private String profile_picture;
+    private String chat_status_msg;
     private String auth="ROLE_MEMBER";
 
     @Override
@@ -49,6 +50,14 @@ public class User implements UserDetails {
         roles.add(new SimpleGrantedAuthority(this.getAuth()));
 
         return roles;
+    }
+
+    public String getChat_status_msg() {
+        return chat_status_msg;
+    }
+
+    public void setChat_status_msg(String chat_status_msg) {
+        this.chat_status_msg = chat_status_msg;
     }
 
     public String getProfile_picture() {return profile_picture;}
