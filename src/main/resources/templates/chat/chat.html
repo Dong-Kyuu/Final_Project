@@ -116,7 +116,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <ul class="touch-y touch-chat">
+                                <ul class="touch-y touch-chatroom">
                                     <li>
                                         <div class="sender-image">
                                             <img
@@ -1299,7 +1299,6 @@
                 },
                 success: function (rdata) {
                     console.log(rdata);
-                    //$(".touch-friend").show();
                     $(".touch-chatroom").empty();
                     let output = '';
                     $(rdata).each(function () {
@@ -1310,22 +1309,7 @@
                             // 업로드된 프로필을 보여주도록 한다.
                         }
 
-                        output += "<li>";
-                        output += "    <input type='hidden' name='room_num' value=''/>";
-                        output += "    <div class='sender-image'>";
-                        output += "       " + img;
-                        output += "    </div>";
-                        output += "    <div class='mes-detail'>";
-                        output += "        <div class='mes-col1 chat-friend-list-col1'>";
-                        output += "            <div class='sender-name'>";
-                        output += "                "+ this.department + " - " + this.name;
-                        output += "            </div>";
-                        output += "            <div class='mes-preview'>";
-                        output += "                " + this.chat_status_msg;
-                        output += "            </div>";
-                        output += "        </div>";
-                        output += "    </div>";
-                        output += "</li>";
+
 
                     }); // each end
                     $(".touch-chatroom").html(output);

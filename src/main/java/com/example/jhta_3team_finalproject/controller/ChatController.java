@@ -51,11 +51,30 @@ public class ChatController {
         return chattingService.chatUserList(chat_user_id);
     }
 
+
+    @RequestMapping("getUserChatRoomList")
+    public @ResponseBody List<ChatRoom> getUserChatRoomList(@RequestParam HashMap<String, String> params) throws Exception {
+        log.info("아이디별 채팅방 구하기");
+        String chat_user_id = params.get("chat_user_id");
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.setChat_session_id(chat_user_id);
+        chatRoomList = chattingService.searchRoomUser(chatRoom);
+        return chatRoomList;
+    }
+
+    @RequestMapping("getRoom")
+    public @ResponseBody List<ChatRoom> getRoom(@RequestParam HashMap<Object, Object> params) throws Exception {
+        log.info("관리자용 채팅방 전체 구하기");
+        ChatRoom chatRoom_empty = new ChatRoom();
+        chatRoomList = chattingService.searchRoom(chatRoom_empty);
+        return chatRoomList;
+    }
+
     @RequestMapping(value = "chatUserInviteView")
     public ModelAndView chatUserInviteView(ModelAndView mv,
-                                  @RequestParam(value = "type") String type,
-                                  @RequestParam(value = "name") String name,
-                                  @RequestParam(value = "userButton") String userButton) {
+                                           @RequestParam(value = "type") String type,
+                                           @RequestParam(value = "name") String name,
+                                           @RequestParam(value = "userButton") String userButton) {
         mv.setViewName("chat/chatUserMgr");
         mv.addObject("type", type);
         mv.addObject("name", name);
@@ -65,10 +84,10 @@ public class ChatController {
 
     @RequestMapping(value = "chatUserMgrView")
     public ModelAndView chatUserMgrView(ModelAndView mv,
-                                  @RequestParam(value = "type") String type,
-                                  @RequestParam(value = "name") String name,
-                                  @RequestParam(value = "roomButton") String roomButton,
-                                  @RequestParam(value = "userButton") String userButton) {
+                                        @RequestParam(value = "type") String type,
+                                        @RequestParam(value = "name") String name,
+                                        @RequestParam(value = "roomButton") String roomButton,
+                                        @RequestParam(value = "userButton") String userButton) {
         mv.setViewName("chat/chatUserMgr");
         mv.addObject("type", type);
         mv.addObject("name", name);
@@ -79,18 +98,6 @@ public class ChatController {
 
     @RequestMapping(value = "chatRoomCreateView")
     public ModelAndView chatRoomCreateView(ModelAndView mv,
-                                        @RequestParam(value = "type") String type,
-                                        @RequestParam(value = "name") String name,
-                                        @RequestParam(value = "roomButton") String roomButton) {
-        mv.setViewName("chat/roomMgr");
-        mv.addObject("type", type);
-        mv.addObject("name", name);
-        mv.addObject("roomButton", roomButton);
-        return mv;
-    }
-
-    @RequestMapping(value = "chatRoomExitView")
-    public ModelAndView chatRoomExitView(ModelAndView mv,
                                            @RequestParam(value = "type") String type,
                                            @RequestParam(value = "name") String name,
                                            @RequestParam(value = "roomButton") String roomButton) {
@@ -101,24 +108,16 @@ public class ChatController {
         return mv;
     }
 
-    @RequestMapping("getUserChatRoomList")
-    public @ResponseBody List<ChatRoom> getUserChatRoomList(@RequestParam HashMap<String, String> params) throws Exception {
-        log.info("아이디별 채팅방 구하기");
-
-        String chat_user_id = params.get("chat_user_id");
-
-        ChatRoom chatRoom_user = new ChatRoom();
-        chatRoom_user.setChat_session_id(chat_user_id);
-        chatRoomList = chattingService.searchRoomUser(chatRoom_user);
-        return chatRoomList;
-    }
-
-    @RequestMapping("getRoom")
-    public @ResponseBody List<ChatRoom> getRoom(@RequestParam HashMap<Object, Object> params) throws Exception {
-        log.info("관리자용 채팅방 전체 구하기");
-        ChatRoom chatRoom_empty = new ChatRoom();
-        chatRoomList = chattingService.searchRoom(chatRoom_empty);
-        return chatRoomList;
+    @RequestMapping(value = "chatRoomExitView")
+    public ModelAndView chatRoomExitView(ModelAndView mv,
+                                         @RequestParam(value = "type") String type,
+                                         @RequestParam(value = "name") String name,
+                                         @RequestParam(value = "roomButton") String roomButton) {
+        mv.setViewName("chat/roomMgr");
+        mv.addObject("type", type);
+        mv.addObject("name", name);
+        mv.addObject("roomButton", roomButton);
+        return mv;
     }
 
     @RequestMapping("createRoom")
