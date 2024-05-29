@@ -35,6 +35,7 @@ public class User implements UserDetails {
 
         return roles;
     }
+
     @Override
     public String toString() {
         return "User{" +
@@ -65,9 +66,7 @@ public class User implements UserDetails {
     }
 
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<SimpleGrantedAuthority> roles= new ArrayList<SimpleGrantedAuthority>();}
+
 
     public String getAge() {
         return age;
@@ -80,15 +79,7 @@ public class User implements UserDetails {
     public String getPhone_number() {
         return phone_number;
     }
-    public String getChat_status_msg() {
-        return chat_status_msg;
-    }
-
-    public void setChat_status_msg(String chat_status_msg) {
-        this.chat_status_msg = chat_status_msg;
-    }
-
-    public String getProfile_picture() {return profile_picture;}
+    public String getChat_status_msg() {return chat_status_msg;}public void setChat_status_msg(String chat_status_msg) {this.chat_status_msg = chat_status_msg;}
 
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
