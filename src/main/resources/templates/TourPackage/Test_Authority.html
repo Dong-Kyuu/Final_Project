@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>승인 요청 페이지</title>
+  <!-- 부트스트랩 CSS 링크 -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .container {
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>여행 매니저에게 승인 요청</h2>
+  <hr>
+  <!-- 여행 일정 변경 요청 리스트 -->
+  <div class="card">
+    <div class="card-header">
+      여행 일정 변경 요청
+    </div>
+    <div class="card-body">
+      <ul class="list-group">
+        <!-- 여행 일정 변경 요청 리스트 아이템 -->
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-6">
+              <h5 class="mb-1">상품 등록 승인 #1</h5>
+              <p class="mb-1">내용: 서유럽 클래식 15일 / 2024.05.16 / 340만원</p>
+            </div>
+            <div class="col-sm-6 text-right">
+              <!-- 승인 또는 거부 버튼 -->
+              <button type="button" class="btn btn-success mr-2">승인</button>
+              <button type="button" class="btn btn-danger">거부</button>
+            </div>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-sm-6">
+              <h5 class="mb-1">상품 변경 승인 #2</h5>
+              <p class="mb-1">변경 사항 설명: 가격변경 380만원</p>
+            </div>
+            <div class="col-sm-6 text-right">
+              <!-- 승인 또는 거부 버튼 -->
+              <button type="button" class="btn btn-success mr-2">승인</button>
+              <button type="button" class="btn btn-danger">거부</button>
+            </div>
+          </div>
+        </li>
+        <!-- 기타 요청들 추가 -->
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 부트스트랩 JS 링크 -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
