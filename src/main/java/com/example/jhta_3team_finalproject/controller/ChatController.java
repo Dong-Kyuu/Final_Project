@@ -51,9 +51,14 @@ public class ChatController {
         return mv;
     }
 
-    @RequestMapping(value = "roomInvite")
-    public String roomInvite() {
-        return "chat/roomInvite";
+    @RequestMapping(value = "roomMgr")
+    public ModelAndView roomMgrView(ModelAndView mv,
+                                        @RequestParam(value = "type") String type,
+                                        @RequestParam(value = "name") String name) {
+        mv.setViewName("roomMgr");
+        mv.addObject("type", type);
+        mv.addObject("name", name);
+        return mv;
     }
 
     @RequestMapping("testchat")
