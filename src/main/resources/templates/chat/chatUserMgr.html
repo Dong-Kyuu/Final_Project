@@ -1,26 +1,58 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<th:block th:fragment="inviteFragment">
-    <head>
-        <meta charset="UTF-8"/>
-        <!-- 2024-05-28, 채팅방 초대 화면 -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link th:href="@{/css/chat/chat-invite.css}" rel="stylesheet" type="text/css"/>
-        <title>title</title>
-    </head>
+<th:block th:fragment="chatUserMgrFragment">
+<head>
+    <meta charset="UTF-8" />
+    <!-- 2024-05-28, 채팅방 인원 초대, 관리 화면 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+<!--    <link th:href="@{/css/chat/chat-invite.css}" rel="stylesheet" type="text/css"/>-->
+    <style>
+        #memberList::-webkit-scrollbar {
+            display: none
+        }
 
-    <body>
-    <div class="bg-gray-50 h-screen flex justify-center items-center invite-screen">
+        .customShadow {
+            /* box-shadow: 0px 80px 63px -66px rgba(0, 0, 0, 0.1); */
+        }
+
+        .chat-mgr-screen {
+            width: 310px;
+            height: 547px;
+            display: none;
+            z-index: 99999;
+            background-color: white;
+        }
+
+        .invite-card {
+            height: 547px;
+            left: 5px;
+        }
+
+        .chat-mgr-screen-back-arrow {
+            font-size: 35px;
+            vertical-align: middle;
+        }
+
+        .invite-title {
+            padding-bottom: 10px;
+            padding-left: 5px;
+            padding-top: 10px;
+        }
+    </style>
+    <title>title</title>
+</head>
+
+<body>
+    <div class="bg-gray-50 h-screen flex justify-center items-center chat-mgr-screen">
         <!-- Card -->
         <div class="invite-card w-full h-5/6 max-w-lg flex-auto flex-col space-y-4 bg-white rounded-2xl overflow-hidden customShadow relative">
             <!-- Titling -->
             <div class="w-full border-b border-blue-100">
                 <div class="p-6 flex flex-col space-y-4 invite-title">
-
-                    <h2 class="text-2ml font-semibold text-gray-900"><i class="material-icons invite-screen-back-arrow">navigate_before</i>[[${type}]]
-                    </h2>
-                    <!-- 				<p class="text-xs text-gray-400">An email invite will be sent on your behalf to the selected team members.</p> -->
+                    
+                    <h2 class="text-2ml font-semibold text-gray-900"><i class="material-icons chat-mgr-screen-back-arrow">navigate_before</i>[[${name}]]</h2>
+                        <!-- 				<p class="text-xs text-gray-400">An email invite will be sent on your behalf to the selected team members.</p> -->
                 </div>
             </div>
 
@@ -30,28 +62,28 @@
                 <!-- Search Input -->
                 <div class="py-2 px-6 relative flex flex-col justify-center">
                     <svg class="absolute left-10" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                         viewBox="0 0 16 16">
+                        viewBox="0 0 16 16">
                         <path class="fill-current text-gray-400"
-                              d="M6.4 1.6a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm-4.525.275a6.4 6.4 0 019.58 8.45l4.31 4.31a.8.8 0 01-1.13 1.13l-4.31-4.31A6.399 6.399 0 010 6.4a6.4 6.4 0 011.875-4.525z"/>
+                            d="M6.4 1.6a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm-4.525.275a6.4 6.4 0 019.58 8.45l4.31 4.31a.8.8 0 01-1.13 1.13l-4.31-4.31A6.399 6.399 0 010 6.4a6.4 6.4 0 011.875-4.525z" />
                     </svg>
-                    <input type="text" placeholder="Search.." x-ref="searchField" x-model="search"
-                           x-on:keydown.window.prevent.slash="$refs.searchField.focus()"
-                           class="border border-blue-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-blue-400 focus:border-blue-400 focus:bg-blue-50 focus:bg-opacity-25"/>
+                    <input type="text" placeholder="검색" x-ref="searchField" x-model="search"
+                        x-on:keydown.window.prevent.slash="$refs.searchField.focus()"
+                        class="border border-blue-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-blue-400 focus:border-blue-400 focus:bg-blue-50 focus:bg-opacity-25" />
                 </div>
 
                 <!-- Member List -->
                 <div id="memberList" class="flex-grow flex flex-col py-2 px-6 -mt-2 pb-72 overflow-scroll">
                     <template x-for="member in filteredMembers" :key="member">
                         <div class="flex p-2 mb-2 space-x-2 rounded-lg cursor-pointer hover:bg-blue-50"
-                             :class="{'bg-blue-50 ring-2 ring-blue-400 ring-offset-1 ring-offset-white': selectedMembers.includes(member.id)}"
-                             x-on:click="selectedMembers.includes(member.id) ? selectedMembers.splice(selectedMembers.indexOf(member.id), 1) : selectedMembers.push(member.id)">
-                            <img :src="`${member.photo}`" class="rounded-full" width="36px" style="height: 36px;"/>
+                            :class="{'bg-blue-50 ring-2 ring-blue-400 ring-offset-1 ring-offset-white': selectedMembers.includes(member.id)}"
+                            x-on:click="selectedMembers.includes(member.id) ? selectedMembers.splice(selectedMembers.indexOf(member.id), 1) : selectedMembers.push(member.id)">
+                            <img :src="`${member.photo}`" class="rounded-full" width="36px" style="height: 36px;" />
                             <div>
                                 <p class="font-medium text-gray-900" x-text="member.name"></p>
                                 <p class="text-xs text-gray-400">
                                     <span class="inline-block mr-2" x-text="member.email"></span>
                                     <span :class="{ 'text-green-600 font-medium': member.status === 'online' }"
-                                          x-text="member.status"></span>
+                                        x-text="member.status"></span>
                                 </p>
                             </div>
                         </div>
@@ -98,10 +130,11 @@
 
                 <!-- Fixed Footer -->
                 <div
-                        class="absolute bottom-0 w-full h-24 flex justify-center items-center bg-white border-t border-blue-100">
+                    class="absolute bottom-0 w-full h-24 flex justify-center items-center bg-white border-t border-blue-100">
                     <div class="py-2 px-4 bg-gray-200 text-white rounded inline-block outline-none cursor-default"
-                         :class="{'bg-blue-500 cursor-pointer hover:bg-blue-600' : selectedMembers.length > 0}">
-                        <span>초대</span>
+                        :class="{'bg-blue-500 cursor-pointer hover:bg-blue-600' : selectedMembers.length > 0}"
+                        style="margin-bottom: 10px;">
+                        <span>[[${userButton}]]</span>
                         <span x-show="selectedMembers.length !== 0" x-text="selectedMembers.length"></span>
                         <span x-text="selectedMembers.length > 0 ? '명' : ''"></span>
                     </div>
@@ -113,9 +146,9 @@
     </div>
 
     <script>
-        /** 2024-05-21, 채팅방 유저 관리 화면, < 클릭 시 */
-        $(".invite-screen-back-arrow").click(function () {
-            $(".invite-screen").css("display", "none");
+        /** 2024-05-28, 채팅방 유저 관리 화면, < 버튼 클릭 시 */
+        $(".chat-mgr-screen-back-arrow").click(function () {
+            $(".chat-mgr-screen").fadeOut(300).css("display", "none");
             $(".messages-area").css("display", "block");
             $(".text-media-area").css("display", "block");
         });
@@ -211,6 +244,6 @@
             }
         ]
     </script>
-    </body>
+</body>
 
 </html>

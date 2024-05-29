@@ -26,6 +26,25 @@
         VALUES (NULL, #{room_name}, #{chat_session_id}, now())
     </insert>
 
+    <!-- 채팅 유저 리스트 가져오기 -->
+    <select id="chatUserList" resultType="user">
+        SELECT id, name, department, profile_picture, chat_status_msg FROM users WHERE id NOT IN (#{chat_user_id});
+    </select>
+
+    <!-- 채팅 자신의 유저 리스트 가져오기 -->
+    <select id="chatUserProfile" resultType="user">
+        SELECT id, name, department, profile_picture, chat_status_msg, email, phone_number FROM users WHERE id IN (#{chat_user_id});
+    </select>
+
+    <!-- 채팅 프로필 상태 메시지 변경 -->
+    <update id="chatUserProfileMsgUpdate">
+        UPDATE users
+        SET chat_status_msg = #{chat_status_msg}
+        <where>
+            id = #{chat_user_id}
+        </where>
+    </update>
+
     <!-- 방목록 가져오기 -->
     <select id="searchRoom" resultType="chatRoom">
         select *

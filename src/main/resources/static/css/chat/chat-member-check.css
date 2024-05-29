@@ -1,273 +1,273 @@
-/* variables */
-:root {
-    --main-color: #4f97e5;
-    --connection-status: #4FE02B;
-    --time-status: #DAFFED;
-    --text-primary-color: #4D4C4C;
-}
-
-.main-container {
-    background-color: white;
-    max-width: 400px;
-    height: 300px;
-    /* margin: 20px auto; */
-    /* border: 1px solid lightgrey; */
-    /* -webkit-box-shadow: 0px 0px 11px -6px rgb(0 0 0 / 50%); */
-    overflow: hidden;
-}
-
-.back-arrow-nav {
-    width: 30px;
-}
-
-.nav-profile-h1 {
-    font-size: 16px;
-    font-weight: 700;
-    color: #494949;
-}
-
-.add-icon {
-    flex-shrink: 0;
-}
-
-.user-avatar,
-.add-icon {
-    width: 40px !important;
-    height: 40px !important;
-    border-radius: 50%;
-}
-
-.user-avatar {
-    position: relative;
-
-    &:before {
-        content: "";
-        position: absolute;
-        right: -1px;
-        bottom: 10px;
-        z-index: 200;
-        background-color: var(--connection-status);
-        border-radius: 50%;
-        height: 14px;
-        width: 14px;
-        bottom: 3px;
-        border: 3px solid white;
+    /* variables */
+    :root {
+        --main-color: #4f97e5;
+        --connection-status: #4FE02B;
+        --time-status: #DAFFED;
+        --text-primary-color: #4D4C4C;
     }
 
-    &.offline {
-        &:before {
-            background-color: transparent;
-            border: none;
-        }
+    .main-container {
+        background-color: white;
+        max-width: 400px;
+        height: 300px;
+        /* margin: 20px auto; */
+        /* border: 1px solid lightgrey; */
+        /* -webkit-box-shadow: 0px 0px 11px -6px rgb(0 0 0 / 50%); */
+        overflow: hidden;
     }
 
-    &.small {
-        width: 40px !important;
-        height: 40px !important;
+    .back-arrow-nav {
+        width: 30px;
     }
 
-    &.hasStory {
-        &:after {
-            position: absolute;
-            content: "";
-            border: 2px solid var(--main-color);
-            height: 64px;
-            width: 64px;
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-    }
-
-}
-
-.top-container {
-    -webkit-box-shadow: -1px -2px 11px -6px rgb(0 0 0 / 50%);
-    height: 87px;
-
-}
-
-.top-content {
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 90px;
-}
-
-.activity-container {
-    display: flex;
-    flex-direction: row;
-    margin: 0px 20px 0px 20px;
-    max-width: 100%;
-    overflow-x: scroll;
-    height: 110px;
-    scroll-behavior: smooth;
-
-    /* 2024-05-17, 스크롤바 꾸미기 작업 */
-
-    &::-webkit-scrollbar {
-        width: 2px;
-        /* width: 0;
-       Remove scrollbar space
-       background: transparent;
-       Optional: just make scrollbar invisible  */
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: rgba(80, 152, 230);
-        /* 스크롤바 색상 */
-        border-radius: 2px;
-        /* 스크롤바 둥근 테두리 */
-    }
-
-    &::-webkit-scrollbar-track {
-        background: rgba(80, 152, 230, .1);
-        /*스크롤바 뒷 배경 색상*/
-        border-radius: 2px;
+    .nav-profile-h1 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #494949;
     }
 
     .add-icon {
-        margin-top: 16px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: var(--main-color);
+        flex-shrink: 0;
+    }
+
+    .user-avatar,
+    .add-icon {
+        width: 40px !important;
+        height: 40px !important;
         border-radius: 50%;
-        margin-right: 18px;
-        transition: 0.2s;
-
-        svg {
-            /* width: 26px !important; */
-            height: auto;
-        }
-
-        &:active {
-            transform: scale(0.9);
-        }
     }
 
-    .remove-icon {
-        background-color: #FF6666;
-        left: 5px;
-    }
-
-    .avatar-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        margin-right: 18px;
-        transition: 0.2s;
-
-        p {
-            margin-top: 5px;
-            flex: 0 0 auto;
-            font-size: 11px;
-        }
-
-        &:active {
-            transform: scale(0.9);
-        }
-
-    }
-
-
-}
-
-.user-message-container {
-    margin: 0 20px;
-    position: relative;
-    top: -15px;
-    margin-bottom: 70px;
-
-    .card-item {
-        align-items: center;
-        border-bottom: 1px solid #e8e7e7;
-        padding-bottom: 8px;
-        padding-top: 8px;
-        max-height: 70px;
-        overflow: hidden;
-
-        &:last-child {
-            border-bottom: none;
-        }
-    }
-
-    .card-item,
-    .inner-left-item {
-        display: flex;
-
-        .inner-left-item {
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .user-text {
-            font-size: 14px;
-            color: #767676;
-        }
-
-        .user-name {
-            font-size: 14px;
-            font-weight: 800;
-        }
-
-        .hour-info {
-            font-size: 10px;
-        }
-
-        .right-content {
-            flex: 1;
-            margin-left: 12px;
-        }
-    }
-}
-
-.scroll-wrapper {
-    overflow: scroll;
-    height: inherit;
-
-    &::-webkit-scrollbar {
-        width: 0;
-    / / Remove scrollbar space background: transparent;
-    / / Optional: just make scrollbar invisible
-    }
-
-    .searchbar-container {
+    .user-avatar {
         position: relative;
-        border: 1px solid #EDEDED;
-        border-radius: 25px;
-        height: 40px;
-        overflow: hidden;
-        margin: 0 20px;
-        margin-top: 15px;
 
-        svg {
+        &:before {
+            content: "";
             position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            left: 12px;
-            color: #a8a8a8;
+            right: -1px;
+            bottom: 10px;
+            z-index: 200;
+            background-color: var(--connection-status);
+            border-radius: 50%;
+            height: 14px;
+            width: 14px;
+            bottom: 3px;
+            border: 3px solid white;
         }
 
-        input {
-            background-color: #f9f9f9;
-            height: 100%;
-            width: 100%;
-            border: none;
-            padding-left: 44px;
+        &.offline {
+            &:before {
+                background-color: transparent;
+                border: none;
+            }
+        }
 
-            &:focus {
-                outline-width: 0;
+        &.small {
+            width: 40px !important;
+            height: 40px !important;
+        }
+
+        &.hasStory {
+            &:after {
+                position: absolute;
+                content: "";
+                border: 2px solid var(--main-color);
+                height: 40px;
+                width: 40px;
+                border-radius: 50%;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+    }
+
+    .top-container {
+        -webkit-box-shadow: -1px -2px 11px -6px rgb(0 0 0 / 50%);
+        height: 87px;
+
+    }
+
+    .top-content {
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 90px;
+    }
+
+    .activity-container {
+        display: flex;
+        flex-direction: row;
+        margin: 0px 20px 0px 20px;
+        max-width: 100%;
+        overflow-x: scroll;
+        height: 110px;
+        scroll-behavior: smooth;
+
+        /* 2024-05-17, 스크롤바 꾸미기 작업 */
+        &::-webkit-scrollbar {
+            width: 2px;
+            /* width: 0;
+           Remove scrollbar space 
+           background: transparent;
+           Optional: just make scrollbar invisible  */
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(80, 152, 230);
+            /* 스크롤바 색상 */
+            border-radius: 2px;
+            /* 스크롤바 둥근 테두리 */
+        }
+
+        &::-webkit-scrollbar-track {
+            background: rgba(80, 152, 230, .1);
+            /*스크롤바 뒷 배경 색상*/
+            border-radius: 2px;
+        }
+
+        .add-icon {
+            margin-top: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--main-color);
+            border-radius: 50%;
+            margin-right: 18px;
+            transition: 0.2s;
+
+            svg {
+                /* width: 26px !important; */
+                height: auto;
             }
 
-            &::placeholder {
-                color: #B9B9B9;
-                font-family: 'Nunito', sans-serif !important;
-                font-size: 18px;
+            &:active {
+                transform: scale(0.9);
+            }
+        }
+
+        .remove-icon {
+            background-color: #FF6666;
+            left: 5px;
+        }
+
+        .avatar-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-right: 18px;
+            transition: 0.2s;
+
+            p {
+                margin-top: 5px;
+                flex: 0 0 auto;
+                font-size: 11px;
+            }
+
+            &:active {
+                transform: scale(0.9);
+            }
+
+        }
+
+
+    }
+
+    .user-message-container {
+        margin: 0 20px;
+        position: relative;
+        top: -15px;
+        margin-bottom: 70px;
+
+        .card-item {
+            align-items: center;
+            border-bottom: 1px solid #e8e7e7;
+            padding-bottom: 8px;
+            padding-top: 8px;
+            max-height: 70px;
+            overflow: hidden;
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+
+        .card-item,
+        .inner-left-item {
+            display: flex;
+
+            .inner-left-item {
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .user-text {
+                font-size: 14px;
+                color: #767676;
+            }
+
+            .user-name {
+                font-size: 14px;
+                font-weight: 800;
+            }
+
+            .hour-info {
+                font-size: 10px;
+            }
+
+            .right-content {
+                flex: 1;
+                margin-left: 12px;
             }
         }
     }
-}
+
+    .scroll-wrapper {
+        overflow: scroll;
+        height: inherit;
+
+        &::-webkit-scrollbar {
+            width: 0;
+            // Remove scrollbar space 
+            background: transparent;
+            // Optional: just make scrollbar invisible 
+        }
+
+        .searchbar-container {
+            position: relative;
+            border: 1px solid #EDEDED;
+            border-radius: 25px;
+            height: 40px;
+            overflow: hidden;
+            margin: 0 20px;
+            margin-top: 15px;
+
+            svg {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 12px;
+                color: #a8a8a8;
+            }
+
+            input {
+                background-color: #f9f9f9;
+                height: 100%;
+                width: 100%;
+                border: none;
+                padding-left: 44px;
+
+                &:focus {
+                    outline-width: 0;
+                }
+
+                &::placeholder {
+                    color: #B9B9B9;
+                    font-family: 'Nunito', sans-serif !important;
+                    font-size: 18px;
+                }
+            }
+        }
+    }

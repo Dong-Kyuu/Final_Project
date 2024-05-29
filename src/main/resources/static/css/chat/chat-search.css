@@ -25,7 +25,7 @@
 .chat-search-input {
     position: absolute;
     right: 40px;
-    top: 19px;
+    top: 14px;
     box-sizing: border-box;
     width: 0px;
     height: 23px;
@@ -65,7 +65,7 @@
     /*background: #4f97e5;*/
     border-radius: 50%;
     right: 40px;
-    top: 18px;
+    top: 13px;
     cursor: pointer;
     text-align: center;
     line-height: 80px;
