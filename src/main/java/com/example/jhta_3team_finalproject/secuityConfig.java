@@ -49,11 +49,11 @@ public class secuityConfig {
         // 내가 만든 페이지로 이동합니다
         http.
                 formLogin((fo) -> fo.loginPage("/user/login")
-                .loginProcessingUrl("/user/loginProcess")
-                .usernameParameter("id")
-                .passwordParameter("password")
-                .successHandler(loginSuccessHandler)
-                .failureHandler(loginFailHandler));
+                        .loginProcessingUrl("/user/loginProcess")
+                        .usernameParameter("id")
+                        .passwordParameter("password")
+                        .successHandler(loginSuccessHandler)
+                        .failureHandler(loginFailHandler));
 
 
         http.logout((fo) -> fo.logoutSuccessUrl("/user/login")
@@ -70,13 +70,13 @@ public class secuityConfig {
 
 
         http.authorizeHttpRequests((au)->au
-                        .requestMatchers("/user/list", "/user/delete")
-                        .hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/user/update","/user/info")
-                        .hasAnyAuthority("ROLE_ADMIN","ROLE_MEMBER")
-                        .requestMatchers("/board/**","/comment/**")
-                        .hasAnyAuthority("ROLE_ADMIN","ROLE_MEMBER")
-                        .requestMatchers("/**").permitAll()
+                .requestMatchers("/user/list", "/user/delete")
+                .hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/user/update","/user/info")
+                .hasAnyAuthority("ROLE_ADMIN","ROLE_MEMBER")
+                .requestMatchers("/board/**","/comment/**")
+                .hasAnyAuthority("ROLE_ADMIN","ROLE_MEMBER")
+                .requestMatchers("/**").permitAll()
         );
         http.exceptionHandling((ex)->ex.accessDeniedHandler(customAccessDeniedHandler));
 

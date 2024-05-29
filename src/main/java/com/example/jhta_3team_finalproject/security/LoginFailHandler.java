@@ -16,18 +16,18 @@ import jakarta.servlet.http.HttpSession;
 
 @Component
 //AuthenticationFailureHandler : 로그인 실패 후 처리할 작업를 해야 할 때 사용하는  인터페이스입니다.
-public class LoginFailHandler implements AuthenticationFailureHandler{
-	private static final Logger logger = LoggerFactory.getLogger(LoginFailHandler.class);
+public class LoginFailHandler implements AuthenticationFailureHandler {
+    private static final Logger logger = LoggerFactory.getLogger(LoginFailHandler.class);
 
-	public void onAuthenticationFailure(HttpServletRequest request,HttpServletResponse response,
-					AuthenticationException exception) throws IOException, ServletException{
-			HttpSession session =request.getSession();
-		
-			
-			logger.info(exception.getMessage());
-			logger.info("로그인 실패");
-			session.setAttribute("loginfail", "loginFailMsg");
-			String url =request.getContextPath()+"/member/login";
-			response.sendRedirect(url);
-	}
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+                                        AuthenticationException exception) throws IOException, ServletException {
+        HttpSession session = request.getSession();
+
+
+        logger.info(exception.getMessage());
+        logger.info("로그인 실패");
+        session.setAttribute("loginfail", "loginFailMsg");
+        String url = request.getContextPath() + "/member/login";
+        response.sendRedirect(url);
+    }
 }

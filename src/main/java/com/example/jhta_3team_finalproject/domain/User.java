@@ -17,10 +17,10 @@ public class User implements UserDetails {
     private String department;
     private String position;
     private int is_approved;
-    private  String created_at;
+    private String created_at;
     private String updated_at;
     private String profile_picture;
-    private String auth="ROLE_MEMBER";
+    private String auth = "ROLE_MEMBER";
 
     @Override
     public String toString() {
@@ -41,19 +41,23 @@ public class User implements UserDetails {
     }
 
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<SimpleGrantedAuthority> roles= new ArrayList<SimpleGrantedAuthority>();
+        Collection<SimpleGrantedAuthority> roles = new ArrayList<SimpleGrantedAuthority>();
 
         roles.add(new SimpleGrantedAuthority(this.getAuth()));
 
         return roles;
     }
 
-    public String getProfile_picture() {return profile_picture;}
+    public String getProfile_picture() {
+        return profile_picture;
+    }
 
-    public void setProfile_picture(String profile_picture) {this.profile_picture = profile_picture;}
+    public void setProfile_picture(String profile_picture) {
+        this.profile_picture = profile_picture;
+    }
+
     public String getUpdated_at() {
         return updated_at;
     }
@@ -69,7 +73,6 @@ public class User implements UserDetails {
     public void setPosition(String position) {
         this.position = position;
     }
-
 
 
     public String getPassword() {
@@ -104,6 +107,7 @@ public class User implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
+
     public String getName() {
         return name;
     }
@@ -119,6 +123,7 @@ public class User implements UserDetails {
     public void setIs_approved(int is_approved) {
         this.is_approved = is_approved;
     }
+
     public String getId() {
         return id;
     }
@@ -134,6 +139,7 @@ public class User implements UserDetails {
     public void setEmployee_number(String employee_number) {
         this.employee_number = employee_number;
     }
+
     public String getEmail() {
         return email;
     }
@@ -141,6 +147,7 @@ public class User implements UserDetails {
     public void setEmail(String email) {
         this.email = email;
     }
+
     public String getDepartment() {
         return department;
     }
@@ -157,6 +164,7 @@ public class User implements UserDetails {
     public void setAuth(String auth) {
         this.auth = auth;
     }
+
     public String getCreated_at() {
         return created_at;
     }
@@ -164,7 +172,6 @@ public class User implements UserDetails {
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
-
 
 
 }

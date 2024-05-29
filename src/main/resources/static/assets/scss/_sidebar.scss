@@ -19,10 +19,11 @@
     margin-bottom: 60px;
 
     .nav-item {
-      padding:0 $sidebar-menu-padding-x;
+      padding: 0 $sidebar-menu-padding-x;
       @include transition-duration(0.25s);
       transition-property: background;
       -webkit-transition-property: background;
+
       .collapse {
         z-index: 999;
       }
@@ -31,7 +32,7 @@
         @include display-flex;
         @include align-items(center);
         white-space: nowrap;
-        padding:$sidebar-menu-padding-y 0 $sidebar-menu-padding-y 0;
+        padding: $sidebar-menu-padding-y 0 $sidebar-menu-padding-y 0;
         color: $sidebar-light-menu-color;
         @include transition-duration(0.45s);
         transition-property: color;
@@ -44,11 +45,14 @@
             font-size: $sidebar-icon-font-size;
             line-height: 1;
             margin-left: auto;
+
             .rtl & {
               margin-left: 0;
               margin-right: auto;
             }
+
             color: $sidebar-light-menu-icon-color;
+
             &:before {
               vertical-align: middle;
             }
@@ -59,18 +63,23 @@
             line-height: 1;
             font-size: $sidebar-icon-font-size;
             margin-left: auto;
+
             .rtl & {
               margin-left: 0;
               margin-right: auto;
             }
+
             color: $sidebar-light-menu-arrow-color;
-            &:before{
+
+            &:before {
               content: "\f141";
               font-size: inherit;
               color: inherit;
             }
+
             + .menu-icon {
               margin-left: .25rem;
+
               .rtl & {
                 margin-left: 0;
                 margin-right: .25rem;
@@ -92,9 +101,9 @@
           margin-left: 1rem;
         }
 
-        &[aria-expanded="true"]{
-          .menu-arrow{
-            &:before{
+        &[aria-expanded="true"] {
+          .menu-arrow {
+            &:before {
               content: "\f140";
             }
           }
@@ -103,44 +112,54 @@
 
       &.active {
         background: $sidebar-light-menu-active-bg;
+
         > .nav-link {
           .menu-title {
             color: $sidebar-light-menu-active-color;
-            font-family: $type1-medium;            
+            font-family: $type1-medium;
           }
+
           i {
             color: $primary;
           }
         }
       }
-      &:hover{
+
+      &:hover {
         background: $sidebar-light-menu-hover-bg;
       }
+
       &.nav-profile {
         .nav-link {
           height: auto;
           line-height: 1;
           border-top: 0;
           padding: 1.25rem 0;
+
           .nav-profile-image {
             width: 44px;
             height: 44px;
+
             img {
               width: 44px;
               height: 44px;
               border-radius: 100%;
             }
           }
+
           .nav-profile-text {
             margin-left: 1rem;
+
             .rtl & {
               margin-left: auto;
               margin-right: 1rem;
             }
           }
+
           .nav-profile-badge {
             font-size: 1.125rem;
             margin-left: auto;
+
             .rtl & {
               margin-left: 0;
               margin-right: auto;
@@ -148,15 +167,19 @@
           }
         }
       }
+
       &.sidebar-actions {
         margin-top: 1rem;
+
         .nav-link {
           border-top: 0;
           display: block;
           height: auto;
         }
+
         &:hover {
           background: initial;
+
           .nav-link {
             color: initial;
           }
@@ -175,13 +198,15 @@
         }
       }
     }
+
     &.sub-menu {
       margin-bottom: 20px;
-      margin-top:0;
+      margin-top: 0;
       list-style: none;
 
       .nav-item {
         padding: 0;
+
         .nav-link {
           color: $sidebar-light-submenu-color;
           padding: $sidebar-submenu-item-padding;
@@ -190,29 +215,35 @@
           line-height: 1;
           height: auto;
           border-top: 0;
+
           &:before {
             content: "\F054";
             font-family: "Material Design Icons";
             display: block;
             position: absolute;
-            left:0px;
+            left: 0px;
+
             .rtl & {
               left: auto;
               right: 0;
             }
-            top:50%;
+
+            top: 50%;
             @include transform(translateY(-50%));
             color: lighten($sidebar-light-submenu-color, 10%);
             font-size: .75rem;
           }
+
           &.active {
             color: $sidebar-light-menu-active-color;
             background: transparent;
           }
+
           &:hover {
             color: $sidebar-light-submenu-hover-color;
           }
         }
+
         &:hover {
           background: transparent;
         }
@@ -233,6 +264,7 @@
     -webkit-transition: all 0.25s ease-out;
     -o-transition: all 0.25s ease-out;
     transition: all 0.25s ease-out;
+
     &.active {
       right: 0;
     }

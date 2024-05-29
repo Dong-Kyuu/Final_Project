@@ -3,12 +3,15 @@
 .card {
   border: 0;
   background: $card-bg;
+
   .card-body {
     padding: $card-padding-y $card-padding-x;
+
     + .card-body {
       padding-top: 1rem;
     }
   }
+
   .card-title {
     color: $card-title-color;
     margin-bottom: 0.75rem;
@@ -16,29 +19,36 @@
     font-family: $type1-medium;
     font-size: 1.125rem;
   }
+
   .card-subtitle {
     @extend .text-gray;
     font-family: $type1-regular;
     margin-top: 0.625rem;
     margin-bottom: 0.625rem;
   }
+
   .card-description {
     color: $card-description-color;
     margin-bottom: 1.5rem;
     font-family: $type1-regular;
   }
+
   &.card-outline-success {
     border: 1px solid theme-color("success");
   }
+
   &.card-outline-primary {
     border: 1px solid theme-color("primary");
   }
+
   &.card-outline-warning {
     border: 1px solid theme-color("warning");
   }
+
   &.card-outline-danger {
     border: 1px solid theme-color("danger");
   }
+
   &.card-rounded {
     @include border-radius(5px);
   }
@@ -47,12 +57,15 @@
     background: #b5b0b2;
     border-color: #b5b0b2;
   }
+
   &.card-circle-progress {
     color: $white;
     text-align: center;
   }
+
   &.card-img-holder {
     position: relative;
+
     .card-img-absolute {
       position: absolute;
       top: 0;
@@ -60,6 +73,7 @@
       height: 100%;
     }
   }
+
   &.bg-blue-gradient {
     background: linear-gradient(to right, #065efd, #3169fd, #6f79fc);
     color: #fff;
@@ -86,6 +100,7 @@
     column-gap: 1.25rem;
     orphans: 1;
     widows: 1;
+
     .card {
       display: inline-block;
       width: 100%;
@@ -93,6 +108,7 @@
     }
   }
 }
+
 @each $color, $value in $theme-colors {
   .card-inverse-#{$color} {
     @include card-inverse-variant(rgba($value, .2), theme-color-level($value, 1), theme-color-level($value, 3));
