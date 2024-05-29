@@ -5,6 +5,8 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -47,11 +49,11 @@ public class secuityConfig {
         // 내가 만든 페이지로 이동합니다
         http.
                 formLogin((fo) -> fo.loginPage("/user/login")
-                .loginProcessingUrl("/user/loginProcess")
-                .usernameParameter("id")
-                .passwordParameter("password")
-                .successHandler(loginSuccessHandler)
-                .failureHandler(loginFailHandler));
+                        .loginProcessingUrl("/user/loginProcess")
+                        .usernameParameter("id")
+                        .passwordParameter("password")
+                        .successHandler(loginSuccessHandler)
+                        .failureHandler(loginFailHandler));
 
 
         http.logout((fo) -> fo.logoutSuccessUrl("/user/login")
@@ -68,13 +70,13 @@ public class secuityConfig {
 
 
         http.authorizeHttpRequests((au)->au
-                        .requestMatchers("/user/list", "/user/delete")
-                        .hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/user/update","/user/info")
-                        .hasAnyAuthority("ROLE_ADMIN","ROLE_MEMBER")
-                        .requestMatchers("/board/**","/comment/**")
-                        .hasAnyAuthority("ROLE_ADMIN","ROLE_MEMBER")
-                        .requestMatchers("/**").permitAll()
+                .requestMatchers("/user/list", "/user/delete")
+                .hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/user/update","/user/info")
+                .hasAnyAuthority("ROLE_ADMIN","ROLE_MEMBER")
+                .requestMatchers("/board/**","/comment/**")
+                .hasAnyAuthority("ROLE_ADMIN","ROLE_MEMBER")
+                .requestMatchers("/**").permitAll()
         );
         http.exceptionHandling((ex)->ex.accessDeniedHandler(customAccessDeniedHandler));
 
@@ -95,5 +97,13 @@ public class secuityConfig {
         JdbcTokenRepositoryImpl jdbcTokenRepository =new JdbcTokenRepositoryImpl();
         jdbcTokenRepository.setDataSource(dataSource);//import javax.sql.DataSource;
         return jdbcTokenRepository;
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        String hierarchy = "ROLE_MASTER > ROLE_SUB_MASTER > ROLE_HEAD > ROLE_TEAM > ROLE_MEMBER";
+        roleHierarchy.setHierarchy(hierarchy);
+        return roleHierarchy;
     }
 }

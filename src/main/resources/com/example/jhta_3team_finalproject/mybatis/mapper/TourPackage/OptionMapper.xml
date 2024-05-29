@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.TourPackage.OptionMapper">
+    <select id="getOptionsByOptionId" resultType="com.example.jhta_3team_finalproject.domain.TourPackage.TripOption" parameterType="string">
+        SELECT * FROM TripOption WHERE optionId = #{optionId}
+    </select>
+
+</mapper>

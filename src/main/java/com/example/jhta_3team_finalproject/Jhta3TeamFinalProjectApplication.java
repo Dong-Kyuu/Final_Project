@@ -8,8 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Jhta3TeamFinalProjectApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(Jhta3TeamFinalProjectApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Jhta3TeamFinalProjectApplication.class, args);
+    }
 
 }

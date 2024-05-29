@@ -14,18 +14,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class CustomAccessDeniedHandler  implements AccessDeniedHandler{
-	private static final Logger logger = LoggerFactory.getLogger(CustomAccessDeniedHandler.class);
-	
+public class CustomAccessDeniedHandler implements AccessDeniedHandler {
+    private static final Logger logger = LoggerFactory.getLogger(CustomAccessDeniedHandler.class);
 
-	@Override
-	public void handle(HttpServletRequest request, HttpServletResponse response,
-			AccessDeniedException accessDeniedException) throws IOException, ServletException {
-		logger.error("Access Denied Handler");
-		String url="/error/403";
-		RequestDispatcher dispatcher= request.getRequestDispatcher(url);
-		dispatcher.forward(request, response);
-		
-		
-	}
+
+    @Override
+    public void handle(HttpServletRequest request, HttpServletResponse response,
+                       AccessDeniedException accessDeniedException) throws IOException, ServletException {
+        logger.error("Access Denied Handler");
+        String url = "/error/403";
+        RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+        dispatcher.forward(request, response);
+
+
+    }
 }

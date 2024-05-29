@@ -17,6 +17,7 @@
   @include animation-duration($action-transition-duration);
   @include animation-fill-mode(both);
 }
+
 @mixin transition($settings) {
   -webkit-transition: $settings;
   -moz-transition: $settings;
@@ -24,6 +25,7 @@
   -o-transition: $settings;
   transition: $settings;
 }
+
 @keyframes fadeOut {
   from {
     opacity: 1;
@@ -53,6 +55,7 @@
   animation-iteration-count: infinite;
   animation-timing-function: linear;
 }
+
 @keyframes fadeInUp {
   from {
     opacity: 0;

@@ -5,6 +5,7 @@ ol,
 dl {
   padding-left: 1rem;
   font-size: $default-font-size;
+
   li {
     line-height: 1.8;
   }
@@ -15,8 +16,10 @@ dl {
 .list-star {
   list-style: none;
   padding: 0;
+
   li {
     padding-left: 1.5rem;
+
     &:before {
       font-family: "Material Design Icons";
       margin-left: -1.5rem;
@@ -55,20 +58,24 @@ dl {
 
 .gradient-bullet-list {
   padding-left: 0;
+
   .rtl & {
     padding-right: 0;
   }
+
   li {
     position: relative;
     list-style-type: none;
     padding-left: 25px;
     line-height: 1;
     padding-bottom: 25px;
+
     &:before,
     &:after {
-      content:"";
+      content: "";
       position: absolute;
     }
+
     &:before {
       top: 0;
       left: 0;
@@ -76,6 +83,7 @@ dl {
       height: 15px;
       border-radius: 100%;
     }
+
     &:after {
       width: 11px;
       height: 11px;
@@ -84,29 +92,34 @@ dl {
       background: $card-bg;
       border-radius: 100%;
     }
+
     &:nth-child(1) {
       &:before {
-        background: theme-gradient-color(danger);        
+        background: theme-gradient-color(danger);
       }
     }
+
     &:nth-child(2) {
       &:before {
-        background: theme-gradient-color(info);        
+        background: theme-gradient-color(info);
       }
     }
+
     &:nth-child(3) {
       &:before {
-        background: theme-gradient-color(warning);        
+        background: theme-gradient-color(warning);
       }
     }
+
     &:nth-child(4) {
       &:before {
-        background: theme-gradient-color(success);        
+        background: theme-gradient-color(success);
       }
     }
+
     &:nth-child(5) {
       &:before {
-        background: theme-gradient-color(primary);        
+        background: theme-gradient-color(primary);
       }
     }
   }

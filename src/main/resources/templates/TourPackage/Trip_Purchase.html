@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Male_Fashion Template">
+    <meta name="keywords" content="Male_Fashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Purchase</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="/css/mainpage/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/mainpage/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/css/mainpage/style.css" type="text/css">
+    <link rel="stylesheet" href="/css/mainpage/font-awesome.min.css" type="text/css">
+
+    <style>
+        .gender { height: 50px; display: block; margin-bottom: 6px; }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function(){
+            let checkemail = false;
+
+            $("input[name=Email]").on('keyup', function(){
+                const pattern = /^\w+@\w+[.][A-Za-z0-9]{3}$/;
+                const email_value = $(this).val();
+
+                if(!pattern.test(email_value)){
+                    $("#email_message").css('color','red').html('이메일 형식이 맞지 않습니다.');
+                    checkemail = false;
+                } else {
+                    $("#email_message").css('color','green').html('이메일 형식이 맞습니다.');
+                    checkemail = true;
+                }
+            });
+
+            $('form').submit(function(){
+                if(!checkemail){
+                    alert("email 형식을 확인하세요");
+                    $("input[name=Email]").focus();
+                    return false;
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+<!-- Page Preloder -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+<!-- Header Section Begin -->
+<!--
+<div th:if="${#strings.isEmpty(member_id)}">
+    <th:insert th:src="~{../mainpage/header :: header}"/>
+</div>
+<div th:if="${!#strings.isEmpty(member_id)}">
+    <th:insert th:src="~{../member/memberHeader :: memberHeader}"/>
+</div>
+-->
+<!-- Header Section End -->
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Check Out</h4>
+                    <div class="breadcrumb__links">
+                        <a th:href="@{/}">Home</a>
+                        <a th:href="@{/shop}">Shop</a>
+                        <span>Check Out</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+    <div class="container">
+        <div class="checkout__form">
+            <form th:action="@{/PurchaseInfo}" id="orderForm" method="post">
+                <div class="row">
+                    <!-- 예약자 정보 시작  -->
+                    <div class="col-lg-8 col-md-6">
+                        <h6 class="checkout__title">예약자 정보</h6>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>이름<span>*</span></p>
+                                    <input type="text" name="FirstNameKor" placeholder="" th:value="${memberInfo.memberName}">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>성<span>*</span></p>
+                                    <input type="text" name="LastNameKor">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>First Name<span>*</span></p>
+                                    <input type="text" name="FirstNameEng" placeholder="" th:value="${memberInfo.englishName}">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Last Name<span>*</span></p>
+                                    <input type="text" name="LastNameEng">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>예약자 여권번호<span>*</span></p>
+                                    <input type="text" name="Passport" placeholder="" th:value="${memberInfo.passportNumber}">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>예약자 성별<span>*</span></p>
+                                </div>
+                                <div class="gender">
+                                    <input type="radio" name="gender" value="man" th:checked="${memberInfo.gender == 'man'}"> 남
+                                    <input type="radio" name="gender" value="woman" th:checked="${memberInfo.gender == 'woman'}"> 여
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Phone<span>*</span></p>
+                                    <input type="text" name="Phone" placeholder="" th:value="${memberInfo.phoneNumber}">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Email<span>*</span></p>
+                                    <input type="text" name="Email" placeholder="email@domain.com" th:value="${memberInfo.email}">
+                                    <div id="email_message"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="checkout__order">
+                            <h4 class="order__title">Your order</h4>
+                            <div class="checkout__order__products">Trip <span>Price</span></div>
+                            <ul class="checkout__total__products">
+                                <li>메인상품 : <span th:text="${trip.tripName}"></span> <span th:text="${trip.tripPrice} + '₩'"></span></li>
+                                <li th:each="option, status : ${options}">
+                                    옵션 <span th:text="${status.count}"></span> : <span th:text="${option.optionName}"></span> <span th:text="${option.optionPrice} + '₩'"></span>
+                                </li>
+                            </ul>
+                            <ul class="checkout__total__all">
+                                <li>Subtotal(excl.tax) <span th:text="${subTotal} + '₩'"></span></li>
+                                <li>Total <span th:text="${cartTotal} + '₩'"></span></li>
+                            </ul>
+
+                            <div class="cart__discount">
+                                <h6>Discount codes</h6>
+                                <input type="text" placeholder="Coupon code">
+                                <button type="submit">Apply</button>
+                            </div>
+
+                            <div class="checkout__input__checkbox">
+                                <label for="payment">
+                                    Check Payment
+                                    <input type="checkbox" id="payment">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <div class="checkout__input__checkbox">
+                                <label for="paypal">
+                                    Paypal
+                                    <input type="checkbox" id="paypal">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                            <button id="imsi-register" type="submit" class="site-btn">PLACE ORDER</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<!-- Checkout Section End -->
+
+<!-- Footer Section Begin -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="footer__about">
+                    <div class="footer__logo">
+                        <a href="#"><img src="/img/footer-logo.png" alt=""></a>
+                    </div>
+                    <p>The customer is at the heart of our unique business model, which includes design.</p>
+                    <a href="#"><img src="/img/payment.png" alt=""></a>
+                </div>
+            </div>
+            <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+                <div class="footer__widget">
+                    <h6>Shopping</h6>
+                    <ul>
+                        <li><a href="#">Clothing Store</a></li>
+                        <li><a href="#">Trending Shoes</a></li>
+                        <li><a href="#">Accessories</a></li>
+                        <li><a href="#">Sale</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-3 col-sm-6">
+                <div class="footer__widget">
+                    <h6>Shopping</h6>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Payment Methods</a></li>
+                        <li><a href="#">Delivary</a></li>
+                        <li><a href="#">Return & Exchanges</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+                <div class="footer__widget">
+                    <h6>NewLetter</h6>
+                    <div class="footer__newslatter">
+                        <p>Be the first to know about new arrivals, look books, sales & promos!</p>
+                        <form action="#">
+                            <input type="text" placeholder="Your email">
+                            <button type="submit"><span class="icon_mail_alt"></span></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Footer Section End -->
+<!-- Search Begin -->
+<div class="search-model" th:fragment="searchModel">
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <div class="search-close-switch">+</div>
+        <form class="search-model-form">
+            <input type="text" id="search-input" placeholder="Search here.....">
+        </form>
+    </div>
+</div>
+<!-- Search End -->
+
+<!-- Js Plugins -->
+<script th:src="@{/js/mainpage/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/js/mainpage/bootstrap.min.js}"></script>
+<script th:src="@{/js/mainpage/jquery.nice-select.min.js}"></script>
+<script th:src="@{/js/mainpage/jquery.nicescroll.min.js}"></script>
+<script th:src="@{/js/mainpage/jquery.magnific-popup.min.js}"></script>
+<script th:src="@{/js/mainpage/jquery.countdown.min.js}"></script>
+<script th:src="@{/js/mainpage/jquery.slicknav.js}"></script>
+<script th:src="@{/js/mainpage/mixitup.min.js}"></script>
+<script th:src="@{/js/mainpage/owl.carousel.min.js}"></script>
+<script th:src="@{/js/mainpage/main.js}"></script>
+
+<script>
+    // 버튼을 클릭할 때 이벤트 처리
+    document.getElementById("imsi-register").addEventListener("click", function() {
+        // TripRegister.net으로 이동
+        window.location.href = "PurchaseInfo.net";
+    });
+
+    // form의 submit 이벤트를 감지하여 처리
+    document.getElementById("orderForm").addEventListener("submit", function(event) {
+        // form의 기본 동작을 막음
+        event.preventDefault();
+        // 필요한 작업을 수행
+    });
+</script>
+</body>
+</html>

@@ -9,7 +9,10 @@ import java.util.List;
 public interface UserMapper {
 
     public User isId(String id);
+
     public int join(User user);
-    public  User user_info (String id);
+
+    public User user_info(String id);
+
     public int update(User user);
 }
