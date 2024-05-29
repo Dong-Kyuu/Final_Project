@@ -3,47 +3,57 @@
 .grid-margin {
   margin-bottom: $card-spacing-y;
 }
+
 .grid-margin-sm-0 {
   @media (min-width: 576px) {
     margin-bottom: 0;
   }
 }
+
 .grid-margin-md-0 {
   @media (min-width: 768px) {
     margin-bottom: 0;
   }
 }
+
 .grid-margin-lg-0 {
   @media (min-width: 992px) {
     margin-bottom: 0;
   }
 }
+
 .grid-margin-xl-0 {
   @media (min-width: 1200px) {
     margin-bottom: 0;
   }
 }
+
 .img-lg {
   width: 92px;
   height: 92px;
 }
+
 .img-sm {
   width: 43px;
   height: 43px;
 }
+
 .img-xs {
   width: 37px;
   height: 37px;
 }
+
 .img-ss {
   width: 35px;
   height: 35px;
 }
+
 .stretch-card {
   @include display-flex;
   @include align-items(stretch);
   @include justify-content(stretch);
-  >.card{
+
+  > .card {
     width: 100%;
     min-width: 100%;
   }
@@ -54,11 +64,13 @@
     border-right: $border-width solid $border-color;
   }
 }
+
 .border-right-md {
   @media (min-width: 768px) {
     border-right: $border-width solid $border-color;
   }
 }
+
 .border-right-lg {
   @media (min-width: 992px) {
     border-right: $border-width solid $border-color;
@@ -70,11 +82,13 @@
     border-left: $border-width solid $border-color;
   }
 }
+
 .border-left-md {
   @media (min-width: 768px) {
     border-left: $border-width solid $border-color;
   }
 }
+
 .border-left-lg {
   @media (min-width: 992px) {
     border-left: $border-width solid $border-color;
@@ -204,8 +218,9 @@
     height: 6px;
   }
 }
+
 @each $color, $value in $theme-gradient-colors {
-	.bg-gradient-#{$color} {
-		background: theme-gradient-color($color) !important;
-	}
+  .bg-gradient-#{$color} {
+    background: theme-gradient-color($color) !important;
+  }
 }

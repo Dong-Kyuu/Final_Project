@@ -23,7 +23,8 @@ public class User implements UserDetails {
     private String created_at;
     private String updated_at;
     private String profile_picture;
-    private String auth = "ROLE_MEMBER";
+    private String chat_status_msg;
+    private String auth="ROLE_MEMBER";
 
 
     @Override
@@ -64,6 +65,9 @@ public class User implements UserDetails {
     }
 
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<SimpleGrantedAuthority> roles= new ArrayList<SimpleGrantedAuthority>();}
 
     public String getAge() {
         return age;
@@ -76,6 +80,15 @@ public class User implements UserDetails {
     public String getPhone_number() {
         return phone_number;
     }
+    public String getChat_status_msg() {
+        return chat_status_msg;
+    }
+
+    public void setChat_status_msg(String chat_status_msg) {
+        this.chat_status_msg = chat_status_msg;
+    }
+
+    public String getProfile_picture() {return profile_picture;}
 
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
@@ -106,6 +119,7 @@ public class User implements UserDetails {
     public void setPosition(String position) {
         this.position = position;
     }
+
 
 
     public String getPassword() {
@@ -189,6 +203,7 @@ public class User implements UserDetails {
         this.department = department;
     }
 
+
     public String getAuth() {
         return auth;
     }
@@ -204,6 +219,7 @@ public class User implements UserDetails {
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
+
 
 
 }

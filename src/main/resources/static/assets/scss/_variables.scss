@@ -14,76 +14,76 @@ $black: #000;
 $white: #ffffff;
 $white-smoke: #f2f7f8;
 $violet: #41478a;
-$darkslategray : #2e383e;
-$dodger-blue : #3498db;
+$darkslategray: #2e383e;
+$dodger-blue: #3498db;
 
 
 $colors: (
-  blue: $blue,
-  indigo: $indigo,
-  purple: $purple,
-  pink: $pink,
-  red: $red,
-  orange: $orange,
-  yellow: $yellow,
-  green: $green,
-  teal: $teal,
-  cyan: $cyan,
-  white: $white,
-  gray: #434a54,
-  gray-light: #aab2bd,
-  gray-lighter: #e8eff4,
-  gray-lightest: #e6e9ed,
-  gray-dark: #0f1531,
-  black: #000000
-  );
+        blue: $blue,
+        indigo: $indigo,
+        purple: $purple,
+        pink: $pink,
+        red: $red,
+        orange: $orange,
+        yellow: $yellow,
+        green: $green,
+        teal: $teal,
+        cyan: $cyan,
+        white: $white,
+        gray: #434a54,
+        gray-light: #aab2bd,
+        gray-lighter: #e8eff4,
+        gray-lightest: #e6e9ed,
+        gray-dark: #0f1531,
+        black: #000000
+);
 
-  $blue: $blue;
-  $indigo: $indigo;
-  $purple: $purple;
-  $pink: $pink;
-  $red: $red;
-  $orange: $orange;
-  $yellow: $yellow;
-  $green: $green;
-  $teal: $teal;
-  $cyan: $cyan;
-  $white: $white;
-  $gray: #434a54;
-  $gray-light: #aab2bd;
-  $gray-lighter: #e8eff4;
-  $gray-lightest: #e6e9ed;
-  $gray-dark: #0f1531;
-  $black: #000000;
+$blue: $blue;
+$indigo: $indigo;
+$purple: $purple;
+$pink: $pink;
+$red: $red;
+$orange: $orange;
+$yellow: $yellow;
+$green: $green;
+$teal: $teal;
+$cyan: $cyan;
+$white: $white;
+$gray: #434a54;
+$gray-light: #aab2bd;
+$gray-lighter: #e8eff4;
+$gray-lightest: #e6e9ed;
+$gray-dark: #0f1531;
+$black: #000000;
 
 $theme-colors: (
-  primary: #b66dff,
-  secondary: #c3bdbd,
-  success: #1bcfb4,
-  info: #198ae3,
-  warning: #fed713,
-  danger: #fe7c96,
-  light: #f8f9fa,
-  dark: #3e4b5b
-  );
+        primary: #b66dff,
+        secondary: #c3bdbd,
+        success: #1bcfb4,
+        info: #198ae3,
+        warning: #fed713,
+        danger: #fe7c96,
+        light: #f8f9fa,
+        dark: #3e4b5b
+);
 
-  $primary: #b66dff;
-  $secondary: #c3bdbd;
-  $success: #1bcfb4;
-  $info: #198ae3;
-  $warning: #fed713;
-  $danger: #fe7c96;
-  $light: #f8f9fa;
-  $dark: #3e4b5b;
+$primary: #b66dff;
+$secondary: #c3bdbd;
+$success: #1bcfb4;
+$info: #198ae3;
+$warning: #fed713;
+$danger: #fe7c96;
+$light: #f8f9fa;
+$dark: #3e4b5b;
 
 $theme-gradient-colors: (primary: linear-gradient(to right, #da8cff, #9a55ff),
-secondary: linear-gradient(to right, #e7ebf0, #868e96),
-success: linear-gradient(to right, #84d9d2, #07cdae),
-info: linear-gradient(to right, #90caf9, #047edf 99%),
-warning: linear-gradient(to right, #f6e384, #ffd500),
-danger: linear-gradient(to right, #ffbf96, #fe7096),
-light: linear-gradient(to bottom, #f4f4f4, #e4e4e9),
-dark: linear-gradient(89deg, #5e7188, #3e4b5b));
+        secondary: linear-gradient(to right, #e7ebf0, #868e96),
+        success: linear-gradient(to right, #84d9d2, #07cdae),
+        info: linear-gradient(to right, #90caf9, #047edf 99%),
+        warning: linear-gradient(to right, #f6e384, #ffd500),
+        danger: linear-gradient(to right, #ffbf96, #fe7096),
+        light: linear-gradient(to bottom, #f4f4f4, #e4e4e9),
+        dark: linear-gradient(89deg, #5e7188, #3e4b5b));
 
 
 ////////// COLOR SYSTEM //////////
@@ -93,21 +93,21 @@ $content-bg: #f2edf3;
 $footer-bg: $content-bg;
 $footer-color: color(dark);
 $border-color: #ebedf2;
-$circle-border:$white;
+$circle-border: $white;
 ////////// COLOR VARIABLES //////////
 
 ////////// SOCIAL COLORS //////////
 
 $social-colors: (twitter: #2caae1,
-facebook: #3b579d,
-google: #dc4a38,
-linkedin: #0177b5,
-pinterest: #cc2127,
-youtube: #e52d27,
-github: #333333,
-behance: #1769ff,
-dribbble: #ea4c89,
-reddit: #ff4500);
+        facebook: #3b579d,
+        google: #dc4a38,
+        linkedin: #0177b5,
+        pinterest: #cc2127,
+        youtube: #e52d27,
+        github: #333333,
+        behance: #1769ff,
+        dribbble: #ea4c89,
+        reddit: #ff4500);
 
 ////////// SOCIAL COLORS //////////
 
@@ -157,11 +157,10 @@ $navbar-height: 70px;
 $navbar-menu-color: #9c9fa6;
 $navbar-font-size: .875rem;
 $navbar-icon-font-size: 1.25rem;
-$mail-head-bg:#303a40;
-$u-name-color:$black;
-$file-name:$black;
+$mail-head-bg: #303a40;
+$u-name-color: $black;
+$file-name: $black;
 ///////// NAVBAR ////////
-
 
 
 ///////// BUTTONS ////////
@@ -193,7 +192,6 @@ $btn-border-radius-lg: .1875rem;
 ///////// BUTTONS ////////
 
 
-
 ////////// TOOLTIP VARIABLES //////////
 
 //default styles
@@ -203,7 +201,6 @@ $tooltip-padding-x: .75rem;
 $tooltip-border-radius: .375rem;
 
 ////////// TOOLTIP VARIABLES //////////
-
 
 
 /////////  FORMS /////////
@@ -226,9 +223,9 @@ $input-padding-x-sm: .81rem;
 $input-padding-y-lg: .94rem;
 $input-padding-x-lg: 1.94rem;
 
-$input-height:          2.875rem;
-$input-height-sm:       2.575rem;
-$input-height-lg:       3.175rem;
+$input-height: 2.875rem;
+$input-height-sm: 2.575rem;
+$input-height-lg: 3.175rem;
 
 ///////// FORMS /////////
 
@@ -325,20 +322,20 @@ $nav-tabs-link-active-border-color: $nav-tabs-border-color $nav-tabs-border-colo
 $nav-pills-custom-bg: #fcfcfd;
 ////////   TABS VARIABLES /////////
 $accent-color: $white;
-$chat-container-height:100%s;
-$text-gray:gray;
+$chat-container-height: 100% s;
+$text-gray: gray;
 $bullet-line-list-shape-bg: color(white) !default;
 $arrow-color: $white;
 $tab-head-bg: darken(#f2edf3, 2%);
-$accordian-shadow-color:rgba(230, 234, 236, 0.35);
-$landing-bg:#1a142dfa;
-$private-btn-bg:#eae2ec;
+$accordian-shadow-color: rgba(230, 234, 236, 0.35);
+$landing-bg: #1a142dfa;
+$private-btn-bg: #eae2ec;
 $circle-img-border: $white;
 $bottom-submenu-bg: $white;
 $chat-bottom-btn: $white;
-$form-focus-bg:$white;
 $form-focus-bg: $white;
-$form-focus-color:$black;
+$form-focus-bg: $white;
+$form-focus-color: $black;
 $landing-bg-color: $white;
 $mail-hover-color: rgba(240, 244, 249, 0.8);
 
@@ -393,4 +390,4 @@ $icon-only-menu-bg-light: $sidebar-light-menu-hover-bg;
 ///////// SIDEBAR ////////
 
 $bullet-line-list-shape-bg: color(white) !default;
-$buy-nowbanner-padding-top:80px;
+$buy-nowbanner-padding-top: 80px;

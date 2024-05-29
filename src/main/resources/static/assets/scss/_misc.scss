@@ -34,15 +34,18 @@ code {
   @extend .justify-content-between;
   @extend .align-items-center;
   margin: 0 0 1.5rem 0;
+
   .breadcrumb {
     border: 0;
     margin-bottom: 0;
   }
 }
+
 .page-title {
   color: $page-title-color;
   font-size: 1.125rem;
   margin-bottom: 0;
+
   .page-title-icon {
     display: inline-block;
     width: 36px;
@@ -50,6 +53,7 @@ code {
     border-radius: 4px;
     text-align: center;
     box-shadow: 0px 3px 8.3px 0.7px rgba(163, 93, 255, 0.35);
+
     i {
       font-size: .9375rem;
       line-height: 36px;

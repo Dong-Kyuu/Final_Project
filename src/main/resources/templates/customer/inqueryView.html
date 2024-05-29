@@ -109,9 +109,10 @@
                     </div>
                     <span class="download-text">
                         <form method="post" action="down">
-                            <input type="hidden" th:value="${boarddata.inq_file}" th:name="filename" />
-						    <input type="hidden" th:value="${boarddata.inq_original}" th:name="original" />
-                            <input style="color: white; background-color: #4f97e5; border: 0;" type="submit" th:value="${boarddata.inq_original}" />
+                            <input type="hidden" th:value="${boarddata.inq_file}" th:name="filename"/>
+						    <input type="hidden" th:value="${boarddata.inq_original}" th:name="original"/>
+                            <input style="color: white; background-color: #4f97e5; border: 0;" type="submit"
+                                   th:value="${boarddata.inq_original}"/>
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                         </form>
                     </span>
@@ -123,21 +124,21 @@
 
         <tr>
             <td colspan="2" class="center">
-            <th:block sec:authorize-expr="isAuthenticated()">
-                <th:block th:with="pinfo=${#authentication.principal}">
-                    <th:block th:if="${boarddata.inq_name == pinfo.username or pinfo.username == 'admin'}">
-                    <a th:href="@{'modifyView?num=' + ${boarddata.inq_num}}">
-                        <button class="btn  btn-primary">수정</button>
-                    </a>
-                    <!-- href의 주소를 #으로 설정합니다. -->
-                    <a href="#"> <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#exampleModal">삭제
-                        </button>
-                    </a>
+                <th:block sec:authorize-expr="isAuthenticated()">
+                    <th:block th:with="pinfo=${#authentication.principal}">
+                        <th:block th:if="${boarddata.inq_name == pinfo.username or pinfo.username == 'admin'}">
+                            <a th:href="@{'modifyView?num=' + ${boarddata.inq_num}}">
+                                <button class="btn  btn-primary">수정</button>
+                            </a>
+                            <!-- href의 주소를 #으로 설정합니다. -->
+                            <a href="#"> <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#exampleModal">삭제
+                                </button>
+                            </a>
+                        </th:block>
                     </th:block>
                 </th:block>
-            </th:block>
                 <a th:href="@{/inquery/list}">
                     <button class="btn btn-primary">목록</button>
                 </a>

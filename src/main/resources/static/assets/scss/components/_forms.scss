@@ -3,6 +3,7 @@
 .form-group {
   margin-bottom: 1.5rem;
 }
+
 .input-group-append,
 .input-group-prepend {
   color: $input-placeholder-color;
@@ -15,10 +16,12 @@
     color: $input-placeholder-color;
   }
 }
+
 .form-control {
   border: 1px solid $border-color;
   font-family: $type1-regular;
   font-size: $input-font-size;
+
   &:focus {
     background-color: $form-focus-bg;
     color: $form-focus-color;
@@ -32,12 +35,15 @@ select {
     border: 0;
     outline: 1px solid $border-color;
     color: $input-placeholder-color;
+
     &:focus {
       outline: 1px solid $border-color;
     }
+
     @each $color, $value in $theme-colors {
       &.border-#{$color} {
         outline: 1px solid $value;
+
         &:focus {
           outline: 1px solid $value;
         }
@@ -45,6 +51,7 @@ select {
     }
   }
 }
+
 .form-group {
   label {
     font-size: $default-font-size;
@@ -52,15 +59,18 @@ select {
     vertical-align: top;
     margin-bottom: .5rem;
   }
+
   &.has-danger {
     .form-control {
       border-color: $danger;
     }
   }
+
   .file-upload-default {
     visibility: hidden;
     position: absolute;
   }
+
   .file-upload-info {
     background: transparent;
   }

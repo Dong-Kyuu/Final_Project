@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.TourPackage.TripMapper">
+
+    <select id="getListCount" resultType="int">
+        SELECT count(*) FROM Trip
+    </select>
+
+    <select id="getCategoryListCount" resultType="int">
+        SELECT count(*) FROM Trip WHERE tripCategory = #{category}
+    </select>
+
+    <select id="getDetail" resultType="Trip" parameterType="int">
+        SELECT * FROM Trip WHERE tripNo = #{num}
+    </select>
+
+    <select id="getTripFileByNo" resultType="TripFile" parameterType="String">
+        SELECT * FROM TripFile WHERE fileId = #{fileNo}
+    </select>
+
+    <select id="getOptionIds" resultType="String" parameterType="int">
+        SELECT optionIds FROM Trip WHERE tripNo = #{num}
+    </select>
+
+    <select id="getTripList" resultType="Trip">
+        SELECT * FROM (
+        SELECT
+        ROW_NUMBER() OVER (
+        <choose>
+            <when test="sort == 'date_asc'">ORDER BY tripDate ASC</when>
+            <when test="sort == 'date_desc'">ORDER BY tripDate DESC</when>
+            <when test="sort == 'price_low'">ORDER BY tripPrice ASC</when>
+            <when test="sort == 'price_high'">ORDER BY tripPrice DESC</when>
+            <otherwise>ORDER BY expireDate ASC</otherwise>
+        </choose>
+        ) AS rnum,
+        tripName,
+        tripNo,
+        tripPrice,
+        tripStock,
+        tripMaxStock,
+        regDate,
+        expireDate,
+        tripDate,
+        fileId,
+        tripMainIMG,
+        tripCategory
+        FROM Trip
+        ) AS TripAlias
+        WHERE rnum BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+    <select id="getCategoryTripList" resultType="Trip">
+        SELECT * FROM (
+        SELECT ROW_NUMBER() OVER (
+        <choose>
+            <when test="sort == 'date_asc'">ORDER BY STR_TO_DATE(tripDate, '%Y-%m-%d') ASC</when>
+            <when test="sort == 'date_desc'">ORDER BY STR_TO_DATE(tripDate, '%Y-%m-%d') DESC</when>
+            <when test="sort == 'price_low'">ORDER BY tripPrice ASC</when>
+            <when test="sort == 'price_high'">ORDER BY tripPrice DESC</when>
+            <otherwise>ORDER BY tripNo ASC</otherwise>
+        </choose>
+        ) AS rnum,
+        tripName, tripNo, tripPrice, tripStock, tripMaxStock,
+        regDate, expireDate, tripDate, fileId, tripMainIMG, tripCategory
+        FROM Trip WHERE tripCategory = #{category}
+        ) AS derived_table_alias
+         where rnum BETWEEN #{startRow} AND #{endRow}
+    </select>
+
+    <select id="getKeywordListCount" resultType="int">
+        SELECT count(*) FROM Trip WHERE tripName LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <select id="getTripListByKeyword" resultType="Trip">
+        SELECT * FROM (
+        SELECT
+        ROW_NUMBER() OVER (
+        <choose>
+            <when test="sort == 'date_asc'">ORDER BY tripDate ASC</when>
+            <when test="sort == 'date_desc'">ORDER BY tripDate DESC</when>
+            <when test="sort == 'price_low'">ORDER BY tripPrice ASC</when>
+            <when test="sort == 'price_high'">ORDER BY tripPrice DESC</when>
+            <otherwise>ORDER BY expireDate ASC</otherwise>
+        </choose>
+        ) AS rnum,
+        tripName,
+        tripNo,
+        tripPrice,
+        tripStock,
+        tripMaxStock,
+        regDate,
+        expireDate,
+        tripDate,
+        fileId,
+        tripMainIMG,
+        tripCategory
+        FROM Trip
+        WHERE tripName LIKE CONCAT('%', #{keyword}, '%')
+        ) AS TripAlias WHERE rnum BETWEEN #{startRow} AND #{endRow}
+    </select>
+</mapper>
+

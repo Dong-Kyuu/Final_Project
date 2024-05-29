@@ -9,17 +9,17 @@ import java.util.Map;
 @Mapper
 public interface InqCommentMapper {
 
-	int getListCount(int board_num);
+    int getListCount(int board_num);
 
-	int commentsInsert(InqueryComment c);
+    int commentsInsert(InqueryComment c);
 
-	List<InqueryComment> getCommentList(Map<String, Object> map);
+    List<InqueryComment> getCommentList(Map<String, Object> map);
 
-	int commentsDelete(int num);
+    int commentsDelete(int num);
 
-	int commentsUpdate(InqueryComment co);
+    int commentsUpdate(InqueryComment co);
 
-	int commentReplyUpdate(InqueryComment co);
+    int commentReplyUpdate(InqueryComment co);
 
-	int commentReply(InqueryComment co);
+    int commentReply(InqueryComment co);
 }

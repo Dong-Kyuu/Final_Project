@@ -1,4 +1,5 @@
 package com.example.jhta_3team_finalproject.security;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -24,32 +25,29 @@ import com.example.jhta_3team_finalproject.mybatis.mapper.UserMapper;
  */
 
 @Component
-public class CustomUserDetailsService  implements UserDetailsService {
-	private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
-	
-	@Autowired
-	private UserMapper dao;
+public class CustomUserDetailsService implements UserDetailsService {
+    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		logger.info("username은 로그인 시 입력한 값: " +username);
-		com.example.jhta_3team_finalproject.domain.User users= dao.isId(username);
-		logger.info(users.toString());
-		if(users==null) {
-			logger.info("username"+username +"not found");
-			
-			throw new UsernameNotFoundException("username"+username +"not found");
-			
-		}
-		 //GrantedAuthority : 인증 개체에 부여된 권한을 나타내기 위한 인터페이스로 이를 구현한 구현체는
-			//      			생성자에 권한을 문자열로 넣어주면 됩니다 
-		   //SimpleGrantedAuthority : GrantedAuthority의 구현체입니다.
+    @Autowired
+    private UserMapper dao;
 
-		return users;
-	}
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        logger.info("username은 로그인 시 입력한 값: " + username);
+        com.example.jhta_3team_finalproject.domain.User users = dao.isId(username);
+        logger.info(users.toString());
+        if (users == null) {
+            logger.info("username" + username + "not found");
 
-	
-	
-	
+            throw new UsernameNotFoundException("username" + username + "not found");
+
+        }
+        //GrantedAuthority : 인증 개체에 부여된 권한을 나타내기 위한 인터페이스로 이를 구현한 구현체는
+        //      			생성자에 권한을 문자열로 넣어주면 됩니다
+        //SimpleGrantedAuthority : GrantedAuthority의 구현체입니다.
+
+        return users;
+    }
+
 
 }
