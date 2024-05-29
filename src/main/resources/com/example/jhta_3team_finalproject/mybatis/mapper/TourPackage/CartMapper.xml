@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.TourPackage.CartMapper">
+
+    <!-- 특정 카트의 상세 정보 가져오기 -->
+    <select id="getDetail" parameterType="string" resultType="com.example.jhta_3team_finalproject.domain.TourPackage.Cart">
+        SELECT * FROM Cart WHERE cartNo = #{memberId}
+    </select>
+
+    <!-- 특정 카트의 존재 여부 확인 -->
+    <select id="isId" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM Cart WHERE cartNo = #{memberId}
+    </select>
+
+    <!-- 특정 카트 삭제-->
+    <delete id="deleteCart" parameterType="string">
+        DELETE FROM Cart WHERE cartNo = #{cartNo}
+    </delete>
+
+    <!-- 카트 내용 삽입-->
+    <insert id="insertCart">
+        INSERT INTO Cart (cartNo, tripNo,cartTotal, optionIds)
+        VALUES (#{memberId}, #{tripNo},  #{cartTotal}, #{optionIds})
+    </insert>
+
+    <!-- 카트 내용 업데이트-->
+    <update id="updateCart">
+        UPDATE Cart SET tripNo=#{tripNoValue}, optionIds=#{newOptionIds}, cartTotal=#{totalPrice} WHERE cartNo=#{memberId}
+    </update>
+
+    <!--TripNo를 삭제하기로 선택했을 경우 cartNo를 제외한 tripNo와optionIds모두 삭제한다-->
+    <update id="deleteTripNo" parameterType="string">
+        UPDATE Cart
+        SET optionIds = NULL, tripNo = NULL, cartTotal = NULL
+        WHERE cartNo = #{cartNo}
+    </update>
+
+    <!--optionId를 삭제하기로 선택했을 경우 optionIds에서 일치하는 optionId만 삭제해야한다.-->
+    <update id="deleteOption">
+        UPDATE Cart
+        SET optionIds = #{updatedOptionIds}, cartTotal = #{updatedCartTotal}
+        WHERE cartNo = #{cartNo};
+    </update>
+
+    <!-- 특정 카트의 optionIds를 가져오기 -->
+    <select id="getOptionIds" parameterType="string" resultType="string">
+        SELECT optionIds FROM Cart WHERE cartNo = #{cartNo}
+    </select>
+</mapper>
