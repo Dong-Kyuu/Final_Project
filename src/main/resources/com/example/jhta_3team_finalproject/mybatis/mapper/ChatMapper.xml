@@ -25,6 +25,11 @@
         VALUES (NULL, #{room_name}, #{chat_session_id}, now())
     </insert>
 
+    <!-- 채팅 유저 리스트 가져오기 -->
+    <select id="chatUserList" resultType="user">
+        SELECT id, name, email, department, profile_picture, chat_status_msg FROM users WHERE id NOT IN (#{chat_user_id});
+    </select>
+
     <!-- 방목록 가져오기 -->
     <select id="searchRoom" resultType="chatRoom">
         select *

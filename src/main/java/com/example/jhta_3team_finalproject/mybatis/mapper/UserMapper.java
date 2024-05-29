@@ -3,6 +3,8 @@ package com.example.jhta_3team_finalproject.mybatis.mapper;
 import com.example.jhta_3team_finalproject.domain.User;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
 

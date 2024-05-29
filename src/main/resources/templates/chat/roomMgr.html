@@ -6,19 +6,52 @@
     <!-- 2024-05-28, 채팅방 생성 + 초대, 채팅방 삭제 화면 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link th:href="@{/css/chat/chat-invite.css}" rel="stylesheet" type="text/css"/>
+<!--    <link th:href="@{/css/chat/chat-invite.css}" rel="stylesheet" type="text/css"/>-->
+    <style>
+        #memberList::-webkit-scrollbar {
+            display: none
+        }
+
+        .customShadow {
+            /* box-shadow: 0px 80px 63px -66px rgba(0, 0, 0, 0.1); */
+        }
+
+        .mgr-room-screen {
+            width: 310px;
+            height: 547px;
+            display: none;
+            z-index: 99999;
+            background-color: white;
+        }
+
+        .invite-card {
+            height: 547px;
+            left: 5px;
+        }
+
+        .mgr-room-screen-back-arrow {
+            font-size: 35px;
+            vertical-align: middle;
+        }
+
+        .invite-title {
+            padding-bottom: 10px;
+            padding-left: 5px;
+            padding-top: 10px;
+        }
+    </style>
     <title>title</title>
 </head>
 
 <body>
-    <div class="bg-gray-50 h-screen flex justify-center items-center invite-screen">
+    <div class="bg-gray-50 h-screen flex justify-center items-center mgr-room-screen">
         <!-- Card -->
         <div class="invite-card w-full h-5/6 max-w-lg flex-auto flex-col space-y-4 bg-white rounded-2xl overflow-hidden customShadow relative">
             <!-- Titling -->
             <div class="w-full border-b border-blue-100">
                 <div class="p-6 flex flex-col space-y-4 invite-title">
                     
-                    <h2 class="text-2ml font-semibold text-gray-900"><i class="material-icons invite-screen-back-arrow">navigate_before</i>채팅방 생성 - 대화상대 초대</h2>
+                    <h2 class="text-2ml font-semibold text-gray-900"><i class="material-icons mgr-room-screen-back-arrow">navigate_before</i>[[${name}]]</h2>
                         <!-- 				<p class="text-xs text-gray-400">An email invite will be sent on your behalf to the selected team members.</p> -->
                 </div>
             </div>
@@ -33,7 +66,7 @@
                         <path class="fill-current text-gray-400"
                             d="M6.4 1.6a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm-4.525.275a6.4 6.4 0 019.58 8.45l4.31 4.31a.8.8 0 01-1.13 1.13l-4.31-4.31A6.399 6.399 0 010 6.4a6.4 6.4 0 011.875-4.525z" />
                     </svg>
-                    <input type="text" placeholder="Search.." x-ref="searchField" x-model="search"
+                    <input type="text" placeholder="검색" x-ref="searchField" x-model="search"
                         x-on:keydown.window.prevent.slash="$refs.searchField.focus()"
                         class="border border-blue-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-blue-400 focus:border-blue-400 focus:bg-blue-50 focus:bg-opacity-25" />
                 </div>
@@ -101,9 +134,16 @@
                     <div class="py-2 px-4 bg-gray-200 text-white rounded inline-block outline-none cursor-default"
                         :class="{'bg-blue-500 cursor-pointer hover:bg-blue-600' : selectedMembers.length > 0}"
                         style="margin-bottom: 10px;">
-                        <span>초대</span>
+                        <span>[[${roomButton}]]</span>
                         <span x-show="selectedMembers.length !== 0" x-text="selectedMembers.length"></span>
-                        <span x-text="selectedMembers.length > 0 ? '명' : ''"></span>
+                        <th:block th:if="${roomButton == '방 초대'}">
+                            <span x-text="selectedMembers.length > 0 ? '명' : ''"></span>
+                        </th:block>
+                        <th:block th:if="${roomButton == '방 나가기'}">
+                            <span x-text="selectedMembers.length > 0 ? '개' : ''"></span>
+                        </th:block>
+
+
                     </div>
                 </div>
 
@@ -113,6 +153,11 @@
     </div>
 
     <script>
+        /** 2024-05-28, 채팅방 관리 화면, < 버튼 클릭 시 */
+        $(".mgr-room-screen-back-arrow").click(function () {
+            $(".mgr-room-screen").fadeOut(300);
+        });
+
         function loadMembers() {
             return {
                 selectedMembers: [],

@@ -1,6 +1,7 @@
 package com.example.jhta_3team_finalproject.controller;
 
 
+import com.example.jhta_3team_finalproject.domain.User;
 import com.example.jhta_3team_finalproject.domain.chat.ChatRoom;
 import com.example.jhta_3team_finalproject.service.ChattingService;
 import lombok.RequiredArgsConstructor;
@@ -31,33 +32,59 @@ public class ChatController {
         return "chat/chat";
     }
 
-    @RequestMapping(value = "chatUserAddView")
-    public ModelAndView chatUserAddView(ModelAndView mv,
+    @RequestMapping(value = "chatUserList")
+    public @ResponseBody List<User> chatUserList(@RequestParam(value = "chat_user_id") String chat_user_id) {
+        // 사원 리스트를 불러옵니다.
+        return chattingService.chatUserList(chat_user_id);
+    }
+
+    @RequestMapping(value = "chatUserInviteView")
+    public ModelAndView chatUserInviteView(ModelAndView mv,
                                   @RequestParam(value = "type") String type,
-                                  @RequestParam(value = "name") String name) {
-        mv.setViewName("chatUserMgr");
+                                  @RequestParam(value = "name") String name,
+                                  @RequestParam(value = "userButton") String userButton) {
+        mv.setViewName("chat/chatUserMgr");
         mv.addObject("type", type);
         mv.addObject("name", name);
+        mv.addObject("userButton", userButton);
         return mv;
     }
 
     @RequestMapping(value = "chatUserMgrView")
     public ModelAndView chatUserMgrView(ModelAndView mv,
                                   @RequestParam(value = "type") String type,
-                                  @RequestParam(value = "name") String name) {
-        mv.setViewName("chatUserMgr");
+                                  @RequestParam(value = "name") String name,
+                                  @RequestParam(value = "roomButton") String roomButton,
+                                  @RequestParam(value = "userButton") String userButton) {
+        mv.setViewName("chat/chatUserMgr");
         mv.addObject("type", type);
         mv.addObject("name", name);
+        mv.addObject("roomButton", roomButton);
+        mv.addObject("userButton", userButton);
         return mv;
     }
 
-    @RequestMapping(value = "roomMgr")
-    public ModelAndView roomMgrView(ModelAndView mv,
+    @RequestMapping(value = "chatRoomCreateView")
+    public ModelAndView chatRoomCreateView(ModelAndView mv,
                                         @RequestParam(value = "type") String type,
-                                        @RequestParam(value = "name") String name) {
-        mv.setViewName("roomMgr");
+                                        @RequestParam(value = "name") String name,
+                                        @RequestParam(value = "roomButton") String roomButton) {
+        mv.setViewName("chat/roomMgr");
         mv.addObject("type", type);
         mv.addObject("name", name);
+        mv.addObject("roomButton", roomButton);
+        return mv;
+    }
+
+    @RequestMapping(value = "chatRoomExitView")
+    public ModelAndView chatRoomExitView(ModelAndView mv,
+                                           @RequestParam(value = "type") String type,
+                                           @RequestParam(value = "name") String name,
+                                           @RequestParam(value = "roomButton") String roomButton) {
+        mv.setViewName("chat/roomMgr");
+        mv.addObject("type", type);
+        mv.addObject("name", name);
+        mv.addObject("roomButton", roomButton);
         return mv;
     }
 
