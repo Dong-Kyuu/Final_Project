@@ -16,7 +16,7 @@
   }
 
   > .btn-group,
-  >  .btn-group-vertical {
+  > .btn-group-vertical {
     @extend .mt-2;
     @extend .me-2;
   }
@@ -30,10 +30,10 @@
   }
 
   > h2,
-   > h3,
-   > h4,
-   > h5,
-   > h6,
+  > h3,
+  > h4,
+  > h5,
+  > h6,
   > h1 {
     border-top: 1px solid $border-color;
     padding: 0.5rem 0 0;
@@ -119,6 +119,7 @@
       list-style-type: none;
       color: $text-muted;
       font-size: .75rem;
+
       .legend-dots {
         width: 1rem;
         height: 1rem;
@@ -126,18 +127,22 @@
         display: inline-block;
         vertical-align: text-bottom;
         margin-right: .5rem;
+
         .rtl & {
           margin-left: .5rem;
         }
       }
     }
   }
+
   &.legend-horizontal {
     @include display-flex;
+
     ul {
       li {
         display: inline-block;
         margin-right: 1.5rem;
+
         .rtl & {
           margin-right: auto;
           margin-left: 1.5rem;
@@ -145,14 +150,17 @@
       }
     }
   }
+
   &.legend-top-right {
     ul {
       float: right;
+
       .rtl & {
         float: left;
       }
     }
   }
+
   &.legend-vertical {
     ul {
       li {
@@ -161,6 +169,7 @@
     }
   }
 }
+
 #proBanner {
   position: fixed;
   left: 0;
@@ -168,16 +177,18 @@
   width: 100%;
   z-index: 9999;
   background: #000;
+
   .card-body-padding {
-    padding-top: .5rem ;
+    padding-top: .5rem;
     padding-bottom: .5rem;
     padding-left: 2rem;
     padding-right: 2rem;
     @media (max-width: 766px) {
-    padding-left: 1rem;
-    padding-right: 1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
     }
   }
+
   .buy-now-text {
     color: $white;
     @media (max-width: 766px) {
@@ -185,6 +196,7 @@
       line-height: 1.5;
     }
   }
+
   .btn {
     &.buy-now-btn {
       background: transparent;
@@ -201,7 +213,8 @@
         font-size: 12px;
       }
     }
-    &#bannerClose { 
+
+    &#bannerClose {
       i {
         margin-right: 1rem;
         font-size: 1.25rem;
@@ -212,8 +225,10 @@
       }
     }
   }
+
   a {
     text-decoration: none;
+
     i {
       font-size: 1.25rem;
       @media (max-width: 766px) {
@@ -221,8 +236,9 @@
       }
     }
   }
-  
+
 }
+
 .proBanner-padding-top {
   padding-top: $buy-nowbanner-padding-top !important;
 }

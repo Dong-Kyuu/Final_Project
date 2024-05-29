@@ -955,8 +955,8 @@
     <div id="container" class="container">
         <h2 style="font-size: 250%;">[[${roomName}]]</h2>
         <th:block th:with="pinfo=${#authentication.principal}">
-        <input type="hidden" id="userName" name="userName"
-               th:value="${pinfo.username}">
+            <input type="hidden" id="userName" name="userName"
+                   th:value="${pinfo.username}">
         </th:block>
         <input type="hidden" id="roomNumber" th:value="${roomNumber}">
         <div id="chating" class="chating" style='background-repeat:no-repeat;background-position: center;'>

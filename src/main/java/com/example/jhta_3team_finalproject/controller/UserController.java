@@ -3,6 +3,7 @@ package com.example.jhta_3team_finalproject.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.jhta_3team_finalproject.service.UserService;
+
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.security.Principal;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -65,9 +68,9 @@ public class UserController {
         return mv;
     }
 
-   // 로그아웃
-    @RequestMapping(value = "/logout", method = RequestMethod.GET )
-    public String logout(){
+    // 로그아웃
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout() {
         return "member/login";
     }
 
@@ -112,23 +115,23 @@ public class UserController {
     }
 
     //수정하기 저장
-    @RequestMapping(value="/updateProcess",method= RequestMethod.POST)
-    public String UpdateProcess( User user,Model model,
-                                 RedirectAttributes rattr,
-                                 HttpServletRequest request) {
+    @RequestMapping(value = "/updateProcess", method = RequestMethod.POST)
+    public String UpdateProcess(User user, Model model,
+                                RedirectAttributes rattr,
+                                HttpServletRequest request) {
         int result = userService.update(user);
 
         //삽입이 된 경우
-        if(result==1) {
-            rattr.addFlashAttribute("result","updateSuccess");
+        if (result == 1) {
+            rattr.addFlashAttribute("result", "updateSuccess");
             return "redirect:/board/list";
-        }else {
-            model.addAttribute("url",request.getRequestURI());
-            model.addAttribute("message","정보 수정실패");
+        } else {
+            model.addAttribute("url", request.getRequestURI());
+            model.addAttribute("message", "정보 수정실패");
             return "error/error";
         }
 
     }
 
-    }
+}
 

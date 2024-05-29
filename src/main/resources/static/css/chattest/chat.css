@@ -1,585 +1,595 @@
 * {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 html, body {
-	height: 100%;
-	overflow: auto;
+    height: 100%;
+    overflow: auto;
 }
 
 header {
-	position: fixed;
-	top: 0;
-	/* width: 100% */
-	left: 0;
-	right: 0;
+    position: fixed;
+    top: 0;
+    /* width: 100% */
+    left: 0;
+    right: 0;
 
-	/* 생략 */
+    /* 생략 */
 }
 
 a {
-	text-decoration: none;
-	color: white;
+    text-decoration: none;
+    color: white;
 }
 
 .navbar {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	background-color: #0C66AC;
-	padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0C66AC;
+    padding: 8px 12px;
 }
 
 .navbar-logo {
-	font-size: 20px;
-	color: white;
+    font-size: 20px;
+    color: white;
 }
 
 p {
-	font-size: 20px;
-	font-weight: 50px;
-	color: white;
+    font-size: 20px;
+    font-weight: 50px;
+    color: white;
 }
 
 .navbar-logo i {
-	color: #d49466;
+    color: #d49466;
 }
 
 .navbar_menu {
-	display: flex;
-	list-style: none;
-	padding-left: 0;
+    display: flex;
+    list-style: none;
+    padding-left: 0;
 }
 
 .navbar_menu li {
-	padding: 8px 12px;
-	color: white;
+    padding: 8px 12px;
+    color: white;
 }
 
 .navbar_menu li:hover {
-	background-color: #d49466;
+    background-color: #d49466;
 }
 
 .navbar_icons {
-	list-style: none;
-	background-color: white;
-	color: white;
-	display: flex;
-	padding-left: 0;
+    list-style: none;
+    background-color: white;
+    color: white;
+    display: flex;
+    padding-left: 0;
 }
 
 .navbar_icons li {
-	padding: 8px 12px;
+    padding: 8px 12px;
 }
 
 .navbar_toogleBtn {
-	display: none;
-	position: absolute;
-	right: 32px;
-	font-size: 24px;
-	color: #d49466;
+    display: none;
+    position: absolute;
+    right: 32px;
+    font-size: 24px;
+    color: #d49466;
 }
 
-@media screen and(max-width:760px) {
-	.navbar {
-		flex-direction: column;
-		align-items: flex-start;
-	}
-	.navbar_menu {
-		display: none;
-		flex-direction: column;
-		align-items: center;
-		width: 100%;
-	}
-	.navbar_menu li {
-		width: 100%;
-		text-align: center;
-	}
-	.navbar_icons {
-		display: none;
-		justify-content: center;
-		width: 100%;
-	}
-	.navbar_toogleBtn {
-		display: block;
-	}
-	.navbar_menu.active, .navbar_icons.active {
-		display: flex;
-	}
+@media screen and(max-width: 760px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar_menu {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .navbar_menu li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .navbar_icons {
+        display: none;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .navbar_toogleBtn {
+        display: block;
+    }
+
+    .navbar_menu.active, .navbar_icons.active {
+        display: flex;
+    }
 }
 
 body {
-	margin: 0;
-	padding: 0;
-	font-weight: 400;
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: 1rem;
-	line-height: 1.58;
-	color: #333;
-	height: 100%;
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.58;
+    color: #333;
+    height: 100%;
 }
 
 .container {
-	left: 0;
-	right: 0;
-	text-align: center;
-	margin-left: auto;
-	margin-right: auto;
-	background-color: #a2d0f2;
-	position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #a2d0f2;
+    position: absolute;
 }
 
 .container h1 {
-	text-align: left;
-	padding: 5px 5px 5px 15px;
-	color: #000;
-	text-align: center;
-	display: inline;
+    text-align: left;
+    padding: 5px 5px 5px 15px;
+    color: #000;
+    text-align: center;
+    display: inline;
 }
 
 .container h3 {
-	text-align: left;
-	padding: 0px 0px 0px 0px;
-	color: #021422;
-	text-align: center;
-	display: inline;
+    text-align: left;
+    padding: 0px 0px 0px 0px;
+    color: #021422;
+    text-align: center;
+    display: inline;
 }
 
 .chating {
-	background-color: #9bbbd4;
-	margin-left: auto;
-	margin-right: auto;
-	width: 98%;
-	height: 700px;
-	overflow: auto;
-	position: relative;
+    background-color: #9bbbd4;
+    margin-left: auto;
+    margin-right: auto;
+    width: 98%;
+    height: 700px;
+    overflow: auto;
+    position: relative;
 }
 
 .chating::-webkit-scrollbar {
-	width: 10px;
-	display: none;
+    width: 10px;
+    display: none;
 }
 
 .chatingr::-webkit-scrollbar {
-	width: 10px;
-	display: block;
+    width: 10px;
+    display: block;
 }
 
 .chatingr::-webkit-scrollbar-thumb {
-	background-color: #3681ba;
-	display: block;
+    background-color: #3681ba;
+    display: block;
 }
 
 .chatingr::-webkit-scrollbar-thumb:hover {
-	background: #1869ab;
-	display: block;
+    background: #1869ab;
+    display: block;
 }
 
 .chatingr::-webkit-scrollbar-track {
-	background-color: grey;
-	box-shadow: inset 0px 0px 5px black;
-	display: none;
+    background-color: grey;
+    box-shadow: inset 0px 0px 5px black;
+    display: none;
 }
 
 .chating::-webkit-scrollbar-button {
-	display: none;
+    display: none;
 }
 
 .chating .me {
-	color: #000;
-	text-align: left;
+    color: #000;
+    text-align: left;
 }
 
 .chating .others {
-	color: #000;
-	text-align: left;
+    color: #000;
+    text-align: left;
 }
 
 input {
-	width: 330px;
-	height: 25px;
+    width: 330px;
+    height: 25px;
 }
 
 .msgImg {
-	width: 200px;
-	height: 125px;
+    width: 200px;
+    height: 125px;
 }
 
 .clearBoth {
-	clear: both;
+    clear: both;
 }
 
 .img {
-	float: right;
+    float: right;
 }
 
 body:before {
-	height: 45%;
-	width: 100%;
-	position: absolute;
-	top: 5%;
-	left: 0;
-	background: #fff;
-	content: "";
-	z-index: 0;
+    height: 45%;
+    width: 100%;
+    position: absolute;
+    top: 5%;
+    left: 0;
+    background: #fff;
+    content: "";
+    z-index: 0;
 }
 
 .clearfix:after {
-	display: block;
-	content: "";
-	clear: both;
+    display: block;
+    content: "";
+    clear: both;
 }
 
 .hidden {
-	display: none;
+    display: none;
 }
 
 .form-control {
-	width: 96.5%;
-	margin-left: auto;
-	margin-right: auto;
-	min-height: 38px;
-	font-size: 15px;
-	border: 1px solid #c8c8c8;
-	border: 0;
+    width: 96.5%;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 38px;
+    font-size: 15px;
+    border: 1px solid #c8c8c8;
+    border: 0;
 }
 
 .form-group {
-	margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 input {
-	padding-left: 10px;
-	outline: none;
+    padding-left: 10px;
+    outline: none;
 }
-
 
 
 h1 {
-	font-size: 1.7em;
-	background-color: 128ff2;
+    font-size: 1.7em;
+    background-color: 128ff2;
 }
 
 a {
-	color: #128ff2;
+    color: #128ff2;
 }
 
 button {
-	box-shadow: none;
-	border: 1px solid transparent;
-	font-size: 14px;
-	outline: none;
-	line-height: 100%;
-	white-space: nowrap;
-	vertical-align: middle;
-	padding: 0.6rem 1rem;
-	border-radius: 2px;
-	transition: all 0.2s ease-in-out;
-	cursor: pointer;
-	min-height: 38px;
+    box-shadow: none;
+    border: 1px solid transparent;
+    font-size: 14px;
+    outline: none;
+    line-height: 100%;
+    white-space: nowrap;
+    vertical-align: middle;
+    padding: 0.6rem 1rem;
+    border-radius: 2px;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    min-height: 38px;
 }
 
 button.default {
-	background-color: #e8e8e8;
-	color: #333;
-	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
+    background-color: #e8e8e8;
+    color: #333;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
 }
 
 button.primary {
-	background-color: #55AFF5;
-	content: '메시지 보내기';
-	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
-	color: #fff;
-	width: 98%;
-	margin-left : 1%;
+    background-color: #55AFF5;
+    content: '메시지 보내기';
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
+    color: #fff;
+    width: 98%;
+    margin-left: 1%;
 }
 
 button.accent {
-	margin: 10px 0px;
-	background-color: #fff;
-	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
-	color: #fff;
-	width: 98%;
+    margin: 10px 0px;
+    background-color: #fff;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
+    color: #fff;
+    width: 98%;
 }
 
 button.accent2 {
-	background-color: #fff;
-	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
-	color: #fff;
-	width: 98%;
+    background-color: #fff;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
+    color: #fff;
+    width: 98%;
 }
 
 #username-page {
-	text-align: center;
+    text-align: center;
 }
 
 .username-page-container {
-	background: #fff;
-	box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
-	width: 100%;
-	max-width: 500px;
-	display: inline-block;
-	margin-top: 42px;
-	vertical-align: middle;
-	position: relative;
-	padding: 35px 55px 35px;
-	min-height: 200px;
-	position: absolute;
-	top: 50%;
-	left: 0;
-	right: 0;
-	margin: 0 auto;
-	margin-top: -160px;
+    background: #fff;
+    box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
+    width: 100%;
+    max-width: 500px;
+    display: inline-block;
+    margin-top: 42px;
+    vertical-align: middle;
+    position: relative;
+    padding: 35px 55px 35px;
+    min-height: 200px;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    margin-top: -160px;
 }
 
 .username-page-container .username-submit {
-	margin-top: 10px;
+    margin-top: 10px;
 }
 
 #chat-page {
-	position: relative;
-	height: 100%;
+    position: relative;
+    height: 100%;
 }
 
 .chat-container {
-	max-height:100%;
-	max-width: 1500px;
-	margin-left: auto;
-	margin-right: auto;
-	background-color: #fff;
-	margin-top: 0px;
-	height: calc(100% - 60px);
-	max-height: 1000px;
-	position: relative;
+    max-height: 100%;
+    max-width: 1500px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #fff;
+    margin-top: 0px;
+    height: calc(100% - 60px);
+    max-height: 1000px;
+    position: relative;
 }
 
 #chat-page ul {
-	list-style-type: none;
-	background-color: #FFF;
-	margin: 0;
-	overflow: auto;
-	overflow-y: scroll;
-	padding: 0 20px 0px 20px;
-	height: calc(100% - 150px);
+    list-style-type: none;
+    background-color: #FFF;
+    margin: 0;
+    overflow: auto;
+    overflow-y: scroll;
+    padding: 0 20px 0px 20px;
+    height: calc(100% - 150px);
 }
 
 #chat-page #messageForm {
-	padding: 20px;
+    padding: 20px;
 }
 
 #chat-page ul li {
-	line-height: 1.5rem;
-	padding: 10px 20px;
-	margin: 0;
-	border-bottom: 1px solid #f4f4f4;
+    line-height: 1.5rem;
+    padding: 10px 20px;
+    margin: 0;
+    border-bottom: 1px solid #f4f4f4;
 }
 
 #chat-page ul li p {
-	margin: 0;
+    margin: 0;
 }
 
 #chat-page .event-message {
-	width: 100%;
-	text-align: center;
-	clear: both;
+    width: 100%;
+    text-align: center;
+    clear: both;
 }
 
 #chat-page .event-message p {
-	color: #777;
-	font-size: 14px;
-	word-wrap: break-word;
+    color: #777;
+    font-size: 14px;
+    word-wrap: break-word;
 }
 
 #chat-page .chat-message {
-	padding-left: 68px;
-	position: relative;
+    padding-left: 68px;
+    position: relative;
 }
 
 #chat-page .chat-message i {
-	position: absolute;
-	width: 42px;
-	height: 42px;
-	overflow: hidden;
-	left: 10px;
-	display: inline-block;
-	vertical-align: middle;
-	font-size: 18px;
-	line-height: 42px;
-	color: #fff;
-	text-align: center;
-	border-radius: 50%;
-	font-style: normal;
-	text-transform: uppercase;
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    overflow: hidden;
+    left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 18px;
+    line-height: 42px;
+    color: #fff;
+    text-align: center;
+    border-radius: 50%;
+    font-style: normal;
+    text-transform: uppercase;
 }
 
 #chat-page .chat-message span {
-	color: #333;
-	font-weight: 600;
+    color: #333;
+    font-weight: 600;
 }
 
 #chat-page .chat-message p {
-	color: #43464b;
+    color: #43464b;
 }
 
 #messageForm .input-group input {
-	float: left;
-	width: calc(100% - 85px);
+    float: left;
+    width: calc(100% - 85px);
 }
 
 #messageForm .input-group button {
-	float: left;
-	width: 80px;
-	height: 38px;
-	margin-left: 5px;
+    float: left;
+    width: 80px;
+    height: 38px;
+    margin-left: 5px;
 }
 
 .chat-header {
-	background-color: #82c7fa;
-	text-align: center;
-	padding: 15px;
-	border-bottom: 1px solid #ececec;
-	font-family: sans-serif;
+    background-color: #82c7fa;
+    text-align: center;
+    padding: 15px;
+    border-bottom: 1px solid #ececec;
+    font-family: sans-serif;
 }
 
 .chat-header h2 {
-	margin: 0;
+    margin: 0;
 }
 
 .connecting {
-	padding-top: 5px;
-	text-align: center;
-	color: #777;
-	position: absolute;
-	top: 65px;
-	width: 100%;
+    padding-top: 5px;
+    text-align: center;
+    color: #777;
+    position: absolute;
+    top: 65px;
+    width: 100%;
 }
 
 @media screen and (max-width: 730px) {
-	.chat-container {
-		margin-left: 10px;
-		margin-right: 10px;
-		margin-top: 10px;
-	}
+    .chat-container {
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-top: 10px;
+    }
 }
 
 @media screen and (max-width: 480px) {
-	.chat-container {
-		height: calc(100% - 30px);
-	}
-	.username-page-container {
-		width: 100%;
-		margin-left: 15px;
-		margin-right: 15px;
-		padding: 25px;
-	}
-	#chat-page ul {
-		height: calc(100% - 120px);
-	}
-	#messageForm .input-group button {
-		width: 65px;
-	}
-	#messageForm .input-group input {
-		width: calc(100% - 70px);
-	}
-	.connecting {
-		top: 60px;
-	}
-	.chat-header h2 {
-		font-size: 1.1em;
-	}
+    .chat-container {
+        height: calc(100% - 30px);
+    }
+
+    .username-page-container {
+        width: 100%;
+        margin-left: 15px;
+        margin-right: 15px;
+        padding: 25px;
+    }
+
+    #chat-page ul {
+        height: calc(100% - 120px);
+    }
+
+    #messageForm .input-group button {
+        width: 65px;
+    }
+
+    #messageForm .input-group input {
+        width: calc(100% - 70px);
+    }
+
+    .connecting {
+        top: 60px;
+    }
+
+    .chat-header h2 {
+        font-size: 1.1em;
+    }
 }
 
 .balloon_03 {
-	position: relative;
-	margin: 20px;
-	background: #fff;
-	border-radius: 7px;
-	text-align: left;
-	max-width: 55%;
-	float: left;
-	padding-top: 0px;
-	padding-right: 5px;
-	padding-bottom: 0px;
-	padding-left: 5px;
+    position: relative;
+    margin: 20px;
+    background: #fff;
+    border-radius: 7px;
+    text-align: left;
+    max-width: 55%;
+    float: left;
+    padding-top: 0px;
+    padding-right: 5px;
+    padding-bottom: 0px;
+    padding-left: 5px;
 }
 
 .balloon_03:after {
-	border-top: 13px solid #fff;
-	border-left: 13px solid transparent;
-	border-right: 0px solid transparent;
-	border-bottom: 0px solid transparent;
-	content: "";
-	position: absolute;
-	top: 6px;
-	left: -11px;
-	float: left;
+    border-top: 13px solid #fff;
+    border-left: 13px solid transparent;
+    border-right: 0px solid transparent;
+    border-bottom: 0px solid transparent;
+    content: "";
+    position: absolute;
+    top: 6px;
+    left: -11px;
+    float: left;
 }
 
 .balloon_02 {
-	position: relative;
-	max-width: 70%;
-	background: #ede100;
-	border-radius: 7px;
-	text-align: left;
-	float: right;
-	padding-top: 0px;
-	padding-right: 5px;
-	padding-bottom: 0px;
-	padding-left: 5px;
-	display: table-row;
+    position: relative;
+    max-width: 70%;
+    background: #ede100;
+    border-radius: 7px;
+    text-align: left;
+    float: right;
+    padding-top: 0px;
+    padding-right: 5px;
+    padding-bottom: 0px;
+    padding-left: 5px;
+    display: table-row;
 }
 
 .balloon_semo {
-	border-top: 0px solid transparent;
-	border-right: 14px solid transparent;
-	border-left: 0px solid transparent;
-	border-bottom: 14px solid #ede100;
-	content: "";
-	position: relative;
-	float: right;
-	top: 12px;
-	right: 3px;
+    border-top: 0px solid transparent;
+    border-right: 14px solid transparent;
+    border-left: 0px solid transparent;
+    border-bottom: 14px solid #ede100;
+    content: "";
+    position: relative;
+    float: right;
+    top: 12px;
+    right: 3px;
 }
 
 .block {
-	width: 100%;
-	height: 20%;
-	max-height: 100%;
-	display: table;
+    width: 100%;
+    height: 20%;
+    max-height: 100%;
+    display: table;
 }
 
 .float {
-	float: left;
-	color: #000;
+    float: left;
+    color: #000;
 }
 
 .circle1 {
-	background-color: #fef01b;
-	width: 9%;
-	height: 63px;
-	top: 50px;
-	border-radius: 20px;
-	text-align: center;
-	font-size: 20px;
-	margin-left: 15px;
-	margin-top: 10px;
-	overflow: hidden;
+    background-color: #fef01b;
+    width: 9%;
+    height: 63px;
+    top: 50px;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 20px;
+    margin-left: 15px;
+    margin-top: 10px;
+    overflow: hidden;
 }
 
 .textarea {
-	resize: none;
-	margin-left : 1%;
-	margin-right : 1%;
-	font-size: 150%;
-	height: 12%;
-	min-height: 12%;
-	width: 98%;
-	vertical-align: middle;
-	outline: none;
-	border: none;
-	text-decoration: none;
-	font-family: Consolas, sans-serif;
-	overflow: hidden;
+    resize: none;
+    margin-left: 1%;
+    margin-right: 1%;
+    font-size: 150%;
+    height: 12%;
+    min-height: 12%;
+    width: 98%;
+    vertical-align: middle;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    font-family: Consolas, sans-serif;
+    overflow: hidden;
 }
 

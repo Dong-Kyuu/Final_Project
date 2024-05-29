@@ -1,30 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
-"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <!-- 마이바티스는 파라미터에 Null값이 있을 경우 에러가 발생.
 	 이를 처리하기 위한 방법
-	 <setting name = "jdbcTypeForNull" value="NULL" /> 
+	 <setting name = "jdbcTypeForNull" value="NULL" />
 -->
 
 <configuration>
-	<settings>
-		<setting name = "jdbcTypeForNull" value="NULL" />
-	</settings>
+    <settings>
+        <setting name = "jdbcTypeForNull" value="NULL" />
+    </settings>
 
-	<mappers>
-		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/UserMapper.xml"/>
-		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/BoardMapper.xml"/>
-		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/UpfileMapper.xml"/>
-		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table_CommentMapper.xml"/>
-		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/ChatMapper.xml"/>
-		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/InqCommentMapper.xml"/>
-		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/InqueryBoardMapper.xml"/>
-	</mappers>
+    <mappers>
+        <mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/UserMapper.xml"/>
+        <mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/BoardMapper.xml"/>
+        <mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/UpfileMapper.xml"/>
+        <mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table_CommentMapper.xml"/>
+        <mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/ChatMapper.xml"/>
+        <mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/InqCommentMapper.xml"/>
+        <mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/InqueryBoardMapper.xml"/>
+        <mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/TourPackage/TripMapper.xml"/>
+        <mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/TourPackage/OptionMapper.xml"/>
+        <mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/TourPackage/CartMapper.xml"/>
+    </mappers>
 
 </configuration>
-
-
-
-
-
-

@@ -42,14 +42,17 @@
     /* Chrome/Opera/Safari */
     color: #4f97e5;
 }
+
 ::-moz-placeholder {
     /* Firefox 19+ */
     color: #4f97e5;
 }
+
 :-ms-input-placeholder {
     /* IE 10+ */
     color: #4f97e5;
 }
+
 :-moz-placeholder {
     /* Firefox 18- */
     color: #4f97e5;

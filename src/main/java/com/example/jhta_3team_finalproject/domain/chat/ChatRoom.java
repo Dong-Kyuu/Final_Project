@@ -15,9 +15,9 @@ public class ChatRoom {
 //	String sessionId;
 //	String description;
 
-	private long chat_room_num;
-	private String chat_session_id;
-	private String room_name;
-	private Date room_create_date;
+    private long chat_room_num;
+    private String chat_session_id;
+    private String room_name;
+    private Date room_create_date;
 
 }

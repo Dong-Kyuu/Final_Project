@@ -1,8 +1,12 @@
 -- 순서대로 삭제
-# DROP TABLE com_message;
-# DROP TABLE com_chat_participate;
-# DROP TABLE com_chat_room;
-# DROP TABLE member;
+#
+DROP TABLE com_message;
+#
+DROP TABLE com_chat_participate;
+#
+DROP TABLE com_chat_room;
+#
+DROP TABLE member;
 
 -- 채팅방
 -- auto-generated definition
@@ -48,6 +52,8 @@ create table com_chat_participate
 
 
 -- 시퀀스 대신 사용
-#<selectKey resultType="int" order="BEFORE" keyProperty="chatroom_num">
-#    select nvl(max(chatroom_num),0)+1 from com_chat_room
-#</selectKey>
+#
+<selectKey resultType="int" order="BEFORE" keyProperty="chatroom_num">
+#
+select nvl(max(chatroom_num), 0) + 1
+from com_chat_room #</selectKey>

@@ -33,7 +33,7 @@ public class ChatController {
 
     @RequestMapping(value = "inviteAdd")
     public ModelAndView inviteAdd(ModelAndView mv,
-                            @RequestParam(value = "type") String type) {
+                                  @RequestParam(value = "type") String type) {
         mv.setViewName("chat/invite");
         mv.addObject("type", type);
         return mv;

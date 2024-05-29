@@ -15,54 +15,54 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController // @Controller + @ResponseBody
-@RequestMapping(value="/inqcomment")
+@RequestMapping(value = "/inqcomment")
 public class InqCommentController {
 
-	private InqCommentService inqCommentService;
+    private InqCommentService inqCommentService;
 
-	@Autowired
-	public InqCommentController(InqCommentService inqCommentService) {
-		this.inqCommentService = inqCommentService;
-	}
-	
-	private static final Logger logger = LoggerFactory.getLogger(InqCommentController.class);
-	
-	@PostMapping(value = "/add")
-	public int CommentAdd(InqueryComment co) {
-		logger.info("답변 추가");
-		return inqCommentService.commentsInsert(co);
-	}
+    @Autowired
+    public InqCommentController(InqCommentService inqCommentService) {
+        this.inqCommentService = inqCommentService;
+    }
 
-	@PostMapping(value = "/reply")
-	public int CommentReply(InqueryComment co) {
-		logger.info("답글 추가");
-		return inqCommentService.commentsReply(co);
-	}
+    private static final Logger logger = LoggerFactory.getLogger(InqCommentController.class);
 
-	@PostMapping(value = "/list")
-	public String CommentList(int comment_board_num, int state) {
-		logger.info("답변 리스트");
-		int listcount = inqCommentService.getListCount(comment_board_num);
+    @PostMapping(value = "/add")
+    public int CommentAdd(InqueryComment co) {
+        logger.info("답변 추가");
+        return inqCommentService.commentsInsert(co);
+    }
 
-		JsonObject object = new JsonObject();
-		object.addProperty("listcount", listcount);
+    @PostMapping(value = "/reply")
+    public int CommentReply(InqueryComment co) {
+        logger.info("답글 추가");
+        return inqCommentService.commentsReply(co);
+    }
 
-		JsonArray jarray = inqCommentService.getCommentJsonList(comment_board_num, state);
-		JsonElement je = new Gson().toJsonTree(jarray);
-		object.add("commentlist", je);
-		return object.toString();
-	}
-	
-	@PostMapping(value = "/update")
-	public int CommentUpdate(InqueryComment co) {
-		logger.info("답변 수정");
-		return inqCommentService.commentsUpdate(co);
-	}
-	
-	@PostMapping(value = "/delete")
-	public int CommentDelete(int num) {
-		logger.info("답변 삭제");
-		return inqCommentService.commentsDelete(num);
-	}
-	
+    @PostMapping(value = "/list")
+    public String CommentList(int comment_board_num, int state) {
+        logger.info("답변 리스트");
+        int listcount = inqCommentService.getListCount(comment_board_num);
+
+        JsonObject object = new JsonObject();
+        object.addProperty("listcount", listcount);
+
+        JsonArray jarray = inqCommentService.getCommentJsonList(comment_board_num, state);
+        JsonElement je = new Gson().toJsonTree(jarray);
+        object.add("commentlist", je);
+        return object.toString();
+    }
+
+    @PostMapping(value = "/update")
+    public int CommentUpdate(InqueryComment co) {
+        logger.info("답변 수정");
+        return inqCommentService.commentsUpdate(co);
+    }
+
+    @PostMapping(value = "/delete")
+    public int CommentDelete(int num) {
+        logger.info("답변 삭제");
+        return inqCommentService.commentsDelete(num);
+    }
+
 }
