@@ -6,6 +6,7 @@ import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 import com.example.jhta_3team_finalproject.domain.chat.ChatRoom;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Mapper
@@ -21,5 +22,11 @@ public interface ChatMapper {
 
     public List<ChatMessage> searchMessages(ChatMessage chatMessage);
 
-    public List<User> chatUserList(String chat_user_id);
+    public List<User> chatUserList(String chatUserId);
+
+    public User chatUserProfile(String chatUserId);
+
+    public int chatUserProfileMsgUpdate(String profileStatusMsg, String chatUserId);
+
+    int chatUserProfileMsgUpdate(HashMap<String, String> map);
 }

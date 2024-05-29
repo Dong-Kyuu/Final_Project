@@ -6,10 +6,10 @@ import com.example.jhta_3team_finalproject.domain.User;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 import com.example.jhta_3team_finalproject.domain.chat.ChatRoom;
 import com.example.jhta_3team_finalproject.mybatis.mapper.ChatMapper;
-import com.example.jhta_3team_finalproject.mybatis.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -43,7 +43,18 @@ public class ChattingService {
         return dao.searchRoomUser(chatRoom);
     }
 
-    public List<User> chatUserList(String chat_user_id) {
-        return dao.chatUserList(chat_user_id);
+    public List<User> chatUserList(String chatUserId) {
+        return dao.chatUserList(chatUserId);
+    }
+
+    public User chatUserProfile(String chatUserId) {
+        return dao.chatUserProfile(chatUserId);
+    }
+
+    public int chatUserProfileMsgUpdate(String profileStatusMsg, String chatUserId) {
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("chat_status_msg", profileStatusMsg);
+        map.put("chat_user_id", chatUserId);
+        return dao.chatUserProfileMsgUpdate(map);
     }
 }
