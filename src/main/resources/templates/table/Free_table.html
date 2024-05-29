@@ -1,128 +1,120 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Purple Admin</title>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Purple Admin</title>
 
-    <!-- css -->
-    <link rel="stylesheet" th:href="@{../assets/vendors/mdi/css/materialdesignicons.min.css}">
-    <link rel="stylesheet" th:href="@{../assets/vendors/css/vendor.bundle.base.css}">
-    <link rel="stylesheet" th:href="@{../assets/css/style.css}">
-    <link rel="stylesheet" th:href="@{../css/table/list.css}">
-    <link rel="shortcut icon" th:href="@{../assets/images/favicon.ico}"/>
+        <!-- css -->
+        <link rel="stylesheet" th:href="@{../assets/vendors/mdi/css/materialdesignicons.min.css}">
+        <link rel="stylesheet" th:href="@{../assets/vendors/css/vendor.bundle.base.css}">
+        <link rel="stylesheet" th:href="@{../assets/css/style.css}">
+        <link rel="stylesheet" th:href="@{../css/table/list.css}">
+        <link rel="shortcut icon" th:href="@{../assets/images/favicon.ico}" />
 
-    <!-- js -->
-    <script th:src="@{/js/jquery-3.7.1.js}"></script>
-    <script th:src="@{../js/table/Ftable.js}"></script>
+        <!-- js -->
+        <script th:src="@{/js/jquery-3.7.1.js}"></script>
+        <script th:src="@{../js/table/Ftable.js}"></script>
 
-</head>
-<body>
+    </head>
+    <body>
 
-<div class="container-scroller">
-    <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
+        <div class="container-scroller">
+            <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
 
-    <div class="container-fluid page-body-wrapper">
-        <th:block th:replace="~{HSF/_sidebar :: sidebar}"></th:block>
+            <div class="container-fluid page-body-wrapper">
+                <th:block th:replace="~{HSF/_sidebar :: sidebar}"></th:block>
 
-        <div class="main-panel">
-            <div class="content-wrapper">
-                <div class="page-header">
-                    <h4 class="page-title"> 자유 게시판 </h4>
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#">게시판</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">자유 게시판</li>
-                        </ol>
-                    </nav>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">전체 보기</h4>
-                                <p class="card-description">
-                                    글 갯수 <code> [[${listcount}]]</code>
-                                </p>
-                                <th:block th:if="${listcount > 0}">
-                                    <table class="table">
-                                        <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Title</th>
-                                            <th>Writer</th>
-                                            <th>Date</th>
-                                            <th>Views</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <th:block th:with="num=${listcount -(page -1)*limit}">
-                                            <th:block th:each="b, iterStat:${boardlist}">
-                                                <tr>
-                                                    <td><span th:text="${num -(iterStat.index)}"></span></td>
-                                                    <td>
-                                                        <div>
-                                                            <th:block
-                                                                    th:each="i : ${#numbers.sequence(1, b.BOARD_RE_LEV * 2,1)}">
-                                                                &nbsp;&nbsp;
-                                                            </th:block>
-                                                            <img th:src="@{/image/line.gif}"
-                                                                 th:if="${b.BOARD_RE_LEV != 0}"/>
-                                                            <a th:href="@{'detail?num=' + ${b.BOARD_NUM}}">
-                                                                <span th:text="${b.BOARD_SUBJECT}"></span>
-                                                                <span class="gray"
-                                                                      th:text="'[' + ${b.CNT} + ']'"></span>
+                <div class="main-panel">
+                    <div class="content-wrapper">
+                        <div class="page-header">
+                            <h4 class="page-title"> 자유 게시판 </h4>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">게시판</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">자유 게시판</li>
+                                </ol>
+                            </nav>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 grid-margin stretch-card">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">전체 보기</h4>
+                                        <p class="card-description">
+                                            글 갯수 <code> [[${listcount}]]</code>
+                                        </p>
+                                        <th:block th:if = "${listcount > 0}">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No</th>
+                                                        <th>Title</th>
+                                                        <th>Writer</th>
+                                                        <th>Date</th>
+                                                        <th>Views</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <th:block th:with = "num=${listcount -(page -1)*limit}">
+                                                        <th:block th:each	= "b, iterStat:${boardlist}">
+                                                            <tr>
+                                                                <td><span th:text = "${num -(iterStat.index)}"></span></td>
+                                                                <td>
+                                                                    <div>
+                                                                        <th:block th:each = "i : ${#numbers.sequence(1, b.BOARD_RE_LEV * 2,1)}">
+                                                                            &nbsp;&nbsp;
+                                                                        </th:block>
+                                                                        <img th:src	= "@{/image/line.gif}" 	th:if 	= "${b.BOARD_RE_LEV != 0}" />
+                                                                        <a th:href = "@{'detail?num=' + ${b.BOARD_NUM}}">
+                                                                            <span>[[${#strings.abbreviate(b.BOARD_SUBJECT,25)}]]</span>
+                                                                            <span class	= "gray" th:text = "'[' + ${b.CNT} + ']'"></span>
+                                                                        </a>
+                                                                    </div>
+                                                                </td>
+                                                                <td><div th:text = "${b.BOARD_NAME}"></div></td>
+                                                                <td><div th:text = "${b.BOARD_DATE}"></div></td>
+                                                                <td><div th:text = "${b.BOARD_READCOUNT}"></div></td>
+                                                            </tr>
+                                                        </th:block>
+                                                    </th:block>
+                                                </tbody>
+                                            </table>
+
+                                            <div class = "container ">
+                                                <div class = "center-block mt-5">
+                                                    <ul class = "pagination justify-content-center">
+                                                        <li class = "page-item">
+                                                            <a class = "page-link"
+                                                               th:classappend = "${page<=1} ? 'gray' : ''"
+                                                               th:href = "${page>1} ? 'freelist?page=' + ${page -1} : ''">
+                                                                    이전&nbsp;
                                                             </a>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div th:text="${b.BOARD_NAME}"></div>
-                                                    </td>
-                                                    <td>
-                                                        <div th:text="${b.BOARD_DATE}"></div>
-                                                    </td>
-                                                    <td>
-                                                        <div th:text="${b.BOARD_READCOUNT}"></div>
-                                                    </td>
-                                                </tr>
-                                            </th:block>
+                                                        </li>
+                                                        <li th:class = "${a == page} ? 'page-item active' : 'page-item'"
+                                                            th:each = "a : ${#numbers.sequence(startpage, endpage)}">
+                                                            <a th:href = "${a == page} ? '' : 'freelist?page=' + ${a}" class = "page-link">
+                                                                <span th:text = "${a}"></span>
+                                                            </a>
+                                                        </li>
+                                                        <li class = "page-item">
+                                                            <a class = "page-link"
+                                                               th:classappend = "${page >= maxpage} ? 'gray' : ''"
+                                                               th:href = "${page < maxpage} ? 'freelist?page=' + ${page+1} : ''">다음&nbsp;</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
                                         </th:block>
-                                        </tbody>
-                                    </table>
-                                    <div class="container ">
-                                        <div class="center-block mt-5">
-                                            <ul class="pagination justify-content-center">
-                                                <li class="page-item">
-                                                    <a class="page-link"
-                                                       th:classappend="${page<=1} ? 'gray' : ''"
-                                                       th:href="${page>1} ? 'list?page=' + ${page -1} : ''">
-                                                        이전&nbsp;
-                                                    </a>
-                                                </li>
-                                                <li th:class="${a == page} ? 'page-item active' : 'page-item'"
-                                                    th:each="a : ${#numbers.sequence(startpage, endpage)}">
-                                                    <a th:href="${a == page} ? '' : 'list?page=' + ${a}"
-                                                       class="page-link">
-                                                        <span th:text="${a}"></span>
-                                                    </a>
-                                                </li>
-                                                <li class="page-item">
-                                                    <a class="page-link"
-                                                       th:classappend="${page >= maxpage} ? 'gray' : ''"
-                                                       th:href="${page < maxpage} ? 'list?page=' + ${page+1} : ''">다음&nbsp;</a>
-                                                </li>
-                                            </ul>
+
+                                        <th:block th:if = "${listcount == 0}">
+                                            <span class="no-list">등록된 글이 없습니다.</span>
+                                        </th:block>
+
+                                        <div class = "write-button">
+                                            <button type="button" class="btn btn-gradient-dark btn-rounded btn-fw"> 글 쓰 기 </button>
                                         </div>
                                     </div>
-                                </th:block>
-
-                                <th:block th:if="${listcount == 0}">
-                                    <span class="no-list">등록된 글이 없습니다.</span>
-                                </th:block>
-
-                                <div class="write-button">
-                                    <button type="button" class="btn btn-gradient-dark btn-rounded btn-fw"> 글 쓰 기
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -130,13 +122,11 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<script th:src="@{../assets/vendors/js/vendor.bundle.base.js}"></script>
-<script th:src="@{../assets/js/off-canvas.js}"></script>
-<script th:src="@{../assets/js/hoverable-collapse.js}"></script>
-<!--<script th:src="@{../assets/js/misc.js}"></script>-->
+    <script th:src="@{../assets/vendors/js/vendor.bundle.base.js}"></script>
+    <script th:src="@{../assets/js/off-canvas.js}"></script>
+    <script th:src="@{../assets/js/hoverable-collapse.js}"></script>
+    <!--<script th:src="@{../assets/js/misc.js}"></script>-->
 
-</body>
+    </body>
 </html>
