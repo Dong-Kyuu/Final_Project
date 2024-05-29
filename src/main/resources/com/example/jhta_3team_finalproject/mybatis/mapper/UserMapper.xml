@@ -7,10 +7,11 @@
     <select id="isId" resultType="user">
         SELECT * FROM mbt.users WHERE id = #{id}
     </select>
+
     <insert id="join" >
         insert  into mbt.users
-            (id,name,email,department,password)
-        values ( #{id}, #{name},#{email}, #{department},#{password})
+            (id, password, name, email,phone_number,department,gender)
+        values ( #{id},#{password} ,#{name},#{email},#{phone_number}, #{department},#{gender})
     </insert>
 
 

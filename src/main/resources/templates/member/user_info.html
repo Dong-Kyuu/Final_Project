@@ -6,11 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>내 정보</title>
     <!-- plugins:css -->
-    <link rel="stylesheet" th:href="@{../assets/vendors/mdi/css/materialdesignicons.min.css}">
-    <link rel="stylesheet" th:href="@{../assets/vendors/css/vendor.bundle.base.css}">
-    <link rel="stylesheet" th:href="@{../edit_css/table/list.css}">
-    <link rel="stylesheet" th:href="@{../static/css/user/userinfo.css}">
-
+    <link rel="stylesheet" th:href="@{/assets/vendors/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/css/user/userinfo.css}">
 
     <!-- endinject -->
     <!-- Plugin css for this page -->
@@ -18,9 +16,69 @@
     <!-- inject:css -->
     <!-- endinject -->
     <!-- Layout styles -->
-    <link rel="stylesheet" th:href="@{../assets/css/style.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
     <!-- End layout styles -->
-    <link rel="shortcut icon" th:href="@{../assets/images/favicon.ico}"/>
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <style>
+        .profile-img {
+            width: 150px; /* 프로필 사진 너비 */
+            height: 150px; /* 프로필 사진 높이 */
+            border-radius: 50%; /* 원형으로 만들기 */
+            object-fit: cover; /* 이미지 비율 유지 */
+            display: block;
+            margin: 0 auto; /* 가운데 정렬 */
+        }
+        .profile-card {
+            border: none; /* 테두리 제거 */
+            text-align: center; /* 가운데 정렬 */
+            margin: 0 auto; /* 가운데 정렬 */
+        }
+        .profile-info {
+            padding: 20px; /* 패딩 추가 */
+        }
+        .profile-label {
+            font-weight: bold; /* 굵게 표시 */
+            margin-top: 10px; /* 위 여백 추가 */
+        }
+        .profile-text {
+            margin-bottom: 10px; /* 아래 여백 추가 */
+        }
+        .no-outline:focus {
+            outline: none; /* 마우스 클릭 시 선 제거 */
+        }
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .profile-section {
+            display: flex;
+            align-items: flex-start;
+            width: 100%;
+            gap: 20px; /* 프로필과 정보 수정 섹션 간 간격 추가 */
+        }
+        .form-section {
+            width: 100%;
+            max-width: 800px;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .breadcrumb {
+            margin-top: 0; /* 상단 내 정보와 내정보/내 정보 수정 간격 조정 */
+        }
+        .no-click {
+            pointer-events: none; /* 마우스 클릭 불가 */
+        }
+        .form-control.no-click {
+            background-color: white; /* 배경색을 흰색으로 변경 */
+        }
+    </style>
 </head>
 <body>
 <div class="container-scroller">
@@ -34,123 +92,125 @@
         <div class="main-panel">
             <div class="content-wrapper">
                 <div class="page-header">
-                    <h4 class="page-title">  </h4>
+                    <h4 class="page-title">내 정보</h4>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a th:href="@{/user/info}">내 정보</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><a th:href="@{/user/updateProcess}">내
-                                정보 수정</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><a th:href="@{/user/updateProcess}">내 정보 수정</a></li>
                         </ol>
                     </nav>
                 </div>
-                <div class="row">
-                    <div class="col-md-4 grid-margin stretch-card">
-                        <div class="card" >
+                <div class="profile-section">
+                    <div class="col-md-3 grid-margin stretch-card">
+                        <div class="card profile-card">
                             <div class="card-body">
-                                <h4 class="card-title">Input size</h4>
-                                <p class="card-description"> Add classes like <code>.form-control-lg</code> and <code>.form-control-sm</code>.
-                                </p>
+                                <h4 class="card-title">내 프로필</h4>
                                 <div class="form-group">
-                                    <label>Large input</label>
-                                    <input type="text" class="form-control form-control-lg" placeholder="Username"
-                                           aria-label="Username">
+                                    <th:block th:with="profilePicture=${#authentication.principal.profile_picture}">
+                                        <img th:src="@{|/image/${profilePicture}|}" alt="image" class="profile-img">
+                                    </th:block>
                                 </div>
                                 <div class="form-group">
-                                    <label>Default input</label>
-                                    <input type="text" class="form-control" placeholder="Username"
-                                           aria-label="Username">
+                                    <label class="profile-label">이름</label>
+                                    <p class="profile-text text-black" th:text="${#authentication.principal.name}"></p>
                                 </div>
                                 <div class="form-group">
-                                    <label>Small input</label>
-                                    <input type="text" class="form-control form-control-sm" placeholder="Username"
-                                           aria-label="Username">
+                                    <label class="profile-label">부서</label>
+                                    <p class="profile-text text-black" th:text="${#authentication.principal.department}"></p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="profile-label">직급</label>
+                                    <p class="profile-text text-black" th:text="${#authentication.principal.position}"></p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-8 grid-margin stretch-card">
+                    <div class="col-md-9 grid-margin stretch-card form-section">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title" sec:authentication="principal.name">사용자 이름 </h4>
-                                <p class="card-description"> 내 정보 수정 </p>
+                                <h4 class="card-title">내 정보 </h4>
                                 <form class="forms-sample">
                                     <div class="form-group">
                                         <label for="exampleInputName1">이름</label>
-                                        <input type="text" class="form-control" id="exampleInputName1"
-                                               th:value="${#authentication.principal.name}">
+                                        <input type="text" class="form-control no-outline no-click" id="exampleInputName1" th:value="${#authentication.principal.name}" readonly>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail3">이메일 주소</label>
-                                        <input type="email" class="form-control" id="exampleInputEmail3"
-                                               th:value="${#authentication.principal.email}">
+                                        <label for="exampleInputEmail3">이메일</label>
+                                        <input type="email" class="form-control no-outline no-click" id="exampleInputEmail3" th:value="${#authentication.principal.email}" readonly>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputPassword4">핸드폰 번호</label>
-                                        <input type="text" class="form-control" id="exampleInputPassword4"
-                                               th:value="${#authentication.principal.email}">
+                                        <label for="exampleInputPhone">핸드폰 번호</label>
+                                        <input type="text" class="form-control no-outline no-click" id="exampleInputPhone" th:value="${#authentication.principal.phone_number}" oninput="formatPhoneNumber(this)" readonly>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleSelectGender">성별</label>
-                                        <input type="text" class="form-control" id="exampleSelectGender"
-                                               th:value="${#authentication.principal.email}">
-
+                                        <label for="exampleInputDepartment">부서</label>
+                                        <input type="text" class="form-control no-outline no-click" id="exampleInputDepartment" th:value="${#authentication.principal.department}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPosition">직급</label>
+                                        <input type="text" class="form-control no-outline no-click" id="exampleInputPosition" th:value="${#authentication.principal.position}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputCity1">사원 번호</label>
+                                        <input type="text" class="form-control no-outline no-click" id="exampleInputCity1" th:value="${#authentication.principal.employee_number}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>성별</label>
+                                        <div>
+                                            <div class="orm-check form-check-flat form-check-primary">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input" type="radio" name="gender" id="genderMale" th:checked="${#authentication.principal.gender} == 'M'" disabled> 남
+                                                </label>
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input" type="radio" name="gender" id="genderFemale" th:checked="${#authentication.principal.gender} == 'F'" disabled> 여
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label>File upload</label>
                                         <input type="file" name="img[]" class="file-upload-default">
                                         <div class="input-group col-xs-12">
-                                            <input type="text" class="form-control file-upload-info" disabled
-                                                   placeholder="Upload Image">
+                                            <input type="text" class="form-control file-upload-info no-outline no-click" disabled placeholder="Upload Image">
                                             <span class="input-group-append">
-                                <button class="file-upload-browse btn btn-gradient-primary"
-                                        type="button">Upload</button>
-                              </span>
+                                                <button class="btn btn-outline-secondary btn-icon-text" type="button">
+                                                    <i class="mdi mdi-upload btn-icon-prepend"></i> Upload </button>
+                                            </span>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputCity1">City</label>
-                                        <input type="text" class="form-control" id="exampleInputCity1"
-                                               placeholder="Location">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleTextarea1">Textarea</label>
-                                        <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
-                                    <button class="btn btn-light">Cancel</button>
-
                                 </form>
-
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-
-
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
-
         <!-- partial -->
     </div>
     <!-- main-panel ends -->
 </div>
 <!-- page-body-wrapper ends -->
-
 <!-- container-scroller -->
 <!-- plugins:js -->
-<script th:src="@{../assets/vendors/js/vendor.bundle.base.js}"></script>
+<script th:src="@{/assets/vendors/js/vendor.bundle.base.js}"></script>
 <!-- endinject -->
 <!-- Plugin js for this page -->
 <!-- End plugin js for this page -->
 <!-- inject:js -->
-<script th:src="@{../assets/js/off-canvas.js}"></script>
-<script th:src="@{../assets/js/hoverable-collapse.js}"></script>
-<script th:src="@{../assets/js/misc.js}"></script>
+<script th:src="@{/assets/js/off-canvas.js}"></script>
+<script th:src="@{/assets/js/hoverable-collapse.js}"></script>
+<script th:src="@{/assets/js/misc.js}"></script>
+<script>
+    function formatPhoneNumber(input) {
+        // Remove all non-numeric characters
+        let phone = input.value.replace(/\D/g, '');
+        // Apply formatting
+        phone = phone.replace(/^(\d{3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+        input.value = phone;
+    }
+</script>
 <!-- endinject -->
-<!-- Custom js for this page -->
-<!-- End custom js for this page -->
 </body>
 </html>
