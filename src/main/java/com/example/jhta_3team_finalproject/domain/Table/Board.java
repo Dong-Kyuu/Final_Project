@@ -5,6 +5,7 @@ import java.util.List;
 public class Board {
 
     private String BOARD_NAME;
+    private String BOARD_ID;
     private String BOARD_SUBJECT;
     private String BOARD_CONTENT;
     private int BOARD_NUM;
@@ -105,20 +106,11 @@ public class Board {
         this.files = files;
     }
 
-    @Override
-    public String toString() {
-        return "Board{" +
-                "BOARD_NAME='" + BOARD_NAME + '\'' +
-                ", BOARD_SUBJECT='" + BOARD_SUBJECT + '\'' +
-                ", BOARD_CONTENT='" + BOARD_CONTENT + '\'' +
-                ", BOARD_NUM=" + BOARD_NUM +
-                ", BOARD_RE_REF=" + BOARD_RE_REF +
-                ", BOARD_RE_LEV=" + BOARD_RE_LEV +
-                ", BOARD_RE_SEQ=" + BOARD_RE_SEQ +
-                ", BOARD_READCOUNT=" + BOARD_READCOUNT +
-                ", BOARD_DATE='" + BOARD_DATE + '\'' +
-                ", CNT=" + CNT +
-                ", files=" + files +
-                '}';
+    public String getBOARD_ID() {
+        return BOARD_ID;
+    }
+
+    public void setBOARD_ID(String BOARD_ID) {
+        this.BOARD_ID = BOARD_ID;
     }
 }

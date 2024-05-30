@@ -8,11 +8,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -176,6 +178,7 @@ public class TableController {
         }
 
         Board board = BS.getDetail(num);
+        List<Table_Files> upfiles = BS.getFilesByBoardNum(num);
         // board = null; // error페이지 이동 확인하고자 임의로 지정.
         if (board == null) {
             logger.info("상세보기 실패");
@@ -188,8 +191,31 @@ public class TableController {
             mv.setViewName("table/Fview");
             mv.addObject("count", count);
             mv.addObject("boarddata", board);
+            mv.addObject("upfiles", upfiles);
+
         }
         return mv;
+    }
+
+    @PostMapping("/delete")
+    public String BoardDeleteAction(String BOARD_PASS, int num,
+                                    Model mv, RedirectAttributes rattr,
+                                    HttpServletRequest request) {
+
+        int result = BS.boardDelete(num);
+
+        // 삭제 처리 실패한 경우
+        if(result == 0) {
+            logger.info("삭제 실패!");
+            mv.addAttribute("url", request.getRequestURL());
+            mv.addAttribute("message", "삭제 실패");
+            return "error/error";
+        } else {
+            // 삭제 처리 성공한 경우 - 글 목록 보기 요청을 전송하는 부분
+            logger.info("삭제 완료!");
+            rattr.addFlashAttribute("result", "deleteSuccess");
+            return "redirect:freelist";
+        }
     }
 
     @GetMapping("/t")

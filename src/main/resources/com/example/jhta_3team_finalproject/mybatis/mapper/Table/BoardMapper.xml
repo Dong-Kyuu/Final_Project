@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.BoardMapper">
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.Table.BoardMapper">
     <select id="getListCount" resultType="int">
         SELECT COUNT(*)
         FROM board
@@ -26,12 +26,12 @@
         </selectKey>
         INSERT INTO board
         (BOARD_NUM,
-        BOARD_NAME, BOARD_SUBJECT,
+        BOARD_NAME, BOARD_ID, BOARD_SUBJECT,
         BOARD_CONTENT, BOARD_RE_REF, BOARD_RE_LEV,
         BOARD_RE_SEQ, BOARD_READCOUNT, BOARD_DATE)
         VALUES
         (#{BOARD_NUM},
-        #{BOARD_NAME}, #{BOARD_SUBJECT},
+        #{BOARD_NAME}, #{BOARD_ID}, #{BOARD_SUBJECT},
         #{BOARD_CONTENT}, #{BOARD_NUM}, #{BOARD_RE_LEV},
         #{BOARD_RE_SEQ}, #{BOARD_READCOUNT}, NOW())
     </insert>
@@ -47,4 +47,27 @@
         from board
         where BOARD_NUM = #{number}
     </select>
+
+    <delete id="boardDelete">
+		<![CDATA[
+            DELETE FROM board
+            WHERE BOARD_RE_REF = #{BOARD_RE_REF}
+            AND BOARD_RE_LEV >= #{BOARD_RE_LEV}
+            AND BOARD_RE_SEQ >= #{BOARD_RE_SEQ}
+            AND BOARD_RE_SEQ <= (
+                SELECT seq_val FROM (
+                    SELECT IFNULL(
+                        (SELECT MIN(board_re_seq) - 1
+                         FROM board
+                         WHERE board_re_ref = #{BOARD_RE_REF}
+                         AND board_re_lev = #{BOARD_RE_LEV}
+                         AND board_re_seq > #{BOARD_RE_SEQ}),
+                        (SELECT MAX(board_re_seq)
+                         FROM board
+                         WHERE board_re_ref = #{BOARD_RE_REF})
+                    ) AS seq_val
+                ) AS temp_table
+            )
+        ]]>
+	</delete>
 </mapper>
