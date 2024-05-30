@@ -3,10 +3,9 @@ package com.example.jhta_3team_finalproject.domain;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class User implements UserDetails {
     private String id;
@@ -23,8 +22,9 @@ public class User implements UserDetails {
     private String created_at;
     private String updated_at;
     private String profile_picture;
+    private MultipartFile profilePictureFile; // 파일 업로드 처리
     private String chat_status_msg;
-    private String auth="ROLE_MEMBER";
+    private String auth = "ROLE_MEMBER";
 
 
     @Override
@@ -47,13 +47,15 @@ public class User implements UserDetails {
                 ", name='" + name + '\'' +
                 ", phone_number='" + phone_number + '\'' +
                 ", department='" + department + '\'' +
+                ", gender='" + gender + '\'' +
                 ", position='" + position + '\'' +
                 ", is_approved=" + is_approved +
                 ", created_at='" + created_at + '\'' +
                 ", updated_at='" + updated_at + '\'' +
                 ", profile_picture='" + profile_picture + '\'' +
+                ", profilePictureFile=" + profilePictureFile +
+                ", chat_status_msg='" + chat_status_msg + '\'' +
                 ", auth='" + auth + '\'' +
-                ", gender='" + gender + '\'' +
                 '}';
     }
 
@@ -65,8 +67,13 @@ public class User implements UserDetails {
         this.gender = gender;
     }
 
+    public MultipartFile getProfilePictureFile() {
+        return profilePictureFile;
+    }
 
-
+    public void setProfilePictureFile(MultipartFile profilePictureFile) {
+        this.profilePictureFile = profilePictureFile;
+    }
 
     public String getAge() {
         return age;
@@ -79,7 +86,14 @@ public class User implements UserDetails {
     public String getPhone_number() {
         return phone_number;
     }
-    public String getChat_status_msg() {return chat_status_msg;}public void setChat_status_msg(String chat_status_msg) {this.chat_status_msg = chat_status_msg;}
+
+    public String getChat_status_msg() {
+        return chat_status_msg;
+    }
+
+    public void setChat_status_msg(String chat_status_msg) {
+        this.chat_status_msg = chat_status_msg;
+    }
 
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
@@ -110,7 +124,6 @@ public class User implements UserDetails {
     public void setPosition(String position) {
         this.position = position;
     }
-
 
 
     public String getPassword() {
@@ -210,7 +223,6 @@ public class User implements UserDetails {
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
-
 
 
 }
