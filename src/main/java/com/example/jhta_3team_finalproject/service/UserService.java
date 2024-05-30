@@ -4,6 +4,8 @@ import com.example.jhta_3team_finalproject.domain.User;
 
 public interface UserService {
 
+    public int insert(User user);
+
     public int isId(String id);
 
     public int join(User user);

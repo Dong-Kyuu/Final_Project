@@ -9,19 +9,21 @@
     </select>
 
     <insert id="join" >
-        insert  into mbt.users
+        insert  into users
             (id, password, name, email,phone_number,department,gender)
         values ( #{id},#{password} ,#{name},#{email},#{phone_number}, #{department},#{gender})
     </insert>
 
 
     <update id="update">
-        update  mbt.users set
-            id= #{id},
+        update  users
+        set
             name=#{name},
             email=#{email},
-            department=#{department},
+            phone_number=#{phone_number},
+            gender=#{gender},
+            profile_picture=#{profile_picture},
             password=#{password}
-
+            where id= #{id}
     </update>
 </mapper>

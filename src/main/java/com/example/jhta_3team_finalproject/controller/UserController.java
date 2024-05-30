@@ -3,9 +3,7 @@ package com.example.jhta_3team_finalproject.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.jhta_3team_finalproject.service.UserService;
-
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.security.Principal;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -109,22 +104,19 @@ public class UserController {
         } else {
             mv.addObject("url", request.getRequestURI());
             mv.addObject("message", "정보 수정실패");
-            //mv.setViewName("error/error");
+            mv.setViewName("error");
         }
         return mv;
     }
 
 
-    //회원 정보 수정
-    @RequestMapping(value = "/update", method = RequestMethod.GET)
-    public ModelAndView user_update(
-            ModelAndView mv,
-            Principal principal) {
-
+    //회원 정보 수정 폼
+    @RequestMapping(value = "/update")
+    public ModelAndView user_update(ModelAndView mv, Principal principal) {
         String id = principal.getName();
 
         if (id == null) {
-            mv.setViewName("redirect:login");
+            mv.setViewName("redirect:/user/login");
             logger.info("id is null");
         } else {
             User user = userService.user_info(id);
@@ -135,23 +127,23 @@ public class UserController {
     }
 
 
-
-
     //수정하기 저장
-    @RequestMapping(value = "/updateProcess", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateProcess", method= RequestMethod.POST)
     public String UpdateProcess(User user, Model model,
                                 RedirectAttributes rattr,
                                 HttpServletRequest request) {
         int result = userService.update(user);
 
+        logger.info("Updating user: " + user);
+        logger.info("Update result: " + result);
         //삽입이 된 경우
         if (result == 1) {
             rattr.addFlashAttribute("result", "updateSuccess");
-            return "redirect:/";
+            return "redirect:/user/info";
         } else {
             model.addAttribute("url", request.getRequestURI());
             model.addAttribute("message", "정보 수정실패");
-            return "";
+            return "error";
         }
     }
 
