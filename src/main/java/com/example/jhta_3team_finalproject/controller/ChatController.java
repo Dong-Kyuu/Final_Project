@@ -29,7 +29,7 @@ public class ChatController {
 
     @RequestMapping(value = "chatview")
     public String chatView() {
-        return "chat/chat";
+        return "chat/blank-page";
     }
 
     @RequestMapping(value = "chatUserProfile")
@@ -52,8 +52,8 @@ public class ChatController {
     }
 
 
-    @RequestMapping("getUserChatRoomList")
-    public @ResponseBody List<ChatRoom> getUserChatRoomList(@RequestParam HashMap<String, String> params) throws Exception {
+    @RequestMapping("userChatRoomList")
+    public @ResponseBody List<ChatRoom> userChatRoomList(@RequestParam HashMap<String, String> params) throws Exception {
         log.info("아이디별 채팅방 구하기");
         String chat_user_id = params.get("chat_user_id");
         ChatRoom chatRoom = new ChatRoom();
@@ -68,6 +68,52 @@ public class ChatController {
         ChatRoom chatRoom_empty = new ChatRoom();
         chatRoomList = chattingService.searchRoom(chatRoom_empty);
         return chatRoomList;
+    }
+
+    @RequestMapping(value = "chatRoomCreateView")
+    public ModelAndView chatRoomCreateView(ModelAndView mv,
+                                           @RequestParam(value = "type") String type,
+                                           @RequestParam(value = "name") String name,
+                                           @RequestParam(value = "roomButton") String roomButton,
+                                           @RequestParam(value = "chat_user_id") String chat_user_id) {
+        mv.setViewName("chat/roomMgr");
+        mv.addObject("type", type);
+        mv.addObject("name", name);
+        mv.addObject("roomButton", roomButton);
+        mv.addObject("chat_user_id", chat_user_id);
+        return mv;
+    }
+
+    @RequestMapping("createRoomProcess")
+    public @ResponseBody List<ChatRoom> createRoomProcess(@RequestParam HashMap<Object, Object> params) throws Exception {
+        String roomName = (String) params.get("roomName");
+        String sessionId = (String) params.get("sessionId");
+
+        ChatRoom chatRoom_empty = new ChatRoom();
+        chatRoomList = chattingService.searchRoom(chatRoom_empty);
+
+        if (roomName != null && !roomName.trim().equals("")) {
+            ChatRoom chatRoom = new ChatRoom();
+            chatRoom.setChat_room_num(++roomNumber);
+            chatRoom.setRoom_name(roomName);
+            chatRoom.setChat_session_id(sessionId);
+            chattingService.createChatRoom(chatRoom);
+            chatRoomList = chattingService.searchRoom(chatRoom);
+        }
+
+        return chatRoomList;
+    }
+
+    @RequestMapping(value = "chatRoomExitView")
+    public ModelAndView chatRoomExitView(ModelAndView mv,
+                                         @RequestParam(value = "type") String type,
+                                         @RequestParam(value = "name") String name,
+                                         @RequestParam(value = "roomButton") String roomButton) {
+        mv.setViewName("chat/roomMgr");
+        mv.addObject("type", type);
+        mv.addObject("name", name);
+        mv.addObject("roomButton", roomButton);
+        return mv;
     }
 
     @RequestMapping(value = "chatUserInviteView")
@@ -96,49 +142,6 @@ public class ChatController {
         return mv;
     }
 
-    @RequestMapping(value = "chatRoomCreateView")
-    public ModelAndView chatRoomCreateView(ModelAndView mv,
-                                           @RequestParam(value = "type") String type,
-                                           @RequestParam(value = "name") String name,
-                                           @RequestParam(value = "roomButton") String roomButton) {
-        mv.setViewName("chat/roomMgr");
-        mv.addObject("type", type);
-        mv.addObject("name", name);
-        mv.addObject("roomButton", roomButton);
-        return mv;
-    }
-
-    @RequestMapping(value = "chatRoomExitView")
-    public ModelAndView chatRoomExitView(ModelAndView mv,
-                                         @RequestParam(value = "type") String type,
-                                         @RequestParam(value = "name") String name,
-                                         @RequestParam(value = "roomButton") String roomButton) {
-        mv.setViewName("chat/roomMgr");
-        mv.addObject("type", type);
-        mv.addObject("name", name);
-        mv.addObject("roomButton", roomButton);
-        return mv;
-    }
-
-    @RequestMapping("createRoom")
-    public @ResponseBody List<ChatRoom> createRoom(@RequestParam HashMap<Object, Object> params) throws Exception {
-        String roomName = (String) params.get("roomName");
-        String sessionId = (String) params.get("sessionId");
-
-        ChatRoom chatRoom_empty = new ChatRoom();
-        chatRoomList = chattingService.searchRoom(chatRoom_empty);
-
-        if (roomName != null && !roomName.trim().equals("")) {
-            ChatRoom chatRoom = new ChatRoom();
-            chatRoom.setChat_room_num(++roomNumber);
-            chatRoom.setRoom_name(roomName);
-            chatRoom.setChat_session_id(sessionId);
-            chattingService.createChatRoom(chatRoom);
-            chatRoomList = chattingService.searchRoom(chatRoom);
-        }
-
-        return chatRoomList;
-    }
 
     @RequestMapping("moveChating")
     public ModelAndView chating(@RequestParam HashMap<Object, Object> params) {
