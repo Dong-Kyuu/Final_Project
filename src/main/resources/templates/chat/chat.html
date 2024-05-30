@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
+<th:block th:fragment="chatView">
 <head>
     <meta charset="utf-8">
     <title>test</title>
@@ -10,15 +10,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/3.0.2/less.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- 2024-05-16, 채팅창 Drag UI 기능 -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
     <!-- 2024-05-17, 채팅방 Side Slide 기능 -->
     <link th:href="@{/css/chat/chat-slide.css}" rel="stylesheet" type="text/css"/>
     <script th:src="@{/js/chat/chat-slide.js}"></script>
-    <!-- 2024-05-17, 채팅방 대화상대 확인 -->
-    <link th:href="@{/css/chat/chat-member-check.css}" rel="stylesheet" type="text/css"/>
     <!-- 2024-05-21, 채팅방 반응형 메뉴 버튼 구현 -->
     <link th:href="@{/css/chat/chat-skill-menu.css}" rel="stylesheet" type="text/css"/>
     <!-- 2024-05-27, 채팅방 검색 버튼 구현 -->
@@ -55,20 +49,20 @@
                         <div class="chat-profile-name">홍길동</div>
                         <div class="status chat-profile-dept">관광영업부</div>
                     </div>
-                    <div class="wave-wrapp">
-                        <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28"
-                             preserveAspectRatio="none">
-                            <defs>
-                                <path id="gentle-wave"
-                                      d="m -160,44.4 c 30,0 58,-18 87.7,-18 30.3,0 58.3,18 87.3,18 30,0 58,-18 88,-18 30,0 58,18 88,18 l 0,34.5 -351,0 z"/>
-                            </defs>
-                            <g class="parallax">
-                                <use xlink:href="#gentle-wave" x="50" y="0" fill="rgba(255, 255, 255, 0.48)"/>
-                                <use xlink:href="#gentle-wave" x="50" y="3" fill="rgba(255, 255, 255, 0.78)"/>
-                                <use xlink:href="#gentle-wave" x="50" y="6" fill="rgba(255, 255, 255, 0.8)"/>
-                            </g>
-                        </svg>
-                    </div>
+<!--                    <div class="wave-wrapp">-->
+<!--                        <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28"-->
+<!--                             preserveAspectRatio="none">-->
+<!--                            <defs>-->
+<!--                                <path id="gentle-wave"-->
+<!--                                      d="m -160,44.4 c 30,0 58,-18 87.7,-18 30.3,0 58.3,18 87.3,18 30,0 58,-18 88,-18 30,0 58,18 88,18 l 0,34.5 -351,0 z"/>-->
+<!--                            </defs>-->
+<!--                            <g class="parallax">-->
+<!--                                <use xlink:href="#gentle-wave" x="50" y="0" fill="rgba(255, 255, 255, 0.48)"/>-->
+<!--                                <use xlink:href="#gentle-wave" x="50" y="3" fill="rgba(255, 255, 255, 0.78)"/>-->
+<!--                                <use xlink:href="#gentle-wave" x="50" y="6" fill="rgba(255, 255, 255, 0.8)"/>-->
+<!--                            </g>-->
+<!--                        </svg>-->
+<!--                    </div>-->
                 </div>
                 <div class="content-wrapp">
                     <div class="nav-group">
@@ -117,230 +111,7 @@
                                     </div>
                                 </div>
                                 <ul class="touch-y touch-chatroom">
-                                    <li>
-                                        <div class="sender-image">
-                                            <img
-                                                    th:src="@{/image/default.png}">
-                                        </div>
-                                        <div class="mes-detail">
-                                            <div class="mes-col1">
-                                                <div class="sender-name">
-                                                    관광영업부
-                                                </div>
-                                                <div class="mes-preview">
-                                                    오늘 영업은 잘 되었나요?
-                                                    <br>
-                                                    결과에 따라 월급 없음
-                                                </div>
-                                            </div>
-                                            <div class="mes-col2">
-                                                <div>
-                                                    <div class="send-time">10:26 AM</div>
-                                                    <div class="mes-seen-status">
-                                                        <span class='new'>new</span>
-                                                        <!-- <i class="material-icons">done_all</i> -->
-                                                    </div>
-                                                </div>
-                                                <span class="mes-count">3</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="sender-image">
-                                            <img
-                                                    th:src="@{/image/default.png}">
-                                        </div>
-                                        <div class="mes-detail">
-                                            <div class="mes-col1">
-                                                <div class="sender-name">
-                                                    영업부 - 남대문 부장님
-                                                </div>
-                                                <div class="mes-preview">
-                                                    너의 이름은 ...
-                                                </div>
-                                            </div>
-                                            <div class="mes-col2">
-                                                <div>
-                                                    <div class="send-time">9:00 AM</div>
-                                                    <div class="mes-seen-status">
-                                                        <span class='new'>new</span>
-                                                        <!-- <i class="material-icons">done_all</i> -->
-                                                    </div>
-                                                </div>
-                                                <span class="mes-count">12</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="sender-image">
-                                            <img
-                                                    th:src="@{/image/default.png}">
-                                        </div>
-                                        <div class="mes-detail">
-                                            <div class="mes-col1">
-                                                <div class="sender-name">
-                                                    동대문 대표님
-                                                </div>
-                                                <div class="mes-preview">
-                                                    내일 구조조정 예정
-                                                </div>
-                                            </div>
-                                            <div class="mes-col2">
-                                                <div>
-                                                    <div class="send-time">Tue</div>
-                                                    <div class="mes-seen-status"></div>
-                                                </div>
-                                                <span class="mes-count">50</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="sender-image">
-                                            <img
-                                                    th:src="@{/image/default.png}">
-                                        </div>
-                                        <div class="mes-detail">
-                                            <div class="mes-col1">
-                                                <div class="sender-name">
-                                                    외교부 - Mr.홍 대리님
-                                                </div>
-                                                <div class="mes-preview">
-                                                    헬로우
-                                                </div>
-                                            </div>
-                                            <div class="mes-col2">
-                                                <div>
-                                                    <div class="send-time">Sun</div>
-                                                    <!--<div class="mes-seen-status"><i class="material-icons">done_all</i></div>-->
-                                                </div>
-                                                <!--<span class="mes-count">3</span>-->
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="sender-image">
-                                            <img
-                                                    th:src="@{/image/default.png}">
-                                        </div>
-                                        <div class="mes-detail">
-                                            <div class="mes-col1">
-                                                <div class="sender-name">
-                                                    홍길동3
-                                                </div>
-                                                <div class="mes-preview">
-                                                    안녕 너의 이름은 ?
-                                                    <br>
-                                                    키미노 나마에와?
-                                                </div>
-                                            </div>
-                                            <div class="mes-col2">
-                                                <div>
-                                                    <div class="send-time">10:26 AM</div>
-                                                    <div class="mes-seen-status"><i
-                                                            class="material-icons">done_all</i>
-                                                    </div>
-                                                </div>
-                                                <span class="mes-count">3</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="sender-image">
-                                            <img
-                                                    th:src="@{/image/default.png}">
-                                        </div>
-                                        <div class="mes-detail">
-                                            <div class="mes-col1">
-                                                <div class="sender-name">
-                                                    홍길동이
-                                                </div>
-                                                <div class="mes-preview">
-                                                    Where are you from ...
-                                                </div>
-                                            </div>
-                                            <div class="mes-col2">
-                                                <div>
-                                                    <div class="send-time">9:00 AM</div>
-                                                    <div class="mes-seen-status">
-                                                    </div>
-                                                </div>
-                                                <span class="mes-count">12</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="sender-image">
-                                            <img
-                                                    th:src="@{/image/default.png}">
-                                        </div>
-                                        <div class="mes-detail">
-                                            <div class="mes-col1">
-                                                <div class="sender-name">
-                                                    Hello gini
-                                                </div>
-                                                <div class="mes-preview">
-                                                    Lorem ipsum a plane text
-                                                </div>
-                                            </div>
-                                            <div class="mes-col2">
-                                                <div>
-                                                    <div class="send-time">Tue</div>
-                                                    <div class="mes-seen-status"></div>
-                                                </div>
-                                                <span class="mes-count">50</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="sender-image">
-                                            <img
-                                                    th:src="@{/image/default.png}">
-                                        </div>
-                                        <div class="mes-detail">
-                                            <div class="mes-col1">
-                                                <div class="sender-name">
-                                                    Ali Torabi
-                                                </div>
-                                                <div class="mes-preview">
-                                                    Hey i'm here
-                                                </div>
-                                            </div>
-                                            <div class="mes-col2">
-                                                <div>
-                                                    <div class="send-time">Sun</div>
-                                                    <!--<div class="mes-seen-status"><i class="material-icons">done_all</i></div>-->
-                                                </div>
-                                                <!--<span class="mes-count">3</span>-->
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="sender-image">
-                                            <img
-                                                    th:src="@{/image/default.png}">
-                                        </div>
-                                        <div class="mes-detail">
-                                            <div class="mes-col1">
-                                                <div class="sender-name">
-                                                    Masome Sami
-                                                </div>
-                                                <div class="mes-preview">
-                                                    Hi how are you ?
-                                                    <br>
-                                                    What's your name?
-                                                </div>
-                                            </div>
-                                            <div class="mes-col2">
-                                                <div>
-                                                    <div class="send-time">10:26 AM</div>
-                                                    <div class="mes-seen-status"><i
-                                                            class="material-icons">done_all</i>
-                                                    </div>
-                                                </div>
-                                                <span class="mes-count">3</span>
-                                            </div>
-                                        </div>
-                                    </li>
+
                                 </ul>
                             </div>
                         </div>
@@ -469,11 +240,11 @@
                         <div class="scroll-wrapper">
                             <!-- Search Input -->
                             <div class="py-2 px-6 relative flex flex-col justify-center">
-                                <svg class="absolute left-10" xmlns="http://www.w3.org/2000/svg"
-                                     style="width: 16px; height: 16px;" viewBox="0 0 16 16">
-                                    <path class="fill-current text-gray-400"
-                                          d="M6.4 1.6a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm-4.525.275a6.4 6.4 0 019.58 8.45l4.31 4.31a.8.8 0 01-1.13 1.13l-4.31-4.31A6.399 6.399 0 010 6.4a6.4 6.4 0 011.875-4.525z"/>
-                                </svg>
+<!--                                <svg class="absolute left-10" xmlns="http://www.w3.org/2000/svg"-->
+<!--                                     style="width: 16px; height: 16px;" viewBox="0 0 16 16">-->
+<!--                                    <path class="fill-current text-gray-400"-->
+<!--                                          d="M6.4 1.6a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm-4.525.275a6.4 6.4 0 019.58 8.45l4.31 4.31a.8.8 0 01-1.13 1.13l-4.31-4.31A6.399 6.399 0 010 6.4a6.4 6.4 0 011.875-4.525z"/>-->
+<!--                                </svg>-->
                                 <input type="text" id="searchChatUser" placeholder="검색" x-ref="searchField"
                                        x-model="search" x-on:keydown.window.prevent.slash="$refs.searchField.focus()"
                                        class="border border-blue-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-blue-400 focus:border-blue-400 focus:bg-blue-50 focus:bg-opacity-25"/>
@@ -677,13 +448,16 @@
             var currentY = parseFloat($ele.css('transform').split(',')[5]);
             $(document).on('mousemove touchmove', function (e) {
                 e.preventDefault();
+                //console.log(distY);
+                $(".messages-list > ul > li").off('click');
+                $(".messages-list > ul > li").bind('click');
                 var y = e.pageY || e.originalEvent.touches[0].pageY;
                 distY = y - startY;
                 if (currentY) {
                     distY += currentY;
                 }
                 if (distY > 3 || distY < (-3)) {
-                    $(".messages-list > ul > li").off('click');
+                    //$(".messages-list > ul > li").off('click');
                 }
                 $ele.css('transform', 'translateY(' + distY + 'px)');
                 if (distY > 0 || distY < viewportY) {
@@ -719,6 +493,7 @@
                 setTimeout(function () {
                     $ele.removeClass("reset");
                     viewport($ele).find('.viewportShadow').remove();
+                    $(".messages-list > ul > li").off('click');
                     $(".messages-list > ul > li").bind('click', showMessages);
                 }, 400);
             });
@@ -758,12 +533,24 @@
             $("#master-nav-items > div").eq(index).addClass("active");
             $("#master-nav-items > div").eq(index).nextAll().addClass("after");
             $("#master-nav-items > div").eq(index).prevAll().addClass("before");
+            $(".messages-list > ul > li").off('click', showMessages);
+            $(".messages-list > ul > li").bind('click', showMessages);
         }
 
-        /** 2024-05-21, 채팅방에서 클릭 시와 사원 리스트에서 클릭 시를 이벤트 분리 예정 */
-        $(".messages-list > ul > li").bind('click', showMessages);
-
+        /** 2024-05-30, 채팅방 리스트와 사원 리스트 동작 분리 */
         function showMessages() {
+            console.log('show message');
+            //console.log(this);
+            var type = $(this).find('input[name=chat_room_type]').val();
+            console.log(type);
+            if(type === 'p2p') {
+               var chat_counterpart_id = $(this).find('input[name=chat_counterpart_id]').val();
+               console.log(chat_counterpart_id);
+            } else {
+               var chat_room_num = $(this).find('input[name=chat_room_num]').val();
+               console.log(chat_room_num);
+            }
+
             $('.view-main').addClass("deactive");
             $('.view-message').addClass("active");
             $(".chat-menu-container-mgr").css("display", "none");
@@ -840,6 +627,7 @@
 
         /** 2024-05-16, 채팅창 Drag UI 기능 */
         $("#opener").on("click", function () {
+            console.log('show chat');
             $("#dialog").dialog("open");
             //$("#dialog").dialog();
             $el = $("#master-nav ul li:eq(2)");
@@ -853,6 +641,7 @@
             });
             getChatUserList();
             getChatUserProfile();
+            getUserChatRoomList();
         });
 
         $("#dialog").dialog({
@@ -883,32 +672,33 @@
         $(".ui-dialog .ui-dialog-content").css('padding', '0');
         $(".ui-widget-content").css('background', 'transparent');
         $(".ui-dialog-titlebar").css('width', '310px');
-        $(".ui-dialog-titlebar").css('background', '#4f97e5');
-        $(".ui-dialog-title").css('background', '#4f97e5');
-        $(".ui-dialog-title").css('color', 'white');
+        $(".ui-dialog-titlebar").css('background', '#fff');
+        $(".ui-dialog-title").css('background', '#fff');
+        $(".ui-dialog-title").css('color', 'black');
         $(".ui-widget.ui-widget-content").css('border', '0px');
         $(".ui-widget-content").css('max-height', '578px');
-
+        $(".ui-dialog-titlebar-close").css('right', '0.7em');
+        $(".ui-dialog-titlebar-close").html("<i class='material-icons' style='font-size: 20px'>close</i>");
         //$(".ui-resizable-handle").css('background', '#4f97e5');
 
         /** 2024-05-16, profile-upfile */
-        function show() {
-            // 파일 이름이 있는 경우 remove 이미지를 보이게 하고
-            // 파일 이름이 없는 경우 remove 이미지 보이지 않게 합니다.
-            if ($('#filevalue').text() == '') {
-                $(".remove").css('display', 'none');
-            } else {
-                $(".remove").css({
-                    'display': 'inline-block',
-                    'position': 'relative',
-                    'top': '-5px'
-                });
-            }
-        }
+        // function show() {
+        //     // 파일 이름이 있는 경우 remove 이미지를 보이게 하고
+        //     // 파일 이름이 없는 경우 remove 이미지 보이지 않게 합니다.
+        //     if ($('#filevalue').text() == '') {
+        //         $(".remove").css('display', 'none');
+        //     } else {
+        //         $(".remove").css({
+        //             'display': 'inline-block',
+        //             'position': 'relative',
+        //             'top': '-5px'
+        //         });
+        //     }
+        // }
+        //
+        // show();
 
-        show();
-
-        let check = 0; // profile upload 사진이 있는지 체크
+        //let check = 0; // profile upload 사진이 있는지 체크
 
         /** 2024-05-16, 파일 변경시 처리 필요 */
         // 파일첨부를 변경하지 않으면 $('#filevalue').text()의 파일명을
@@ -920,19 +710,19 @@
         //     $(this).append(html);
         // }
 
-        $("#profile-upfile").change(function () {
-            check++;
-            console.log($(this).val()); // c:\fakepath\upload.png
-            const inputfile = $(this).val().split('\\');
-            $('#filevalue').text(inputfile[inputfile.length - 1]);
-            show();
-        });
+        // $("#profile-upfile").change(function () {
+        //     check++;
+        //     console.log($(this).val()); // c:\fakepath\upload.png
+        //     const inputfile = $(this).val().split('\\');
+        //     $('#filevalue').text(inputfile[inputfile.length - 1]);
+        //     show();
+        // });
 
         // remove 이미지를 클릭하면 파일명을 ''로 변경하고 remove 이미지를 보이지 않게 합니다.
-        $(".remove").click(function () {
-            $('#filevalue').text('');
-            $(this).css('display', 'none');
-        });
+        // $(".remove").click(function () {
+        //     $('#filevalue').text('');
+        //     $(this).css('display', 'none');
+        // });
 
         /** 2024-05-16, 프로필 사진 툴팁 처리 */
         $(".prifile-image-tooltip").tooltip();
@@ -999,7 +789,8 @@
             const data = {
                 'type': 'room-create',
                 'name': '대화상대 선택',
-                'roomButton': '방 초대'
+                'roomButton': '방 초대',
+                "chat_user_id": $("#chat_user_id").val()
             };
             chatRoomMgrAjax('/chat/chatRoomCreateView', data, function (html) {
                 chatRoomMgrDisplay(html);
@@ -1071,6 +862,7 @@
          */
         function chatRoomMgrDisplay(html) {
             console.log("chat-room-mgr");
+            document.querySelector('.list-container-mgr').classList.toggle('active');
             $(".chat-room-mgr").empty();
             $(".chat-room-mgr").append(html);
             $(".mgr-room-screen").fadeIn(500).css("display", "block");
@@ -1209,19 +1001,29 @@
                         }
 
                         output += "<li>";
-                        output += "    <input type='hidden' name='room_num' value=''/>";
+                        output += "    <input type='hidden' name='chat_counterpart_id' value='" + this.id + "'/>";
+                        output += "    <input type='hidden' name='chat_room_type' value='p2p'/>";
                         output += "    <div class='sender-image'>";
                         output += "       " + img;
                         output += "    </div>";
                         output += "    <div class='mes-detail'>";
-                        output += "        <div class='mes-col1 chat-friend-list-col1'>";
-                        output += "            <div class='sender-name'>";
-                        output += "                "+ this.department + " - " + this.name;
-                        output += "            </div>";
-                        output += "            <div class='mes-preview'>";
-                        output += "                " + this.chat_status_msg;
-                        output += "            </div>";
-                        output += "        </div>";
+                        if(this.chat_status_msg === null) {
+                            output += "        <div class='mes-col1 chat-friend-list-col1' style='margin-top: 18px;'>";
+                            output += "            <div class='sender-name'>";
+                            output += "                "+ this.department + " - " + this.name;
+                            output += "            </div>";
+                            output += "        </div>";
+                        } else {
+                            output += "        <div class='mes-col1 chat-friend-list-col1'>";
+                            output += "            <div class='sender-name'>";
+                            output += "                "+ this.department + " - " + this.name;
+                            output += "            </div>";
+                            output += "            <div class='mes-preview'>";
+                            output += "                " + this.chat_status_msg;
+                            output += "            </div>";
+                            output += "        </div>";
+                        }
+
                         output += "    </div>";
                         output += "</li>";
 
@@ -1232,12 +1034,12 @@
         }
 
         /**
-         * 2024-05-29, getChatUserList 작업
+         * 2024-05-29, getUserChatRoomList - 채팅방 리스트 가져오기
          */
-        function getChatUserList() {
+        function getUserChatRoomList() {
             $.ajax({
                 type: "post",
-                url: "/chat/chatUserList",
+                url: "/chat/userChatRoomList",
                 data: {
                     "chat_user_id": $("#chat_user_id").val()
                 },
@@ -1246,73 +1048,51 @@
                     //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
                     xhr.setRequestHeader(header, token);
                 },
-                success: function (rdata) {
-                    console.log(rdata);
-                    //$(".touch-friend").show();
-                    $(".touch-employee").empty();
+                success: function (res) {
+                    console.log(res);
                     let output = '';
-                    $(rdata).each(function () {
+                    res.forEach(function (d, idx) {
                         let img = ''; // 이미지 처리 시
                         if (this.profile_picture === 'default.png') {
                             img = "<img src='/image/default.png' />";
                         } else {
-                            // 업로드된 프로필을 보여주도록 한다.
+                            // 업로드된 프로필을 보여주도록 한다. (채팅방 화면은 임시 처리)
+                            img = "<img src='/image/default.png' />";
                         }
+                        var rn = d.room_name;
+                        var roomNumber = d.chat_room_num;
+                        var sessionId = d.chat_session_id;
 
                         output += "<li>";
-                        output += "    <input type='hidden' name='personal_room_num' value=''/>";
+                        output += "<input type='hidden' name='chat_room_num' value='" + roomNumber + "' />";
+                        output += "    <input type='hidden' name='chat_room_type' value='multi'/>";
                         output += "    <div class='sender-image'>";
-                        output += "       " + img;
+                        output += "        " + img;
                         output += "    </div>";
                         output += "    <div class='mes-detail'>";
-                        output += "        <div class='mes-col1 chat-friend-list-col1'>";
+                        output += "        <div class='mes-col1'>";
                         output += "            <div class='sender-name'>";
-                        output += "                "+ this.department + " - " + this.name;
+                        output += "                " + rn;
                         output += "            </div>";
                         output += "            <div class='mes-preview'>";
-                        output += "                " + this.chat_status_msg;
+                        output += "                오늘 영업은 잘 되었나요? 결과에 따라 월급 없음";
                         output += "            </div>";
+                        output += "        </div>";
+                        output += "        <div class='mes-col2'>";
+                        output += "            <div>";
+                        output += "                <div class='send-time'>10:26 AM</div>";
+                        output += "                <div class='mes-seen-status'>";
+                        output += "                    <span class='new'>new</span>";
+                        output += "                    <!-- <i class='material-icons'>done_all</i> -->";
+                        output += "                </div>";
+                        output += "            </div>";
+                        output += "            <span class='mes-count'>3</span>";
                         output += "        </div>";
                         output += "    </div>";
                         output += "</li>";
 
                     }); // each end
-                    $(".touch-employee").html(output);
-                }
-            }) // ajax end
-        }
-
-        /**
-         * 2024-05-29, getChatUserRoomList - 채팅방 리스트 가져오기
-         */
-        function getChatUserRoomList() {
-            $.ajax({
-                type: "post",
-                url: "/chat/getChatUserRoomList",
-                data: {
-                    "chat_user_id": $("#chat_user_id").val()
-                },
-                dataType: "json",
-                beforeSend: function (xhr) {
-                    //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
-                    xhr.setRequestHeader(header, token);
-                },
-                success: function (rdata) {
-                    console.log(rdata);
-                    $(".touch-chatroom").empty();
-                    let output = '';
-                    $(rdata).each(function () {
-                        let img = ''; // 이미지 처리 시
-                        if (this.profile_picture === 'default.png') {
-                            img = "<img src='/image/default.png' />";
-                        } else {
-                            // 업로드된 프로필을 보여주도록 한다.
-                        }
-
-
-
-                    }); // each end
-                    $(".touch-chatroom").html(output);
+                    $(".touch-chatroom").empty().html(output);
                 }
             }) // ajax end
         }
@@ -1334,7 +1114,7 @@
                     xhr.setRequestHeader(header, token);
                 },
                 success: function (rdata) {
-                    console.log(rdata);
+                    //console.log(rdata);
                 }, // success end
                 error : function() {
                     console.log('에러');
