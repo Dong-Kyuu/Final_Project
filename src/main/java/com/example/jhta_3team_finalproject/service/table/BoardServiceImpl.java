@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.example.jhta_3team_finalproject.domain.Table.Board;
 import com.example.jhta_3team_finalproject.domain.Table.Table_Files;
-import com.example.jhta_3team_finalproject.mybatis.mapper.BoardMapper;
-import com.example.jhta_3team_finalproject.mybatis.mapper.UpfilesMapper;
+import com.example.jhta_3team_finalproject.mybatis.mapper.Table.BoardMapper;
+import com.example.jhta_3team_finalproject.mybatis.mapper.Table.UpfilesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,8 +66,20 @@ public class BoardServiceImpl implements BoardService {
         return Bdao.setReadCountUpdate(num);
     }
 
+    // 글 내용 가져오기
     @Override
     public Board getDetail(int num) {
         return Bdao.getDetail(num);
     }
+
+    @Override
+    public int boardDelete(int num) {
+        int result = 0;
+        Board board = Bdao.getDetail(num);
+        if(board != null) {
+            result = Bdao.boardDelete(board);
+        }
+        return result;
+    }
+
 }

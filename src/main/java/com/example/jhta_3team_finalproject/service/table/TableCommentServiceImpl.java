@@ -1,8 +1,6 @@
 package com.example.jhta_3team_finalproject.service.table;
 
-import com.example.jhta_3team_finalproject.mybatis.mapper.BoardMapper;
-import com.example.jhta_3team_finalproject.mybatis.mapper.TableCommentMapper;
-import com.example.jhta_3team_finalproject.mybatis.mapper.UpfilesMapper;
+import com.example.jhta_3team_finalproject.mybatis.mapper.Table.TableCommentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

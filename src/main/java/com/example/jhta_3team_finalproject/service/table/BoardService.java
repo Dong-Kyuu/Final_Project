@@ -8,10 +8,10 @@ import java.util.List;
 public interface BoardService {
 
     // 글 갯수 구하기
-    public int getListCount();
+    int getListCount();
 
     // 글 목록 보기
-    public List<Board> getBoardList(int page, int limit);
+    List<Board> getBoardList(int page, int limit);
 
     // 글 등록
     void insertBoard(Board board);
@@ -24,4 +24,10 @@ public interface BoardService {
 
     // View 페이지
     Board getDetail(int num);
+
+    // 업로드했던 파일 가져오기
+    List<Table_Files> getFilesByBoardNum(int board_num);
+
+    // 게시글 삭제
+    int boardDelete(int num);
 }

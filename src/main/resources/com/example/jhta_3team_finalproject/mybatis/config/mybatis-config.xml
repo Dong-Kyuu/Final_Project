@@ -13,9 +13,9 @@
 
 	<mappers>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/UserMapper.xml"/>
-		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/BoardMapper.xml"/>
-		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/UpfileMapper.xml"/>
-		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table_CommentMapper.xml"/>
+		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/BoardMapper.xml"/>
+		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/UpfileMapper.xml"/>
+		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/Table_CommentMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/ChatMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/InqCommentMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/InqueryBoardMapper.xml"/>
