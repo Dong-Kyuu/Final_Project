@@ -70,8 +70,11 @@
 
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <label class="col-xs-4" for="edit-allDay">하루종일</label>
-                                    <input class='allDayNewEvent' id="edit-allDay" type="checkbox"></label>
+                                    <label class="col-xs-4" for="edit-allDay">반복기간</label>
+                                    <input class='allDayNewEvent' id="edit-allDay" type="checkbox">하루</label>
+                                    <input class='allDayNewEvent' id="edit-allWeek" type="checkbox">한주</label>
+                                    <input class='allDayNewEvent' id="edit-allMonth" type="checkbox">한달</label>
+                                    <input class='allDayNewEvent' id="edit-allYear" type="checkbox">일년</label>
                                 </div>
                             </div>
 
@@ -84,13 +87,13 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <label class="col-xs-4" for="edit-start">시작</label>
+                                    <label class="col-xs-4" for="edit-start">시작일</label>
                                     <input class="inputModal" type="text" name="edit-start" id="edit-start"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <label class="col-xs-4" for="edit-end">끝</label>
+                                    <label class="col-xs-4" for="edit-end">마지막일</label>
                                     <input class="inputModal" type="text" name="edit-end" id="edit-end"/>
                                 </div>
                             </div>
@@ -98,10 +101,9 @@
                                 <div class="col-xs-12">
                                     <label class="col-xs-4" for="edit-type">구분</label>
                                     <select class="inputModal" type="text" name="edit-type" id="edit-type">
-                                        <option value="인사">인사</option>
-                                        <option value="판매">상품</option>
-                                        <option value="ESFJ">ESFJ</option>
-                                        <option value="INFP">INFP</option>
+                                        <option value="#">팀장</option>
+                                        <option value="#">과장</option>
+                                        <option value="#">사원</option>
                                     </select>
                                 </div>
                             </div>
@@ -123,7 +125,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <label class="col-xs-4" for="edit-desc">설명</label>
+                                    <label class="col-xs-4" for="edit-desc">내용</label>
                                     <textarea rows="4" cols="50" class="inputModal" name="edit-desc"
                                               id="edit-desc"></textarea>
                                 </div>
