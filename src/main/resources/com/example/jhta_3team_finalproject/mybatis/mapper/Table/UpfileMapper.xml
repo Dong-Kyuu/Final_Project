@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.UpfilesMapper">
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.Table.UpfilesMapper">
 
     <!-- 파일 정보 삽입 -->
     <insert id="insertFile">
@@ -13,7 +13,7 @@
 
     <!-- 특정 게시글의 파일 정보 조회 -->
     <select id="getFilesbyBoardNum" resultType="com.example.jhta_3team_finalproject.domain.Table.Table_Files">
-        SELECT id, board_num, original_file_name, file_name, upload_date
+        SELECT *
         FROM TABLE_FILES
         WHERE board_num = #{boardNum}
     </select>

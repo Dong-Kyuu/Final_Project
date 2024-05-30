@@ -1,0 +1,25 @@
+.tablemodal {
+    display: none;
+    position: absolute !important; /* 포지션을 fixed로 변경 */
+    z-index: 1;
+    background-color: #fefefe;
+
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-radius: 5px; /* 모서리를 둥글게 설정 */
+}
+
+.menu-M {
+    font-size : 14px;
+    text-align: center;
+    align-content: center;
+    height: 40px !important;
+    width: 70px !important;
+    padding-top:0px!important;
+    padding-bottom:0px!important;
+
+}
+
+.remo {
+    border-color: #f8f9fa !important;
+    color:red !important;
+}
