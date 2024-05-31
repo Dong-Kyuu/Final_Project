@@ -22,13 +22,15 @@
     <link th:href="@{/css/chat/chat-timestamp.css}" rel="stylesheet" type="text/css"/>
     <!-- 2024-05-28, 채팅방 로딩 화면 구현 -->
     <link th:href="@{/css/chat/chat-loading.css}" rel="stylesheet" type="text/css"/>
+    <!-- 2024-05-17, 채팅방 대화상대 확인 -->
+    <link th:href="@{/css/chat/chat-member-check.css}" rel="stylesheet" type="text/css"/>
     <!-- CSRF Token -->
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
 
 <body>
-<button id="opener">채팅하기</button>
+<!--<button id="opener">채팅하기</button>-->
 
 <div id="dialog" title="Chat">
     <th:block th:with="pinfo=${#authentication.principal}">
@@ -46,8 +48,8 @@
                         <div class="chat-profile-picture">
                             <img th:src="@{/image/default.png}" alt="">
                         </div>
-                        <div class="chat-profile-name">홍길동</div>
-                        <div class="status chat-profile-dept">관광영업부</div>
+                        <div class="chat-profile-name"></div>
+                        <div class="status chat-profile-dept"></div>
                     </div>
 <!--                    <div class="wave-wrapp">-->
 <!--                        <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28"-->
@@ -1126,5 +1128,4 @@
     });
 </script>
 </body>
-
 </html>
