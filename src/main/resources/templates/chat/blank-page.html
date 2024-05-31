@@ -31,7 +31,7 @@
           <div class="content-wrapper">
             <div class="row"></div>
             <div class="col-12 grid-margin stretch-card">
-              <th:block th:replace="~{chat/chat :: chatView}"></th:block>
+<!--              <th:block th:replace="~{chat/chat :: chatView}"></th:block>-->
             </div>
           </div>
           <!-- content-wrapper ends -->
@@ -61,11 +61,6 @@
     <!-- endinject -->
     <!-- Custom js for this page -->
     <!-- End custom js for this page -->
-    <!-- 2024-05-16, 채팅창 Drag UI 기능 -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
-    <!-- 2024-05-17, 채팅방 대화상대 확인 -->
-    <link th:href="@{/css/chat/chat-member-check.css}" rel="stylesheet" type="text/css"/>
+    <th:block th:replace="~{chat/chatDrag :: chatDragJS}"></th:block>
   </body>
 </html>

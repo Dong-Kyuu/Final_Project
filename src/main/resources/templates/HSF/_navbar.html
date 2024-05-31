@@ -56,6 +56,12 @@
                     <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
                 </a>
             </li>
+            <li class="nav-item d-none d-lg-block full-screen-link">
+                <a id="opener" class="nav-link count-indicator dropdown-toggle" href="#">
+                    <span class="mdi mdi-message-text-outline" style="font-size: 20px;"></span>
+                    <span class="count-symbol bg-success"></span>
+                </a>
+            </li>
             <li class="nav-item dropdown">
                 <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#"
                    data-bs-toggle="dropdown" aria-expanded="false">
@@ -163,6 +169,9 @@
                 data-toggle="offcanvas">
             <span class="mdi mdi-menu"></span>
         </button>
+    </div>
+    <div id="dialog" title="Chat" style="width: 330px; height: 587px; display: none;">
+        <iframe style="width: 330px; height: 587px;" th:src="@{/chat/chat}"></iframe>
     </div>
 </nav>
 </body>
