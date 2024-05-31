@@ -34,6 +34,11 @@ public class ChatController {
         return "chat/blank-page";
     }
 
+    @RequestMapping(value = "chat")
+    public String chatViewer() {
+        return "chat/chat";
+    }
+
     @RequestMapping(value = "chatUserProfile")
     public @ResponseBody User chatUserProfile(@RequestParam(value = "chat_user_id") String chat_user_id) {
         // 사원 리스트를 불러옵니다.

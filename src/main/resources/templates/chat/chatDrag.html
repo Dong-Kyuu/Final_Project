@@ -1,0 +1,52 @@
+<th:block th:fragment="chatDragJS">
+<!-- 2024-05-16, 채팅창 Drag UI 기능 -->
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
+<script>
+    /** 2024-05-16, 채팅창 Drag UI 기능 */
+    $("#opener").on("click", function () {
+        console.log('show chat');
+        $("#dialog").dialog("open");
+        //$("#dialog").dialog();
+    });
+
+    $("#dialog").dialog({
+        autoOpen: false,
+        resizable: false,
+        width: 310,
+        maxHeight: 578,
+        show: {
+            effect: "blind",
+            duration: 500
+        },
+        hide: {
+            effect: "blind",
+            duration: 500
+        }
+    });
+
+    $("#dialog").css('width', '310px');
+    $("#dialog").css('background', 'transparent');
+    $("#dialog").css('overflow', 'hidden');
+    $(".ui-dialog").css('width', '310px');
+    $(".ui-dialog").css('padding', '0');
+    $(".ui-corner-all").css('border-bottom-right-radius', '0');
+    $(".ui-corner-all").css('border-bottom-left-radius', '0');
+    $(".ui-widget-header").css('border', '0');
+    $(".ui-widget-header").css('font-family', '\'Open Sans\', sans-serif');
+    //$(".ui-widget-header").css('border-bottom', '1px solid white');
+    $(".ui-dialog .ui-dialog-content").css('padding', '0');
+    $(".ui-widget-content").css('background', 'transparent');
+    $(".ui-dialog-titlebar").css('width', '310px');
+    $(".ui-dialog-titlebar").css('background', '#fff');
+    $(".ui-dialog-title").css('background', '#fff');
+    $(".ui-dialog-title").css('color', 'black');
+    $(".ui-widget.ui-widget-content").css('border', '0px');
+    $(".ui-widget-content").css('max-height', '578px');
+    $(".ui-dialog-titlebar-close").css('right', '0.5em');
+    // $(".ui-dialog-titlebar-close").html("<i class='material-icons' style='font-size: 20px'>close</i>");
+
+    var $active_line = $("#active-line");
+    $active_line.css("left", '115px');
+</script>
