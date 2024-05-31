@@ -93,12 +93,15 @@
                                 <p class="text-xs text-gray-400">
                                     <span class="inline-block mr-2" x-text="member.email"></span>
                                 </p>
+                                <div style="display: none;" id="selectedUserList" x-text="selectedMembers"></div>
                             </div>
                             <div th:if="${type == 'room-exit'}">
                                 <p class="font-medium text-gray-900" x-text="member.name"></p>
                                 <p class="text-xs text-gray-400">
                                     <span class="inline-block mr-2" x-text="member.message"></span>
                                 </p>
+                                <input type="hidden" name="id" x-text="member.id" />
+                                <div style="display: none;" id="selectedRoomList" x-text="selectedMembers"></div>
                                 <!--                                    <p class="text-xs text-gray-400">-->
                                 <!--                                        <span class="inline-block mr-2" x-text="member.id"></span>-->
                                 <!--                                    </p>-->
@@ -147,8 +150,7 @@
                 </div>
 
                 <!-- Fixed Footer -->
-                <div
-                        class="absolute bottom-0 w-full h-24 flex justify-center items-center bg-white border-t border-blue-100">
+                <div class="absolute bottom-0 w-full h-24 flex justify-center items-center bg-white border-t border-blue-100">
                     <div class="chat-room-create-proc py-2 px-4 bg-gray-200 text-white rounded inline-block outline-none cursor-default"
                          :class="{'bg-blue-500 cursor-pointer hover:bg-blue-600' : selectedMembers.length > 0}"
                          style="margin-bottom: 10px;">
@@ -178,8 +180,8 @@
          * 2024-05-30, 채팅방 버튼 클릭 시
          */
         $(".chat-room-create-proc").click(function () {
-            console.log("test");
-            console.log(loadMembers());
+            console.log($("#selectedUserList").text());
+            console.log($("#selectedRoomList").text());
         });
 
         function loadMembers() {
@@ -202,45 +204,45 @@
 
         var sourceData = [
             {
-                name: '홍길동',
+                name: '테스트1',
                 id: 1,
-                email: 'chance.septimus@gmail.com',
+                email: 'chance.septimus123@gmail.com',
                 photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
             },
             {
-                name: '홍길동',
+                name: '테스트2',
                 id: 2,
-                email: 'chance.septimus@gmail.com',
+                email: 'chance.sept123imus@gmail.com',
                 photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
             },
             {
-                name: '홍길동',
+                name: '테스트3',
                 id: 3,
                 email: 'chance.septimus@gmail.com',
                 photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
             },
             {
-                name: '홍길동',
+                name: '테스트4',
                 id: 4,
-                email: 'chance.septimus@gmail.com',
+                email: 'chance.s124214eptimus@gmail.com',
                 photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
             },
             {
-                name: '홍길동',
+                name: '테스트5',
                 id: 5,
                 email: 'chance.septimus@gmail.com',
                 photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
             },
             {
-                name: '홍길동',
+                name: '테스트6',
                 id: 6,
-                email: 'chance.septimus@gmail.com',
+                email: 'chance.septiafdsfmus@gmail.com',
                 photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
             },
             {
-                name: '홍길동',
+                name: '테스트7',
                 id: 7,
-                email: 'chance.septimus@gmail.com',
+                email: 'chance.septimu123213s@gmail.com',
                 photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
             },
         ]

@@ -47,9 +47,9 @@ public class SocketHandler extends TextWebSocketHandler {
         String msg = message.getPayload(); // JSON형태의 String메시지를 받는다.
         JSONObject obj = jsonToObjectParser(msg); // JSON데이터를 JSONObject로 파싱한다.
 
-        String rN = (String) obj.get("roomNumber"); // 방의 번호를 받는다.
-        String content = (String) obj.get("msg"); // 유저의 아이디를 얻는다. 세션 대신 사용한다.
-        String userName = (String) obj.get("userName"); // 유저의 아이디를 얻는다.
+        String rN = (String) obj.get("roomNumber"); // 방의 번호
+        String content = (String) obj.get("msg"); // 메시지
+        String userName = (String) obj.get("userName"); // 유저의 아이디
 
         log.info(rN);
         log.info(content);
