@@ -562,11 +562,11 @@
             var type = $(this).find('input[name=chat_room_type]').val();
             console.log(type);
             if(type === 'p2p') {
-               var chat_counterpart_id = $(this).find('input[name=chat_counterpart_id]').val();
-               console.log(chat_counterpart_id);
+               var chatCounterpartId = $(this).find('input[name=chat_counterpart_id]').val();
+               console.log(chatCounterpartId);
             } else {
-               var chat_room_num = $(this).find('input[name=chat_room_num]').val();
-               console.log(chat_room_num);
+               var chatRoomNum = $(this).find('input[name=chat_room_num]').val();
+               console.log(chatRoomNum);
             }
 
             $('.view-main').addClass("deactive");
@@ -713,7 +713,7 @@
                 'type': 'room-create',
                 'name': '대화상대 선택',
                 'roomButton': '방 초대',
-                "chat_user_id": $("#chat_user_id").val()
+                "chatUserId": $("#chat_user_id").val()
             };
             chatRoomMgrAjax('/chat/chatRoomCreateView', data, function (html) {
                 chatRoomMgrDisplay(html);
@@ -857,7 +857,7 @@
                 type: "post",
                 url: "/chat/chatUserProfile",
                 data: {
-                    "chat_user_id": $("#chat_user_id").val()
+                    "chatUserId": $("#chat_user_id").val()
                 },
                 dataType: "json",
                 beforeSend: function (xhr) {
@@ -873,24 +873,24 @@
                         // 업로드된 프로필을 보여주도록 한다.
                     }
 
-                    var $chat_profile_picture = $('.chat-profile-picture');
-                    var $chat_profile_name = $('.chat-profile-name');
-                    var $chat_profile_dept = $('.chat-profile-dept');
-                    var $chat_profile_id = $('input[name="chat_profile_id"]');
-                    var $chat_profile_name_input = $('input[name="chat_profile_name_input"]');
-                    var $chat_profile_status_msg = $('#chat-profile-status-msg');
-                    var $chat_profile_email = $('input[name="chat_profile_email"]');
-                    var $chat_profile_phone = $('input[name="chat_profile_phone"]');
+                    var $chatProfilePicture = $('.chat-profile-picture');
+                    var $chatProfileName = $('.chat-profile-name');
+                    var $chatProfileDept = $('.chat-profile-dept');
+                    var $chatProfileId = $('input[name="chat_profile_id"]');
+                    var $chatProfileNameInput = $('input[name="chat_profile_name_input"]');
+                    var $chatProfileStatusMsg = $('#chat-profile-status-msg');
+                    var $chatProfileEmail = $('input[name="chat_profile_email"]');
+                    var $chatProfilePhone = $('input[name="chat_profile_phone"]');
 
-                    $chat_profile_picture.empty();
-                    $chat_profile_picture.html(img);
-                    $chat_profile_name.html(rdata.name);
-                    $chat_profile_dept.html(rdata.department);
-                    $chat_profile_id.val(rdata.id);
-                    $chat_profile_name_input.val(rdata.name);
-                    $chat_profile_status_msg.html(rdata.chat_status_msg);
-                    $chat_profile_email.val(rdata.email);
-                    $chat_profile_phone.val(rdata.phone_number);
+                    $chatProfilePicture.empty();
+                    $chatProfilePicture.html(img);
+                    $chatProfileName.html(rdata.name);
+                    $chatProfileDept.html(rdata.department);
+                    $chatProfileId.val(rdata.id);
+                    $chatProfileNameInput.val(rdata.name);
+                    $chatProfileStatusMsg.html(rdata.chatStatusMsg);
+                    $chatProfileEmail.val(rdata.email);
+                    $chatProfilePhone.val(rdata.phoneNumber);
                 }
             }) // ajax end
         }
@@ -903,7 +903,7 @@
                 type: "post",
                 url: "/chat/chatUserList",
                 data: {
-                    "chat_user_id": $("#chat_user_id").val()
+                    "chatUserId": $("#chat_user_id").val()
                 },
                 dataType: "json",
                 beforeSend: function (xhr) {
@@ -964,7 +964,7 @@
                 type: "post",
                 url: "/chat/userChatRoomList",
                 data: {
-                    "chat_user_id": $("#chat_user_id").val()
+                    "chatUserId": $("#chat_user_id").val()
                 },
                 dataType: "json",
                 beforeSend: function (xhr) {
@@ -1024,13 +1024,13 @@
          * 2024-05-29, 상태 메시지 변경 구현
          */
         $('#chat-profile-status-msg').on('keyup', function() {
-            var status_msg = $("#chat-profile-status-msg").val();
+            var statusMsg = $("#chat-profile-status-msg").val();
             $.ajax({
                 type: "post",
                 url: "/chat/chatUserProfileMsg",
                 data: {
-                    "chat_user_id": $("#chat_user_id").val(),
-                    "profile_status_msg": status_msg
+                    "chatUserId": $("#chat_user_id").val(),
+                    "profileStatusMsg": statusMsg
                 },
                 beforeSend: function (xhr) {
                     //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.

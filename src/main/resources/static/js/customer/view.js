@@ -10,7 +10,7 @@ function getList(state) {//현재 선택한 댓글 정렬방식을 저장합니�
     $.ajax({
         type: "post",
         url: "/inqcomment/list",
-        data: {"comment_board_num": $("#comment_board_num").val(), state: state},
+        data: {"commentBoardNum": $("#comment_board_num").val(), state: state},
         dataType: "json",
         beforeSend: function (xhr) {
             //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
@@ -40,7 +40,7 @@ function getList(state) {//현재 선택한 댓글 정렬방식을 저장합니�
                 output = '';
 
                 $(rdata.commentlist).each(function () {
-                    const lev = this.comment_re_lev;
+                    const lev = this.commentReLevel;
                     let comment_reply = '';
                     if (lev == 1) {
                         comment_reply = ' comment-list-item--reply lev1';
@@ -74,7 +74,7 @@ function getList(state) {//현재 선택한 댓글 정렬방식을 저장합니�
                         + '            <span class="comment-info-date">' + this.reg_date + '</span>'
                     if (lev < 2) {
                         output += '        <a href="javascript:replyform(' + this.num + ','
-                            + lev + ',' + this.comment_re_seq + ','
+                            + lev + ',' + this.commentReSequence + ','
                             + this.comment_re_ref + ')" class="comment-info-button">답글쓰기</a>'
                     }
                     output += '       </div>' // comment-info-box;
@@ -243,10 +243,10 @@ $(function () {
             data: {
                 id: $("#comment_id").val(),
                 content: content,
-                comment_board_num: $("#comment_board_num").val(),
-                comment_re_lev: 0, // 원문인 경우 comment_re_seq는 0,
+                commentBoardNum: $("#comment_board_num").val(),
+                commentReLevel: 0, // 원문인 경우 comment_re_seq는 0,
                                    // comment_re_ref는 댓글의 원문 글번호
-                comment_re_seq: 0
+                commentReSequence: 0
             },
             success: function (rdata) {
                 if (rdata == 1) {
@@ -319,9 +319,9 @@ $(function () {
             return;
         }
 
-        const comment_re_ref = $(this).attr('data-ref');
-        const comment_re_lev = $(this).attr('data-lev');
-        const comment_re_seq = $(this).attr('data-seq');
+        const commentReReferer = $(this).attr('data-ref');
+        const commentReLevel = $(this).attr('data-lev');
+        const commentReSequence = $(this).attr('data-seq');
 
         $.ajax({
             type: 'post',
@@ -330,9 +330,9 @@ $(function () {
                 id: $("#comment_id").val(),
                 content: content,
                 comment_board_num: $("#comment_board_num").val(),
-                comment_re_lev: comment_re_lev,
-                comment_re_ref: comment_re_ref,
-                comment_re_seq: comment_re_seq
+                commentReLevel: commentReLevel,
+                commentReReferer: commentReReferer,
+                commentReSequence: commentReSequence
             },
             beforeSend: function (xhr) {
                 //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.

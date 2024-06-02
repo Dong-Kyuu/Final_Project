@@ -28,5 +28,5 @@ public interface ChatMapper {
 
     public int chatUserProfileMsgUpdate(String profileStatusMsg, String chatUserId);
 
-    int chatUserProfileMsgUpdate(HashMap<String, String> map);
+    int chatUserProfileMsgUpdate(User user);
 }

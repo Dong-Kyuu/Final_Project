@@ -40,14 +40,14 @@ public class InqCommentController {
     }
 
     @PostMapping(value = "/list")
-    public String CommentList(int comment_board_num, int state) {
+    public String CommentList(int commentBoardNum, int state) {
         logger.info("답변 리스트");
-        int listcount = inqCommentService.getListCount(comment_board_num);
+        int listcount = inqCommentService.getListCount(commentBoardNum);
 
         JsonObject object = new JsonObject();
         object.addProperty("listcount", listcount);
 
-        JsonArray jarray = inqCommentService.getCommentJsonList(comment_board_num, state);
+        JsonArray jarray = inqCommentService.getCommentJsonList(commentBoardNum, state);
         JsonElement je = new Gson().toJsonTree(jarray);
         object.add("commentlist", je);
         return object.toString();

@@ -21,8 +21,6 @@ public class ChattingService {
     List<ChatRoom> chatChatRoomList;
     List<ChatMessage> chatMessageList;
 
-
-
     public int createMessage(ChatMessage chatMessage) throws Exception {
         return dao.createMessage(chatMessage);
     }
@@ -52,9 +50,9 @@ public class ChattingService {
     }
 
     public int chatUserProfileMsgUpdate(String profileStatusMsg, String chatUserId) {
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.put("chat_status_msg", profileStatusMsg);
-        map.put("chat_user_id", chatUserId);
-        return dao.chatUserProfileMsgUpdate(map);
+        User user = new User();
+        user.setChat_status_msg(profileStatusMsg);
+        user.setId(chatUserId);
+        return dao.chatUserProfileMsgUpdate(user);
     }
 }

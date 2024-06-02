@@ -8,7 +8,7 @@
     <select id="getListCount" resultType="int">
         select count(*)
         from inquery_comm
-        where comment_board_num = #{comment_board_num}
+        where comment_board_num = #{commentBoardNum}
     </select>
 
     <insert id="commentsInsert" parameterType="inqueryComment">
@@ -19,8 +19,8 @@
         (num, id, content, reg_date, comment_board_num,
         comment_re_lev, comment_re_seq, comment_re_ref)
         values
-        (NULL, #{id}, #{content}, NOW(), #{comment_board_num},
-        #{comment_re_lev}, #{comment_re_seq}, #{comment_re_ref})
+        (NULL, #{id}, #{content}, NOW(), #{commentBoardNum},
+        #{commentReLevel}, #{commentReSequence}, #{commentReReferer})
     </insert>
 
     <!-- 2024-05-08 $=abc, #='abc' -->
@@ -30,7 +30,7 @@
         from inquery_comm join users
         on inquery_comm.id = users.id
         <where>
-            comment_board_num = #{comment_board_num}
+            comment_board_num = #{commentBoardNum}
         </where>
         order by comment_re_ref ${sort}, comment_re_seq asc
     </select>
@@ -49,8 +49,8 @@
     <update id="commentReplyUpdate">
         update inquery_comm
         set comment_re_seq = comment_re_seq + 1
-        where comment_re_ref = #{comment_re_ref}
-        and comment_re_seq <![CDATA[ > ]]> #{comment_re_seq}
+        where comment_re_ref = #{commentReReferer}
+        and comment_re_seq <![CDATA[ > ]]> #{commentReSequence}
     </update>
 
     <insert id="commentReply">
@@ -61,7 +61,7 @@
         (num, id, content, reg_date, comment_board_num,
         comment_re_lev, comment_re_seq, comment_re_ref)
         values
-        (#{num}, #{id}, #{content}, NOW(), #{comment_board_num},
-        #{comment_re_lev}, #{comment_re_seq}, #{comment_re_ref})
+        (#{num}, #{id}, #{content}, NOW(), #{commentBoardNum},
+        #{commentReLevel}, #{commentReSequence}, #{commentReReferer})
     </insert>
 </mapper>

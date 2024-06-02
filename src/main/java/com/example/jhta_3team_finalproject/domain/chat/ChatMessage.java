@@ -22,16 +22,11 @@ public class ChatMessage {
         ENTER, TALK, QUIT, KICK
     }
 
-//	private int chatNum;
-//	private String roomNumber;
-//	private String userName;
-//	private String content;
-
     private MessageType type; // 메시지 타입
-    private long message_num; // 메시지 번호
-    private String message_content; // 메시지 내용
-    private int read_count; // 안 읽은 사람 수
-    private Date send_time; // 메시지 보낸 시간
-    private String sender_id; // 보낸 회원의 아이디
-    private String chat_room_num; // 채팅방 번호
+    private long messageNum; // 메시지 번호
+    private String messageContent; // 메시지 내용
+    private int readCount; // 안 읽은 사람 수
+    private Date sendTime; // 메시지 보낸 시간
+    private String senderId; // 보낸 회원의 아이디
+    private String chatRoomNum; // 채팅방 번호
 }

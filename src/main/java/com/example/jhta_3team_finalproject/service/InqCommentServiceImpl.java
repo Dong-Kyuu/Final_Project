@@ -26,8 +26,8 @@ public class InqCommentServiceImpl implements InqCommentService {
     }
 
     @Override
-    public int getListCount(int board_num) {
-        return dao.getListCount(board_num);
+    public int getListCount(int boardNum) {
+        return dao.getListCount(boardNum);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class InqCommentServiceImpl implements InqCommentService {
     }
 
     @Override
-    public JsonArray getCommentJsonList(int comment_board_num, int state) {
+    public JsonArray getCommentJsonList(int commentBoardNum, int state) {
         JsonArray array = new JsonArray();
 
         String sort = "asc"; // 등록순
@@ -55,7 +55,7 @@ public class InqCommentServiceImpl implements InqCommentService {
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("comment_board_num", comment_board_num);
+        map.put("commentBoardNum", commentBoardNum);
         map.put("sort", sort);
 
         List<InqueryComment> list = dao.getCommentList(map);
@@ -69,10 +69,10 @@ public class InqCommentServiceImpl implements InqCommentService {
             object.addProperty("num", inqueryComment.getNum());
             object.addProperty("id", inqueryComment.getId());
             object.addProperty("content", inqueryComment.getContent());
-            object.addProperty("reg_date", inqueryComment.getReg_date());
-            object.addProperty("comment_re_lev", inqueryComment.getComment_re_lev());
-            object.addProperty("comment_re_seq", inqueryComment.getComment_re_seq());
-            object.addProperty("comment_re_ref", inqueryComment.getComment_re_ref());
+            object.addProperty("reg_date", inqueryComment.getRegDate());
+            object.addProperty("comment_re_lev", inqueryComment.getCommentReLevel());
+            object.addProperty("comment_re_seq", inqueryComment.getCommentReSequence());
+            object.addProperty("comment_re_ref", inqueryComment.getCommentReReferer());
             array.add(object);
         });
         return array;
@@ -88,8 +88,8 @@ public class InqCommentServiceImpl implements InqCommentService {
     public int commentsReply(InqueryComment co) {
         commentReplyUpdate(co);
         // double i = 1/0;
-        co.setComment_re_lev(co.getComment_re_lev() + 1);
-        co.setComment_re_seq(co.getComment_re_seq() + 1);
+        co.setCommentReLevel(co.getCommentReLevel() + 1);
+        co.setCommentReSequence(co.getCommentReSequence() + 1);
         return dao.commentReply(co);
     }
 
