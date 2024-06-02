@@ -40,31 +40,31 @@ public class ChatController {
     }
 
     @RequestMapping(value = "chatUserProfile")
-    public @ResponseBody User chatUserProfile(@RequestParam(value = "chat_user_id") String chat_user_id) {
+    public @ResponseBody User chatUserProfile(@RequestParam(value = "chatUserId") String chatUserId) {
         // 사원 리스트를 불러옵니다.
-        return chattingService.chatUserProfile(chat_user_id);
+        return chattingService.chatUserProfile(chatUserId);
     }
 
     @RequestMapping(value = "chatUserProfileMsg")
-    public @ResponseBody int chatUserProfileMsg(@RequestParam(value = "profile_status_msg", defaultValue = "") String profile_status_msg,
-                                  @RequestParam(value = "chat_user_id") String chat_user_id) {
+    public @ResponseBody int chatUserProfileMsg(@RequestParam(value = "profileStatusMsg", defaultValue = "") String profileStatusMsg,
+                                  @RequestParam(value = "chatUserId") String chatUserId) {
         // 사원의 프로필 상태 메시지를 업데이트합니다.
-        return chattingService.chatUserProfileMsgUpdate(profile_status_msg, chat_user_id);
+        return chattingService.chatUserProfileMsgUpdate(profileStatusMsg, chatUserId);
     }
 
     @RequestMapping(value = "chatUserList")
-    public @ResponseBody List<User> chatUserList(@RequestParam(value = "chat_user_id") String chat_user_id) {
+    public @ResponseBody List<User> chatUserList(@RequestParam(value = "chatUserId") String chatUserId) {
         // 사원 리스트를 불러옵니다.
-        return chattingService.chatUserList(chat_user_id);
+        return chattingService.chatUserList(chatUserId);
     }
 
 
     @RequestMapping("userChatRoomList")
     public @ResponseBody List<ChatRoom> userChatRoomList(@RequestParam HashMap<String, String> params) throws Exception {
         log.info("아이디별 채팅방 구하기");
-        String chat_user_id = params.get("chat_user_id");
+        String chatUserId = params.get("chatUserId");
         ChatRoom chatRoom = new ChatRoom();
-        chatRoom.setChat_session_id(chat_user_id);
+        chatRoom.setChatSessionId(chatUserId);
         chatRoomList = chattingService.searchRoomUser(chatRoom);
         return chatRoomList;
     }
@@ -72,8 +72,8 @@ public class ChatController {
     @RequestMapping("getRoom")
     public @ResponseBody List<ChatRoom> getRoom(@RequestParam HashMap<Object, Object> params) throws Exception {
         log.info("관리자용 채팅방 전체 구하기");
-        ChatRoom chatRoom_empty = new ChatRoom();
-        chatRoomList = chattingService.searchRoom(chatRoom_empty);
+        ChatRoom chatRoomEmpty = new ChatRoom();
+        chatRoomList = chattingService.searchRoom(chatRoomEmpty);
         return chatRoomList;
     }
 
@@ -82,12 +82,12 @@ public class ChatController {
                                            @RequestParam(value = "type") String type,
                                            @RequestParam(value = "name") String name,
                                            @RequestParam(value = "roomButton") String roomButton,
-                                           @RequestParam(value = "chat_user_id") String chat_user_id) {
+                                           @RequestParam(value = "chatUserId") String chatUserId) {
         mv.setViewName("chat/roomMgr");
         mv.addObject("type", type);
         mv.addObject("name", name);
         mv.addObject("roomButton", roomButton);
-        mv.addObject("chat_user_id", chat_user_id);
+        mv.addObject("chatUserId", chatUserId);
         return mv;
     }
 
@@ -101,9 +101,9 @@ public class ChatController {
 
         if (roomName != null && !roomName.trim().equals("")) {
             ChatRoom chatRoom = new ChatRoom();
-            chatRoom.setChat_room_num(++roomNumber);
-            chatRoom.setRoom_name(roomName);
-            chatRoom.setChat_session_id(sessionId);
+            chatRoom.setChatRoomNum(++roomNumber);
+            chatRoom.setRoomName(roomName);
+            chatRoom.setChatSessionId(sessionId);
             chattingService.createChatRoom(chatRoom);
             chatRoomList = chattingService.searchRoom(chatRoom);
         }
@@ -149,7 +149,6 @@ public class ChatController {
         return mv;
     }
 
-
     @RequestMapping("moveChating")
     public ModelAndView chating(@RequestParam HashMap<Object, Object> params) {
         log.info("채팅방 이동");
@@ -157,7 +156,7 @@ public class ChatController {
         ModelAndView mv = new ModelAndView();
         int roomNumber = Integer.parseInt((String) params.get("roomNumber"));
 
-        List<ChatRoom> new_list = chatRoomList.stream().filter(o -> o.getChat_room_num() == roomNumber)
+        List<ChatRoom> new_list = chatRoomList.stream().filter(o -> o.getChatRoomNum() == roomNumber)
                 .collect(Collectors.toList());
         if (new_list != null && new_list.size() > 0) {
             mv.addObject("roomName", params.get("roomName"));

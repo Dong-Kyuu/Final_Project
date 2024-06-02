@@ -1,25 +1,26 @@
 package com.example.jhta_3team_finalproject.cache;
 
+import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
+@RequiredArgsConstructor
 @Service
 public class RedisUtils {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, ChatMessage> redisTemplate;
 
-    public RedisUtils(RedisTemplate<String, Object> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
-
-    public void setData(String key, String value,Long expiredTime){
+    public void setData(String key, ChatMessage value, Long expiredTime){
         redisTemplate.opsForValue().set(key, value, expiredTime, TimeUnit.MILLISECONDS);
     }
 
-    public String getData(String key){
-        return (String) redisTemplate.opsForValue().get(key);
+    public ChatMessage getData(String key){
+        return (ChatMessage) redisTemplate.opsForValue().get(key);
     }
 
     public void deleteData(String key){

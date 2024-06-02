@@ -47,20 +47,20 @@ public class SocketHandler extends TextWebSocketHandler {
         String msg = message.getPayload(); // JSON형태의 String메시지를 받는다.
         JSONObject obj = jsonToObjectParser(msg); // JSON데이터를 JSONObject로 파싱한다.
 
-        String rN = (String) obj.get("roomNumber"); // 방의 번호
+        long rN = (long) obj.get("roomNumber"); // 방의 번호
         String content = (String) obj.get("msg"); // 메시지
         String userName = (String) obj.get("userName"); // 유저의 아이디
 
-        log.info(rN);
+        log.info("{}", rN);
         log.info(content);
         log.info(userName);
 
         // 상태를 저장하기 위해 vo에 값을 넣어주고 insert
         ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setChat_room_num(rN);
-        chatMessage.setSender_id(userName);
-        chatMessage.setMessage_content(content);
-        chatMessage.setRead_count(1);
+        chatMessage.setChatRoomNum(rN);
+        chatMessage.setSenderId(userName);
+        chatMessage.setMessageContent(content);
+        chatMessage.setReadCount(1);
 
         chattingService.createMessage(chatMessage);
 
@@ -132,9 +132,9 @@ public class SocketHandler extends TextWebSocketHandler {
 
         // 방번호를 기준으로 다 받아온다.
         ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setChat_room_num(roomNumber);
+        chatMessage.setChatRoomNum(Long.valueOf(roomNumber));
         log.info("{}", chatMessage);
-        log.info(chatMessage.getChat_room_num());
+        log.info("{}", chatMessage.getChatRoomNum());
         chatMessageList = chattingService.searchMessages(chatMessage);
         log.info("{} : 입니다.", chatMessageList);
 
@@ -162,8 +162,8 @@ public class SocketHandler extends TextWebSocketHandler {
 
         // 포문으로 연속 메시지를 보낸다. list 크기 만큼 돌린다.
         for (int i = 0; i < chatMessageList.size(); i++) {
-            String content = chatMessageList.get(i).getMessage_content();
-            String userDBName = chatMessageList.get(i).getSender_id();
+            String content = chatMessageList.get(i).getMessageContent();
+            String userDBName = chatMessageList.get(i).getSenderId();
             log.info("{} 번째", i);
             // 세션등록이 끝나면 발급받은 세션 ID 값의 메시지를 발송한다.
             JSONObject obj = new JSONObject();
