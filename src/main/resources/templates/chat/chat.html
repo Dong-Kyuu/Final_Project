@@ -247,11 +247,11 @@
                         <div class="scroll-wrapper">
                             <!-- Search Input -->
                             <div class="py-2 px-6 relative flex flex-col justify-center">
-<!--                                <svg class="absolute left-10" xmlns="http://www.w3.org/2000/svg"-->
-<!--                                     style="width: 16px; height: 16px;" viewBox="0 0 16 16">-->
-<!--                                    <path class="fill-current text-gray-400"-->
-<!--                                          d="M6.4 1.6a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm-4.525.275a6.4 6.4 0 019.58 8.45l4.31 4.31a.8.8 0 01-1.13 1.13l-4.31-4.31A6.399 6.399 0 010 6.4a6.4 6.4 0 011.875-4.525z"/>-->
-<!--                                </svg>-->
+                                <svg class="absolute left-10" xmlns="http://www.w3.org/2000/svg"
+                                     style="width: 16px; height: 16px;" viewBox="0 0 16 16">
+                                    <path class="fill-current text-gray-400"
+                                          d="M6.4 1.6a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm-4.525.275a6.4 6.4 0 019.58 8.45l4.31 4.31a.8.8 0 01-1.13 1.13l-4.31-4.31A6.399 6.399 0 010 6.4a6.4 6.4 0 011.875-4.525z"/>
+                                </svg>
                                 <input type="text" id="searchChatUser" placeholder="검색" x-ref="searchField"
                                        x-model="search" x-on:keydown.window.prevent.slash="$refs.searchField.focus()"
                                        class="border border-blue-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-blue-400 focus:border-blue-400 focus:bg-blue-50 focus:bg-opacity-25"/>
@@ -533,6 +533,13 @@
         navItemPos($el.index());
         leftPos = $el.position().left;
         newWidth = $el.parent().width();
+        /**
+         * 2024-06-02, list 바인딩
+         */
+        setTimeout(function () {
+            $(".messages-list > ul > li").off('click');
+            $(".messages-list > ul > li").bind('click', showMessages);
+        }, 400);
 
         $("#master-nav ul li").click(function () {
             $el = $(this);
@@ -871,6 +878,7 @@
                         img = "<img src='/image/default.png' />";
                     } else {
                         // 업로드된 프로필을 보여주도록 한다.
+                        img = "<img src='/image/default.png' />";
                     }
 
                     var $chatProfilePicture = $('.chat-profile-picture');
@@ -921,6 +929,7 @@
                             img = "<img src='/image/default.png' />";
                         } else {
                             // 업로드된 프로필을 보여주도록 한다.
+                            img = "<img src='/image/default.png' />";
                         }
 
                         output += "<li>";
@@ -930,7 +939,7 @@
                         output += "       " + img;
                         output += "    </div>";
                         output += "    <div class='mes-detail'>";
-                        if(this.chat_status_msg === null) {
+                        if(this.chat_status_msg === null) { // 2024-06-02, chatStatusMsg로 변경 예정
                             output += "        <div class='mes-col1 chat-friend-list-col1' style='margin-top: 18px;'>";
                             output += "            <div class='sender-name'>";
                             output += "                "+ this.department + " - " + this.name;
@@ -942,7 +951,7 @@
                             output += "                "+ this.department + " - " + this.name;
                             output += "            </div>";
                             output += "            <div class='mes-preview'>";
-                            output += "                " + this.chat_status_msg;
+                            output += "                " + this.chatStatusMsg;
                             output += "            </div>";
                             output += "        </div>";
                         }
@@ -982,9 +991,9 @@
                             // 업로드된 프로필을 보여주도록 한다. (채팅방 화면은 임시 처리)
                             img = "<img src='/image/default.png' />";
                         }
-                        var rn = d.room_name;
-                        var roomNumber = d.chat_room_num;
-                        var sessionId = d.chat_session_id;
+                        var rn = d.roomName;
+                        var roomNumber = d.chatRoomNum;
+                        var sessionId = d.chatSessionId;
 
                         output += "<li>";
                         output += "<input type='hidden' name='chat_room_num' value='" + roomNumber + "' />";
