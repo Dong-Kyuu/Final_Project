@@ -47,11 +47,11 @@ public class SocketHandler extends TextWebSocketHandler {
         String msg = message.getPayload(); // JSON형태의 String메시지를 받는다.
         JSONObject obj = jsonToObjectParser(msg); // JSON데이터를 JSONObject로 파싱한다.
 
-        String rN = (String) obj.get("roomNumber"); // 방의 번호
+        long rN = (long) obj.get("roomNumber"); // 방의 번호
         String content = (String) obj.get("msg"); // 메시지
         String userName = (String) obj.get("userName"); // 유저의 아이디
 
-        log.info(rN);
+        log.info("{}", rN);
         log.info(content);
         log.info(userName);
 
@@ -132,9 +132,9 @@ public class SocketHandler extends TextWebSocketHandler {
 
         // 방번호를 기준으로 다 받아온다.
         ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setChatRoomNum(roomNumber);
+        chatMessage.setChatRoomNum(Long.valueOf(roomNumber));
         log.info("{}", chatMessage);
-        log.info(chatMessage.getChatRoomNum());
+        log.info("{}", chatMessage.getChatRoomNum());
         chatMessageList = chattingService.searchMessages(chatMessage);
         log.info("{} : 입니다.", chatMessageList);
 

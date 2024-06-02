@@ -28,5 +28,5 @@ public class ChatMessage {
     private int readCount; // 안 읽은 사람 수
     private Date sendTime; // 메시지 보낸 시간
     private String senderId; // 보낸 회원의 아이디
-    private String chatRoomNum; // 채팅방 번호
+    private long chatRoomNum; // 채팅방 번호
 }

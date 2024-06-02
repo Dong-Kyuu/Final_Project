@@ -81,21 +81,21 @@
     <delete id="boardDelete">
         <![CDATA[
 	   		delete from inquery_board
-	   				where inq_re_ref =  #{inqReRef}
-	   				and   inq_re_lev >= #{inqReLev}
-	   				and   inq_re_seq >= #{inqReSeq}
-	   				and   inq_re_seq <= (
-	   										nvl((SELECT min(inq_re_seq)-1
-	   									         FROM   inquery_board
-	   									         WHERE  inq_re_ref = #{inqReRef}
-	   									         AND    inq_re_lev = #{inqReLev}
-	   									         AND    inq_re_seq > #{inqReSeq}),
-	   									        (SELECT max(inq_re_seq)
-	   									         FROM   inquery_board
-	   									         WHERE  inq_re_ref = #{inqReRef})
-	   										))
+	   				where inq_num =  #{inqNum}
 	   	]]>
     </delete>
+<!--	   and   inq_re_lev >= #{inqReLev}
+           and   inq_re_seq >= #{inqReSeq}
+           and   inq_re_seq <= (
+                           IFNULL((SELECT min(inq_re_seq)-1
+                                FROM   inquery_board
+                                WHERE  inq_re_ref = #{inqReRef}
+                                AND    inq_re_lev = #{inqReLev}
+                                AND    inq_re_seq > #{inqReSeq}),
+                               (SELECT max(inq_re_seq)
+                                FROM   inquery_board
+                                WHERE  inq_re_ref = #{inqReRef})
+                           ))-->
 
     <select id="getDeleteFileList" resultType="String">
         select board_file from delete_file

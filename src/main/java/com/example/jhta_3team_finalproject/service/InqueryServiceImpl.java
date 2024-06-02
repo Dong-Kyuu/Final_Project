@@ -5,6 +5,7 @@ import com.example.jhta_3team_finalproject.mybatis.mapper.InqueryBoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -87,6 +88,7 @@ public class InqueryServiceImpl implements InqueryService {
         return dao.boardModify(inqueryBoard);
     }
 
+    @Transactional
     @Override
     public int boardDelete(int num) {
         int result = 0;
