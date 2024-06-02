@@ -265,6 +265,7 @@ public class InqueryController {
 
         // 비밀번호가 다른 경우
         if (usercheck == false) {
+            logger.info("패스 인증 실패");
             rattr.addFlashAttribute("result", "passFail");
             rattr.addAttribute("num", boarddata.getInqNum());
             return "redirect:modifyView";

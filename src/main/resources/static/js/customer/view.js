@@ -40,7 +40,7 @@ function getList(state) {//현재 선택한 댓글 정렬방식을 저장합니�
                 output = '';
 
                 $(rdata.commentlist).each(function () {
-                    const lev = this.commentReLevel;
+                    const lev = this.comment_re_lev;
                     let comment_reply = '';
                     if (lev == 1) {
                         comment_reply = ' comment-list-item--reply lev1';
@@ -74,7 +74,7 @@ function getList(state) {//현재 선택한 댓글 정렬방식을 저장합니�
                         + '            <span class="comment-info-date">' + this.reg_date + '</span>'
                     if (lev < 2) {
                         output += '        <a href="javascript:replyform(' + this.num + ','
-                            + lev + ',' + this.commentReSequence + ','
+                            + lev + ',' + this.comment_re_seq + ','
                             + this.comment_re_ref + ')" class="comment-info-button">답글쓰기</a>'
                     }
                     output += '       </div>' // comment-info-box;
@@ -319,9 +319,11 @@ $(function () {
             return;
         }
 
-        const commentReReferer = $(this).attr('data-ref');
-        const commentReLevel = $(this).attr('data-lev');
-        const commentReSequence = $(this).attr('data-seq');
+        const comment_re_ref = $(this).attr('data-ref');
+        const comment_re_lev = $(this).attr('data-lev');
+        const comment_re_seq = $(this).attr('data-seq');
+
+        console.log($("#comment_board_num").val());
 
         $.ajax({
             type: 'post',
@@ -329,10 +331,10 @@ $(function () {
             data: {
                 id: $("#comment_id").val(),
                 content: content,
-                comment_board_num: $("#comment_board_num").val(),
-                commentReLevel: commentReLevel,
-                commentReReferer: commentReReferer,
-                commentReSequence: commentReSequence
+                commentBoardNum: $("#comment_board_num").val(),
+                commentReReferer: comment_re_ref,
+                commentReLevel: comment_re_lev,
+                commentReSequence: comment_re_seq
             },
             beforeSend: function (xhr) {
                 //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.

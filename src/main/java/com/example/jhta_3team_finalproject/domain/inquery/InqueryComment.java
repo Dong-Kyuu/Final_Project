@@ -17,8 +17,6 @@ public class InqueryComment implements Comparable<InqueryComment> {
     private int commentReLevel;
     private int commentReSequence;
 
-
-
     // 2024-05-09 답글 등록순, 최신순 처리
     @Override
     public int compareTo(InqueryComment o) {

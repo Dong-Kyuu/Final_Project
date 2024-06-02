@@ -70,6 +70,7 @@ public class InqCommentServiceImpl implements InqCommentService {
             object.addProperty("id", inqueryComment.getId());
             object.addProperty("content", inqueryComment.getContent());
             object.addProperty("reg_date", inqueryComment.getRegDate());
+            object.addProperty("comment_board_num", inqueryComment.getCommentBoardNum());
             object.addProperty("comment_re_lev", inqueryComment.getCommentReLevel());
             object.addProperty("comment_re_seq", inqueryComment.getCommentReSequence());
             object.addProperty("comment_re_ref", inqueryComment.getCommentReReferer());

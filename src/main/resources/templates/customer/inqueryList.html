@@ -73,7 +73,7 @@
                                 <span th:if="${b.cnt > 0}" style="font-weight: bold;">[답변완료]</span>
                                 <span th:if="${b.cnt == 0}" style="color: red; font-weight: bold;">[미처리 문의]</span>
                                 <a th:if="${b.inqPassExist}"
-                                   th:href="@{'/inquery/detail?num=' + ${b.inq_num}}">
+                                   th:href="@{'/inquery/detail?num=' + ${b.inqNum}}">
                                     <svg
                                             xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" class="bi bi-lock-fill"
@@ -83,7 +83,7 @@
                                     <span th:text="비밀글입니다."></span>
                                 </a>
                                 <a th:if="${!b.inqPassExist}"
-                                   th:href="@{'/inquery/detail?num='+${b.inq_num}}">
+                                   th:href="@{'/inquery/detail?num='+${b.inqNum}}">
 										<span th:if="${b.inqSubject.length>=20}"
                                               th:text="${#strings.abbreviate(b.inqSubject,20)}"></span>
                                     <span th:if="${b.inqSubject.length<20}"

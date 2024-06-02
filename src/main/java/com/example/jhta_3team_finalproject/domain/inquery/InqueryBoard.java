@@ -16,9 +16,9 @@ public class InqueryBoard {
     private String inqSubject; // 글 제목
     private String inqContent; // 글 내용
     private String inqFile; // 첨부될 파일의 이름
-    private int inqReReferer; // 답변 글 작성 시 참조되는 글의 번호
-    private int inqReLevel; // 답변 글의 깊이
-    private int inqReSequence; // 답변 글의 순서
+    private int inqReRef; // 답변 글 작성 시 참조되는 글의 번호
+    private int inqReLev; // 답변 글의 깊이
+    private int inqReSeq; // 답변 글의 순서
     private int inqReadCount; // 글의 조회수
 
     private MultipartFile uploadfile;

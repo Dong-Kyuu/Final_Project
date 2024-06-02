@@ -87,10 +87,10 @@
 </div>
 <form th:action="@{/inquery/modifyAction}" method="post" name="modifyform"
       enctype="multipart/form-data">
-    <input type="hidden" name="inq_num" th:value="${boarddata.inqNum}">
-    <input type="hidden" name="inq_file" th:value="${boarddata.inqFile}">
+    <input type="hidden" name="inqNum" th:value="${boarddata.inqNum}">
+    <input type="hidden" name="inqFile" th:value="${boarddata.inqFile}">
     <div id="div_edit_title" class="form-group">
-        <input name="inq_name" id="board_name" th:value="${boarddata.inqName}" readOnly
+        <input name="inqName" id="board_name" th:value="${boarddata.inqName}" readOnly
                type="hidden" class="form-control">
     </div>
 
@@ -100,7 +100,7 @@
                 <tr style="width: 100%;">
                     <td style="width: 7%; display: inline-block;">
                         <div>
-                            <select class="form-select form-control" name="inq_tag" id="board_tag">
+                            <select class="form-select form-control" name="inqTag" id="board_tag">
                                 <option value="일반">일반</option>
                                 <option value="탈퇴">탈퇴</option>
                             </select>
@@ -108,7 +108,7 @@
                     </td>
                     <td style="width: 78%; display: inline-block; text-align: left;">
                         <div style="width: 78%; display: inline-block; text-align: left;">
-                            <input class="form-control" style="width: 50%;" name="inq_subject"
+                            <input class="form-control" style="width: 50%;" name="inqSubject"
                                    id="board_subject" type="text" th:value="${boarddata.inqSubject}"
                                    maxlength="100" placeholder="문의 글 제목을 작성해주세요">
                         </div>
@@ -139,12 +139,12 @@
 
     <div id="div_edit_title">
         <!-- <label for="inq_content">내용</label> -->
-        <textarea class="board_content" name="inq_content" id="board_editor"
+        <textarea class="board_content" name="inqContent" id="board_editor"
                   th:utext="${boarddata.inqContent}"></textarea>
     </div>
 
     <!-- 원문글인 경우에만 파일 첨부 수정 가능합니다. -->
-    <div th:if="${boarddata.inqReLevel==0}" id="div_edit_title" class="form-group">
+    <div th:if="${boarddata.inqReLev==0}" id="div_edit_title" class="form-group">
         <label>파일첨부
             <img th:src="@{/image/customer/attach.png}" alt="파일첨부" width="20px">
             <input type="file" id="upfile" name="uploadfile">
@@ -156,11 +156,11 @@
     <div id="div_edit_title" class="form-group">
         <!-- <label for="inq_pass">비밀번호</label>  -->
         <span th:if="${boarddata.inqPassExist} == true">
-			<input name="inq_pass" id="board_pass"
+			<input name="inqPass" id="board_pass"
                    type="password" maxlength="30" class="form-control" placeholder="비밀번호를 입력해주세요">
 		</span>
         <span th:if="${boarddata.inqPassExist} == false">
-			<input name="inq_pass" id="board_pass" style="display: none;"
+			<input name="inqPass" id="board_pass" style="display: none;"
                    type="password" maxlength="30" class="form-control" placeholder="비밀번호를 입력해주세요">
 		</span>
     </div>
