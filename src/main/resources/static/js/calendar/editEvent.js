@@ -86,8 +86,7 @@ var editEvent = function (event, element, view) {
                 //...
             },
             success: function (response) {
-                // 2024-04-08 캘린더 수정 이벤트 주석 처리
-                //alert('수정되었습니다.');
+                alert('수정되었습니다.')
             }
         });
 
@@ -96,9 +95,8 @@ var editEvent = function (event, element, view) {
 
 // 삭제버튼
 $('#deleteEvent').on('click', function () {
-
-    // 2024-04-08 삭제 bug fix;
-    //$('#deleteEvent').unbind();
+    
+    $('#deleteEvent').unbind();
     $("#calendar").fullCalendar('removeEvents', $(this).data('id'));
     eventModal.modal('hide');
 
@@ -110,8 +108,7 @@ $('#deleteEvent').on('click', function () {
             //...
         },
         success: function (response) {
-            // 2024-04-08 캘린더 삭제 이벤트 주석 처리
-            //alert('삭제되었습니다.');
+            alert('삭제되었습니다.');
         }
     });
 
