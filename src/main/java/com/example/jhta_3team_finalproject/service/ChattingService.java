@@ -2,7 +2,7 @@ package com.example.jhta_3team_finalproject.service;
 
 
 
-import com.example.jhta_3team_finalproject.domain.User;
+import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 import com.example.jhta_3team_finalproject.domain.chat.ChatRoom;
 import com.example.jhta_3team_finalproject.mybatis.mapper.ChatMapper;
