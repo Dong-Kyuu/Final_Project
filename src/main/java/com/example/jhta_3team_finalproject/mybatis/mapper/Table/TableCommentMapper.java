@@ -1,4 +1,4 @@
-package com.example.jhta_3team_finalproject.mybatis.mapper;
+package com.example.jhta_3team_finalproject.mybatis.mapper.Table;
 
 import org.apache.ibatis.annotations.Mapper;
 

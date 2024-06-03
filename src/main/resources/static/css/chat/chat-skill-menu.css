@@ -68,7 +68,7 @@
 }
 
 .more-button {
-  background-color: #4f97e5;
+  background-color: #67a3e4;
   box-shadow: 0px 0px 0px 4px rgba(80, 152, 230, 0.3);
   border-radius: 50%;
   width: 30px;
@@ -87,12 +87,12 @@
   z-index: 10;
 }
 .more-button-mgr {
-  background-color: #4f97e5;
+  background-color: #67a3e4;
   box-shadow: 0px 0px 0px 4px rgba(80, 152, 230, 0.3);
   border-radius: 50%;
   width: 40px;
   height: 40px;
-  top: 227px;
+  top: 287px;
   left: 263px;
   border: none;
   padding: 0;
@@ -107,7 +107,7 @@
 }
 .more-button:hover, .more-button:focus {
   box-shadow: 0px 0px 0px 8px rgba(80, 152, 230, 0.3);
-  background-color: #3d8ce2;
+  background-color: #5699e1;
 }
 .more-button:focus {
   outline: 0;
@@ -140,7 +140,7 @@
 }
 .more-button-list-mgr {
   right: -80px;
-  bottom: -198px;
+  bottom: -248px;
   height: 100px;
 }
 .more-button-list-mgr li {
@@ -152,7 +152,7 @@
 .more-button-list-item {
   display: flex;
   align-items: center;
-  color: #4f97e5;
+  color: #67a3e4;
   padding: 10px;
   border-radius: 4px;
   cursor: pointer;

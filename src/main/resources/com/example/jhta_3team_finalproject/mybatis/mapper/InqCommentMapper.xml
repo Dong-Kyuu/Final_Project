@@ -8,7 +8,7 @@
     <select id="getListCount" resultType="int">
         select count(*)
         from inquery_comm
-        where comment_board_num = #{comment_board_num}
+        where comment_board_num = #{commentBoardNum}
     </select>
 
     <insert id="commentsInsert" parameterType="inqueryComment">
@@ -17,22 +17,22 @@
         <!--		</selectKey>-->
         insert into inquery_comm
         (num, id, content, reg_date, comment_board_num,
-        comment_re_lev, comment_re_seq, comment_re_ref)
+        comment_re_level, comment_re_sequence, comment_re_referer)
         values
-        (NULL, #{id}, #{content}, NOW(), #{comment_board_num},
-        #{comment_re_lev}, #{comment_re_seq}, #{comment_re_ref})
+        (NULL, #{id}, #{content}, NOW(), #{commentBoardNum},
+        #{commentReLevel}, #{commentReSequence}, #{commentReReferer})
     </insert>
 
     <!-- 2024-05-08 $=abc, #='abc' -->
     <select id="getCommentList" parameterType="map" resultType="inqueryComment">
         select num, inquery_comm.id, content, reg_date,
-        comment_re_lev, comment_re_seq, comment_re_ref
+        comment_re_level, comment_re_sequence, comment_re_referer
         from inquery_comm join users
         on inquery_comm.id = users.id
         <where>
-            comment_board_num = #{comment_board_num}
+            comment_board_num = #{commentBoardNum}
         </where>
-        order by comment_re_ref ${sort}, comment_re_seq asc
+        order by comment_re_referer ${sort}, comment_re_sequence asc
     </select>
 
     <update id="commentsUpdate">
@@ -42,15 +42,14 @@
     </update>
 
     <delete id="commentsDelete">
-        delete inquery_comm
-        where num = #{num}
+        delete inquery_comm where num = #{num}
     </delete>
 
     <update id="commentReplyUpdate">
         update inquery_comm
-        set comment_re_seq = comment_re_seq + 1
-        where comment_re_ref = #{comment_re_ref}
-        and comment_re_seq <![CDATA[ > ]]> #{comment_re_seq}
+        set comment_re_sequence = comment_re_sequence + 1
+        where comment_re_referer = #{commentReReferer}
+        and comment_re_sequence <![CDATA[ > ]]> #{commentReSequence}
     </update>
 
     <insert id="commentReply">
@@ -59,9 +58,9 @@
         </selectKey>
         insert into inquery_comm
         (num, id, content, reg_date, comment_board_num,
-        comment_re_lev, comment_re_seq, comment_re_ref)
+        comment_re_level, comment_re_sequence, comment_re_referer)
         values
-        (#{num}, #{id}, #{content}, NOW(), #{comment_board_num},
-        #{comment_re_lev}, #{comment_re_seq}, #{comment_re_ref})
+        (#{num}, #{id}, #{content}, NOW(), #{commentBoardNum},
+        #{commentReLevel}, #{commentReSequence}, #{commentReReferer})
     </insert>
 </mapper>

@@ -4,9 +4,9 @@
 /* @Color Palette */
 @white: #FFFFFF;
 @black: #000000;
-@darkPrimaryColor: #4f97e5;
-@primaryColor: #4f97e5;
-@lightPrimaryColor: #4f97e5;
+@darkPrimaryColor: #67a3e4;
+@primaryColor: #FFF;
+@lightPrimaryColor: #67a3e4;
 @textPrimaryColor: #212121;
 @accentColor: #FF5722;
 @primaryTextColor: #212121;
@@ -131,20 +131,20 @@
 
     .header-wrapp {
         width: 100%;
-        height: 36%;
+        height: 25%;
         position: relative;
         background: @primaryColor;
 
         .app-detail {
             text-align: center;
             padding: 20px 5px 5px;
-            color: @white;
-            text-shadow: 0 0 15px @darkPrimaryColor;
+            color: @black;
+            //text-shadow: 0 0 15px @darkPrimaryColor;
 
             img {
-                width: 75px;
+                width: 50px;
                 border-radius: 50%;
-                .shadow(0 0 15px @darkPrimaryColor);
+                //.shadow(0 0 15px @darkPrimaryColor);
                 //border: 3px solid @white;
             }
 
@@ -192,7 +192,7 @@
 
     .content-wrapp {
         width: 100%;
-        height: 64%;
+        height: 75%;
         position: relative;
 
         .nav-group {
@@ -226,7 +226,8 @@
 
                     &.active {
                         i {
-                            color: @primaryColor;
+                            //color: @primaryColor;
+                            color: black;
                         }
                     }
                 }
@@ -235,7 +236,8 @@
                     position: absolute;
                     bottom: -1px;
                     height: 2px;
-                    background: @primaryColor;
+                    //background: @primaryColor;
+                    background: black;
                     padding: 0px;
                     border-radius: 45px;
                     left: 0px;
@@ -247,7 +249,7 @@
         #master-nav-items {
             position: absolute;
             width: 100%;
-            top: 53px;
+            top: 61px;
             bottom: 0;
 
             >div {
@@ -275,7 +277,7 @@
         }
 
         .messages-list {
-            padding-top: 10px;
+            padding-top: 0px;
 
             ul {
                 list-style: none;
@@ -318,13 +320,14 @@
 
                             .mes-preview {
                                 font-size: 12px;
+                                line-height: 120%;
                                 color: @secondaryTextColor;
                             }
                         }
 
                         .chat-friend-list-col1 {
                             width: 100%;
-                            margin-top: 10px;
+                            margin-top: 5px;
                         }
 
                         .mes-col2 {
@@ -347,12 +350,13 @@
                             }
 
                             .mes-count {
-                                background: @primaryColor;
-                                padding: 1px 6px;
-                                border-radius: 50px;
+                                background: red;
+                                padding: 3px 5px 3px 5px;
+                                line-height: 100%;
+                                border-radius: 10px;
                                 color: @white;
                                 float: right;
-                                margin: 10px 0 0;
+                                margin: 0;
                                 clear: right;
                             }
                         }
@@ -772,7 +776,7 @@
 .form-group {
     padding: 5px;
     border-bottom: 1px solid darken(@white, 5%);
-
+    margin-bottom: 0;
     >span {
         display: inline-block;
         width: 40px;

@@ -46,6 +46,8 @@ public class secuityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+        http.headers().frameOptions().disable();
+
         // 내가 만든 페이지로 이동합니다
         http.
                 formLogin((fo) -> fo.loginPage("/user/login")
@@ -71,11 +73,11 @@ public class secuityConfig {
 
         http.authorizeHttpRequests((au)->au
                 .requestMatchers("/user/list", "/user/delete")
-                .hasAuthority("ROLE_ADMIN")
-                .requestMatchers("/user/update","/user/info")
-                .hasAnyAuthority("ROLE_ADMIN","ROLE_MEMBER")
+                .hasAuthority("ROLE_MASTER")
+                .requestMatchers("/user/update","/user/updateProcess","/user/info")
+                .hasAnyAuthority("ROLE_MASTER","ROLE_MEMBER")
                 .requestMatchers("/board/**","/comment/**")
-                .hasAnyAuthority("ROLE_ADMIN","ROLE_MEMBER")
+                .hasAnyAuthority("ROLE_MASTER","ROLE_MEMBER")
                 .requestMatchers("/**").permitAll()
         );
         http.exceptionHandling((ex)->ex.accessDeniedHandler(customAccessDeniedHandler));

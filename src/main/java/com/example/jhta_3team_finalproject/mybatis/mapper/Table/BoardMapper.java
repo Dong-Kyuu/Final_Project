@@ -1,4 +1,4 @@
-package com.example.jhta_3team_finalproject.mybatis.mapper;
+package com.example.jhta_3team_finalproject.mybatis.mapper.Table;
 
 import com.example.jhta_3team_finalproject.domain.Table.Board;
 import org.apache.ibatis.annotations.Mapper;
@@ -23,4 +23,7 @@ public interface BoardMapper {
 
     // View 페이지 가져오기
     Board getDetail(int num);
+
+    // 게시글 삭제
+    int boardDelete(Board board);
 }

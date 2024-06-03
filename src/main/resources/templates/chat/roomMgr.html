@@ -1,90 +1,123 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="roomMgrFragment">
-<head>
-    <meta charset="UTF-8" />
-    <!-- 2024-05-28, 채팅방 생성 + 초대, 채팅방 삭제 화면 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-<!--    <link th:href="@{/css/chat/chat-invite.css}" rel="stylesheet" type="text/css"/>-->
-    <style>
-        #memberList::-webkit-scrollbar {
-            display: none
-        }
+    <head>
+        <meta charset="UTF-8"/>
+        <!-- 2024-05-28, 채팅방 생성 + 초대, 채팅방 삭제 화면 -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!--    <link th:href="@{/css/chat/chat-invite.css}" rel="stylesheet" type="text/css"/>-->
+        <style>
+            #memberList::-webkit-scrollbar {
+                display: none
+            }
 
-        .customShadow {
-            /* box-shadow: 0px 80px 63px -66px rgba(0, 0, 0, 0.1); */
-        }
+            .customShadow {
+                /* box-shadow: 0px 80px 63px -66px rgba(0, 0, 0, 0.1); */
+            }
 
-        .mgr-room-screen {
-            width: 310px;
-            height: 547px;
-            display: none;
-            z-index: 99999;
-            background-color: white;
-        }
+            .mgr-room-screen {
+                width: 310px;
+                height: 547px;
+                display: none;
+                z-index: 99999;
+                background-color: white;
+            }
 
-        .invite-card {
-            height: 547px;
-            left: 5px;
-        }
+            .invite-card {
+                height: 547px;
+                left: 5px;
+            }
 
-        .mgr-room-screen-back-arrow {
-            font-size: 35px;
-            vertical-align: middle;
-        }
+            .mgr-room-screen-back-arrow {
+                font-size: 35px;
+                vertical-align: middle;
+            }
 
-        .invite-title {
-            padding-bottom: 10px;
-            padding-left: 5px;
-            padding-top: 10px;
-        }
-    </style>
-    <title>title</title>
-</head>
+            .invite-title {
+                padding-bottom: 10px;
+                padding-left: 5px;
+                padding-top: 10px;
+            }
+        </style>
+        <title>title</title>
+    </head>
 
-<body>
+    <body>
     <div class="bg-gray-50 h-screen flex justify-center items-center mgr-room-screen">
         <!-- Card -->
         <div class="invite-card w-full h-5/6 max-w-lg flex-auto flex-col space-y-4 bg-white rounded-2xl overflow-hidden customShadow relative">
             <!-- Titling -->
             <div class="w-full border-b border-blue-100">
                 <div class="p-6 flex flex-col space-y-4 invite-title">
-                    
-                    <h2 class="text-2ml font-semibold text-gray-900"><i class="material-icons mgr-room-screen-back-arrow">navigate_before</i>[[${name}]]</h2>
-                        <!-- 				<p class="text-xs text-gray-400">An email invite will be sent on your behalf to the selected team members.</p> -->
+
+                    <h2 class="text-2ml font-semibold text-gray-900"><i
+                            class="material-icons mgr-room-screen-back-arrow">navigate_before</i>[[${name}]]</h2>
+                    <!-- 				<p class="text-xs text-gray-400">An email invite will be sent on your behalf to the selected team members.</p> -->
                 </div>
             </div>
 
             <!-- Search Wrapper -->
             <div x-data="loadMembers()" class="max-h-full flex flex-col flex-grow">
+                <!-- RoomName Input -->
+                <div class="py-2 px-6 relative flex flex-col justify-center" th:if="${type == 'room-create'}">
+                    <svg class="absolute left-10"  xmlns="http://www.w3.org/2000/svg"
+                         style="width: 16px; height: 16px;" viewBox="0 0 16 16">
+                        <path class="fill-current text-gray-400" d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+                        <path class="fill-current text-gray-400" d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9 9 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.4 10.4 0 0 1-.524 2.318l-.003.011a11 11 0 0 1-.244.637c-.079.186.074.394.273.362a22 22 0 0 0 .693-.125m.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8 8 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a11 11 0 0 0 .398-2"/>
+                    </svg>
+                    <input type="text" name="roomName" placeholder="방 이름"
+                           class="border border-blue-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-blue-400 focus:border-blue-400 focus:bg-blue-50 focus:bg-opacity-25"/>
+                </div>
+
+                <input type="hidden" name="sessionId" th:value="${chat_user_id}"/>
 
                 <!-- Search Input -->
                 <div class="py-2 px-6 relative flex flex-col justify-center">
-                    <svg class="absolute left-10" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                        viewBox="0 0 16 16">
+                    <svg class="absolute left-10" xmlns="http://www.w3.org/2000/svg"
+                         style="width: 16px; height: 16px;" viewBox="0 0 16 16">
                         <path class="fill-current text-gray-400"
-                            d="M6.4 1.6a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm-4.525.275a6.4 6.4 0 019.58 8.45l4.31 4.31a.8.8 0 01-1.13 1.13l-4.31-4.31A6.399 6.399 0 010 6.4a6.4 6.4 0 011.875-4.525z" />
+                              d="M6.4 1.6a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm-4.525.275a6.4 6.4 0 019.58 8.45l4.31 4.31a.8.8 0 01-1.13 1.13l-4.31-4.31A6.399 6.399 0 010 6.4a6.4 6.4 0 011.875-4.525z"/>
                     </svg>
-                    <input type="text" placeholder="검색" x-ref="searchField" x-model="search"
-                        x-on:keydown.window.prevent.slash="$refs.searchField.focus()"
-                        class="border border-blue-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-blue-400 focus:border-blue-400 focus:bg-blue-50 focus:bg-opacity-25" />
+                    <input type="text" th:placeholder="${type == 'room-create'} ? '사원 검색' : '채팅방 검색'"
+                           x-ref="searchField" x-model="search"
+                           x-on:keydown.window.prevent.slash="$refs.searchField.focus()"
+                           class="border border-blue-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-blue-400 focus:border-blue-400 focus:bg-blue-50 focus:bg-opacity-25"/>
                 </div>
 
-                <!-- Member List -->
-                <div id="memberList" class="flex-grow flex flex-col py-2 px-6 -mt-2 pb-72 overflow-scroll">
+                <div th:if="${type == 'room-create'}" style="height: 10px;"></div>
+
+                <!-- Employee List or Room List -->
+                <div id="memberList"
+                     th:style="${type == 'room-create'} ? 'height: 267px' : 'height: 340px'"
+                     class="flex-grow flex flex-col py-2 px-6 -mt-2 pb-72 overflow-scroll">
                     <template x-for="member in filteredMembers" :key="member">
                         <div class="flex p-2 mb-2 space-x-2 rounded-lg cursor-pointer hover:bg-blue-50"
-                            :class="{'bg-blue-50 ring-2 ring-blue-400 ring-offset-1 ring-offset-white': selectedMembers.includes(member.id)}"
-                            x-on:click="selectedMembers.includes(member.id) ? selectedMembers.splice(selectedMembers.indexOf(member.id), 1) : selectedMembers.push(member.id)">
-                            <img :src="`${member.photo}`" class="rounded-full" width="36px" style="height: 36px;" />
-                            <div>
+                             :class="{'bg-blue-50 ring-2 ring-blue-400 ring-offset-1 ring-offset-white': selectedMembers.includes(member.id)}"
+                             x-on:click="selectedMembers.includes(member.id) ? selectedMembers.splice(selectedMembers.indexOf(member.id), 1) : selectedMembers.push(member.id)">
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <img :src="`${member.photo}`" class="rounded-full" width="36px" style="height: 36px;"/>
+                            </div>
+                            <div th:if="${type == 'room-create'}">
                                 <p class="font-medium text-gray-900" x-text="member.name"></p>
                                 <p class="text-xs text-gray-400">
-                                    <span class="inline-block mr-2" x-text="member.email"></span>
-                                    <span :class="{ 'text-green-600 font-medium': member.status === 'online' }"
-                                        x-text="member.status"></span>
+                                    <span class="inline-block mr-2" x-text="member.id"></span>
                                 </p>
+                                <p class="text-xs text-gray-400">
+                                    <span class="inline-block mr-2" x-text="member.email"></span>
+                                </p>
+                                <div style="display: none;" id="selectedUserList" x-text="selectedMembers"></div>
+                            </div>
+                            <div th:if="${type == 'room-exit'}">
+                                <p class="font-medium text-gray-900" x-text="member.name"></p>
+                                <p class="text-xs text-gray-400">
+                                    <span class="inline-block mr-2" x-text="member.message"></span>
+                                </p>
+                                <input type="hidden" name="id" x-text="member.id" />
+                                <div style="display: none;" id="selectedRoomList" x-text="selectedMembers"></div>
+                                <!--                                    <p class="text-xs text-gray-400">-->
+                                <!--                                        <span class="inline-block mr-2" x-text="member.id"></span>-->
+                                <!--                                    </p>-->
                             </div>
                         </div>
                     </template>
@@ -114,7 +147,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="w-full p-2 flex space-x-2 bg-gray-100 rounded-lg">
+                            <div th:if="${type == 'room-exit'}"
+                                 class="w-full p-2 flex space-x-2 bg-gray-100 rounded-lg">
                                 <div class="h-12 w-12 rounded-full bg-gray-200"></div>
                                 <div class="flex flex-col space-y-2 justify-center">
                                     <div class="h-3	w-32 rounded-full bg-gray-200"></div>
@@ -129,11 +163,10 @@
                 </div>
 
                 <!-- Fixed Footer -->
-                <div
-                    class="absolute bottom-0 w-full h-24 flex justify-center items-center bg-white border-t border-blue-100">
-                    <div class="py-2 px-4 bg-gray-200 text-white rounded inline-block outline-none cursor-default"
-                        :class="{'bg-blue-500 cursor-pointer hover:bg-blue-600' : selectedMembers.length > 0}"
-                        style="margin-bottom: 10px;">
+                <div class="absolute bottom-0 w-full h-24 flex justify-center items-center bg-white border-t border-blue-100">
+                    <div class="chat-room-create-proc py-2 px-4 bg-gray-200 text-white rounded inline-block outline-none cursor-default"
+                         :class="{'bg-blue-500 cursor-pointer hover:bg-blue-600' : selectedMembers.length > 0}"
+                         style="margin-bottom: 10px;">
                         <span>[[${roomButton}]]</span>
                         <span x-show="selectedMembers.length !== 0" x-text="selectedMembers.length"></span>
                         <th:block th:if="${roomButton == '방 초대'}">
@@ -142,8 +175,6 @@
                         <th:block th:if="${roomButton == '방 나가기'}">
                             <span x-text="selectedMembers.length > 0 ? '개' : ''"></span>
                         </th:block>
-
-
                     </div>
                 </div>
 
@@ -152,10 +183,18 @@
         </div><!-- end of card -->
     </div>
 
-    <script>
+    <script th:inline="javascript">
         /** 2024-05-28, 채팅방 관리 화면, < 버튼 클릭 시 */
         $(".mgr-room-screen-back-arrow").click(function () {
             $(".mgr-room-screen").fadeOut(300);
+        });
+
+        /**
+         * 2024-05-30, 채팅방 버튼 클릭 시
+         */
+        $(".chat-room-create-proc").click(function () {
+            console.log($("#selectedUserList").text());
+            console.log($("#selectedRoomList").text());
         });
 
         function loadMembers() {
@@ -178,77 +217,51 @@
 
         var sourceData = [
             {
+                name: '테스트1',
                 id: 1,
-                name: '홍길동',
-                email: 'chance.septimus@gmail.com',
-                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png',
-                status: 'online'
+                email: 'chance.septimus123@gmail.com',
+                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
             },
             {
+                name: '테스트2',
                 id: 2,
-                name: '홍홍홍',
-                email: 'charlie.mango1990@gmail.com',
-                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png',
-                status: 'online'
+                email: 'chance.sept1imus@gmail.com',
+                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
             },
             {
+                name: '테스트3',
                 id: 3,
-                name: '홍동길',
-                email: 'emery.philips89@gmail.com',
-                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png',
-                status: '4시간 전'
+                email: 'chance.septimus@gmail.com',
+                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
             },
             {
+                name: '테스트4',
                 id: 4,
-                name: '홍길똥',
-                email: 'charliepress_photo@gmail.com',
-                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png',
-                status: '2일 전'
+                email: 'chance.s1242us@gmail.com',
+                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
             },
             {
+                name: '테스트5',
                 id: 5,
-                name: '길길동',
-                email: 'erin.korsgaard@gmail.com',
-                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png',
-                status: '1주 전'
+                email: 'chance.septimus@gmail.com',
+                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
             },
             {
+                name: '테스트6',
                 id: 6,
-                name: '동길홍',
-                email: 'maria.bothman@gmail.com',
-                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png',
-                status: '2주 전'
+                email: 'chance.ssfmus@gmail.com',
+                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
             },
             {
+                name: '테스트7',
                 id: 7,
-                name: '홍길동',
-                email: 'mrosser_design@gmail.com',
-                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png',
-                status: '2주 전'
+                email: 'chance.se23213s@gmail.com',
+                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
             },
-            {
-                id: 8,
-                name: '홍길동',
-                email: 'jaminoff.henry@gmail.com',
-                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png',
-                status: '1달 전'
-            },
-            {
-                id: 9,
-                name: '홍길동',
-                email: 'rosser_design@gmail.com',
-                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png',
-                status: '3달 전'
-            },
-            {
-                id: 10,
-                name: '홍길동',
-                email: 'emery_carder82@gmail.com',
-                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png',
-                status: '1년 전'
-            }
         ]
+
+        //console.log(sourceData);
     </script>
-</body>
+    </body>
 
 </html>

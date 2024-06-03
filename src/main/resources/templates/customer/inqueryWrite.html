@@ -95,7 +95,7 @@
         <!-- <label for="inq_name">글쓴이</label> -->
         <!--<input name="inq_name" id="board_name" th:value="${member_id}" readOnly
             type="hidden" class="form-control" placeholder="">-->
-        <input name="inq_name" id="board_name" th:value="${#authentication.name}" readOnly
+        <input name="inqName" id="board_name" th:value="${#authentication.name}" readOnly
                type="hidden" class="form-control" placeholder=""/>
     </div>
 
@@ -105,7 +105,7 @@
                 <tr style="width: 100%;">
                     <td style="width: 7%; display: inline-block;">
                         <div>
-                            <select class="form-select form-control" name="inq_tag" id="board_tag">
+                            <select class="form-select form-control" name="inqTag" id="board_tag">
                                 <option value="일반">일반</option>
                                 <option value="탈퇴">탈퇴</option>
                             </select>
@@ -113,7 +113,7 @@
                     </td>
                     <td style="width: 78%; display: inline-block; text-align: left;">
                         <div>
-                            <input class="form-control" style="width: 50%;" name="inq_subject"
+                            <input class="form-control" style="width: 50%;" name="inqSubject"
                                    id="board_subject" type="text"
                                    maxlength="100" placeholder="문의 글 제목을 작성해주세요">
                         </div>
@@ -137,7 +137,7 @@
     </div>
 
     <div id="div_edit_title">
-		<textarea class="board_content" name="inq_content" id="board_editor"
+		<textarea class="board_content" name="inqContent" id="board_editor"
                   placeholder="문의하실 내용을 작성해주세요"></textarea>
     </div>
 
@@ -151,7 +151,7 @@
 
     <div id="div_edit_title" class="form-group">
         <!-- <label for="inq_pass">비밀번호</label>  -->
-        <input name="inq_pass" id="board_pass" style="display: none;"
+        <input name="inqPass" id="board_pass" style="display: none;"
                type="password" maxlength="30" class="form-control" placeholder="비밀번호를 입력해주세요">
     </div>
 </form>

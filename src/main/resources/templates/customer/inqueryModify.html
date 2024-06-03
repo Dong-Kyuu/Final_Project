@@ -87,10 +87,10 @@
 </div>
 <form th:action="@{/inquery/modifyAction}" method="post" name="modifyform"
       enctype="multipart/form-data">
-    <input type="hidden" name="inq_num" th:value="${boarddata.inq_num}">
-    <input type="hidden" name="inq_file" th:value="${boarddata.inq_file}">
+    <input type="hidden" name="inqNum" th:value="${boarddata.inqNum}">
+    <input type="hidden" name="inqFile" th:value="${boarddata.inqFile}">
     <div id="div_edit_title" class="form-group">
-        <input name="inq_name" id="board_name" th:value="${boarddata.inq_name}" readOnly
+        <input name="inqName" id="board_name" th:value="${boarddata.inqName}" readOnly
                type="hidden" class="form-control">
     </div>
 
@@ -100,7 +100,7 @@
                 <tr style="width: 100%;">
                     <td style="width: 7%; display: inline-block;">
                         <div>
-                            <select class="form-select form-control" name="inq_tag" id="board_tag">
+                            <select class="form-select form-control" name="inqTag" id="board_tag">
                                 <option value="일반">일반</option>
                                 <option value="탈퇴">탈퇴</option>
                             </select>
@@ -108,18 +108,18 @@
                     </td>
                     <td style="width: 78%; display: inline-block; text-align: left;">
                         <div style="width: 78%; display: inline-block; text-align: left;">
-                            <input class="form-control" style="width: 50%;" name="inq_subject"
-                                   id="board_subject" type="text" th:value="${boarddata.inq_subject}"
+                            <input class="form-control" style="width: 50%;" name="inqSubject"
+                                   id="board_subject" type="text" th:value="${boarddata.inqSubject}"
                                    maxlength="100" placeholder="문의 글 제목을 작성해주세요">
                         </div>
                     </td>
                     <td style="width: 8%; display: inline-block;">
                         <div>
-							<span th:if="${boarddata.inq_pass_exist == true}">
+							<span th:if="${boarddata.inqPassExist == true}">
 								<input type="checkbox" id="checkpass" checked disabled/>
 								<span>비밀글</span>
 							</span>
-                            <span th:if="${boarddata.inq_pass_exist == false}">
+                            <span th:if="${boarddata.inqPassExist == false}">
 								<input style="display: none;" type="checkbox" id="checkpass" disabled/>
 								<span style="display: none;">비밀글</span>
 							</span>
@@ -139,28 +139,28 @@
 
     <div id="div_edit_title">
         <!-- <label for="inq_content">내용</label> -->
-        <textarea class="board_content" name="inq_content" id="board_editor"
-                  th:utext="${boarddata.inq_content}"></textarea>
+        <textarea class="board_content" name="inqContent" id="board_editor"
+                  th:utext="${boarddata.inqContent}"></textarea>
     </div>
 
     <!-- 원문글인 경우에만 파일 첨부 수정 가능합니다. -->
-    <div th:if="${boarddata.inq_re_lev==0}" id="div_edit_title" class="form-group">
+    <div th:if="${boarddata.inqReLev==0}" id="div_edit_title" class="form-group">
         <label>파일첨부
             <img th:src="@{/image/customer/attach.png}" alt="파일첨부" width="20px">
             <input type="file" id="upfile" name="uploadfile">
         </label>
-        <span id="filevalue" th:text="${boarddata.inq_original}"></span>
+        <span id="filevalue" th:text="${boarddata.inqOriginal}"></span>
         <img th:src="@{/image/customer/remove.png}" alt="파일삭제" width="10px" class="remove">
     </div>
 
     <div id="div_edit_title" class="form-group">
         <!-- <label for="inq_pass">비밀번호</label>  -->
-        <span th:if="${boarddata.inq_pass_exist} == true">
-			<input name="inq_pass" id="board_pass"
+        <span th:if="${boarddata.inqPassExist} == true">
+			<input name="inqPass" id="board_pass"
                    type="password" maxlength="30" class="form-control" placeholder="비밀번호를 입력해주세요">
 		</span>
-        <span th:if="${boarddata.inq_pass_exist} == false">
-			<input name="inq_pass" id="board_pass" style="display: none;"
+        <span th:if="${boarddata.inqPassExist} == false">
+			<input name="inqPass" id="board_pass" style="display: none;"
                    type="password" maxlength="30" class="form-control" placeholder="비밀번호를 입력해주세요">
 		</span>
     </div>

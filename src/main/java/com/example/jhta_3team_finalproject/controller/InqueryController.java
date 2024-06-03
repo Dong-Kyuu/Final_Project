@@ -98,7 +98,7 @@ public class InqueryController {
 
         if (!uploadfile.isEmpty()) {
             String fileName = uploadfile.getOriginalFilename();//원래 파일명
-            inqueryBoard.setInq_original(fileName);// 원래 파일명 저장
+            inqueryBoard.setInqOriginal(fileName);// 원래 파일명 저장
             //String saveFolder =	request.getSession().getServletContext().getRealPath("resources")
             //		+ "/upload";
             String fileDBName = fileDBName(fileName, saveFolder);
@@ -108,7 +108,7 @@ public class InqueryController {
             uploadfile.transferTo(new File(saveFolder + fileDBName));
             logger.info("transferTo path = " + saveFolder + fileDBName);
             // 바뀐 파일명으로 저장
-            inqueryBoard.setInq_file(fileDBName);
+            inqueryBoard.setInqFile(fileDBName);
         }
 
         inqueryService.insertBoard(inqueryBoard); // 저장메서드 호출
@@ -254,19 +254,20 @@ public class InqueryController {
     ) throws Exception {
 
         boolean usercheck = false;
-        if (boarddata.getInq_pass() == null || boarddata.getInq_pass().equals("")) {
+        if (boarddata.getInqPass() == null || boarddata.getInqPass().equals("")) {
             // 2024-04-04 비밀번호가 없는 1대1 문의 게시물인 경우 DAO에서 PASS가 null 인지 판단합니다.
-            usercheck = inqueryService.isBoardPassNull(boarddata.getInq_num());
+            usercheck = inqueryService.isBoardPassNull(boarddata.getInqNum());
         } else {
             // 글쓴이 인지 확인하기 위해 저장된 비밀번호와 입력한 비밀번호를 비교합니다.
-            usercheck = inqueryService.isBoardWriter(boarddata.getInq_num(), boarddata.getInq_pass());
+            usercheck = inqueryService.isBoardWriter(boarddata.getInqNum(), boarddata.getInqPass());
         }
         String url = "";
 
         // 비밀번호가 다른 경우
         if (usercheck == false) {
+            logger.info("패스 인증 실패");
             rattr.addFlashAttribute("result", "passFail");
-            rattr.addAttribute("num", boarddata.getInq_num());
+            rattr.addAttribute("num", boarddata.getInqNum());
             return "redirect:modifyView";
         }
 
@@ -275,7 +276,7 @@ public class InqueryController {
 
         if (check != null && !check.equals("")) { // 기존 파일 그대로 사용하는 경우입니다.
             logger.info("기존 파일 그대로 사용합니다.");
-            boarddata.setInq_original(check);
+            boarddata.setInqOriginal(check);
             // <input type="hidden" name="BOARD_FILE" value="${boarddata.BOARD_FILE}">
             // 위 문장 때문에 board.setBOARD_FILE() 값은 자동 저장됩니다.
         } else {
@@ -287,7 +288,7 @@ public class InqueryController {
                 logger.info("파일 변경되었습니다.");
 
                 String fileName = uploadfile.getOriginalFilename(); // 원래 파일명
-                boarddata.setInq_original(fileName);
+                boarddata.setInqOriginal(fileName);
 
                 String fileDBName = fileDBName(fileName, saveFolder);
                 logger.info("fileDBName = " + fileDBName);
@@ -295,13 +296,13 @@ public class InqueryController {
                 uploadfile.transferTo(new File(saveFolder + fileDBName));
                 logger.info("transferTo path = " + saveFolder + fileDBName);
                 // 바뀐 파일명으로 저장
-                boarddata.setInq_file(fileDBName);
+                boarddata.setInqFile(fileDBName);
             } else { // 기존 파일이 없는데 파일 선택하지 않은 경우 또는 기존 파일이 있었는데 삭제한 경우
                 logger.info("선택 파일 없습니다.");
                 // <input type="hidden" name="BOARD_FILE" value="${boarddata.BOARD_FILE}">
                 // 위 태그에 값이 있다면 ""로 값을 변경합니다.
-                boarddata.setInq_file(""); // ""로 초기화 합니다.
-                boarddata.setInq_original(""); // ""로 초기화 합니다.
+                boarddata.setInqFile(""); // ""로 초기화 합니다.
+                boarddata.setInqOriginal(""); // ""로 초기화 합니다.
             } // else end
         } // else end
 
@@ -317,7 +318,7 @@ public class InqueryController {
             logger.info("게시판 수정 완료");
             // 수정한 글 내용을 보여주기 위해 글 내용 보기 - 보기 페이지로 이동하기 위해 경로를 설정합니다.
             url = "redirect:detail";
-            rattr.addAttribute("num", boarddata.getInq_num());
+            rattr.addAttribute("num", boarddata.getInqNum());
         }
         return url;
     }
