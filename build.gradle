@@ -24,6 +24,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
+
     //2024-05-27, 이지훈 - 문의 게시판
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: '3.1.11'
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.1.1'
@@ -46,6 +47,7 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
+
 }
 
 tasks.named('test') {

@@ -20,10 +20,10 @@
 
     </head>
     <body>
-
+        <!-- 헤드바 -->
         <div class="container-scroller">
             <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
-
+            <!-- 사이드바 -->
             <div class="container-fluid page-body-wrapper">
                 <th:block th:replace="~{HSF/_sidebar :: sidebar}"></th:block>
 
@@ -39,7 +39,15 @@
                                 </ol>
                             </nav>
                         </div>
-
+                        <!-- 로그인한 유저 정보 -->
+                        <th:block>
+                            <input type="hidden" id="loginname" th:value="${#authentication.principal.name}">
+                            <input type="hidden" id="loginid" th:value="${#authentication.principal.id}">
+                            <input type="hidden" id="loginprofile" th:value="${#authentication.principal.profile_picture}">
+                            <input type="hidden" id="loginDPM" th:value="${#authentication.principal.department}">
+                            <input type="hidden" id="loginDPM" th:value="${#authentication.principal.department}">
+                        </th:block>
+                        <!-- 백색 카드 -->
                         <div class="row">
                             <div class="col-lg-12 grid-margin stretch-card">
                                 <div class="card">
@@ -68,18 +76,6 @@
                                                     </th:block>
                                                 </th:block>
                                             </th:block>
-                                            <!--<th:block sec:authorize-expr="isAuthenticated()">
-                                                <th:block th:with="pinfo=${#authentication.principal}">
-                                                    <th:block th:if = "${boarddata.BOARD_ID == pinfo.id
-                                                                         or (pinfo.department=='관리부'
-                                                                         and (pinfo.auth=='ROLE_TEAM'
-                                                                         or pinfo.auth=='ROLE_HEAD'
-                                                                         or pinfo.auth=='ROLE_SUB_MASTER'
-                                                                         or pinfo.auth=='ROLE_MASTER'))}">
-                                                        <i class="mdi mdi-dots-horizontal" style="float: right; font-size: 30px; margin-top:0px;"></i>
-                                                    </th:block>
-                                                </th:block>
-                                            </th:block>-->
                                             <div style="height:40px; padding-top:1px;">
                                                 <span class="card-title" style="font-width: bold; font-size:13px">
                                                     [[${boarddata.BOARD_NAME}]]
@@ -98,28 +94,24 @@
                                             [[${boarddata.BOARD_CONTENT}]]
                                         </div>
                                         <br><br><br>
-
                                         <!-- 업로드한 파일 -->
                                         <th:block th:if="${upfiles != null}">
-                                            <div style="margin-bottom: 30px;">
-
-                                            <form method="post" action="down" style="height:0px">
-                                                <input type = "hidden" th:name ="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                                <th:block th:each="F, iterStat:${upfiles}">
-                                                    <input type = "hidden" th:value="${F.file_name}" th:name="filename">
-                                                    <input type = "hidden" th:value="${F.original_file_name}" th:name="original">
-                                                    <img th:src="@{/image/table/down.png}" width="10px"><input type = "submit" style="border: none; background:none" th:value="${F.original_file_name}"><br>
-                                                </th:block>
-                                            </form>
-
-                                            </div>
-                                            <br><br><br>
+                                            <th:block th:each="F, iterStat:${upfiles}">
+                                                <div style="margin-bottom: 30px;">
+                                                    <form method="post" action="down" style="height:0px">
+                                                        <input type = "hidden" th:name ="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                                        <input type = "hidden" th:value="${F.file_name}" th:name="filename">
+                                                        <input type = "hidden" th:value="${F.original_file_name}" th:name="original">
+                                                        <img th:src="@{/image/table/down.png}" width="10px"><input type = "submit" style="border: none; background:none" th:value="${F.original_file_name}"><br>
+                                                    </form>
+                                                </div>
+                                            </th:block>
+                                            <br><br>
                                         </th:block>
-
                                         <!-- 아이콘 박스 -->
                                         <div class="iconbox" style="display: flex; align-items: center; height: 30px;">
                                             <i class="mdi mdi-tooltip-outline" style="font-size: 23px; margin-top:15px;"></i>
-                                            <span class="card-description" style="font-size:16px !important; margin:15px 20px 0px 10px">[[${count}]]</span>
+                                            <span class="card-description " id="count-comment" style="font-size:16px !important; margin:15px 20px 0px 10px">[[${count}]]</span>
                                             <i class="mdi mdi-format-list-bulleted" style="font-size: 25px; margin-top:15px;"></i>
                                             <span class="card-description" style="font-size:12px !important; margin:25px 20px 0px 5px">목록으로</span>
 
@@ -128,61 +120,13 @@
                                         <br><br><br>
                                         <!-- 댓글 입력 폼 -->
                                         <div class="comment-add" style="margin-bottom: 30px; display:flex; ">
-                                            <input type="text" class="form-control form-control-sm" placeholder="댓글을 입력하세요." style="width:95%; height:20px">
-                                            <button type="button" class="btn btn-inverse-danger btn-icon" ><i class="mdi mdi-send" style=""></i>
+                                            <input type="text" class="form-control form-control-sm write-content" placeholder="댓글을 입력하세요." style="width:95%; height:20px">
+                                            <button type="button" id="write" class="btn btn-inverse-danger btn-icon" ><i class="mdi mdi-send" style=""></i>
                                             </button>
                                         </div>
-
-                                        <div class="comment-box" style="margin-bottom:20px;">
-                                            <div style="height: 25px;">
-                                                <th:block th:with="profilePicture=${#authentication.principal.profile_picture}">
-                                                    <img th:src="@{|../image/${profilePicture}|}" alt="image" style="width:30px !important; float: left; margin: 2px 15px 0px 0px;">
-                                                </th:block>
-                                                <i class="mdi mdi-dots-vertical" style="float: right; font-size: 25px; margin-top:3px;"></i>
-                                                <div style="height:40px; padding-top:0px;">
-                                                <span class="card-title" style="font-width: bold; font-size:12px">
-                                                    [[${boarddata.BOARD_NAME}]]
-                                                </span>
-                                                    <p class="card-description" style="font-size:10px">
-                                                        부서명 <code style="font-size:10px"> 직급 </code> <code style="font-size:10px; color:dimgray">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${boarddata.BOARD_DATE}]]</code>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div class="comm-contentbox" style="margin-left:45px; margin-top:8px; font-size:12px">
-                                                <br>
-                                                대충 댓글내용
-                                                <br>
-                                            </div>
-                                            <div class="iconbox" style="display: flex; align-items: center; height: 20px;">
-                                            <i class="mdi mdi-tooltip-outline" style="font-size: 15px; margin-top:20px; margin-left:45px;"></i>
-                                            <span class="card-description" style="font-size:13px !important; margin:19px 20px 0px 5px">[[${count}]]</span>
-                                            </div>
-                                        </div>
-                                        <div class="comment-box" style="margin-bottom:20px;">
-                                            <div style="height: 25px;">
-                                                <th:block th:with="profilePicture=${#authentication.principal.profile_picture}">
-                                                    <img th:src="@{|../image/${profilePicture}|}" alt="image" style="width:30px !important; float: left; margin: 2px 15px 0px 0px;">
-                                                </th:block>
-                                                <i class="mdi mdi-dots-vertical" style="float: right; font-size: 25px; margin-top:3px;"></i>
-                                                <div style="height:40px; padding-top:0px;">
-                                                <span class="card-title" style="font-width: bold; font-size:12px">
-                                                    [[${boarddata.BOARD_NAME}]]
-                                                </span>
-                                                    <p class="card-description" style="font-size:10px">
-                                                        부서명 <code style="font-size:10px"> 직급 </code> <code style="font-size:10px; color:dimgray">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${boarddata.BOARD_DATE}]]</code>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div class="comm-contentbox" style="margin-left:45px; margin-top:8px; font-size:12px">
-                                                <br>
-                                                대충 댓글내용
-                                            </div>
-
-                                        </div>
-
-                                        <div class="comment-lev2" style="display: flex; margin-top:20px;">
-                                            <i class="mdi mdi-subdirectory-arrow-right" style=" font-size: 25px; margin :3px 15px 0px 10px"></i>
-                                            <div class="comment-box" style="margin-bottom:15px; width:100%">
+                                        <div id="comment-box" style="display:none">
+                                            <!-- 댓글 -->
+                                            <div class="comment-box" style="margin-bottom:20px;">
                                                 <div style="height: 25px;">
                                                     <th:block th:with="profilePicture=${#authentication.principal.profile_picture}">
                                                         <img th:src="@{|../image/${profilePicture}|}" alt="image" style="width:30px !important; float: left; margin: 2px 15px 0px 0px;">
@@ -199,25 +143,71 @@
                                                 </div>
                                                 <div class="comm-contentbox" style="margin-left:45px; margin-top:8px; font-size:12px">
                                                     <br>
-                                                    대충 대댓글내용
+                                                    대충 댓글내용
+                                                    <br>
                                                 </div>
-
+                                                <div class="iconbox" style="display: flex; align-items: center; height: 20px;">
+                                                <i class="mdi mdi-tooltip-outline" style="font-size: 15px; margin-top:20px; margin-left:45px;"></i>
+                                                <span class="card-description" style="font-size:13px !important; margin:19px 20px 0px 5px">[[${count}]]</span>
+                                                </div>
+                                            </div>
+                                            <div class="comment-box" style="margin-bottom:20px;">
+                                                <div style="height: 25px;">
+                                                    <th:block th:with="profilePicture=${#authentication.principal.profile_picture}">
+                                                        <img th:src="@{|../image/${profilePicture}|}" alt="image" style="width:30px !important; float: left; margin: 2px 15px 0px 0px;">
+                                                    </th:block>
+                                                    <i class="mdi mdi-dots-vertical" style="float: right; font-size: 25px; margin-top:3px;"></i>
+                                                    <div style="height:40px; padding-top:0px;">
+                                                    <span class="card-title" style="font-width: bold; font-size:12px">
+                                                        [[${boarddata.BOARD_NAME}]]
+                                                    </span>
+                                                        <p class="card-description" style="font-size:10px">
+                                                            부서명 <code style="font-size:10px"> 직급 </code> <code style="font-size:10px; color:dimgray">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${boarddata.BOARD_DATE}]]</code>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="comm-contentbox" style="margin-left:45px; margin-top:8px; font-size:12px">
+                                                    <br>
+                                                    대충 댓글내용
+                                                </div>
+                                            </div>
+                                            <!-- 대댓글 -->
+                                            <div class="comment-lev2" style="display: flex; margin-top:20px;">
+                                                <i class="mdi mdi-subdirectory-arrow-right" style=" font-size: 25px; margin :3px 15px 0px 10px"></i>
+                                                <div class="comment-box" style="margin-bottom:15px; width:100%">
+                                                    <div style="height: 25px;">
+                                                        <th:block th:with="profilePicture=${#authentication.principal.profile_picture}">
+                                                            <img th:src="@{|../image/${profilePicture}|}" alt="image" style="width:30px !important; float: left; margin: 2px 15px 0px 0px;">
+                                                        </th:block>
+                                                        <i class="mdi mdi-dots-vertical" style="float: right; font-size: 25px; margin-top:3px;"></i>
+                                                        <div style="height:40px; padding-top:0px;">
+                                                        <span class="card-title" style="font-width: bold; font-size:12px">
+                                                            [[${boarddata.BOARD_NAME}]]
+                                                        </span>
+                                                            <p class="card-description" style="font-size:10px">
+                                                                부서명 <code style="font-size:10px"> 직급 </code> <code style="font-size:10px; color:dimgray">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${boarddata.BOARD_DATE}]]</code>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="comm-contentbox" style="margin-left:45px; margin-top:8px; font-size:12px">
+                                                        <br>
+                                                        대충 대댓글내용
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+                                        <div id="message"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
-
             </div>
-
         </div>
         <!-- 메뉴 모달 -->
         <div id="table-view-M" class="tablemodal">
-            <form name="delete" action='delete' method="post">
+            <form name="delete" action='delete' method="post" onsubmit="confirmSubmit(event)">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <input type="hidden" name="num" th:value="${param.num}" id="board_num">
                 <button type="submit" class="btn btn-inverse-light btn-fw menu-M remo">삭제</button>
