@@ -1,13 +1,16 @@
-package com.example.jhta_3team_finalproject.domain;
+package com.example.jhta_3team_finalproject.domain.User;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.multipart.MultipartFile;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Random;
+import java.util.UUID;
 
 public class User implements UserDetails {
+    private String num;
     private String id;
     private String password;
     private String email;
@@ -22,7 +25,7 @@ public class User implements UserDetails {
     private String created_at;
     private String updated_at;
     private String profile_picture;
-    private MultipartFile profilePictureFile; // 파일 업로드 처리
+    private String original_profile; // 파일 저장
     private String chat_status_msg;
     private String auth = "ROLE_MEMBER";
 
@@ -35,12 +38,16 @@ public class User implements UserDetails {
 
         return roles;
     }
+    public User() {
+        this.num = UUID.randomUUID().toString();
 
+    }
     @Override
     public String toString() {
         return "User{" +
                 "age='" + age + '\'' +
                 ", id='" + id + '\'' +
+                ", num='" + num + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", employee_number='" + employee_number + '\'' +
@@ -53,11 +60,15 @@ public class User implements UserDetails {
                 ", created_at='" + created_at + '\'' +
                 ", updated_at='" + updated_at + '\'' +
                 ", profile_picture='" + profile_picture + '\'' +
-                ", profilePictureFile=" + profilePictureFile +
+                ", original_profile='" + original_profile + '\'' +
                 ", chat_status_msg='" + chat_status_msg + '\'' +
                 ", auth='" + auth + '\'' +
                 '}';
     }
+
+    public String getNum() {return num;}
+
+    public void setNum(String num) {this.num = num;}
 
     public String getGender() {
         return gender;
@@ -67,12 +78,12 @@ public class User implements UserDetails {
         this.gender = gender;
     }
 
-    public MultipartFile getProfilePictureFile() {
-        return profilePictureFile;
+    public String getoriginal_profile() {
+        return original_profile;
     }
 
-    public void setProfilePictureFile(MultipartFile profilePictureFile) {
-        this.profilePictureFile = profilePictureFile;
+    public void setoriginal_profile(String original_profile) {
+        this.original_profile = original_profile;
     }
 
     public String getAge() {
@@ -107,15 +118,9 @@ public class User implements UserDetails {
         this.profile_picture = profile_picture;
     }
 
-    public String getUpdated_at() {
+    public String getUpdated_at() {return updated_at;}
 
-        return updated_at;
-    }
-
-    public void setUpdated_at(String updated_at) {
-
-        this.updated_at = updated_at;
-    }
+    public void setUpdated_at(String updated_at) {this.updated_at = updated_at;}
 
     public String getPosition() {
         return position;

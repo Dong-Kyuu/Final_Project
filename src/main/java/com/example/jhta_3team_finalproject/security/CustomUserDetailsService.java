@@ -1,18 +1,15 @@
 package com.example.jhta_3team_finalproject.security;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
+import com.example.jhta_3team_finalproject.domain.User.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import com.example.jhta_3team_finalproject.mybatis.mapper.UserMapper;
+import com.example.jhta_3team_finalproject.mybatis.mapper.User.UserMapper;
 
 /*
  * 1. UserDetails 인터페이스는 Security에서 사용자의 정보를 담는 인터페이스입니다.
@@ -34,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.info("username은 로그인 시 입력한 값: " + username);
-        com.example.jhta_3team_finalproject.domain.User users = dao.isId(username);
+        User users = dao.isId(username);
         logger.info(users.toString());
         if (users == null) {
             logger.info("username" + username + "not found");

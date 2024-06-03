@@ -1,12 +1,14 @@
-package com.example.jhta_3team_finalproject.service;
+package com.example.jhta_3team_finalproject.service.User;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.example.jhta_3team_finalproject.domain.User;
-import com.example.jhta_3team_finalproject.mybatis.mapper.UserMapper;
+import com.example.jhta_3team_finalproject.domain.User.User;
+import com.example.jhta_3team_finalproject.mybatis.mapper.User.UserMapper;
+
+import java.util.UUID;
 
 @Service
 public class UserServicelmpl implements UserService {
@@ -33,23 +35,24 @@ public class UserServicelmpl implements UserService {
     }
 
     @Override
-    public User user_info(String id) {
-        return dao.isId(id);
+    public User user_info(String num) {
+        return dao.isId(num);
     }
 
 
     @Override
     public int update(User user) {
-        logger.info("Updating user in service: " + user);
-
+        logger.info("업데이트 전에 로그: " + user);
         return dao.update(user);
     }
 
     @Override
     public int insert(User user) {
-
+        user.setNum(UUID.randomUUID().toString()); // UUID를 사용하여 num 값 설정
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // 비밀번호 암호화
         return dao.insert(user);
     }
+
 
 }
 
