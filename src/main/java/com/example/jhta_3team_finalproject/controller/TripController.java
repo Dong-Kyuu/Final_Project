@@ -106,6 +106,7 @@ public class TripController {
         return "TourPackage/Trip_Page";
     }
 
+
     @GetMapping("/tripDetail")
     public String tripDetail(@RequestParam(name = "num") int num, HttpServletRequest request,Model model) {
         System.out.println("===========================");
@@ -164,6 +165,66 @@ public class TripController {
         model.addAttribute("cartTripNo", cartTripNo);
 
         return "TourPackage/Trip_Detail";
+    }
+
+    @GetMapping("/tripDetail2")
+    public String tripDetail2(@RequestParam(name = "num") int num, HttpServletRequest request,Model model) {
+        System.out.println("===========================");
+        System.out.println("tripDetail?num="+num);
+        System.out.println("===========================");
+
+        Trip trip = tripService.getDetail(num);
+        if (trip == null) {
+            model.addAttribute("message", "데이터를 읽지 못했습니다.");
+            return "error/error";
+        }
+
+        String optionIds = tripService.getOptionIds(num);
+        System.out.println("==> optionIds = "+optionIds);
+        String[] optionId = optionIds.split(",");
+        List<TripOption> options = new ArrayList<TripOption>();
+
+        for (String s : optionId) {
+            System.out.println("==> optionId="+s);
+            // 해당 상품의 옵션 정보 가져오기
+            TripOption option = optionService.getOptionsByOptionId(s);
+            if (option != null) {
+                options.add(option);
+            }
+        }
+
+        TripFile tripFile = tripService.getTripFileByNo(trip.getFileNo());
+
+        //아이디 세션에서 불러오기
+        HttpSession session = request.getSession();
+        String memberId = (String) session.getAttribute("member_id");
+
+        if (memberId == null) {
+            memberId = "0";
+        }
+        System.out.println("memberId="+memberId);
+
+        Cart cart = cartService.getDetail(memberId);
+        int check = cartService.isId(memberId);
+
+        //cartService.updateCart(memberId, String.valueOf(num),null,0 );
+        String cartTripNo =String.valueOf(num);
+        System.out.println("cartTripNo="+cartTripNo);
+        /*
+        if (check == 1) {
+                cartTripNo = cart.getTripNo();
+            System.out.println("cartTripNo="+cartTripNo);
+        }
+         */
+
+        model.addAttribute("trip", trip);
+        model.addAttribute("options", options);
+        model.addAttribute("tripFile", tripFile);
+        model.addAttribute("tripNo", trip.getTripNo());
+        model.addAttribute("check", check);
+        model.addAttribute("cartTripNo", cartTripNo);
+
+        return "TourPackage/Trip_Detail2";
     }
 
     @GetMapping("/tripCart")
@@ -449,7 +510,92 @@ public class TripController {
     public String tripRegister(Model model) {
         // 필요한 모델 속성 추가
         // 여기에 모델 속성을 추가하십시오.
-        return "TourPackage/Trip_Register";
+        return "TourDepartment/Tour_Register";
+    }
+
+    @GetMapping("/tripDepartment")
+    public String tripDepartment(
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "limit", defaultValue = "9") int limit,
+            @RequestParam(name = "category", required = false) String category,
+            @RequestParam(name = "sort", required = false) String sort,
+            @RequestParam(name = "keyword", required = false) String keyword,
+            HttpServletRequest request,HttpServletResponse response,
+            Model model) {
+
+        // -----------------------------------------
+        // 산 - 카트 쿠키가 자기 자신의 쿠키가 아니면 삭제
+        // cartNo가 mem_id와 동일하면 유지
+        // 로그인하지않은 상태라면 항상 카트 쿠키 / 카트 db 초기화
+        //아이디 세션에서 불러오기
+        HttpSession session = request.getSession(); // 세션이 없으면 새로 생성하지 않음
+        String memberId = (String) session.getAttribute("member_id");// 세션에서 "member_id" 값을 가져옴
+        // memberId를 이용하여 필요한 작업 수행
+        String cookieValue = getCookieValue(request);// 쿠키 내용을 갖고오는 메서드
+        if(cookieValue!=null) {
+            String cartNoValue = getValueBetweenEquals(cookieValue, "cartNo");
+            if(!cartNoValue.equals(memberId)) {//쿠키의 cartNo와 mem_id비교
+                deleteCookie(response, "cart");
+                System.out.println("<카트 쿠키 삭제>");
+            }
+        }
+
+        if(cartService.isId("0")==1) {
+            System.out.println("삭제");
+            cartService.deleteCart("0");//비로그인회원에게 제공되는 cartNo="0"
+        }
+        // -----------------------------------------
+
+        int listcount = 0;
+        List<Trip> triplist;
+
+        int startRow = (page - 1) * limit + 1;
+        int endRow = startRow + limit - 1;
+
+        if (category != null && !category.isEmpty() && !Objects.equals(category, "null")) {
+            listcount = tripService.getCategoryListCount(category);
+            triplist = tripService.getCategoryTripList(startRow, endRow,category, sort);
+        } else if (keyword != null && !keyword.isEmpty() && !Objects.equals(keyword, "null")) {
+            listcount = tripService.getKeywordListCount(keyword);
+            triplist = tripService.getTripListByKeyword(startRow, endRow,keyword,  sort);
+        } else {
+            listcount = tripService.getListCount();
+            triplist = tripService.getTripList(startRow, endRow, sort);
+        }
+
+        int maxpage = (listcount + limit - 1) / limit;
+        int startpage = ((page - 1) / 10) * 10 + 1;
+        int endpage = startpage + 10 - 1;
+        if (endpage > maxpage) {
+            endpage = maxpage;
+        }
+
+        int pagefirst = (page - 1) * limit + 1;//startrow
+        int pagelast = Math.min(pagefirst + limit - 1, listcount);//endrow
+
+        model.addAttribute("page", page);
+        model.addAttribute("maxpage", maxpage);
+        model.addAttribute("startpage", startpage);
+        model.addAttribute("endpage", endpage);
+        model.addAttribute("listcount", listcount);
+        model.addAttribute("triplist", triplist);
+        model.addAttribute("limit", limit);
+        model.addAttribute("pagefirst", pagefirst);
+        model.addAttribute("pagelast", pagelast);
+        model.addAttribute("sort", sort);  // 현재 정렬 기준 추가
+        model.addAttribute("keyword", keyword);  // 현재 검색어 추가
+        return "TourDepartment/Travel_Department";
+    }
+
+    @GetMapping("/TLManagement")
+    public String TLManagement(@RequestParam(name = "num", required = false) Integer num,
+            HttpServletRequest request,HttpServletResponse response,
+            Model model) {
+
+        Trip trip = tripService.getDetail(num);
+
+        model.addAttribute("trip", trip);
+        return "TourDepartment/Tour_Management";
     }
 
     //------------------------------

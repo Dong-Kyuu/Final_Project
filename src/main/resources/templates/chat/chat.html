@@ -9,6 +9,7 @@
     <link th:href="@{/css/chat/styles.less}" rel="stylesheet/less" type="text/css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/3.0.2/less.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- 2024-05-17, 채팅방 Side Slide 기능 -->
     <link th:href="@{/css/chat/chat-slide.css}" rel="stylesheet" type="text/css"/>
@@ -22,15 +23,21 @@
     <link th:href="@{/css/chat/chat-timestamp.css}" rel="stylesheet" type="text/css"/>
     <!-- 2024-05-28, 채팅방 로딩 화면 구현 -->
     <link th:href="@{/css/chat/chat-loading.css}" rel="stylesheet" type="text/css"/>
+    <!-- 2024-05-16, 채팅창 Drag UI 기능 -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
+    <!-- 2024-05-17, 채팅방 대화상대 확인 -->
+    <link th:href="@{/css/chat/chat-member-check.css}" rel="stylesheet" type="text/css"/>
     <!-- CSRF Token -->
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
 
 <body>
-<button id="opener">채팅하기</button>
+<!--<button id="opener">채팅하기</button>-->
 
-<div id="dialog" title="Chat">
+<div>
     <th:block th:with="pinfo=${#authentication.principal}">
         <input type="hidden" id="chat_user_id" th:value="${pinfo.username}" />
     </th:block>
@@ -46,8 +53,8 @@
                         <div class="chat-profile-picture">
                             <img th:src="@{/image/default.png}" alt="">
                         </div>
-                        <div class="chat-profile-name">홍길동</div>
-                        <div class="status chat-profile-dept">관광영업부</div>
+                        <div class="chat-profile-name"></div>
+                        <div class="status chat-profile-dept"></div>
                     </div>
 <!--                    <div class="wave-wrapp">-->
 <!--                        <svg class="wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28"-->
@@ -75,7 +82,7 @@
                                 <!-- <li><i class="material-icons">favorite_border</i></li> -->
                                 <li class="active"><label class="nav-profile" title="프로필">
                                     <i class="material-icons">tune</i></label></li>
-                                <li id="active-line" style="left: 20px"></li>
+                                <li id="active-line" style="left: 115px"></li>
                             </ul>
                         </nav>
                     </div>
@@ -240,11 +247,11 @@
                         <div class="scroll-wrapper">
                             <!-- Search Input -->
                             <div class="py-2 px-6 relative flex flex-col justify-center">
-<!--                                <svg class="absolute left-10" xmlns="http://www.w3.org/2000/svg"-->
-<!--                                     style="width: 16px; height: 16px;" viewBox="0 0 16 16">-->
-<!--                                    <path class="fill-current text-gray-400"-->
-<!--                                          d="M6.4 1.6a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm-4.525.275a6.4 6.4 0 019.58 8.45l4.31 4.31a.8.8 0 01-1.13 1.13l-4.31-4.31A6.399 6.399 0 010 6.4a6.4 6.4 0 011.875-4.525z"/>-->
-<!--                                </svg>-->
+                                <svg class="absolute left-10" xmlns="http://www.w3.org/2000/svg"
+                                     style="width: 16px; height: 16px;" viewBox="0 0 16 16">
+                                    <path class="fill-current text-gray-400"
+                                          d="M6.4 1.6a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm-4.525.275a6.4 6.4 0 019.58 8.45l4.31 4.31a.8.8 0 01-1.13 1.13l-4.31-4.31A6.399 6.399 0 010 6.4a6.4 6.4 0 011.875-4.525z"/>
+                                </svg>
                                 <input type="text" id="searchChatUser" placeholder="검색" x-ref="searchField"
                                        x-model="search" x-on:keydown.window.prevent.slash="$refs.searchField.focus()"
                                        class="border border-blue-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-blue-400 focus:border-blue-400 focus:bg-blue-50 focus:bg-opacity-25"/>
@@ -513,9 +520,27 @@
         var $el, leftPos, newWidth,
             $mainNav = $("#master-nav ul");
         var $active_line = $("#active-line");
+
+        /**
+         * 2024-05-31, 네이게이션 기본 위치 설정
+         */
         //$active_line.css("left", $("#master-nav ul .active").position().left);
         $active_line.css("left", '115px');
         navItemPos($("#master-nav ul .active").index());
+        $el = $("#master-nav ul li:eq(1)");
+        $("#master-nav ul li").removeClass('active');
+        $el.addClass('active');
+        navItemPos($el.index());
+        leftPos = $el.position().left;
+        newWidth = $el.parent().width();
+        /**
+         * 2024-06-02, list 바인딩
+         */
+        setTimeout(function () {
+            $(".messages-list > ul > li").off('click');
+            $(".messages-list > ul > li").bind('click', showMessages);
+        }, 400);
+
         $("#master-nav ul li").click(function () {
             $el = $(this);
             $("#master-nav ul li").removeClass('active');
@@ -544,11 +569,11 @@
             var type = $(this).find('input[name=chat_room_type]').val();
             console.log(type);
             if(type === 'p2p') {
-               var chat_counterpart_id = $(this).find('input[name=chat_counterpart_id]').val();
-               console.log(chat_counterpart_id);
+               var chatCounterpartId = $(this).find('input[name=chat_counterpart_id]').val();
+               console.log(chatCounterpartId);
             } else {
-               var chat_room_num = $(this).find('input[name=chat_room_num]').val();
-               console.log(chat_room_num);
+               var chatRoomNum = $(this).find('input[name=chat_room_num]').val();
+               console.log(chatRoomNum);
             }
 
             $('.view-main').addClass("deactive");
@@ -625,108 +650,6 @@
             }, 100);
         }
 
-        /** 2024-05-16, 채팅창 Drag UI 기능 */
-        $("#opener").on("click", function () {
-            console.log('show chat');
-            $("#dialog").dialog("open");
-            //$("#dialog").dialog();
-            $el = $("#master-nav ul li:eq(2)");
-            $("#master-nav ul li").removeClass('active');
-            $el.addClass('active');
-            navItemPos($el.index());
-            leftPos = $el.position().left;
-            newWidth = $el.parent().width();
-            $active_line.stop().animate({
-                left: leftPos
-            });
-            getChatUserList();
-            getChatUserProfile();
-            getUserChatRoomList();
-        });
-
-        $("#dialog").dialog({
-            autoOpen: false,
-            resizable: false,
-            width: 310,
-            maxHeight: 578,
-            show: {
-                effect: "blind",
-                duration: 500
-            },
-            hide: {
-                effect: "blind",
-                duration: 500
-            }
-        });
-
-        $("#dialog").css('width', '310px');
-        $("#dialog").css('background', 'transparent');
-        $("#dialog").css('overflow', 'hidden');
-        $(".ui-dialog").css('width', '310px');
-        $(".ui-dialog").css('padding', '0');
-        $(".ui-corner-all").css('border-bottom-right-radius', '0');
-        $(".ui-corner-all").css('border-bottom-left-radius', '0');
-        $(".ui-widget-header").css('border', '0');
-        $(".ui-widget-header").css('font-family', '\'Open Sans\', sans-serif');
-        //$(".ui-widget-header").css('border-bottom', '1px solid white');
-        $(".ui-dialog .ui-dialog-content").css('padding', '0');
-        $(".ui-widget-content").css('background', 'transparent');
-        $(".ui-dialog-titlebar").css('width', '310px');
-        $(".ui-dialog-titlebar").css('background', '#fff');
-        $(".ui-dialog-title").css('background', '#fff');
-        $(".ui-dialog-title").css('color', 'black');
-        $(".ui-widget.ui-widget-content").css('border', '0px');
-        $(".ui-widget-content").css('max-height', '578px');
-        $(".ui-dialog-titlebar-close").css('right', '0.7em');
-        $(".ui-dialog-titlebar-close").html("<i class='material-icons' style='font-size: 20px'>close</i>");
-        //$(".ui-resizable-handle").css('background', '#4f97e5');
-
-        /** 2024-05-16, profile-upfile */
-        // function show() {
-        //     // 파일 이름이 있는 경우 remove 이미지를 보이게 하고
-        //     // 파일 이름이 없는 경우 remove 이미지 보이지 않게 합니다.
-        //     if ($('#filevalue').text() == '') {
-        //         $(".remove").css('display', 'none');
-        //     } else {
-        //         $(".remove").css({
-        //             'display': 'inline-block',
-        //             'position': 'relative',
-        //             'top': '-5px'
-        //         });
-        //     }
-        // }
-        //
-        // show();
-
-        //let check = 0; // profile upload 사진이 있는지 체크
-
-        /** 2024-05-16, 파일 변경시 처리 필요 */
-        // 파일첨부를 변경하지 않으면 $('#filevalue').text()의 파일명을
-        // 파라미터 'check'라는 이름으로 form에 추가하여 전송합니다.
-        // if (check == 0) {
-        //     const value = $('#filevalue').text();
-        //     const html = "<input type='hidden' value='" + value + "' name='check'>";
-        //     console.log(html);
-        //     $(this).append(html);
-        // }
-
-        // $("#profile-upfile").change(function () {
-        //     check++;
-        //     console.log($(this).val()); // c:\fakepath\upload.png
-        //     const inputfile = $(this).val().split('\\');
-        //     $('#filevalue').text(inputfile[inputfile.length - 1]);
-        //     show();
-        // });
-
-        // remove 이미지를 클릭하면 파일명을 ''로 변경하고 remove 이미지를 보이지 않게 합니다.
-        // $(".remove").click(function () {
-        //     $('#filevalue').text('');
-        //     $(this).css('display', 'none');
-        // });
-
-        /** 2024-05-16, 프로필 사진 툴팁 처리 */
-        $(".prifile-image-tooltip").tooltip();
-
         /** 2024-05-16, 프로필 클릭 시 설정화면으로 이동 */
         $(".app-detail").click(function () {
             $el = $("#master-nav ul li:eq(2)");
@@ -755,6 +678,13 @@
                 $('.activity-container .icon-container').css('display', 'none');
             }
         });
+
+        /**
+         * 2024-05-31, Ajax 사원, 채팅방, 프로필 리스트 가져오기
+         */
+        getChatUserList();
+        getChatUserProfile();
+        getUserChatRoomList();
 
         /** 2024-05-28, 채팅방 유저 관리 화면, - 클릭 시 -> 유저 초대 목록 보여줌 */
         $(".invite-chat-room-users").click(function () {
@@ -790,7 +720,7 @@
                 'type': 'room-create',
                 'name': '대화상대 선택',
                 'roomButton': '방 초대',
-                "chat_user_id": $("#chat_user_id").val()
+                "chatUserId": $("#chat_user_id").val()
             };
             chatRoomMgrAjax('/chat/chatRoomCreateView', data, function (html) {
                 chatRoomMgrDisplay(html);
@@ -934,7 +864,7 @@
                 type: "post",
                 url: "/chat/chatUserProfile",
                 data: {
-                    "chat_user_id": $("#chat_user_id").val()
+                    "chatUserId": $("#chat_user_id").val()
                 },
                 dataType: "json",
                 beforeSend: function (xhr) {
@@ -948,26 +878,27 @@
                         img = "<img src='/image/default.png' />";
                     } else {
                         // 업로드된 프로필을 보여주도록 한다.
+                        img = "<img src='/image/default.png' />";
                     }
 
-                    var $chat_profile_picture = $('.chat-profile-picture');
-                    var $chat_profile_name = $('.chat-profile-name');
-                    var $chat_profile_dept = $('.chat-profile-dept');
-                    var $chat_profile_id = $('input[name="chat_profile_id"]');
-                    var $chat_profile_name_input = $('input[name="chat_profile_name_input"]');
-                    var $chat_profile_status_msg = $('#chat-profile-status-msg');
-                    var $chat_profile_email = $('input[name="chat_profile_email"]');
-                    var $chat_profile_phone = $('input[name="chat_profile_phone"]');
+                    var $chatProfilePicture = $('.chat-profile-picture');
+                    var $chatProfileName = $('.chat-profile-name');
+                    var $chatProfileDept = $('.chat-profile-dept');
+                    var $chatProfileId = $('input[name="chat_profile_id"]');
+                    var $chatProfileNameInput = $('input[name="chat_profile_name_input"]');
+                    var $chatProfileStatusMsg = $('#chat-profile-status-msg');
+                    var $chatProfileEmail = $('input[name="chat_profile_email"]');
+                    var $chatProfilePhone = $('input[name="chat_profile_phone"]');
 
-                    $chat_profile_picture.empty();
-                    $chat_profile_picture.html(img);
-                    $chat_profile_name.html(rdata.name);
-                    $chat_profile_dept.html(rdata.department);
-                    $chat_profile_id.val(rdata.id);
-                    $chat_profile_name_input.val(rdata.name);
-                    $chat_profile_status_msg.html(rdata.chat_status_msg);
-                    $chat_profile_email.val(rdata.email);
-                    $chat_profile_phone.val(rdata.phone_number);
+                    $chatProfilePicture.empty();
+                    $chatProfilePicture.html(img);
+                    $chatProfileName.html(rdata.name);
+                    $chatProfileDept.html(rdata.department);
+                    $chatProfileId.val(rdata.id);
+                    $chatProfileNameInput.val(rdata.name);
+                    $chatProfileStatusMsg.html(rdata.chatStatusMsg);
+                    $chatProfileEmail.val(rdata.email);
+                    $chatProfilePhone.val(rdata.phoneNumber);
                 }
             }) // ajax end
         }
@@ -980,7 +911,7 @@
                 type: "post",
                 url: "/chat/chatUserList",
                 data: {
-                    "chat_user_id": $("#chat_user_id").val()
+                    "chatUserId": $("#chat_user_id").val()
                 },
                 dataType: "json",
                 beforeSend: function (xhr) {
@@ -998,6 +929,7 @@
                             img = "<img src='/image/default.png' />";
                         } else {
                             // 업로드된 프로필을 보여주도록 한다.
+                            img = "<img src='/image/default.png' />";
                         }
 
                         output += "<li>";
@@ -1007,7 +939,7 @@
                         output += "       " + img;
                         output += "    </div>";
                         output += "    <div class='mes-detail'>";
-                        if(this.chat_status_msg === null) {
+                        if(this.chat_status_msg === null) { // 2024-06-02, chatStatusMsg로 변경 예정
                             output += "        <div class='mes-col1 chat-friend-list-col1' style='margin-top: 18px;'>";
                             output += "            <div class='sender-name'>";
                             output += "                "+ this.department + " - " + this.name;
@@ -1019,7 +951,7 @@
                             output += "                "+ this.department + " - " + this.name;
                             output += "            </div>";
                             output += "            <div class='mes-preview'>";
-                            output += "                " + this.chat_status_msg;
+                            output += "                " + this.chatStatusMsg;
                             output += "            </div>";
                             output += "        </div>";
                         }
@@ -1041,7 +973,7 @@
                 type: "post",
                 url: "/chat/userChatRoomList",
                 data: {
-                    "chat_user_id": $("#chat_user_id").val()
+                    "chatUserId": $("#chat_user_id").val()
                 },
                 dataType: "json",
                 beforeSend: function (xhr) {
@@ -1059,9 +991,9 @@
                             // 업로드된 프로필을 보여주도록 한다. (채팅방 화면은 임시 처리)
                             img = "<img src='/image/default.png' />";
                         }
-                        var rn = d.room_name;
-                        var roomNumber = d.chat_room_num;
-                        var sessionId = d.chat_session_id;
+                        var rn = d.roomName;
+                        var roomNumber = d.chatRoomNum;
+                        var sessionId = d.chatSessionId;
 
                         output += "<li>";
                         output += "<input type='hidden' name='chat_room_num' value='" + roomNumber + "' />";
@@ -1101,13 +1033,13 @@
          * 2024-05-29, 상태 메시지 변경 구현
          */
         $('#chat-profile-status-msg').on('keyup', function() {
-            var status_msg = $("#chat-profile-status-msg").val();
+            var statusMsg = $("#chat-profile-status-msg").val();
             $.ajax({
                 type: "post",
                 url: "/chat/chatUserProfileMsg",
                 data: {
-                    "chat_user_id": $("#chat_user_id").val(),
-                    "profile_status_msg": status_msg
+                    "chatUserId": $("#chat_user_id").val(),
+                    "profileStatusMsg": statusMsg
                 },
                 beforeSend: function (xhr) {
                     //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
@@ -1126,5 +1058,4 @@
     });
 </script>
 </body>
-
 </html>
