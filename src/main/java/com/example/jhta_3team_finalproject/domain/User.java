@@ -3,10 +3,9 @@ package com.example.jhta_3team_finalproject.domain;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class User implements UserDetails {
     private String id;
@@ -14,51 +13,107 @@ public class User implements UserDetails {
     private String email;
     private String employee_number;
     private String name;
+    private String phone_number;
+    private String age;
     private String department;
+    private String gender; // 기본값 설정
     private String position;
     private int is_approved;
-    private  String created_at;
+    private String created_at;
     private String updated_at;
     private String profile_picture;
-    private String auth="ROLE_MEMBER";
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "auth='" + auth + '\'' +
-                ", id='" + id + '\'' +
-                ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", employee_number='" + employee_number + '\'' +
-                ", name='" + name + '\'' +
-                ", department='" + department + '\'' +
-                ", position='" + position + '\'' +
-                ", is_approved=" + is_approved +
-                ", created_at='" + created_at + '\'' +
-                ", updated_at='" + updated_at + '\'' +
-                ", profile_picture='" + profile_picture + '\'' +
-                '}';
-    }
-
+    private MultipartFile profilePictureFile; // 파일 업로드 처리
+    private String chat_status_msg;
+    private String auth = "ROLE_MEMBER";
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<SimpleGrantedAuthority> roles= new ArrayList<SimpleGrantedAuthority>();
+        Collection<SimpleGrantedAuthority> roles = new ArrayList<SimpleGrantedAuthority>();
 
         roles.add(new SimpleGrantedAuthority(this.getAuth()));
 
         return roles;
     }
 
-    public String getProfile_picture() {return profile_picture;}
+    @Override
+    public String toString() {
+        return "User{" +
+                "age='" + age + '\'' +
+                ", id='" + id + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", employee_number='" + employee_number + '\'' +
+                ", name='" + name + '\'' +
+                ", phone_number='" + phone_number + '\'' +
+                ", department='" + department + '\'' +
+                ", gender='" + gender + '\'' +
+                ", position='" + position + '\'' +
+                ", is_approved=" + is_approved +
+                ", created_at='" + created_at + '\'' +
+                ", updated_at='" + updated_at + '\'' +
+                ", profile_picture='" + profile_picture + '\'' +
+                ", profilePictureFile=" + profilePictureFile +
+                ", chat_status_msg='" + chat_status_msg + '\'' +
+                ", auth='" + auth + '\'' +
+                '}';
+    }
 
-    public void setProfile_picture(String profile_picture) {this.profile_picture = profile_picture;}
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public MultipartFile getProfilePictureFile() {
+        return profilePictureFile;
+    }
+
+    public void setProfilePictureFile(MultipartFile profilePictureFile) {
+        this.profilePictureFile = profilePictureFile;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getPhone_number() {
+        return phone_number;
+    }
+
+    public String getChat_status_msg() {
+        return chat_status_msg;
+    }
+
+    public void setChat_status_msg(String chat_status_msg) {
+        this.chat_status_msg = chat_status_msg;
+    }
+
+    public void setPhone_number(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
+    public String getProfile_picture() {
+        return profile_picture;
+    }
+
+    public void setProfile_picture(String profile_picture) {
+        this.profile_picture = profile_picture;
+    }
+
     public String getUpdated_at() {
+
         return updated_at;
     }
 
     public void setUpdated_at(String updated_at) {
+
         this.updated_at = updated_at;
     }
 
@@ -69,7 +124,6 @@ public class User implements UserDetails {
     public void setPosition(String position) {
         this.position = position;
     }
-
 
 
     public String getPassword() {
@@ -104,6 +158,7 @@ public class User implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
+
     public String getName() {
         return name;
     }
@@ -119,6 +174,7 @@ public class User implements UserDetails {
     public void setIs_approved(int is_approved) {
         this.is_approved = is_approved;
     }
+
     public String getId() {
         return id;
     }
@@ -134,6 +190,7 @@ public class User implements UserDetails {
     public void setEmployee_number(String employee_number) {
         this.employee_number = employee_number;
     }
+
     public String getEmail() {
         return email;
     }
@@ -141,6 +198,7 @@ public class User implements UserDetails {
     public void setEmail(String email) {
         this.email = email;
     }
+
     public String getDepartment() {
         return department;
     }
@@ -157,6 +215,7 @@ public class User implements UserDetails {
     public void setAuth(String auth) {
         this.auth = auth;
     }
+
     public String getCreated_at() {
         return created_at;
     }
@@ -164,7 +223,6 @@ public class User implements UserDetails {
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
-
 
 
 }

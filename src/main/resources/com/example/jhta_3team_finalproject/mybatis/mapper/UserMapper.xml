@@ -7,20 +7,23 @@
     <select id="isId" resultType="user">
         SELECT * FROM mbt.users WHERE id = #{id}
     </select>
+
     <insert id="join" >
-        insert  into mbt.users
-            (id,name,email,department,password)
-        values ( #{id}, #{name},#{email}, #{department},#{password})
+        insert  into users
+            (id, password, name, email,phone_number,department,gender)
+        values ( #{id},#{password} ,#{name},#{email},#{phone_number}, #{department},#{gender})
     </insert>
 
 
     <update id="update">
-        update  mbt.users set
-            id= #{id},
+        update  users
+        set
             name=#{name},
             email=#{email},
-            department=#{department},
+            phone_number=#{phone_number},
+            gender=#{gender},
+            profile_picture=#{profile_picture},
             password=#{password}
-
+            where id= #{id}
     </update>
 </mapper>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="roomMgrFragment">
+    <head>
+        <meta charset="UTF-8"/>
+        <!-- 2024-05-28, 채팅방 생성 + 초대, 채팅방 삭제 화면 -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!--    <link th:href="@{/css/chat/chat-invite.css}" rel="stylesheet" type="text/css"/>-->
+        <style>
+            #memberList::-webkit-scrollbar {
+                display: none
+            }
+
+            .customShadow {
+                /* box-shadow: 0px 80px 63px -66px rgba(0, 0, 0, 0.1); */
+            }
+
+            .mgr-room-screen {
+                width: 310px;
+                height: 547px;
+                display: none;
+                z-index: 99999;
+                background-color: white;
+            }
+
+            .invite-card {
+                height: 547px;
+                left: 5px;
+            }
+
+            .mgr-room-screen-back-arrow {
+                font-size: 35px;
+                vertical-align: middle;
+            }
+
+            .invite-title {
+                padding-bottom: 10px;
+                padding-left: 5px;
+                padding-top: 10px;
+            }
+        </style>
+        <title>title</title>
+    </head>
+
+    <body>
+    <div class="bg-gray-50 h-screen flex justify-center items-center mgr-room-screen">
+        <!-- Card -->
+        <div class="invite-card w-full h-5/6 max-w-lg flex-auto flex-col space-y-4 bg-white rounded-2xl overflow-hidden customShadow relative">
+            <!-- Titling -->
+            <div class="w-full border-b border-blue-100">
+                <div class="p-6 flex flex-col space-y-4 invite-title">
+
+                    <h2 class="text-2ml font-semibold text-gray-900"><i
+                            class="material-icons mgr-room-screen-back-arrow">navigate_before</i>[[${name}]]</h2>
+                    <!-- 				<p class="text-xs text-gray-400">An email invite will be sent on your behalf to the selected team members.</p> -->
+                </div>
+            </div>
+
+            <!-- Search Wrapper -->
+            <div x-data="loadMembers()" class="max-h-full flex flex-col flex-grow">
+                <!-- RoomName Input -->
+                <div class="py-2 px-6 relative flex flex-col justify-center" th:if="${type == 'room-create'}">
+                    <svg class="absolute left-10"  xmlns="http://www.w3.org/2000/svg"
+                         style="width: 16px; height: 16px;" viewBox="0 0 16 16">
+                        <path class="fill-current text-gray-400" d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+                        <path class="fill-current text-gray-400" d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9 9 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.4 10.4 0 0 1-.524 2.318l-.003.011a11 11 0 0 1-.244.637c-.079.186.074.394.273.362a22 22 0 0 0 .693-.125m.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8 8 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a11 11 0 0 0 .398-2"/>
+                    </svg>
+                    <input type="text" name="roomName" placeholder="방 이름"
+                           class="border border-blue-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-blue-400 focus:border-blue-400 focus:bg-blue-50 focus:bg-opacity-25"/>
+                </div>
+
+                <input type="hidden" name="sessionId" th:value="${chat_user_id}"/>
+
+                <!-- Search Input -->
+                <div class="py-2 px-6 relative flex flex-col justify-center">
+                    <svg class="absolute left-10" xmlns="http://www.w3.org/2000/svg"
+                         style="width: 16px; height: 16px;" viewBox="0 0 16 16">
+                        <path class="fill-current text-gray-400"
+                              d="M6.4 1.6a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm-4.525.275a6.4 6.4 0 019.58 8.45l4.31 4.31a.8.8 0 01-1.13 1.13l-4.31-4.31A6.399 6.399 0 010 6.4a6.4 6.4 0 011.875-4.525z"/>
+                    </svg>
+                    <input type="text" th:placeholder="${type == 'room-create'} ? '사원 검색' : '채팅방 검색'"
+                           x-ref="searchField" x-model="search"
+                           x-on:keydown.window.prevent.slash="$refs.searchField.focus()"
+                           class="border border-blue-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-blue-400 focus:border-blue-400 focus:bg-blue-50 focus:bg-opacity-25"/>
+                </div>
+
+                <div th:if="${type == 'room-create'}" style="height: 10px;"></div>
+
+                <!-- Employee List or Room List -->
+                <div id="memberList"
+                     th:style="${type == 'room-create'} ? 'height: 267px' : 'height: 340px'"
+                     class="flex-grow flex flex-col py-2 px-6 -mt-2 pb-72 overflow-scroll">
+                    <template x-for="member in filteredMembers" :key="member">
+                        <div class="flex p-2 mb-2 space-x-2 rounded-lg cursor-pointer hover:bg-blue-50"
+                             :class="{'bg-blue-50 ring-2 ring-blue-400 ring-offset-1 ring-offset-white': selectedMembers.includes(member.id)}"
+                             x-on:click="selectedMembers.includes(member.id) ? selectedMembers.splice(selectedMembers.indexOf(member.id), 1) : selectedMembers.push(member.id)">
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <img :src="`${member.photo}`" class="rounded-full" width="36px" style="height: 36px;"/>
+                            </div>
+                            <div th:if="${type == 'room-create'}">
+                                <p class="font-medium text-gray-900" x-text="member.name"></p>
+                                <p class="text-xs text-gray-400">
+                                    <span class="inline-block mr-2" x-text="member.id"></span>
+                                </p>
+                                <p class="text-xs text-gray-400">
+                                    <span class="inline-block mr-2" x-text="member.email"></span>
+                                </p>
+                                <div style="display: none;" id="selectedUserList" x-text="selectedMembers"></div>
+                            </div>
+                            <div th:if="${type == 'room-exit'}">
+                                <p class="font-medium text-gray-900" x-text="member.name"></p>
+                                <p class="text-xs text-gray-400">
+                                    <span class="inline-block mr-2" x-text="member.message"></span>
+                                </p>
+                                <input type="hidden" name="id" x-text="member.id" />
+                                <div style="display: none;" id="selectedRoomList" x-text="selectedMembers"></div>
+                                <!--                                    <p class="text-xs text-gray-400">-->
+                                <!--                                        <span class="inline-block mr-2" x-text="member.id"></span>-->
+                                <!--                                    </p>-->
+                            </div>
+                        </div>
+                    </template>
+                    <!-- Empty State -->
+                    <div x-show="filteredMembers.length == 0">
+                        <div class="w-full h-20 mb-2 flex justify-center items-center">
+                            <p class="text-center text-gray-500">검색결과 : "<span x-text="search"></span>"가 없습니다.</p>
+                        </div>
+                        <div class="flex flex-col space-y-2">
+                            <div class="w-full p-2 flex space-x-2 bg-gray-100 rounded-lg">
+                                <div class="h-12 w-12 rounded-full bg-gray-200"></div>
+                                <div class="flex flex-col space-y-2 justify-center">
+                                    <div class="h-3	w-32 rounded-full bg-gray-200"></div>
+                                    <div class="flex space-x-2">
+                                        <div class="h-2 w-40 rounded-full bg-gray-200"></div>
+                                        <div class="h-2 w-12 rounded-full bg-gray-200"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-full p-2 flex space-x-2 bg-gray-100 rounded-lg">
+                                <div class="h-12 w-12 rounded-full bg-gray-200"></div>
+                                <div class="flex flex-col space-y-2 justify-center">
+                                    <div class="h-3	w-32 rounded-full bg-gray-200"></div>
+                                    <div class="flex space-x-2">
+                                        <div class="h-2 w-40 rounded-full bg-gray-200"></div>
+                                        <div class="h-2 w-12 rounded-full bg-gray-200"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${type == 'room-exit'}"
+                                 class="w-full p-2 flex space-x-2 bg-gray-100 rounded-lg">
+                                <div class="h-12 w-12 rounded-full bg-gray-200"></div>
+                                <div class="flex flex-col space-y-2 justify-center">
+                                    <div class="h-3	w-32 rounded-full bg-gray-200"></div>
+                                    <div class="flex space-x-2">
+                                        <div class="h-2 w-40 rounded-full bg-gray-200"></div>
+                                        <div class="h-2 w-12 rounded-full bg-gray-200"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fixed Footer -->
+                <div class="absolute bottom-0 w-full h-24 flex justify-center items-center bg-white border-t border-blue-100">
+                    <div class="chat-room-create-proc py-2 px-4 bg-gray-200 text-white rounded inline-block outline-none cursor-default"
+                         :class="{'bg-blue-500 cursor-pointer hover:bg-blue-600' : selectedMembers.length > 0}"
+                         style="margin-bottom: 10px;">
+                        <span>[[${roomButton}]]</span>
+                        <span x-show="selectedMembers.length !== 0" x-text="selectedMembers.length"></span>
+                        <th:block th:if="${roomButton == '방 초대'}">
+                            <span x-text="selectedMembers.length > 0 ? '명' : ''"></span>
+                        </th:block>
+                        <th:block th:if="${roomButton == '방 나가기'}">
+                            <span x-text="selectedMembers.length > 0 ? '개' : ''"></span>
+                        </th:block>
+                    </div>
+                </div>
+
+            </div><!--end of search wrapper -->
+
+        </div><!-- end of card -->
+    </div>
+
+    <script th:inline="javascript">
+        /** 2024-05-28, 채팅방 관리 화면, < 버튼 클릭 시 */
+        $(".mgr-room-screen-back-arrow").click(function () {
+            $(".mgr-room-screen").fadeOut(300);
+        });
+
+        /**
+         * 2024-05-30, 채팅방 버튼 클릭 시
+         */
+        $(".chat-room-create-proc").click(function () {
+            console.log($("#selectedUserList").text());
+            console.log($("#selectedRoomList").text());
+        });
+
+        function loadMembers() {
+            return {
+                selectedMembers: [],
+                search: "",
+                myForData: sourceData,
+                get filteredMembers() {
+                    if (this.search === "") {
+                        return this.myForData;
+                    }
+                    return this.myForData.filter((item) => {
+                        return item.name
+                            .toLowerCase()
+                            .includes(this.search.toLowerCase());
+                    });
+                },
+            };
+        }
+
+        var sourceData = [
+            {
+                name: '테스트1',
+                id: 1,
+                email: 'chance.septimus123@gmail.com',
+                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
+            },
+            {
+                name: '테스트2',
+                id: 2,
+                email: 'chance.sept1imus@gmail.com',
+                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
+            },
+            {
+                name: '테스트3',
+                id: 3,
+                email: 'chance.septimus@gmail.com',
+                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
+            },
+            {
+                name: '테스트4',
+                id: 4,
+                email: 'chance.s1242us@gmail.com',
+                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
+            },
+            {
+                name: '테스트5',
+                id: 5,
+                email: 'chance.septimus@gmail.com',
+                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
+            },
+            {
+                name: '테스트6',
+                id: 6,
+                email: 'chance.ssfmus@gmail.com',
+                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
+            },
+            {
+                name: '테스트7',
+                id: 7,
+                email: 'chance.se23213s@gmail.com',
+                photo: 'https://cdn-icons-png.flaticon.com/256/25/25231.png'
+            },
+        ]
+
+        //console.log(sourceData);
+    </script>
+    </body>
+
+</html>

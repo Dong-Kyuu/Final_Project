@@ -598,7 +598,6 @@
                 // var rn = d.chat_name.trim();
                 var rn = d.room_name;
                 var roomNumber = d.chat_room_num;
-                //var description = d.description;
                 var sessionId = d.chat_session_id;
                 tag += "<div class='row nfl row-fadeIn-wrapper'>"
                     + "<ul><li class='num'>"
@@ -676,7 +675,7 @@
                     <input type="text" name="roomName" id="roomName" placeholder="방제목을 지정" class="input_box" style="height:50px; max-width:1600px;  font-size: 1.5rem;
 					font-family: sans-serif; ">
                     <input type="text" id="sessionId" name="sessionId" th:value="${pinfo.username}"
-                           placeholder="세션 아이디" />
+                           placeholder="세션 아이디"/>
                 </th:block>
             </th>
             <th rowspan="2">

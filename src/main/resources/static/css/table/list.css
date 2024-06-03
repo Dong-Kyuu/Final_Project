@@ -1,8 +1,8 @@
 th:first-of-type {
-    max-width : 30px;
+    max-width: 30px;
 }
 
-.write-button   {
-    margin-top : 50px;
-    float : right;
+.write-button {
+    margin-top: 50px;
+    float: right;
 }

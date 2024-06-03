@@ -8,11 +8,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import java.io.*;
 import java.util.Random;
 
 @Controller
-@RequestMapping(value="/table")
+@RequestMapping(value = "/table")
 public class TableController {
 
     private static final Logger logger = LoggerFactory.getLogger(TableController.class);
@@ -39,22 +41,22 @@ public class TableController {
     }
 
     // 리스트 가져오기
-    @RequestMapping(value="/freelist", method= RequestMethod.GET)
-    public ModelAndView freeTable(@RequestParam(value="page", defaultValue="1") int page,
+    @RequestMapping(value = "/freelist", method = RequestMethod.GET)
+    public ModelAndView freeTable(@RequestParam(value = "page", defaultValue = "1") int page,
                                   ModelAndView mv) {
 
         int limit = 10; // 한 화면에 출력할 로우 갯수
         int listcount = BS.getListCount(); // 총 리스트 수를 받아온다.
 
         // 총 페이지 수
-        int maxpage = (listcount + limit - 1)/limit;
+        int maxpage = (listcount + limit - 1) / limit;
 
         // 현재 페이지에 보여줄 시작 페이지 수
-        int startpage = ((page-1)/10)*10+1;
+        int startpage = ((page - 1) / 10) * 10 + 1;
         // 현재 페이지에 보여줄 마지막 페이지 수
-        int endpage = startpage+10-1;
+        int endpage = startpage + 10 - 1;
 
-        if(endpage > maxpage)
+        if (endpage > maxpage)
             endpage = maxpage;
 
         List<Board> boardlist = BS.getBoardList(page, limit); // 리스트를 받아옴
@@ -73,7 +75,7 @@ public class TableController {
     }
 
     // 글쓰기 폼 불러오기
-    @GetMapping ("/f_write")
+    @GetMapping("/f_write")
     public String wirteForm() {
         return "table/Fwrite";
     }
@@ -89,7 +91,7 @@ public class TableController {
         int boardNum = board.getBOARD_NUM(); // 저장된 BOARD_NUM 가져오기
 
         List<Table_Files> files = new ArrayList<>();
-        for(MultipartFile uploadfile : uploadfiles) {
+        for (MultipartFile uploadfile : uploadfiles) {
             if (!uploadfile.isEmpty()) {
                 String fileName = uploadfile.getOriginalFilename(); // 원래 파일명
 
@@ -118,14 +120,14 @@ public class TableController {
     private String fileDBName(String fileName, String saveFolder) {
         // 새로운 폴더 이름 : 오늘 년+월+일
         Calendar c = Calendar.getInstance();
-        int year 	= c.get(Calendar.YEAR);			//오늘 년도
-        int month	= c.get(Calendar.MONTH) + 1;	//오늘 월
-        int date 	= c.get(Calendar.DATE);			//오늘 일
+        int year = c.get(Calendar.YEAR);            //오늘 년도
+        int month = c.get(Calendar.MONTH) + 1;    //오늘 월
+        int date = c.get(Calendar.DATE);            //오늘 일
 
         String homedir = saveFolder + "/" + year + "-" + month + "-" + date;
         logger.info(homedir);
         File path1 = new File(homedir);
-        if(!(path1.exists())) {
+        if (!(path1.exists())) {
             path1.mkdirs(); // 새로운 폴더 생성
         }
 
@@ -146,12 +148,12 @@ public class TableController {
         // 확장자 구하기 끝
 
         // 새로운 파일명
-        String refileName = "bbs" + year + month + date + random + "." +fileExtension;
+        String refileName = "bbs" + year + month + date + random + "." + fileExtension;
         logger.info("refileName = " + refileName);
 
         // MySQL 디비에 저장될 파일 명
         // String fileDBName = "/" + year + "-" month + "-" + date + "/" + refileName;
-        String fileDBName = File.separator + year +  "-" + month + "-" + date
+        String fileDBName = File.separator + year + "-" + month + "-" + date
                 + File.separator + refileName;
         logger.info("fileDBName = " + fileDBName);
 
@@ -162,7 +164,7 @@ public class TableController {
     public ModelAndView Detail(
             int num, ModelAndView mv,
             HttpServletRequest request,
-            @RequestHeader(value="referer", required=false) String beforeURL) {
+            @RequestHeader(value = "referer", required = false) String beforeURL) {
 		/*
 			1. String BeforeURL = request.getHeader("referer"); 의미로
 			   어느 주소에서 Detail로 이동했는지 header의 정보 중 "referer"을 통해 알 수 있다.
@@ -171,13 +173,14 @@ public class TableController {
 		 */
 
         logger.info("referer : " + beforeURL);
-        if(beforeURL!=null && beforeURL.endsWith("list")) {
+        if (beforeURL != null && beforeURL.endsWith("list")) {
             BS.setReadCountUpdate(num);
         }
 
         Board board = BS.getDetail(num);
+        List<Table_Files> upfiles = BS.getFilesByBoardNum(num);
         // board = null; // error페이지 이동 확인하고자 임의로 지정.
-        if(board == null) {
+        if (board == null) {
             logger.info("상세보기 실패");
             mv.setViewName("error/error");
             mv.addObject("url", request.getRequestURL());
@@ -188,8 +191,31 @@ public class TableController {
             mv.setViewName("table/Fview");
             mv.addObject("count", count);
             mv.addObject("boarddata", board);
+            mv.addObject("upfiles", upfiles);
+
         }
         return mv;
+    }
+
+    @PostMapping("/delete")
+    public String BoardDeleteAction(String BOARD_PASS, int num,
+                                    Model mv, RedirectAttributes rattr,
+                                    HttpServletRequest request) {
+
+        int result = BS.boardDelete(num);
+
+        // 삭제 처리 실패한 경우
+        if(result == 0) {
+            logger.info("삭제 실패!");
+            mv.addAttribute("url", request.getRequestURL());
+            mv.addAttribute("message", "삭제 실패");
+            return "error/error";
+        } else {
+            // 삭제 처리 성공한 경우 - 글 목록 보기 요청을 전송하는 부분
+            logger.info("삭제 완료!");
+            rattr.addFlashAttribute("result", "deleteSuccess");
+            return "redirect:freelist";
+        }
     }
 
     @GetMapping("/t")

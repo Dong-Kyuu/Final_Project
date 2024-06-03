@@ -5,9 +5,9 @@
 }
 
 $body-bg: #84a0f4;
-$button-bg: #4f97e5;
+$button-bg: #67a3e4;
 $list-bg: #fff;
-$text-color: #4f97e5;
+$text-color: #67a3e4;
 $text-color-hover: #000;
 $menu-icon-transition: transform 300ms cubic-bezier(0.52, -0.80, 0.52, 0.52);
 
@@ -78,7 +78,7 @@ $menu-icon-transition: transform 300ms cubic-bezier(0.52, -0.80, 0.52, 0.52);
   border-radius: 50%;
   width: 30px;
   height: 30px;
-  top: 15px;
+  top: 10px;
   left: 15px;
   border: none;
   padding: 0;
@@ -97,7 +97,7 @@ $menu-icon-transition: transform 300ms cubic-bezier(0.52, -0.80, 0.52, 0.52);
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    top: 237px;
+    top: 287px;
     left: 263px;
     border: none;
     padding: 0;
@@ -150,7 +150,7 @@ $menu-icon-transition: transform 300ms cubic-bezier(0.52, -0.80, 0.52, 0.52);
 
     &-mgr {
       right: -80px;
-      bottom: -198px;
+      bottom: -248px;
       height: 100px;
 
       li {
@@ -162,7 +162,6 @@ $menu-icon-transition: transform 300ms cubic-bezier(0.52, -0.80, 0.52, 0.52);
       opacity: 0;
     }
   }
-
 
 
   &-list-item {

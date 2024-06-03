@@ -5,6 +5,7 @@ import com.example.jhta_3team_finalproject.mybatis.mapper.InqueryBoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,10 +49,10 @@ public class InqueryServiceImpl implements InqueryService {
 
         // 2024-04-04 글 비밀번호가 null이 아니면 true, 아니면 false
         templist.forEach(inqueryBoard -> {
-            if (inqueryBoard.getInq_pass() == null) {
-                inqueryBoard.setInq_pass_exist(false);
+            if (inqueryBoard.getInqPass() == null) {
+                inqueryBoard.setInqPassExist(false);
             } else {
-                inqueryBoard.setInq_pass_exist(!(inqueryBoard.getInq_pass().isEmpty()));
+                inqueryBoard.setInqPassExist(!(inqueryBoard.getInqPass().isEmpty()));
             }
             list.add(inqueryBoard);
         });
@@ -61,7 +62,7 @@ public class InqueryServiceImpl implements InqueryService {
     @Override
     public InqueryBoard getDetail(int num) {
         InqueryBoard inqueryBoard = dao.getDetail(num);
-        inqueryBoard.setInq_pass_exist(inqueryBoard.getInq_pass() != null && !inqueryBoard.getInq_pass().isEmpty());
+        inqueryBoard.setInqPassExist(inqueryBoard.getInqPass() != null && !inqueryBoard.getInqPass().isEmpty());
         return inqueryBoard;
     }
 
@@ -87,6 +88,7 @@ public class InqueryServiceImpl implements InqueryService {
         return dao.boardModify(inqueryBoard);
     }
 
+    @Transactional
     @Override
     public int boardDelete(int num) {
         int result = 0;
@@ -111,7 +113,7 @@ public class InqueryServiceImpl implements InqueryService {
     public boolean isBoardPassNull(int num) {
         InqueryBoard result = dao.isBoardPassNull(num);
 
-        if (result == null)
+        if (result.getInqPass().equals(""))
             return true;
         else
             return false;

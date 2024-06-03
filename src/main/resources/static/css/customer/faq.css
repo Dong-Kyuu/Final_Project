@@ -1,159 +1,166 @@
 @charset "UTF-8";
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-body{
-  font-family:"Rubik", sans-serif;
+body {
+    font-family: "Rubik", sans-serif;
 }
 
-.faq{
-  padding:50px 25px;
+.faq {
+    padding: 50px 25px;
 }
 
-.headings{
-  text-transform:capitalize;
-  text-align:center;
+.headings {
+    text-transform: capitalize;
+    text-align: center;
 }
 
-.section-heading{
-  font-size:40px;
-  color:#131313;
+.section-heading {
+    font-size: 40px;
+    color: #131313;
 }
 
-.sub-heading{
-  margin:20px auto 0;
-  max-width:45ch;
-  color:#939393;
-  line-height:1.6;
+.sub-heading {
+    margin: 20px auto 0;
+    max-width: 45ch;
+    color: #939393;
+    line-height: 1.6;
 }
 
-.que-container{
-  max-width:1200px;
-  margin:50px auto 0;
+.que-container {
+    max-width: 1200px;
+    margin: 50px auto 0;
 }
 
 .question .button {
-  width:100%;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background-color:transparent;
-  font-size:20px;
-  color:#131313;
-  font-family:inherit;
-  font-weight: 0;
-  padding:25px 20px 25px 0;
-  border:none;
-  cursor:pointer;
-  transition:color 0.3s;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: transparent;
+    font-size: 20px;
+    color: #131313;
+    font-family: inherit;
+    font-weight: 0;
+    padding: 25px 20px 25px 0;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s;
 }
 
 .fa-q {
-  color:skyblue;
-  transition:transform 0.3s;
+    color: skyblue;
+    transition: transform 0.3s;
 }
 
 .fa-chevron-down {
-  color:black;
-  transition:transform 0.3s;
+    color: black;
+    transition: transform 0.3s;
 }
 
-.question p{
-  color:black;
-  line-height:1.6;
-  height:0;
-  overflow:hidden;
-  transition:all 0.3s;
+.question p {
+    color: black;
+    line-height: 1.6;
+    height: 0;
+    overflow: hidden;
+    transition: all 0.3s;
 }
 
-.question .button.show + p{
-  padding-bottom:25px;
-  height:auto;
+.question .button.show + p {
+    padding-bottom: 25px;
+    height: auto;
 }
 
-.question .button.show{
-  color:skyblue;
+.question .button.show {
+    color: skyblue;
 }
 
-.question .button.show i{
-  transform:rotate(180deg);
+.question .button.show i {
+    transform: rotate(180deg);
 }
 
 .question-width {
-  margin-left: 1.5%;
-  width: 100%;
+    margin-left: 1.5%;
+    width: 100%;
 }
 
 .float-left {
-  float: left;
+    float: left;
 }
 
 .table td {
-	border-top: 0;
-	padding: 0;
+    border-top: 0;
+    padding: 0;
 }
 
 /* 2024-04-08 FAQ 버튼 추가 */
-.grey{
-  color:grey;
+.grey {
+    color: grey;
 }
-.ft-12{
-  font-size:14px;
+
+.ft-12 {
+    font-size: 14px;
 }
-.blue-text{
-  color: #007bff;
+
+.blue-text {
+    color: #007bff;
 }
+
 /* body{
   -webkit-font-smoothing:antialiased;
   min-width:700px
 } */
-.top-nav{
-  font-size:16px;
-  color:#4e4e4e;
-  margin:10px;
-  padding:10px 0;
-/*   border-bottom:1px solid #dbdbdb; */
-  .pill{
-    padding:5px 10px;
-    border-radius:8px;
-    cursor:pointer;
-    &.active{
-      color:white;
-      background: #007bff;
+.top-nav {
+    font-size: 16px;
+    color: #4e4e4e;
+    margin: 10px;
+    padding: 10px 0;
+    /*   border-bottom:1px solid #dbdbdb; */
+
+    .pill {
+        padding: 5px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+
+        &.active {
+            color: white;
+            background: #007bff;
+        }
     }
-  }
 
 }
 
-.album-container{
-  display:flex;
-  .left{
-    width:calc( 200px + 10vw + 40px);
-    padding:20px;
-    .album-art{
-      height:calc( 200px + 10vw);
-      width:calc( 200px + 10vw);
-      margin:20px auto;
-      border-radius:10px;
-      overflow:hidden;
-      border:1px solid #dbdbdb;
-      background-size:cover;
-      background-position:center;
-    }
-  }
+.album-container {
+    display: flex;
 
-.right{
-    padding:20px;
-  }
+    .left {
+        width: calc(200px + 10vw + 40px);
+        padding: 20px;
+
+        .album-art {
+            height: calc(200px + 10vw);
+            width: calc(200px + 10vw);
+            margin: 20px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #dbdbdb;
+            background-size: cover;
+            background-position: center;
+        }
+    }
+
+    .right {
+        padding: 20px;
+    }
 }
 
 a {
-  color: black;
+    color: black;
 }
 
 ul {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }

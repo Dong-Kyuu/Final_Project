@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.jhta_3team_finalproject.service.UserService;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -56,18 +54,15 @@ public class UserController {
 
             //세션에 저장된 값을 한 번만 실행 될 수 있도록 model에 저장
             mv.addObject("loginfail", session.getAttribute("loginfail"));
-
             session.removeAttribute("loginfail");//세션의 값은 제거합니다
-
-
         }
         logger.info("login 페이지");
         return mv;
     }
 
-   // 로그아웃
-    @RequestMapping(value = "/logout", method = RequestMethod.GET )
-    public String logout(){
+    // 로그아웃
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout() {
         return "member/login";
     }
 
@@ -91,44 +86,71 @@ public class UserController {
         return "member/findPassword";
     }
 
-    //회원 정보 수정
+
+    //회원 정보  폼
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public ModelAndView user_info(
+            Principal principal,
             ModelAndView mv,
-            HttpServletRequest request,
-            Principal principal) {
+            HttpServletRequest request) {
 
         String id = principal.getName();
+        User m = userService.user_info(id);
 
-        if (id == null) {
-            mv.setViewName("redirect:login");
-            logger.info("id is null");
-        } else {
-            User m = userService.user_info(id);
+        //m==null;//오류 확인하는 값
+        if (m != null) {
             mv.setViewName("member/user_info");
             mv.addObject("memberinfo", m);
+        } else {
+            mv.addObject("url", request.getRequestURI());
+            mv.addObject("message", "정보 수정실패");
+            mv.setViewName("error");
         }
         return mv;
     }
 
+
+    //회원 정보 수정 폼
+    @RequestMapping(value = "/update")
+    public ModelAndView user_update(ModelAndView mv, Principal principal) {
+        String id = principal.getName();
+
+        if (id == null) {
+            mv.setViewName("redirect:/user/login");
+            logger.info("id is null");
+        } else {
+            User user = userService.user_info(id);
+            mv.setViewName("member/user_updateForm");
+            mv.addObject("memberinfo", user);
+        }
+        return mv;
+    }
+
+
     //수정하기 저장
-    @RequestMapping(value="/updateProcess",method= RequestMethod.POST)
-    public String UpdateProcess( User user,Model model,
-                                 RedirectAttributes rattr,
-                                 HttpServletRequest request) {
+    @RequestMapping(value = "/updateProcess", method= RequestMethod.POST)
+    public String UpdateProcess(User user, Model model,
+                                RedirectAttributes rattr,
+                                HttpServletRequest request) {
         int result = userService.update(user);
 
+        logger.info("Updating user: " + user);
+        logger.info("Update result: " + result);
         //삽입이 된 경우
-        if(result==1) {
-            rattr.addFlashAttribute("result","updateSuccess");
-            return "redirect:/board/list";
-        }else {
-            model.addAttribute("url",request.getRequestURI());
-            model.addAttribute("message","정보 수정실패");
-            return "error/error";
+        if (result == 1) {
+            rattr.addFlashAttribute("result", "updateSuccess");
+            return "redirect:/user/info";
+        } else {
+            model.addAttribute("url", request.getRequestURI());
+            model.addAttribute("message", "정보 수정실패");
+            return "error";
         }
-
     }
 
-    }
+
+}
+
+
+
+
 

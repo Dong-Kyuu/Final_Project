@@ -1,5 +1,7 @@
 package com.example.jhta_3team_finalproject.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import com.example.jhta_3team_finalproject.mybatis.mapper.UserMapper;
 
 @Service
 public class UserServicelmpl implements UserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserServicelmpl.class);
     private UserMapper dao;
     private PasswordEncoder passwordEncoder;
 
@@ -37,7 +40,16 @@ public class UserServicelmpl implements UserService {
 
     @Override
     public int update(User user) {
+        logger.info("Updating user in service: " + user);
+
         return dao.update(user);
     }
+
+    @Override
+    public int insert(User user) {
+
+        return dao.insert(user);
+    }
+
 }
 

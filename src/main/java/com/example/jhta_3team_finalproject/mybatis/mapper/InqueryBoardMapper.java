@@ -13,43 +13,43 @@ import java.util.List;
  * */
 @Mapper
 public interface InqueryBoardMapper {
-	
-	// 글의 갯수 구하기
-	public int getListCount();
 
-	// 글의 리스트 구하기
-	public List<InqueryBoard> getBoardList(HashMap<String, Integer> map);
-	
-	// 글 내용 보기
-	public InqueryBoard getDetail(int num);
-	
-	// 글 답변
-	public int boardReply(InqueryBoard inqueryBoard);
-	
-	// 글 수정
-	public int boardModify(InqueryBoard inqueryBoard);
-	
-	// 글 삭제
-	public int boardDelete(InqueryBoard inqueryBoard);
-	
-	// 조회수 업데이트
-	public int setReadCountUpdate(int num);
-	
-	// 글쓴이인지 확인
-	public InqueryBoard isBoardWriter(HashMap<String, Object> map);
+    // 글의 갯수 구하기
+    public int getListCount();
 
-	// 비밀번호가 없는지 확인
-	public InqueryBoard isBoardPassNull(int num);
+    // 글의 리스트 구하기
+    public List<InqueryBoard> getBoardList(HashMap<String, Integer> map);
 
-	// 글 등록하기
-	public void insertBoard(InqueryBoard inqueryBoard);
-	
-	// BOARD_RE_SEQ 값 수정
-	public int boardReplyUpdate(InqueryBoard inqueryBoard);
+    // 글 내용 보기
+    public InqueryBoard getDetail(int num);
 
-	public List<String> getDeleteFileList();
+    // 글 답변
+    public int boardReply(InqueryBoard inqueryBoard);
 
-	public void deleteFileList(String filename);
+    // 글 수정
+    public int boardModify(InqueryBoard inqueryBoard);
+
+    // 글 삭제
+    public int boardDelete(InqueryBoard inqueryBoard);
+
+    // 조회수 업데이트
+    public int setReadCountUpdate(int num);
+
+    // 글쓴이인지 확인
+    public InqueryBoard isBoardWriter(HashMap<String, Object> map);
+
+    // 비밀번호가 없는지 확인
+    public InqueryBoard isBoardPassNull(int num);
+
+    // 글 등록하기
+    public void insertBoard(InqueryBoard inqueryBoard);
+
+    // BOARD_RE_SEQ 값 수정
+    public int boardReplyUpdate(InqueryBoard inqueryBoard);
+
+    public List<String> getDeleteFileList();
+
+    public void deleteFileList(String filename);
 
 
 }

@@ -1,76 +1,76 @@
 @charset "UTF-8";
 
 .download-btn {
-  user-select: none;
-  appearance: none;
-  border: 0;
-  background-color: #2196F3;
-  padding: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  border-radius: 4px;
-  position: relative;
-  cursor: pointer;
-  
-  &:disabled {
-    opacity: 0.6;
-  }
-  
-  .loader {
-    visibility: hidden;
-    width: 38px;
-    height: 42.4px;
-    position: absolute;
+    user-select: none;
+    appearance: none;
+    border: 0;
     background-color: #2196F3;
-    border-radius: 4px;
-    left: 0;
-    display: flex;
-    justify-content: center;
+    padding: 12px;
+    display: inline-flex;
     align-items: center;
-    
-    .loader-inner {
-      width: 12px;
-      height: 12px;
-      border: 3px solid transparent;
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-  }
-  
-  .loaded {
-    visibility: hidden;
-    width: 38px;
-    height: 42.4px;
-    position: absolute;
-    background-color: #2196F3;
+    gap: 12px;
     border-radius: 4px;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    .loaded-inner {
-      fill: white;
+    position: relative;
+    cursor: pointer;
+
+    &:disabled {
+        opacity: 0.6;
     }
-  }
-  
-  .download-icon {
-    fill: white;
-  }
-  
-  .download-text {
-    color: white;
-    font-size: 16px;
-  }
+
+    .loader {
+        visibility: hidden;
+        width: 38px;
+        height: 42.4px;
+        position: absolute;
+        background-color: #2196F3;
+        border-radius: 4px;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .loader-inner {
+            width: 12px;
+            height: 12px;
+            border: 3px solid transparent;
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+    }
+
+    .loaded {
+        visibility: hidden;
+        width: 38px;
+        height: 42.4px;
+        position: absolute;
+        background-color: #2196F3;
+        border-radius: 4px;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .loaded-inner {
+            fill: white;
+        }
+    }
+
+    .download-icon {
+        fill: white;
+    }
+
+    .download-text {
+        color: white;
+        font-size: 16px;
+    }
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }

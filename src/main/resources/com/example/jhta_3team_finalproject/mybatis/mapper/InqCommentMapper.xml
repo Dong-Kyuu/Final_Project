@@ -1,67 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?><!-- SQL 맵퍼 파일은 XML이기 때문에 제일 먼저 XML 선언이 옵니다. -->
 <!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- Mapper 인터페이스의 패키지명과 이름을 namespace로 설정합니다. -->
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.InqCommentMapper">
 
-	<select id="getListCount" resultType="int">
-		select count(*)
-		from inquery_comm
-		where comment_board_num = #{comment_board_num}
-	</select>
+    <select id="getListCount" resultType="int">
+        select count(*)
+        from inquery_comm
+        where comment_board_num = #{commentBoardNum}
+    </select>
 
-	<insert id="commentsInsert" parameterType="inqueryComment">
-<!--		<selectKey resultType="int" order="BEFORE" keyProperty="num">-->
-<!--			select nvl(max(num),0)+1 from inquery_comm-->
-<!--		</selectKey>-->
-		insert into inquery_comm
-		(num, id, content, reg_date, comment_board_num,
-		comment_re_lev, comment_re_seq, comment_re_ref)
-		values
-		(NULL, #{id}, #{content}, NOW(), #{comment_board_num},
-		#{comment_re_lev}, #{comment_re_seq}, #{comment_re_ref})
-	</insert>
+    <insert id="commentsInsert" parameterType="inqueryComment">
+        <!--		<selectKey resultType="int" order="BEFORE" keyProperty="num">-->
+        <!--			select nvl(max(num),0)+1 from inquery_comm-->
+        <!--		</selectKey>-->
+        insert into inquery_comm
+        (num, id, content, reg_date, comment_board_num,
+        comment_re_level, comment_re_sequence, comment_re_referer)
+        values
+        (NULL, #{id}, #{content}, NOW(), #{commentBoardNum},
+        #{commentReLevel}, #{commentReSequence}, #{commentReReferer})
+    </insert>
 
-	<!-- 2024-05-08 $=abc, #='abc' -->
-	<select id="getCommentList" parameterType="map" resultType="inqueryComment">
-		select num, inquery_comm.id, content, reg_date,
-		comment_re_lev, comment_re_seq, comment_re_ref
-		from     inquery_comm join users
-		on       inquery_comm.id = users.id
-		<where>
-			comment_board_num = #{comment_board_num}
-		</where>
-		order by comment_re_ref ${sort}, comment_re_seq asc
-	</select>
+    <!-- 2024-05-08 $=abc, #='abc' -->
+    <select id="getCommentList" parameterType="map" resultType="inqueryComment">
+        select num, inquery_comm.id, content, reg_date,
+        comment_re_level, comment_re_sequence, comment_re_referer
+        from inquery_comm join users
+        on inquery_comm.id = users.id
+        <where>
+            comment_board_num = #{commentBoardNum}
+        </where>
+        order by comment_re_referer ${sort}, comment_re_sequence asc
+    </select>
 
-	<update id="commentsUpdate">
-		update inquery_comm
-		set	   content=#{content}
-		where  num = #{num}
-	</update>
+    <update id="commentsUpdate">
+        update inquery_comm
+        set content=#{content}
+        where num = #{num}
+    </update>
 
-	<delete id="commentsDelete">
-		delete inquery_comm
-		where  num = #{num}
-	</delete>
+    <delete id="commentsDelete">
+        delete inquery_comm where num = #{num}
+    </delete>
 
-	<update id="commentReplyUpdate">
-		update inquery_comm
-		set	   comment_re_seq = comment_re_seq + 1
-		where  comment_re_ref = #{comment_re_ref}
-		and	   comment_re_seq <![CDATA[ > ]]> #{comment_re_seq}
-	</update>
+    <update id="commentReplyUpdate">
+        update inquery_comm
+        set comment_re_sequence = comment_re_sequence + 1
+        where comment_re_referer = #{commentReReferer}
+        and comment_re_sequence <![CDATA[ > ]]> #{commentReSequence}
+    </update>
 
-	<insert id="commentReply">
-		<selectKey resultType="int" order="BEFORE" keyProperty="num">
-			select IFNULL(MAX(num),0)+1 from inquery_comm
-		</selectKey>
-		insert into inquery_comm
-		(num, id, content, reg_date, comment_board_num,
-		comment_re_lev, comment_re_seq, comment_re_ref)
-		values
-		(#{num}, #{id}, #{content}, NOW(), #{comment_board_num},
-		#{comment_re_lev}, #{comment_re_seq}, #{comment_re_ref})
-	</insert>
+    <insert id="commentReply">
+        <selectKey resultType="int" order="BEFORE" keyProperty="num">
+            select IFNULL(MAX(num),0)+1 from inquery_comm
+        </selectKey>
+        insert into inquery_comm
+        (num, id, content, reg_date, comment_board_num,
+        comment_re_level, comment_re_sequence, comment_re_referer)
+        values
+        (#{num}, #{id}, #{content}, NOW(), #{commentBoardNum},
+        #{commentReLevel}, #{commentReSequence}, #{commentReReferer})
+    </insert>
 </mapper>

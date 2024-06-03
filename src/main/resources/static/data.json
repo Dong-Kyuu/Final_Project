@@ -1,0 +1,122 @@
+[
+  {
+    "_id": 1,
+    "title": "프로젝트1",
+    "description": "대충프로젝트 내용",
+    "start": "2024-04-01T09:30",
+    "end": "2024-04-07T15:00",
+    "type": "팀장",
+    "username": "홍길동",
+    "backgroundColor": "#D25565",
+    "textColor": "#ffffff",
+    "allDay": false
+  },
+  {
+    "_id": 2,
+    "title": "프로젝트2",
+    "description": "프로젝트2 내용",
+    "start": "2024-04-01T12:30",
+    "end": "2024-04-01T15:30",
+    "type": "팀장",
+    "username": "횡귈됭",
+    "backgroundColor": "#9775fa",
+    "textColor": "#ffffff",
+    "allDay": false
+  },
+  {
+    "_id": 3,
+    "title": "연차",
+    "description": "병원 방문으로 인한 연차",
+    "start": "2024-04-12",
+    "end": "2024-04-12",
+    "type": "사원",
+    "username": "김아픔",
+    "backgroundColor": "#ffa94d",
+    "textColor": "#ffffff",
+    "allDay": true
+  },
+  {
+    "_id": 4,
+    "title": "연차",
+    "description": "디즈니랜드",
+    "start": "2024-04-06",
+    "end": "2024-04-06",
+    "type": "사원",
+    "username": "김꿀벌",
+    "backgroundColor": "#74c0fc",
+    "textColor": "#ffffff",
+    "allDay": true
+  },
+  {
+    "_id": 5,
+    "title": "연차",
+    "description": "시장투어with쿠킹클래스",
+    "start": "2024-04-08",
+    "end": "2024-04-08",
+    "type": "사원",
+    "username": "김요리",
+    "backgroundColor": "#f06595",
+    "textColor": "#ffffff",
+    "allDay": true
+  },
+  {
+    "_id": 6,
+    "title": "프로젝트2",
+    "description": "프로젝트 내용",
+    "start": "2024-04-14",
+    "end": "2024-04-14",
+    "type": "팀장",
+    "username": "어드민",
+    "backgroundColor": "#63e6be",
+    "textColor": "#ffffff",
+    "allDay": true
+  },
+  {
+    "_id": 7,
+    "title": "연차",
+    "description": "휴가 여행",
+    "start": "2024-04-18",
+    "end": "2024-04-20",
+    "type": "팀장",
+    "username": "김매출",
+    "backgroundColor": "#a9e34b",
+    "textColor": "#ffffff",
+    "allDay": true
+  },
+  {
+    "_id": 8,
+    "title": "프로젝트3",
+    "description": "프로젝트 내용",
+    "start": "2024-04-24T09:00",
+    "end": "2024-04-24T10:00",
+    "type": "팀장",
+    "username": "김계획",
+    "backgroundColor": "#4d638c",
+    "textColor": "#ffffff",
+    "allDay": false
+  },
+  {
+    "_id": 9,
+    "title": "회사 운동회",
+    "description": "운동회 내용",
+    "start": "2024-04-28",
+    "end": "2024-04-31",
+    "type": "대표",
+    "username": "김대표",
+    "backgroundColor": "#495057",
+    "textColor": "#ffffff",
+    "allDay": true
+  },
+  {
+    "_id": 10,
+    "title": "프로젝트4",
+    "description": "프로젝트 내용",
+    "start": "2024-04-15",
+    "end": "2024-04-22",
+    "type": "팀장",
+    "username": "김계중",
+    "backgroundColor": "#9775fa",
+    "textColor": "#ffffff",
+    "allDay": true
+  }
+]

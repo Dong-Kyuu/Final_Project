@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.Table.BoardMapper">
+    <select id="getListCount" resultType="int">
+        SELECT COUNT(*)
+        FROM board
+    </select>
+
+    <select id="getBoardList" parameterType="map" resultType="com.example.jhta_3team_finalproject.domain.Table.Board">
+        SELECT *
+        FROM (SELECT (@rownum := @rownum + 1) AS rnum, b.*
+              FROM (SELECT board.*, COALESCE(comm.cnt, 0) AS cnt
+                    FROM board
+                             LEFT JOIN (SELECT board_num, COUNT(*) AS cnt
+                                        FROM table_comments
+                                        GROUP BY board_num) comm
+                                       ON comm.board_num = board.board_num
+                    ORDER BY BOARD_RE_REF DESC, BOARD_RE_SEQ ASC) b,
+                   (SELECT @rownum := 0) r) temp
+        WHERE rnum BETWEEN #{start} AND #{end}
+    </select>
+
+    <insert id="insertBoard">
+        <selectKey resultType="int" order="BEFORE" keyProperty="BOARD_NUM">
+            SELECT IFNULL(MAX(BOARD_NUM), 0) + 1 FROM board
+        </selectKey>
+        INSERT INTO board
+        (BOARD_NUM,
+        BOARD_NAME, BOARD_ID, BOARD_SUBJECT,
+        BOARD_CONTENT, BOARD_RE_REF, BOARD_RE_LEV,
+        BOARD_RE_SEQ, BOARD_READCOUNT, BOARD_DATE)
+        VALUES
+        (#{BOARD_NUM},
+        #{BOARD_NAME}, #{BOARD_ID}, #{BOARD_SUBJECT},
+        #{BOARD_CONTENT}, #{BOARD_NUM}, #{BOARD_RE_LEV},
+        #{BOARD_RE_SEQ}, #{BOARD_READCOUNT}, NOW())
+    </insert>
+
+    <update id="setReadCountUpdate">
+        UPDATE board
+        SET BOARD_READCOUNT = BOARD_READCOUNT + 1
+        WHERE BOARD_NUM = #{number}
+    </update>
+
+    <select id="getDetail" resultType="board">
+        select *
+        from board
+        where BOARD_NUM = #{number}
+    </select>
+
+    <delete id="boardDelete">
+		<![CDATA[
+            DELETE FROM board
+            WHERE BOARD_RE_REF = #{BOARD_RE_REF}
+            AND BOARD_RE_LEV >= #{BOARD_RE_LEV}
+            AND BOARD_RE_SEQ >= #{BOARD_RE_SEQ}
+            AND BOARD_RE_SEQ <= (
+                SELECT seq_val FROM (
+                    SELECT IFNULL(
+                        (SELECT MIN(board_re_seq) - 1
+                         FROM board
+                         WHERE board_re_ref = #{BOARD_RE_REF}
+                         AND board_re_lev = #{BOARD_RE_LEV}
+                         AND board_re_seq > #{BOARD_RE_SEQ}),
+                        (SELECT MAX(board_re_seq)
+                         FROM board
+                         WHERE board_re_ref = #{BOARD_RE_REF})
+                    ) AS seq_val
+                ) AS temp_table
+            )
+        ]]>
+	</delete>
+</mapper>

@@ -67,7 +67,7 @@
                                                                         </th:block>
                                                                         <img th:src	= "@{/image/line.gif}" 	th:if 	= "${b.BOARD_RE_LEV != 0}" />
                                                                         <a th:href = "@{'detail?num=' + ${b.BOARD_NUM}}">
-                                                                            <span th:text = "${b.BOARD_SUBJECT}"></span>
+                                                                            <span>[[${#strings.abbreviate(b.BOARD_SUBJECT,25)}]]</span>
                                                                             <span class	= "gray" th:text = "'[' + ${b.CNT} + ']'"></span>
                                                                         </a>
                                                                     </div>
@@ -80,26 +80,27 @@
                                                     </th:block>
                                                 </tbody>
                                             </table>
+
                                             <div class = "container ">
                                                 <div class = "center-block mt-5">
                                                     <ul class = "pagination justify-content-center">
                                                         <li class = "page-item">
                                                             <a class = "page-link"
                                                                th:classappend = "${page<=1} ? 'gray' : ''"
-                                                               th:href = "${page>1} ? 'list?page=' + ${page -1} : ''">
+                                                               th:href = "${page>1} ? 'freelist?page=' + ${page -1} : ''">
                                                                     이전&nbsp;
                                                             </a>
                                                         </li>
                                                         <li th:class = "${a == page} ? 'page-item active' : 'page-item'"
                                                             th:each = "a : ${#numbers.sequence(startpage, endpage)}">
-                                                            <a th:href = "${a == page} ? '' : 'list?page=' + ${a}" class = "page-link">
+                                                            <a th:href = "${a == page} ? '' : 'freelist?page=' + ${a}" class = "page-link">
                                                                 <span th:text = "${a}"></span>
                                                             </a>
                                                         </li>
                                                         <li class = "page-item">
                                                             <a class = "page-link"
                                                                th:classappend = "${page >= maxpage} ? 'gray' : ''"
-                                                               th:href = "${page < maxpage} ? 'list?page=' + ${page+1} : ''">다음&nbsp;</a>
+                                                               th:href = "${page < maxpage} ? 'freelist?page=' + ${page+1} : ''">다음&nbsp;</a>
                                                         </li>
                                                     </ul>
                                                 </div>
