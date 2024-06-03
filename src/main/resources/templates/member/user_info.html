@@ -96,7 +96,7 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a th:href="@{/user/info}">내 정보</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><a th:href="@{/user/updateProcess}">내 정보 수정</a></li>
+                            <li class="breadcrumb-item active" aria-current="page"><a th:href="@{/user/update}">내 정보 수정</a></li>
                         </ol>
                     </nav>
                 </div>
@@ -106,8 +106,8 @@
                             <div class="card-body">
                                 <h4 class="card-title">내 프로필</h4>
                                 <div class="form-group">
-                                    <th:block th:with="profilePicture=${#authentication.principal.profile_picture}">
-                                        <img th:src="@{|/image/${profilePicture}|}" alt="image" class="profile-img">
+                                    <th:block th:with="profilePicture=${#strings.replace(#authentication.principal.profile_picture, '\\', '/')}">
+                                        <img th:src="@{|/upload/user${#authentication.principal.getProfile_picture()}|}" class="profile-img">
                                     </th:block>
                                 </div>
                                 <div class="form-group">
@@ -167,17 +167,23 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="form-group">
-                                        <label>File upload</label>
-                                        <input type="file" name="img[]" class="file-upload-default">
+                                        <label for="profileImageUpload">프로필 사진</label>
+                                        <input type="file" name="profilePictureFile" class="file-upload-default" id="profileImageUpload" onchange="previewProfileImage(event)" th:value="${memberinfo.profile_picture}">
                                         <div class="input-group col-xs-12">
-                                            <input type="text" class="form-control file-upload-info no-outline no-click" disabled placeholder="Upload Image">
+                                            <input type="text" class="form-control file-upload-info no-outline" id="fileNameDisplay" disabled placeholder="Upload Image">
                                             <span class="input-group-append">
-                                                <button class="btn btn-outline-secondary btn-icon-text" type="button">
-                                                    <i class="mdi mdi-upload btn-icon-prepend"></i> Upload </button>
+                                                <button class="btn btn-outline-secondary btn-icon-text" type="button" onclick="triggerFileUpload()">
+                                                    <i class="mdi mdi-upload btn-icon-prepend"></i> 업로드
+                                                </button>
                                             </span>
                                         </div>
                                     </div>
+                                    <button type="submit" class="btn btn-gradient-dark btn-rounded btn-fw">저장</button>
+                                    <button type="reset" class="btn btn-gradient-light btn-rounded btn-fw" onclick="location.href='/user/info'">취소</button>
+                                </form>
+                            </div>
                                 </form>
                             </div>
                         </div>
@@ -202,13 +208,26 @@
 <script th:src="@{/assets/js/off-canvas.js}"></script>
 <script th:src="@{/assets/js/hoverable-collapse.js}"></script>
 <script th:src="@{/assets/js/misc.js}"></script>
-<script>
+<script th:inline="javascript">
     function formatPhoneNumber(input) {
-        // Remove all non-numeric characters
         let phone = input.value.replace(/\D/g, '');
-        // Apply formatting
         phone = phone.replace(/^(\d{3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
         input.value = phone;
+    }
+    function triggerFileUpload() {
+        document.getElementById('profileImageUpload').click();
+    }
+    function previewProfileImage(event) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var output = document.getElementById('profileImg');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+
+        // Display the selected file name
+        var fileName = event.target.files[0].name;
+        document.getElementById('fileNameDisplay').value = fileName;
     }
 </script>
 <!-- endinject -->

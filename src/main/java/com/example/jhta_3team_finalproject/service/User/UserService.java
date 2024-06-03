@@ -1,6 +1,6 @@
-package com.example.jhta_3team_finalproject.service;
+package com.example.jhta_3team_finalproject.service.User;
 
-import com.example.jhta_3team_finalproject.domain.User;
+import com.example.jhta_3team_finalproject.domain.User.User;
 
 public interface UserService {
 
@@ -10,7 +10,7 @@ public interface UserService {
 
     public int join(User user);
 
-    public User user_info(String id);
+    public User user_info(String num);
 
     public int update(User user);
 

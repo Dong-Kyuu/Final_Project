@@ -1,35 +1,44 @@
 package com.example.jhta_3team_finalproject.controller;
 
+import com.example.jhta_3team_finalproject.util.PagingUtil;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import com.example.jhta_3team_finalproject.service.UserService;
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
+import com.example.jhta_3team_finalproject.service.User.UserService;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.File;
+import java.util.Calendar;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
+import java.util.Random;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import com.example.jhta_3team_finalproject.domain.User;
+import com.example.jhta_3team_finalproject.domain.User.User;
+
+import java.io.*;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    @Value("${my.savefolder}")
+    private String saveFolder;
     private UserService userService;
     private PasswordEncoder passwordEncoder;
+
 
     @Autowired
     public UserController(UserService userService, PasswordEncoder passwordEncoder) {
@@ -127,16 +136,33 @@ public class UserController {
     }
 
 
-    //수정하기 저장
-    @RequestMapping(value = "/updateProcess", method= RequestMethod.POST)
-    public String UpdateProcess(User user, Model model,
+    //회원 수정 저장
+    @RequestMapping(value = "/updateProcess", method = RequestMethod.POST)
+    public String updateProcess(User user, Model model,
                                 RedirectAttributes rattr,
-                                HttpServletRequest request) {
+                                HttpServletRequest request,
+                                @RequestParam("profilePictureFile") MultipartFile uploadfile) throws IOException {
+
+        if (!uploadfile.isEmpty()) {
+            String fileName = uploadfile.getOriginalFilename();
+            String fileDBName = fileDBName(fileName, saveFolder);
+            logger.info("fileDBName = " + fileDBName);
+
+            File destinationFile = new File(saveFolder + fileDBName);
+            uploadfile.transferTo(destinationFile);
+            logger.info("File saved to: " + destinationFile.getAbsolutePath());
+
+            user.setProfile_picture(fileDBName);
+        }
         int result = userService.update(user);
+
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         logger.info("Updating user: " + user);
         logger.info("Update result: " + result);
-        //삽입이 된 경우
+
         if (result == 1) {
             rattr.addFlashAttribute("result", "updateSuccess");
             return "redirect:/user/info";
@@ -147,6 +173,57 @@ public class UserController {
         }
     }
 
+    private String fileDBName(String fileName, String saveFolder) {
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH) + 1;
+        int date = c.get(Calendar.DATE);
+
+        String homedir = saveFolder + "/" + year + "-" + month + "-" + date;
+        logger.info(homedir);
+        File path1 = new File(homedir);
+        if (!path1.exists()) {
+            path1.mkdirs();
+        }
+
+        Random r = new Random();
+        int random = r.nextInt(100000000);
+
+        int index = fileName.lastIndexOf(".");
+        String fileExtension = fileName.substring(index + 1);
+        logger.info("fileExtension = " + fileExtension);
+
+        String refileName = "bbs" + year + month + date + random + "." + fileExtension;
+        logger.info("refileName = " + refileName);
+
+        String fileDBName = "/" + year + "-" + month + "-" + date + "/" + refileName;
+        logger.info("fileDBName = " + fileDBName);
+
+        return fileDBName;
+    }
+
+//    //사원 출퇴근 관리
+//    @RequestMapping(value = "/commute")
+//    public String user_copmmute(@RequestParam(value = "page", defaultValue = "1") int page, ModelAndView mv) {
+//
+//        int limit = 10;  // 한 화면에 출력할 로우 갯수
+//        int listcount = userService.getListCount();  // 총 리스트 수를 받아옴
+//
+//        PagingUtil.Paging paging= PagingUtil.getPaging(page, limit, listcount);
+//
+//        mv.addObject("page", paging.getPage());
+//        mv.addObject("maxpage", paging.getMaxpage());
+//        mv.addObject("startpage", paging.getStartpage());
+//        mv.addObject("endpage", paging.getEndpage());
+//
+//
+//        mv.setViewName("member/commute");
+//        return "member/commute";
+//    }
+
+    //직원 근태 관리
+    //직원 정보 관리
+    //신규 등록 사원
 
 }
 

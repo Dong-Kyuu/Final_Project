@@ -18,39 +18,48 @@
             display: block;
             margin: 0 auto;
         }
+
         .profile-card {
             border: none;
             text-align: center;
             margin: 0 auto;
         }
+
         .profile-info {
             padding: 20px;
         }
+
         .profile-label {
             font-weight: bold;
             margin-top: 10px;
         }
+
         .profile-text {
             margin-bottom: 10px;
         }
+
         .no-outline:focus {
             outline: none;
         }
+
         .content-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
         .profile-section {
             display: flex;
             align-items: flex-start;
             width: 100%;
             gap: 20px;
         }
+
         .form-section {
             width: 100%;
             max-width: 800px;
         }
+
         .page-header {
             display: flex;
             justify-content: space-between;
@@ -59,12 +68,15 @@
             padding: 0 20px;
             box-sizing: border-box;
         }
+
         .breadcrumb {
             margin-top: 0;
         }
+
         .no-click {
             pointer-events: none;
         }
+
         .form-control.no-click {
             background-color: white;
         }
@@ -81,8 +93,9 @@
                     <h4 class="page-title">내 정보 수정</h4>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a th:href="@{/user/info}">내 정보</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><a th:href="@{/user/updateProcess}">내 정보 수정</a></li>
+                            <!--<li class="breadcrumb-item"><a th:href="@{/user/info}">내 정보</a></li>-->
+                            <li class="breadcrumb-item active" aria-current="page"><a th:href="@{/user/update}">내 정보
+                                수정</a></li>
                         </ol>
                     </nav>
                 </div>
@@ -90,21 +103,28 @@
                     <div class="col-md-3 grid-margin stretch-card">
                         <div class="card profile-card">
                             <div class="card-body">
+                                <input type="hidden" name="id" th:value="${#authentication.principal.id}">
                                 <h4 class="card-title">내 프로필</h4>
                                 <div class="form-group">
-                                    <img id="profileImg" th:src="@{|/image/${#authentication.principal.profile_picture}|}" alt="image" class="profile-img">
+
+                                    <img th:src="@{|/upload/user${#authentication.principal.getProfile_picture()}|}"
+                                         class="profile-img">
+
+                                    <!--<th:block th:if="${#authentication.principal.profile_picture} == 'default.png'"}>
+                                        <img id="profileImg" th:src="@{|/upload/user/${#authentication.principal.profile_picture}|}" alt="image" class="profile-img">
+                                    </th:block>-->
                                 </div>
                                 <div class="form-group">
                                     <label class="profile-label">이름</label>
-                                    <p class="profile-text text-black" th:text="${#authentication.principal.name}"></p>
+                                    <p class="profile-text text-black" th:text="${memberinfo.name}"></p>
                                 </div>
                                 <div class="form-group">
                                     <label class="profile-label">부서</label>
-                                    <p class="profile-text text-black" th:text="${#authentication.principal.department}"></p>
+                                    <p class="profile-text text-black" th:text="${memberinfo.department}"></p>
                                 </div>
                                 <div class="form-group">
                                     <label class="profile-label">직급</label>
-                                    <p class="profile-text text-black" th:text="${#authentication.principal.position}"></p>
+                                    <p class="profile-text text-black" th:text="${memberinfo.position}"></p>
                                 </div>
                             </div>
                         </div>
@@ -113,46 +133,62 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">내 정보 </h4>
-                                <form class="forms-sample" th:action="@{/user/updateProcess}" method="post" enctype="multipart/form-data">
+                                <form class="forms-sample" th:action="@{/user/updateProcess}" method="post"
+                                      enctype="multipart/form-data">
+                                    <input type="hidden" name="id" th:value="${memberinfo.id}">
                                     <div class="form-group">
                                         <label for="exampleInputName1">이름</label>
-                                        <input type="text" class="form-control no-outline" id="exampleInputName1" name="name" th:value="${#authentication.principal.name}">
+                                        <input type="text" class="form-control no-outline" id="exampleInputName1"
+                                               name="name" th:value="${memberinfo.name}">
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail3">이메일</label>
-                                        <input type="email" class="form-control no-outline" id="exampleInputEmail3" name="email" th:value="${#authentication.principal.email}">
+                                        <input type="email" class="form-control no-outline" id="exampleInputEmail3"
+                                               name="email" th:value="${memberinfo.email}">
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputPhone">핸드폰 번호</label>
-                                        <input type="text" class="form-control no-outline" id="exampleInputPhone" name="phone_number" th:value="${#authentication.principal.phone_number}" oninput="formatPhoneNumber(this)">
+                                        <input type="text" class="form-control no-outline" id="exampleInputPhone"
+                                               name="phone_number" th:value="${memberinfo.phone_number}"
+                                               oninput="formatPhoneNumber(this)">
                                     </div>
                                     <div class="form-group">
                                         <label>성별</label>
                                         <div>
                                             <div class="orm-check form-check-flat form-check-primary">
                                                 <label class="form-check-label">
-                                                    <input class="form-check-input" type="radio" name="gender" id="genderMale" th:checked="${#authentication.principal.gender} == 'M'" > 남
+                                                    <input class="form-check-input" type="radio" name="gender"
+                                                           id="genderMale" th:value="M"
+                                                           th:checked="${memberinfo.gender == 'M'}"> 남
                                                 </label>
                                                 <label class="form-check-label">
-                                                    <input class="form-check-input" type="radio" name="gender" id="genderFemale" th:checked="${#authentication.principal.gender} == 'F'" > 여
+                                                    <input class="form-check-input" type="radio" name="gender"
+                                                           id="genderFemale" th:value="F"
+                                                           th:checked="${memberinfo.gender == 'F'}"> 여
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="profileImageUpload">프로필 사진</label>
-                                        <input type="file" name="profilePictureFile" class="file-upload-default" id="profileImageUpload" th:onchange="previewProfileImage(event)">
+                                        <input type="file" name="profilePictureFile" class="file-upload-default"
+                                               id="profileImageUpload" onchange="previewProfileImage(event)"
+                                               th:value="${memberinfo.profile_picture}">
                                         <div class="input-group col-xs-12">
-                                            <input type="text" class="form-control file-upload-info no-outline" id="fileNameDisplay" disabled placeholder="Upload Image">
+                                            <input type="text" class="form-control file-upload-info no-outline"
+                                                   id="fileNameDisplay" disabled placeholder="Upload Image">
                                             <span class="input-group-append">
-                                                <button class="btn btn-outline-secondary btn-icon-text" type="button" onclick="triggerFileUpload()">
+                                                <button class="btn btn-outline-secondary btn-icon-text" type="button"
+                                                        onclick="triggerFileUpload()">
                                                     <i class="mdi mdi-upload btn-icon-prepend"></i> 업로드
                                                 </button>
                                             </span>
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-gradient-dark btn-rounded btn-fw">저장</button>
-                                    <button type="reset" class="btn btn-gradient-light btn-rounded btn-fw" onclick="location.href='/user/info'">취소</button>
+                                    <button type="reset" class="btn btn-gradient-light btn-rounded btn-fw"
+                                            onclick="location.href='/user/info'">취소
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -167,18 +203,21 @@
 <script th:src="@{/assets/js/off-canvas.js}"></script>
 <script th:src="@{/assets/js/hoverable-collapse.js}"></script>
 <script th:src="@{/assets/js/misc.js}"></script>
-<script>
+
+<script th:inline="javascript">
     function formatPhoneNumber(input) {
         let phone = input.value.replace(/\D/g, '');
         phone = phone.replace(/^(\d{3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
         input.value = phone;
     }
+
     function triggerFileUpload() {
         document.getElementById('profileImageUpload').click();
     }
+
     function previewProfileImage(event) {
         var reader = new FileReader();
-        reader.onload = function() {
+        reader.onload = function () {
             var output = document.getElementById('profileImg');
             output.src = reader.result;
         };
