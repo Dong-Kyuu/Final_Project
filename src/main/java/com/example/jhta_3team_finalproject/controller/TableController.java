@@ -5,10 +5,12 @@ import com.example.jhta_3team_finalproject.domain.Table.Table_Files;
 import com.example.jhta_3team_finalproject.service.table.BoardService;
 import com.example.jhta_3team_finalproject.service.table.TableCommentService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -216,6 +218,33 @@ public class TableController {
             rattr.addFlashAttribute("result", "deleteSuccess");
             return "redirect:freelist";
         }
+    }
+
+    @ResponseBody
+    @PostMapping("/down")
+    public byte[] BoardFileDown(String filename,
+                                HttpServletRequest request,
+                                String original,
+                                HttpServletResponse response) throws Exception {
+
+        // String savePath = "resources/upload";
+        // 서블릿의 실행 환경 정보를 담고 있는 객체를 리터한다.
+        // ServletContext context = request.getSession().getServletContext();
+        // String sDownloadPath = context.getRealPath(savePath);
+        // 수정
+        String sFilePath = saveFolder + filename;
+
+        File file = new File(sFilePath);
+
+        byte[] bytes = FileCopyUtils.copyToByteArray(file);
+
+        String sEncoding = new String(original.getBytes("utf-8"), "ISO-8859-1");
+
+        // Context-Disposition : attachment : 브라우저는 해당 Context를 처리하지 않고, 다운로드 하게 된다.
+        response.setHeader("Content-Disposition", "attachment;filename=" + sEncoding);
+
+        response.setContentLength(bytes.length);
+        return bytes;
     }
 
     @GetMapping("/t")

@@ -8,4 +8,21 @@
         from table_comments
         where board_num = #{board_num}
     </select>
+
+    <select id = "getCommentList" resultType = "comment">
+        SELECT *
+        FROM (
+            SELECT *
+            FROM table_comments
+            WHERE board_num = #{board_num}
+            ORDER BY comm_regdate DESC
+        ) AS subquery
+            LIMIT #{start}, #{end};
+    </select>
+
+    <insert id = "commentsInsert">
+        insert into table_comments(comm_id, comm_name, comm_profile, comm_content, board_num, comm_regdate)
+        values(#{comm_id}, #{comm_name}, #{comm_profile}, #{comm_content}, #{board_num}, NOW())
+    </insert>
+
 </mapper>
