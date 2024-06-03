@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="Male_Fashion Template">
-    <meta name="keywords" content="Male_Fashion, unica, creative, html">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>상품 리스트 페이지</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Purple Admin</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="../../assets/images/favicon.ico"/>
 
-    <!-- Css Styles -->
     <link rel="stylesheet" href="/css/mainpage/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="/css/mainpage/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="/css/mainpage/elegant-icons.css" type="text/css">
@@ -22,217 +31,239 @@
             /* 이미지가 잘릴 수 없도록 설정 */
             background-position: center;
             /* 배경 이미지가 적용된 div의 크기를 지정 */
-            width: 100%;
-            height: 350px; /* 이미지의 높이를 원하는 값으로 지정 */
+            height: 80%;
         }
 
         .product__item__text a{
             top:30px;
         }
 
+        .product__item {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .product__item a {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .product__item__text {
+            padding: 15px;
+            text-align: center;
+            display: block;
+
+        }
+
+        .product__item__text h6 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .product__item__text h5 {
+            font-size: 16px;
+            color: #ff5722;
+            margin-bottom: 10px;
+        }
+
+        .col-lg-2{
+            padding-top:140px;
+        }
+
+        .content-wrapper{
+            padding: 2.5rem 6.5rem;
+        }
     </style>
 </head>
-
 <body>
-<!-- Page Preloder -->
-<div id="preloder">
-    <div class="loader"></div>
-</div>
+<div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_sidebar.html -->
+        <div class="col-lg-2">
+            <div class="shop__sidebar">
+                <div class="shop__sidebar__search">
+                    <form action="#">
+                        <input type="text" name="keyword" placeholder="Search..." th:value="${keyword}" onchange="sortProducts()">
+                        <button type="submit"> <i class="mdi mdi-magnify"></i></button>
+                    </form>
+                </div>
+                <div class="shop__sidebar__accordion">
+                    <div class="accordion" id="accordionExample">
+                        <div class="card">
+                            <div class="card-heading">
+                                <a data-toggle="collapse" data-target="#collapseOne">20's유럽패키지<i class="mdi mdi-chevron-down"></i>
+                                </a>
+                            </div>
+                            <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <div class="shop__sidebar__categories">
+                                        <ul class="nice-scroll">
+                                            <li><a href="tripPage">전체보기</a></li>
+                                            <li><a href="tripPage?category=WEU">서유럽</a></li>
+                                            <li><a href="tripPage?category=CEU">센트럴유럽</a></li>
+                                            <li><a href="tripPage?category=EEU">동유럽</a></li>
+                                            <li><a href="tripPage?category=SEU">스위트유럽 22일</a></li>
+                                            <li><a href="tripPage?category=DEU">돌체비타유럽 26일</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-heading">
+                                <a data-toggle="collapse" data-target="#collapseTwo">Continent<i class="mdi mdi-chevron-down"></i>
+                                </a>
+                            </div>
+                            <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <div class="shop__sidebar__brand">
+                                        <ul>
+                                            <li><a href="#">America</a></li>
+                                            <li><a href="#">Europe</a></li>
+                                            <li><a href="#">Asia</a></li>
+                                            <li><a href="#">Africa</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-heading">
+                                <a data-toggle="collapse" data-target="#collapseThree">Filter Price<i class="mdi mdi-chevron-down"></i>
+                                </a>
+                            </div>
+                            <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
+                                <div class="card-body">
+                                    <div class="shop__sidebar__price">
+                                        <ul>
+                                            <li><a href="#">$0.00 - $50.00</a></li>
+                                            <li><a href="#">$50.00 - $100.00</a></li>
+                                            <li><a href="#">$100.00 - $150.00</a></li>
+                                            <li><a href="#">$150.00 - $200.00</a></li>
+                                            <li><a href="#">$200.00 - $250.00</a></li>
+                                            <li><a href="#">250.00+</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-<!-- Header Section Begin -->
-<!--
-<div th:if="${empty member_id}">
-    <div th:replace="../mainpage/header :: header"></div>
-</div>
-
-<div th:if="${!empty member_id}">
-    <div th:replace="../member/memberHeader :: header"></div>
-</div>
--->
-<!-- Header Section End -->
-
-<!-- Breadcrumb Section Begin -->
-<section class="breadcrumb-option">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb__text">
-                    <h4>Shop</h4>
-                    <div class="breadcrumb__links">
-                        <a href="./index.html">Home</a>
-                        <span>Shop</span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-<!-- Breadcrumb Section End -->
+        <!-- partial -->
+        <div class="col-lg-10">
+            <div class="content-wrapper">
+                <!-- Shop Section Begin -->
+                <section class="shop spad">
+                    <div class="container">
 
-<!-- Shop Section Begin -->
-<section class="shop spad">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="shop__sidebar">
-                    <div class="shop__sidebar__search">
-                        <form action="#">
-                            <input type="text" name="keyword" placeholder="Search..." th:value="${keyword}" onchange="sortProducts()">
-                            <button type="submit"><span class="icon_search"></span></button>
-                        </form>
-                    </div>
-                    <div class="shop__sidebar__accordion">
-                        <div class="accordion" id="accordionExample">
-                            <div class="card">
-                                <div class="card-heading">
-                                    <a data-toggle="collapse" data-target="#collapseOne">20's유럽패키지</a>
-                                </div>
-                                <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                        <div class="shop__sidebar__categories">
-                                            <ul class="nice-scroll">
-                                                <li><a href="tripPage">전체보기</a></li>
-                                                <li><a href="tripPage?category=WEU">서유럽</a></li>
-                                                <li><a href="tripPage?category=CEU">센트럴유럽</a></li>
-                                                <li><a href="tripPage?category=EEU">동유럽</a></li>
-                                                <li><a href="tripPage?category=SEU">스위트유럽 22일</a></li>
-                                                <li><a href="tripPage?category=DEU">돌체비타유럽 26일</a></li>
-                                            </ul>
+
+                                <!-- 상품페이지 상단 -->
+                                <div class="shop__product__option">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                            <div class="shop__product__option__left">
+                                                <p th:text="'Showing ' + ${pagefirst} + '-' + ${pagelast} + ' of ' + ${listcount} + ' results'"></p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                            <div class="shop__product__option__right">
+                                                <p>Sort by - </p>
+                                                <select id="sortSelect" onchange="sortProducts()">
+                                                    <option value="date_asc" th:selected="${sort == 'date_asc'}">&nbsp; DATE (oldest)</option>
+                                                    <option value="date_desc" th:selected="${sort == 'date_desc'}">&nbsp; DATE (newest)</option>
+                                                    <option value="price_high" th:selected="${sort == 'price_high'}">&nbsp; Price (high to low)</option>
+                                                    <option value="price_low" th:selected="${sort == 'price_low'}">&nbsp; Price (low to high)</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-heading">
-                                    <a data-toggle="collapse" data-target="#collapseTwo">Continent</a>
-                                </div>
-                                <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                        <div class="shop__sidebar__brand">
-                                            <ul>
-                                                <li><a href="#">America</a></li>
-                                                <li><a href="#">Europe</a></li>
-                                                <li><a href="#">Asia</a></li>
-                                                <li><a href="#">Africa</a></li>
-                                            </ul>
+                                <!-- 상품페이지 상단 -->
+
+
+                                <!-- 실제 적용할 상품 리스트 -->
+
+                                <div class="row" id="productList">
+                                    <div th:each="goods : ${triplist}" class="col-lg-4 col-md-6 col-sm-12">
+                                        <div class="product__item">
+                                            <a th:href="'tripDetail?num=' + ${goods.tripNo}"> <!-- 이동 경로 -->
+                                                <div class="product__item__pic set-bg">
+                                                    <img th:src="${goods.tripMainIMG}" alt="Main Image">
+                                                </div>
+                                            </a>
+                                            <div class="product__item__text">
+                                                <h6 th:text="${goods.tripName}"></h6>
+                                                <a href="#" class="add-cart">+ Add To Cart</a>
+                                                <h5 th:text="${goods.tripPrice}/10000 + '만원'"></h5>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-heading">
-                                    <a data-toggle="collapse" data-target="#collapseThree">Filter Price</a>
-                                </div>
-                                <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
-                                    <div class="card-body">
-                                        <div class="shop__sidebar__price">
-                                            <ul>
-                                                <li><a href="#">$0.00 - $50.00</a></li>
-                                                <li><a href="#">$50.00 - $100.00</a></li>
-                                                <li><a href="#">$100.00 - $150.00</a></li>
-                                                <li><a href="#">$150.00 - $200.00</a></li>
-                                                <li><a href="#">$200.00 - $250.00</a></li>
-                                                <li><a href="#">250.00+</a></li>
-                                            </ul>
+
+                                <!-- 실제 적용할 상품 리스트 -->
+
+
+                                <!-- 페이징 처리-->
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="product__pagination">
+                                            <span th:if="${page <= 1}">&lt;&nbsp;</span>
+                                            <a th:if="${page > 1}" th:href="|?page=${page - 1}&category=${category}&sort=${sort}&keyword=${keyword}|">&lt;&nbsp;</a>
+
+                                            <th:block th:each="a : ${#numbers.sequence(startpage, endpage)}">
+                                                <a th:if="${a == page}" th:text="${a}"></a>
+                                                <a th:if="${a != page}" th:href="|?page=${a}&category=${category}&sort=${sort}&keyword=${keyword}|" th:text="${a}"></a>
+                                            </th:block>
+
+                                            <span th:if="${page >= maxpage}">&nbsp;&gt;</span>
+                                            <a th:if="${page < maxpage}" th:href="|?page=${page + 1}&category=${category}&sort=${sort}&keyword=${keyword}|">&nbsp;&gt;</a>
                                         </div>
                                     </div>
                                 </div>
+                                <!-- 페이징 처리 -->
+
                             </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-9">
-
-                <!-- 상품페이지 상단 -->
-                <div class="shop__product__option">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="shop__product__option__left">
-                                <p th:text="'Showing ' + ${pagefirst} + '-' + ${pagelast} + ' of ' + ${listcount} + ' results'"></p>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="shop__product__option__right">
-                                <p>Sort by - </p>
-                                <select id="sortSelect" onchange="sortProducts()">
-                                    <option value="date_asc" th:selected="${sort == 'date_asc'}">DATE (oldest)</option>
-                                    <option value="date_desc" th:selected="${sort == 'date_desc'}">DATE (newest)</option>
-                                    <option value="price_high" th:selected="${sort == 'price_high'}">Price (high to low)</option>
-                                    <option value="price_low" th:selected="${sort == 'price_low'}">Price (low to high)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- 상품페이지 상단 -->
-
-
-                <!-- 실제 적용할 상품 리스트 -->
-
-                <div class="row" id="productList">
-                    <div th:each="goods : ${triplist}" class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="product__item">
-                            <a th:href="'tripDetail?num=' + ${goods.tripNo}"> <!-- 이동 경로 -->
-                                <div class="product__item__pic set-bg">
-                                    <img th:src="${goods.tripMainIMG}" alt="Main Image">
-                                </div>
-                            </a>
-                            <div class="product__item__text">
-                                <h6 th:text="${goods.tripName}"></h6>
-                                <a href="#" class="add-cart">+ Add To Cart</a>
-                                <h5 th:text="${goods.tripPrice}/10000 + '만원'"></h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 실제 적용할 상품 리스트 -->
-
-
-                <!-- 리스트 페이지 샘플-->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="product__pagination">
-                            <span th:if="${page <= 1}">&lt;&nbsp;</span>
-                            <a th:if="${page > 1}" th:href="|?page=${page - 1}&category=${category}&sort=${sort}&keyword=${keyword}|">&lt;&nbsp;</a>
-
-                            <th:block th:each="a : ${#numbers.sequence(startpage, endpage)}">
-                                <a th:if="${a == page}" th:text="${a}"></a>
-                                <a th:if="${a != page}" th:href="|?page=${a}&category=${category}&sort=${sort}&keyword=${keyword}|" th:text="${a}"></a>
-                            </th:block>
-
-                            <span th:if="${page >= maxpage}">&nbsp;&gt;</span>
-                            <a th:if="${page < maxpage}" th:href="|?page=${page + 1}&category=${category}&sort=${sort}&keyword=${keyword}|">&nbsp;&gt;</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- 리스트 페이지 -->
+                </section>
 
             </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            <footer class="footer">
+                <div class="container-fluid d-flex justify-content-between">
+                    <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © bootstrapdash.com 2021</span>
+                    <span class="float-none float-sm-end mt-1 mt-sm-0 text-end"> Free <a
+                            href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin template</a> from Bootstrapdash.com</span>
+                </div>
+            </footer>
+            <!-- partial -->
         </div>
+        <!-- main-panel ends -->
     </div>
-</section>
-<!-- Shop Section End -->
-
-
-<!-- Footer Section Begin -->
-
-<!-- Footer Section End -->
-
-<!-- Search Begin -->
-<div class="search-model">
-    <div class="h-100 d-flex align-items-center justify-content-center">
-        <div class="search-close-switch">+</div>
-        <form class="search-model-form">
-            <input type="text" id="search-input" placeholder="Search here.....">
-        </form>
-    </div>
+    <!-- page-body-wrapper ends -->
 </div>
-<!-- Search End -->
-
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="../../assets/js/off-canvas.js"></script>
+<script src="../../assets/js/hoverable-collapse.js"></script>
+<script src="../../assets/js/misc.js"></script>
+<!-- endinject -->
+<!-- Custom js for this page -->
+<!-- End custom js for this page -->
 <script>
     // 옵션 변경 시 실행되는 함수
     function sortProducts() {
@@ -249,9 +280,8 @@
         window.location.href = currentUrl.href;
 
     }
-
-
 </script>
+
 <!-- Js Plugins -->
 <script th:src="@{/js/mainpage/jquery-3.3.1.min.js}"></script>
 <script th:src="@{/js/mainpage/bootstrap.min.js}"></script>
