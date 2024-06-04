@@ -106,21 +106,21 @@
                             <div class="card-body">
                                 <h4 class="card-title">내 프로필</h4>
                                 <div class="form-group">
-                                    <th:block th:with="profilePicture=${#strings.replace(#authentication.principal.profile_picture, '\\', '/')}">
-                                        <img th:src="@{|/upload/user${#authentication.principal.getProfile_picture()}|}" class="profile-img">
+                                    <th:block th:with="profilePicture=${#strings.replace(#authentication.principal.user_profile_picture, '\\', '/')}">
+                                        <img th:src="@{|/upload/user${#authentication.principal.getUser_profile_picture()}|}" class="profile-img">
                                     </th:block>
                                 </div>
                                 <div class="form-group">
                                     <label class="profile-label">이름</label>
-                                    <p class="profile-text text-black" th:text="${#authentication.principal.name}"></p>
+                                    <p class="profile-text text-black" th:text="${#authentication.principal.user_name}"></p>
                                 </div>
                                 <div class="form-group">
                                     <label class="profile-label">부서</label>
-                                    <p class="profile-text text-black" th:text="${#authentication.principal.department}"></p>
+                                    <p class="profile-text text-black" th:text="${#authentication.principal.user_department}"></p>
                                 </div>
                                 <div class="form-group">
                                     <label class="profile-label">직급</label>
-                                    <p class="profile-text text-black" th:text="${#authentication.principal.position}"></p>
+                                    <p class="profile-text text-black" th:text="${#authentication.principal.user_position}"></p>
                                 </div>
                             </div>
                         </div>
@@ -132,23 +132,23 @@
                                 <form class="forms-sample">
                                     <div class="form-group">
                                         <label for="exampleInputName1">이름</label>
-                                        <input type="text" class="form-control no-outline no-click" id="exampleInputName1" th:value="${#authentication.principal.name}" readonly>
+                                        <input type="text" class="form-control no-outline no-click" id="exampleInputName1" th:value="${#authentication.principal.user_name}" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail3">이메일</label>
-                                        <input type="email" class="form-control no-outline no-click" id="exampleInputEmail3" th:value="${#authentication.principal.email}" readonly>
+                                        <input type="email" class="form-control no-outline no-click" id="exampleInputEmail3" th:value="${#authentication.principal.user_email}" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputPhone">핸드폰 번호</label>
-                                        <input type="text" class="form-control no-outline no-click" id="exampleInputPhone" th:value="${#authentication.principal.phone_number}" oninput="formatPhoneNumber(this)" readonly>
+                                        <input type="text" class="form-control no-outline no-click" id="exampleInputPhone" th:value="${#authentication.principal.user_phone_number}" oninput="formatPhoneNumber(this)" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputDepartment">부서</label>
-                                        <input type="text" class="form-control no-outline no-click" id="exampleInputDepartment" th:value="${#authentication.principal.department}" readonly>
+                                        <input type="text" class="form-control no-outline no-click" id="exampleInputDepartment" th:value="${#authentication.principal.user_department}" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputPosition">직급</label>
-                                        <input type="text" class="form-control no-outline no-click" id="exampleInputPosition" th:value="${#authentication.principal.position}" readonly>
+                                        <input type="text" class="form-control no-outline no-click" id="exampleInputPosition" th:value="${#authentication.principal.user_position}" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputCity1">사원 번호</label>
@@ -159,10 +159,10 @@
                                         <div>
                                             <div class="orm-check form-check-flat form-check-primary">
                                                 <label class="form-check-label">
-                                                    <input class="form-check-input" type="radio" name="gender" id="genderMale" th:checked="${#authentication.principal.gender} == 'M'" disabled> 남
+                                                    <input class="form-check-input" type="radio" name="userGender" id="genderMale" th:checked="${#authentication.principal.user_gender} == 'M'" disabled> 남
                                                 </label>
                                                 <label class="form-check-label">
-                                                    <input class="form-check-input" type="radio" name="gender" id="genderFemale" th:checked="${#authentication.principal.gender} == 'F'" disabled> 여
+                                                    <input class="form-check-input" type="radio" name="userGender" id="genderFemale" th:checked="${#authentication.principal.user_gender} == 'F'" disabled> 여
                                                 </label>
                                             </div>
                                         </div>
@@ -170,7 +170,7 @@
 
                                     <div class="form-group">
                                         <label for="profileImageUpload">프로필 사진</label>
-                                        <input type="file" name="profilePictureFile" class="file-upload-default" id="profileImageUpload" onchange="previewProfileImage(event)" th:value="${memberinfo.profile_picture}">
+                                        <input type="file" name="profilePictureFile" class="file-upload-default" id="profileImageUpload" onchange="previewProfileImage(event)" th:value="${memberinfo.user_profile_picture}">
                                         <div class="input-group col-xs-12">
                                             <input type="text" class="form-control file-upload-info no-outline" id="fileNameDisplay" disabled placeholder="Upload Image">
                                             <span class="input-group-append">

@@ -103,11 +103,11 @@
                     <div class="col-md-3 grid-margin stretch-card">
                         <div class="card profile-card">
                             <div class="card-body">
-                                <input type="hidden" name="id" th:value="${#authentication.principal.id}">
+                                <input type="hidden" name="user_id" th:value="${#authentication.principal.user_id}">
                                 <h4 class="card-title">내 프로필</h4>
                                 <div class="form-group">
 
-                                    <img th:src="@{|/upload/user${#authentication.principal.getProfile_picture()}|}"
+                                    <img th:src="@{|/upload/user${#authentication.principal.getUser_profile_picture()}|}"
                                          class="profile-img">
 
                                     <!--<th:block th:if="${#authentication.principal.profile_picture} == 'default.png'"}>

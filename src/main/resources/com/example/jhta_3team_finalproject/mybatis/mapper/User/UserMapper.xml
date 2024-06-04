@@ -5,19 +5,19 @@
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.User.UserMapper">
 
     <select id="isId" >
-        SELECT * FROM users WHERE user_id = #{user_id}
+        SELECT * FROM users WHERE user_id = #{userId}
     </select>
 
     <insert id="join" >
         insert  into users
             (user_num,user_id, user_password, user_name, user_email,user_phone_number,user_department,user_gender)
-        values ( #{user_num},#{user_id},#{user_password} ,#{user_name},#{user_email},#{user_phone_number}, #{user_department},#{user_gender})
+        values ( #{userNum},#{userId},#{user_password} ,#{user_name},#{user_email},#{user_phone_number}, #{user_department},#{user_gender})
     </insert>
 
 
     <update id="update">
         UPDATE users
-        SET user_id              = #{user_id},
+        SET user_id              = #{userId},
             user_password        = #{user_password},
             employee_number      = #{employeeNumber},
             user_department      = #{user_department},

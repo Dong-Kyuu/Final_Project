@@ -52,7 +52,7 @@ public class UserServicelmpl implements UserService {
 
     @Override
     public int insert(User user) {
-        user.setUser_password(passwordEncoder.encode(user.getPassword())); // 비밀번호 암호화
+        user.setUserPassword(passwordEncoder.encode(user.getPassword())); // 비밀번호 암호화
         return dao.insert(user);
     }
 

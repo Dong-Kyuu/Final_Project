@@ -9,218 +9,213 @@ import java.util.Collection;
 
 
 public class User implements UserDetails {
-    private int user_num;
-    private String user_id;
-    private String user_password;
-    private String user_email;
-    private String employee_number;
-    private String user_name;
-    private String user_phone_number;
-    private String user_age;
-    private String user_department;
-    private String user_gender; // 기본값 설정
-    private String user_position;
-    private int user_is_approved;
-    private String user_created_at;
-    private String user_updated_at;
-    private String user_profile_picture;
-    private String user_original_profile; // 파일 저장
-    private String user_chat_status_msg;
-    private String user_auth = "ROLE_MEMBER";
+    private int userNum;
+    private String userId;
+    private String userPassword;
+    private String userEmail;
+    private String employeeNumber;
+    private String userName;
+    private String userPhoneNumber;
+    private String userAge;
+    private String userDepartment;
+    private String userGender; // 기본값 설정
+    private String userPosition;
+    private int userIsApproved;
+    private String userCreatedAt;
+    private String userUpdatedAt;
+    private String userProfilePicture;
+    private String userOriginalProfile; // 파일 저장
+    private String userChatStatusMsg;
+    private String userAuth = "ROLE_MEMBER";
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<SimpleGrantedAuthority> roles = new ArrayList<SimpleGrantedAuthority>();
 
-        roles.add(new SimpleGrantedAuthority(this.getUser_auth()));
+        roles.add(new SimpleGrantedAuthority(this.getUserAuth()));
 
         return roles;
     }
 
 
-
     @Override
     public String toString() {
         return "User{" +
-                "employee_number='" + employee_number + '\'' +
-                ", user_num=" + user_num +
-                ", user_id='" + user_id + '\'' +
-                ", user_password='" + user_password + '\'' +
-                ", user_email='" + user_email + '\'' +
-                ", user_name='" + user_name + '\'' +
-                ", user_phone_number='" + user_phone_number + '\'' +
-                ", user_age='" + user_age + '\'' +
-                ", user_department='" + user_department + '\'' +
-                ", user_gender='" + user_gender + '\'' +
-                ", user_position='" + user_position + '\'' +
-                ", user_is_approved=" + user_is_approved +
-                ", user_created_at='" + user_created_at + '\'' +
-                ", user_updated_at='" + user_updated_at + '\'' +
-                ", user_profile_picture='" + user_profile_picture + '\'' +
-                ", user_original_profile='" + user_original_profile + '\'' +
-                ", user_chat_status_msg='" + user_chat_status_msg + '\'' +
-                ", user_auth='" + user_auth + '\'' +
+                "employeeNumber='" + employeeNumber + '\'' +
+                ", userNum=" + userNum +
+                ", userId='" + userId + '\'' +
+                ", userPassword='" + userPassword + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", userName='" + userName + '\'' +
+                ", userPhone_number='" + userPhoneNumber + '\'' +
+                ", userAge='" + userAge + '\'' +
+                ", userDepartment='" + userDepartment + '\'' +
+                ", userGender='" + userGender + '\'' +
+                ", userPosition='" + userPosition + '\'' +
+                ", userIsApproved=" + userIsApproved +
+                ", userCreatedAt='" + userCreatedAt + '\'' +
+                ", userUpdatedAt='" + userUpdatedAt + '\'' +
+                ", userProfilePicture='" + userProfilePicture + '\'' +
+                ", userOriginalProfile='" + userOriginalProfile + '\'' +
+                ", userChatStatusMsg='" + userChatStatusMsg + '\'' +
+                ", userAuth='" + userAuth + '\'' +
                 '}';
     }
 
-    public String getEmployee_number() {
-        return employee_number;
+    public String getEmployeeNumber() {
+        return employeeNumber;
     }
 
-    public void setEmployee_number(String employee_number) {
-        this.employee_number = employee_number;
+    public void setEmployeeNumber(String employeeNumber) {
+        this.employeeNumber = employeeNumber;
     }
 
-    public String getUser_age() {
-        return user_age;
+    public String getUserAge() {
+        return userAge;
     }
 
-    public void setUser_age(String user_age) {
-        this.user_age = user_age;
+    public void setUserAge(String userAge) {
+        this.userAge = userAge;
     }
 
-    public String getUser_auth() {
-        return user_auth;
+    public String getUserAuth() {
+        return userAuth;
     }
 
-    public void setUser_auth(String user_auth) {
-        this.user_auth = user_auth;
+    public void setUserAuth(String userAuth) {
+        this.userAuth = userAuth;
     }
 
-    public String getUser_chat_status_msg() {
-        return user_chat_status_msg;
+    public String getUserChatStatusMsg() {
+        return userChatStatusMsg;
     }
 
-    public void setUser_chat_status_msg(String user_chat_status_msg) {
-        this.user_chat_status_msg = user_chat_status_msg;
+    public void setUserChatStatusMsg(String userChatStatusMsg) {
+        this.userChatStatusMsg = userChatStatusMsg;
     }
 
-    public String getUser_created_at() {
-        return user_created_at;
+    public String getUserCreatedAt() {
+        return userCreatedAt;
     }
 
-    public void setUser_created_at(String user_created_at) {
-        this.user_created_at = user_created_at;
+    public void setUserCreatedAt(String userCreatedAt) {
+        this.userCreatedAt = userCreatedAt;
     }
 
-    public String getUser_department() {
-        return user_department;
+    public String getUserDepartment() {
+        return userDepartment;
     }
 
-    public void setUser_department(String user_department) {
-        this.user_department = user_department;
+    public void setUserDepartment(String userDepartment) {
+        this.userDepartment = userDepartment;
     }
 
-    public String getUser_email() {
-        return user_email;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUser_email(String user_email) {
-        this.user_email = user_email;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
-    public String getUser_gender() {
-        return user_gender;
+    public String getUserGender() {
+        return userGender;
     }
 
-    public void setUser_gender(String user_gender) {
-        this.user_gender = user_gender;
+    public void setUserGender(String userGender) {
+        this.userGender = userGender;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public int getUser_is_approved() {
-        return user_is_approved;
+    public int getUserIsApproved() {
+        return userIsApproved;
     }
 
-    public void setUser_is_approved(int user_is_approved) {
-        this.user_is_approved = user_is_approved;
+    public void setUserIsApproved(int userIsApproved) {
+        this.userIsApproved = userIsApproved;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public int getUser_num() {
-        return user_num;
+    public int getUserNum() {
+        return userNum;
     }
 
-    public void setUser_num(int user_num) {
-        this.user_num = user_num;
+    public void setUserNum(int userNum) {
+        this.userNum = userNum;
     }
 
-    public String getUser_original_profile() {
-        return user_original_profile;
+    public String getUserOriginalProfile() {
+        return userOriginalProfile;
     }
 
-    public void setUser_original_profile(String user_original_profile) {
-        this.user_original_profile = user_original_profile;
+    public void setUserOriginalProfile(String userOriginalProfile) {
+        this.userOriginalProfile = userOriginalProfile;
     }
 
-    public String getUser_password() {
-        return user_password;
+    public String getUserPassword() {
+        return userPassword;
     }
 
-    public void setUser_password(String user_password) {
-        this.user_password = user_password;
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
-    public String getUser_phone_number() {
-        return user_phone_number;
+    public String getUserPhone_number() {
+        return userPhoneNumber;
     }
 
-    public void setUser_phone_number(String user_phone_number) {
-        this.user_phone_number = user_phone_number;
+    public void setUserPhone_number(String userPhone_number) {
+        this.userPhoneNumber = userPhone_number;
     }
 
-    public String getUser_position() {
-        return user_position;
+    public String getUserPosition() {
+        return userPosition;
     }
 
-    public void setUser_position(String user_position) {
-        this.user_position = user_position;
+    public void setUserPosition(String userPosition) {
+        this.userPosition = userPosition;
     }
 
-    public String getUser_profile_picture() {
-        return user_profile_picture;
+    public String getUserProfilePicture() {
+        return userProfilePicture;
     }
 
-    public void setUser_profile_picture(String user_profile_picture) {
-        this.user_profile_picture = user_profile_picture;
+    public void setUserProfilePicture(String userProfilePicture) {
+        this.userProfilePicture = userProfilePicture;
     }
 
-    public String getUser_updated_at() {
-        return user_updated_at;
+    public String getUserUpdatedAt() {
+        return userUpdatedAt;
     }
 
-    public void setUser_updated_at(String user_updated_at) {
-        this.user_updated_at = user_updated_at;
+    public void setUserUpdatedAt(String userUpdatedAt) {
+        this.userUpdatedAt = userUpdatedAt;
     }
+
 
     @Override
     public String getUsername() {
-        return  this.getUser_id();
+        return  this.getUserId();
     }
     @Override
     public String getPassword() {
-        return  this.getUser_password();
+        return  this.getUserPassword();
     }
-
-
-
-
-
 
     @Override
     public boolean isAccountNonExpired() {
