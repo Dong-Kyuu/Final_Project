@@ -175,12 +175,12 @@ public class User implements UserDetails {
         this.userPassword = userPassword;
     }
 
-    public String getUserPhone_number() {
+    public String getUserPhoneNumber() {
         return userPhoneNumber;
     }
 
-    public void setUserPhone_number(String userPhone_number) {
-        this.userPhoneNumber = userPhone_number;
+    public void setUserPhone_number(String userPhoneNumber) {
+        this.userPhoneNumber = userPhoneNumber;
     }
 
     public String getUserPosition() {

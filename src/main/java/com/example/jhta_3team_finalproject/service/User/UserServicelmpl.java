@@ -34,6 +34,7 @@ public class UserServicelmpl implements UserService {
 
     @Override
     public int join(User user) {
+        logger.info(user.toString());
         return dao.join(user);
     }
 
