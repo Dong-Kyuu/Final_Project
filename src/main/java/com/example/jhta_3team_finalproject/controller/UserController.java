@@ -45,6 +45,12 @@ public class UserController {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
     }
+    //회원가입 폼에서 아이디 검사
+    @ResponseBody
+    @RequestMapping(value ="/idcheck",method=RequestMethod.GET)
+    public int idcheck(@RequestParam("user_id") String id) {
+        return userService.isId(id);
+    }
 
     //로그인
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -83,7 +89,12 @@ public class UserController {
 
     @RequestMapping(value = "/joinProcess", method = RequestMethod.POST)
     public String joinProcess(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setUser_password(passwordEncoder.encode(user.getUser_password()));
+
+        Random randomCreate = new Random();
+        int random = randomCreate.nextInt(100000);
+        user.setUser_num(random);
+
         logger.info(("User: " + user.toString()));
         userService.join(user);
         return "redirect:/user/login";
@@ -104,6 +115,7 @@ public class UserController {
             HttpServletRequest request) {
 
         String id = principal.getName();
+
         User m = userService.user_info(id);
 
         //m==null;//오류 확인하는 값
@@ -152,7 +164,7 @@ public class UserController {
             uploadfile.transferTo(destinationFile);
             logger.info("File saved to: " + destinationFile.getAbsolutePath());
 
-            user.setProfile_picture(fileDBName);
+            user.setUser_profile_picture(fileDBName);
         }
         int result = userService.update(user);
 

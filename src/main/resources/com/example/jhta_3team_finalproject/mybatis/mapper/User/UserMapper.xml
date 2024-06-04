@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.User.UserMapper">
+
+    <select id="isId" >
+        SELECT * FROM users WHERE user_id = #{user_id}
+    </select>
+
+    <insert id="join" >
+        insert  into users
+            (user_num,user_id, user_password, user_name, user_email,user_phone_number,user_department,user_gender)
+        values ( #{user_num},#{user_id},#{user_password} ,#{user_name},#{user_email},#{user_phone_number}, #{user_department},#{user_gender})
+    </insert>
+
+
+    <update id="update">
+        UPDATE users
+        SET user_id              = #{user_id},
+            user_password        = #{user_password},
+            employee_number      = #{employeeNumber},
+            user_department      = #{user_department},
+            user_position        = #{user_position},
+            user_name            = #{user_name},
+            user_email           = #{user_email},
+            user_phone_number    = #{user_phoneNumber},
+            user_age             = #{user_age},
+            user_gender          = #{user_gender},
+            user_profile_picture = #{user_profilePicture},
+            user_updated_at      = #{user_updatedAt},
+            user_is_approved     = #{user_isApproved},
+            user_auth            = #{user_auth},
+            chat_status_msg      = #{chatStatusMsg}
+        WHERE user_num = #{user_num}
+    </update>
+
+    <!-- 사용자 정보 추가 -->
+    <insert id="insert">
+        insert  into users
+            (user_num,user_id, user_password, user_email, user_name, user_phone_number, user_department, user_position, user_gender, user_profile_picture, user_created_at, user_updated_at, user_auth)
+        values (#{user_num},#{user_id}, #{user_password}, #{user_email}, #{user_name}, #{user_phone_number}, #{user_department}, #{user_position}, #{user_gender}, #{user_profile_picture},  NOW(), NOW(), #{user_auth})
+    </insert>
+</mapper>
