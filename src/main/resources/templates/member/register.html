@@ -42,23 +42,24 @@
             <form class="pt-3" th:action="@{/user/joinProcess}" method="post">
               <div class="form-group">
                 <div class="input-group">
-                  <input type="text" name="id" class="form-control form-control-lg" id="id" placeholder="아이디">
+                  <input type="text" name="userId" class="form-control form-control-lg" id="id" placeholder="아이디">
+                  <span id="id_message"></span>
                 </div>
               </div>
               <div class="form-group">
-                <input type="password" name="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="비밀번호">
+                <input type="password" name="userPassword" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="비밀번호">
               </div>
               <div class="form-group">
-                <input type="text" name="name" class="form-control form-control-lg" id="exampleInputUsername" placeholder="이름">
+                <input type="text" name="userName" class="form-control form-control-lg" id="exampleInputUsername" placeholder="이름">
               </div>
               <div class="form-group">
-                <input type="email" name="email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="이메일">
+                <input type="email" name="userEmail" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="이메일">
               </div>
               <div class="form-group">
-                <input type="text" name="phone" class="form-control form-control-lg" id="exampleInputPhone" placeholder="전화번호" oninput="formatPhoneNumber(this)">
+                <input type="text" name="userPhoneNumber" class="form-control form-control-lg" id="exampleInputPhone" placeholder="전화번호" oninput="formatPhoneNumber(this)">
               </div>
               <div class="form-group">
-                <select class="form-control form-control-lg" id="exampleFormControlSelect2" name="department" placeholder="부서">
+                <select class="form-control form-control-lg" id="exampleFormControlSelect2" name="userDepartment" placeholder="부서">
                   <option>영업부</option>
                   <option>총무부</option>
                   <option>인사부</option>
@@ -70,12 +71,12 @@
                 <div>
                   <div class="form-check form-check-flat form-check-primary">
                     <label class="form-check-label">
-                      <input class="form-check-input" type="radio" name="gender" id="genderMale" value="M"> 남
+                      <input class="form-check-input" type="radio" name="userGender" id="genderMale" value="M"> 남
                     </label>
                   </div>
                   <div class="form-check form-check-flat form-check-primary">
                     <label class="form-check-label">
-                      <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="F"> 여
+                      <input class="form-check-input" type="radio" name="userGender" id="genderFemale" value="F"> 여
                     </label>
                   </div>
                 </div>
@@ -120,7 +121,35 @@
     // Apply formatting
     phone = phone.replace(/^(\d{3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
     input.value = phone;
+
   }
+  let checkid=false;
+  let checkemail=false;
+  $("input[name=userId]").on('keyup',
+          function () {
+            const pattern=/^\w{5,12}$/;
+            const id=$(this).val();
+            if( !pattern.test(id)){
+              $("#id_message").css('color','red')
+                      .html("영문자 숫자 _로 5~12자 가능합니다");
+              checkid=false;
+              return;
+            }
+
+            $.ajax({
+              url:"idcheck",
+              data: { "userId" :id}	,
+              success : function (resp) {
+                if(resp=='-1'){
+                  $("#id_message").html("사용 가능한 아이디 입니다").css('color','green');
+                  checkid=true;
+                }else{
+                  $("#id_message").css('color','red').html("사용중인 아이디입니다");
+                  checkid=false;
+                }
+              }//success
+            })//ajax
+          })
 </script>
 </body>
 </html>
