@@ -54,8 +54,8 @@ public class ChattingService {
 
     public int chatUserProfileMsgUpdate(String profileStatusMsg, String chatUserId) {
         User user = new User();
-        user.setChat_status_msg(profileStatusMsg);
-        user.setId(chatUserId);
+        user.setUserChatStatusMsg(profileStatusMsg);
+        user.setUserId(chatUserId);
         return dao.chatUserProfileMsgUpdate(user);
     }
 }

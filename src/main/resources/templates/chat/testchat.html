@@ -746,13 +746,14 @@
             ws.onmessage = function (data) {
                 //메시지를 받으면 동작
                 var msg = data.data;
+                var url;
                 if (msg != null && msg.type != '') {
                     //파일 업로드가 아닌 경우 메시지를 뿌려준다.
                     var d = JSON.parse(msg);
                     console.log(d.type);
+                    console.log(d.fileUrl);
 
-                    var url;
-                    if (d.fileUrl != '') {
+                    if (d.fileUrl != null) {
                         url = "<img class='msgImg' src='" + d.fileUrl + "'>";
                     }
 
@@ -760,25 +761,26 @@
                         var si = d.sessionId != null ? d.sessionId : ""; // sessionId 가 널과 다르면 ""로 하라
                         if (si != '') { // 가져오기
                             if (d.userName == $("#userName").val()) {
-                                $("#chating").append(
-                                    "<div class='block'><p class='balloon_semo'></p><p class='me balloon_02'>"
-                                    + d.msg +
-                                    + url +
-                                    "</p></div>");
-                                $("#chating").scrollTop(
-                                    $("#chating")[0].scrollHeight);
+                                var output = "<div class='block'><p class='balloon_semo'></p><p class='me balloon_02'>";
+                                    output += d.msg;
+                                    if(d.fileUrl != null) {
+                                        output += url;
+                                    }
+                                    output += "</p></div>";
+
+                                $("#chating").append(output);
+                                $("#chating").scrollTop($("#chating")[0].scrollHeight);
                             } else {
-                                $("#chating")
-                                    .append(
-                                        "<div class='block'><p class='float circle1' style='background-repeat:no-repeat;background-position:bottom center; background-size: 35px;'>"
-                                        + d.userName
-                                            .substring(0, 1)
-                                        + "</p><p class='balloon_03_semo float'><p class='others balloon_03 float'>"
-                                        + d.msg +
-                                        + url +
-                                        "</p></div>");
-                                $("#chating").scrollTop(
-                                    $("#chating")[0].scrollHeight);
+                                var output = "<div class='block'><p class='float circle1' style='background-repeat:no-repeat;background-position:bottom center; background-size: 35px;'>"
+                                    output += d.userName.substring(0, 1);
+                                    output += "</p><p class='balloon_03_semo float'><p class='others balloon_03 float'>";
+                                    output += d.msg;
+                                    if(d.fileUrl != null) {
+                                        output += url;
+                                    }
+                                    output += "</p></div>";
+                                $("#chating").append(output);
+                                $("#chating").scrollTop($("#chating")[0].scrollHeight);
                             }
                         }
                     } else if (d.type == "message") { // 평소 처리

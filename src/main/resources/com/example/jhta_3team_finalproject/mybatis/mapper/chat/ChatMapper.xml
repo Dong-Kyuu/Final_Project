@@ -37,20 +37,20 @@
 
     <!-- 채팅 사원 전체 리스트 가져오기 -->
     <select id="chatUserList" resultType="user">
-        SELECT id, name, department, profile_picture, chat_status_msg FROM users WHERE id NOT IN (#{chatUserId});
+        SELECT user_id, user_name, user_department, user_profile_picture, user_chat_status_msg FROM users WHERE user_id NOT IN (#{chatUserId});
     </select>
 
     <!-- 채팅 자신의 유저 리스트 가져오기 -->
     <select id="chatUserProfile" resultType="user">
-        SELECT id, name, department, profile_picture, chat_status_msg, email, phone_number FROM users WHERE id IN (#{chatUserId});
+        SELECT user_id, user_name, user_department, user_profile_picture, user_chat_status_msg, user_email, user_phone_number FROM users WHERE user_id IN (#{chatUserId});
     </select>
 
     <!-- 채팅 프로필 상태 메시지 변경 -->
     <update id="chatUserProfileMsgUpdate">
         UPDATE users
-        SET chat_status_msg = #{chatStatusMsg}
+        SET user_chat_status_msg = #{userChatStatusMsg}
         <where>
-            id = #{chatUserId}
+            user_id = #{userId}
         </where>
     </update>
 

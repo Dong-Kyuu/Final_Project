@@ -82,7 +82,7 @@ public class SocketHandler extends TextWebSocketHandler {
         /**
          * 2024-06-04, URL 을 변경해줄 때 업데이트 해주기 위해 임시 URL 지정
          */
-        if(!fileName.equals("")) {
+        if(fileName != null && !fileName.equals("")) {
             Random random = new Random();
             s3url = String.valueOf(random.nextLong());
             chatMessage.setFileUrl(s3url);

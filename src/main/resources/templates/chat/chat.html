@@ -51,7 +51,7 @@
                 <div class="header-wrapp">
                     <div class="app-detail">
                         <div class="chat-profile-picture">
-                            <img th:src="@{/image/default.png}" alt="">
+                            <img th:src="@{/image/chat/default.png}" alt="">
                         </div>
                         <div class="chat-profile-name"></div>
                         <div class="status chat-profile-dept"></div>
@@ -240,7 +240,7 @@
                                 </div> -->
                                 <h1 class="nav-profile-h1"> 홍길동 </h1>
                                 <span class="user-avatar small hasStory">
-                                    <img th:src="@{/image/default.png}">
+                                    <img th:src="@{/image/chat/default.png}">
                                 </span>
                             </div>
                         </div>
@@ -281,25 +281,25 @@
                                 </div>
                                 <div class=avatar-container>
                                         <span class="user-avatar offline small"> <img
-                                                th:src="@{/image/default.png}">
+                                                th:src="@{/image/chat/default.png}">
                                         </span>
                                     <p>홍길동</p>
                                 </div>
                                 <div class=avatar-container>
                                         <span class="user-avatar offline small"> <img
-                                                th:src="@{/image/default.png}">
+                                                th:src="@{/image/chat/default.png}">
                                         </span>
                                     <p>홍동길</p>
                                 </div>
                                 <div class=avatar-container>
                                         <span class="user-avatar offline small"> <img
-                                                th:src="@{/image/default.png}">
+                                                th:src="@{/image/chat/default.png}">
                                         </span>
                                     <p>동길홍</p>
                                 </div>
                                 <div class=avatar-container>
                                         <span class="user-avatar offline small"> <img
-                                                th:src="@{/image/default.png}">
+                                                th:src="@{/image/chat/default.png}">
                                         </span>
                                     <p>동길동 </p>
                                 </div>
@@ -376,7 +376,7 @@
                     <ul class="touch-y">
                         <li class="recive">
                             <div class="avatar-container">
-                                    <span class="user-avatar offline small"> <img th:src="@{/image/default.png}">
+                                    <span class="user-avatar offline small"> <img th:src="@{/image/chat/default.png}">
                                     </span>
                             </div>
                             <p class="chat-nickname">대표님</p>
@@ -875,10 +875,10 @@
                     console.log(rdata);
                     let img = ''; // 이미지 처리 시
                     if (rdata.profile_picture === 'default.png') {
-                        img = "<img src='/image/default.png' />";
+                        img = "<img src='/image/chat/default.png' />";
                     } else {
                         // 업로드된 프로필을 보여주도록 한다.
-                        img = "<img src='/image/default.png' />";
+                        img = "<img src='/image/chat/default.png' />";
                     }
 
                     var $chatProfilePicture = $('.chat-profile-picture');
@@ -892,13 +892,13 @@
 
                     $chatProfilePicture.empty();
                     $chatProfilePicture.html(img);
-                    $chatProfileName.html(rdata.name);
-                    $chatProfileDept.html(rdata.department);
-                    $chatProfileId.val(rdata.id);
-                    $chatProfileNameInput.val(rdata.name);
-                    $chatProfileStatusMsg.html(rdata.chatStatusMsg);
-                    $chatProfileEmail.val(rdata.email);
-                    $chatProfilePhone.val(rdata.phoneNumber);
+                    $chatProfileName.html(rdata.userName);
+                    $chatProfileDept.html(rdata.userDepartment);
+                    $chatProfileId.val(rdata.userId);
+                    $chatProfileNameInput.val(rdata.userName);
+                    $chatProfileStatusMsg.html(rdata.userChatStatusMsg);
+                    $chatProfileEmail.val(rdata.userEmail);
+                    $chatProfilePhone.val(rdata.userPhone_number);
                 }
             }) // ajax end
         }
@@ -926,10 +926,10 @@
                     $(rdata).each(function () {
                         let img = ''; // 이미지 처리 시
                         if (this.profile_picture === 'default.png') {
-                            img = "<img src='/image/default.png' />";
+                            img = "<img src='/image/chat/default.png' />";
                         } else {
                             // 업로드된 프로필을 보여주도록 한다.
-                            img = "<img src='/image/default.png' />";
+                            img = "<img src='/image/chat/default.png' />";
                         }
 
                         output += "<li>";
@@ -942,13 +942,13 @@
                         if(this.chat_status_msg === null) { // 2024-06-02, chatStatusMsg로 변경 예정
                             output += "        <div class='mes-col1 chat-friend-list-col1' style='margin-top: 18px;'>";
                             output += "            <div class='sender-name'>";
-                            output += "                "+ this.department + " - " + this.name;
+                            output += "                "+ this.userDepartment + " - " + this.userName;
                             output += "            </div>";
                             output += "        </div>";
                         } else {
                             output += "        <div class='mes-col1 chat-friend-list-col1'>";
                             output += "            <div class='sender-name'>";
-                            output += "                "+ this.department + " - " + this.name;
+                            output += "                "+ this.userDepartment + " - " + this.userName;
                             output += "            </div>";
                             output += "            <div class='mes-preview'>";
                             output += "                " + this.chatStatusMsg;
@@ -986,10 +986,10 @@
                     res.forEach(function (d, idx) {
                         let img = ''; // 이미지 처리 시
                         if (this.profile_picture === 'default.png') {
-                            img = "<img src='/image/default.png' />";
+                            img = "<img src='/image/chat/default.png' />";
                         } else {
                             // 업로드된 프로필을 보여주도록 한다. (채팅방 화면은 임시 처리)
-                            img = "<img src='/image/default.png' />";
+                            img = "<img src='/image/chat/default.png' />";
                         }
                         var rn = d.roomName;
                         var roomNumber = d.chatRoomNum;
