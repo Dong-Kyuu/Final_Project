@@ -25,4 +25,8 @@
         values(#{comm_id}, #{comm_name}, #{comm_profile}, #{comm_content}, #{board_num}, NOW())
     </insert>
 
+    <delete id = "commentsDelete">
+        delete 	from table_comments
+		where 	comm_num = #{num}
+    </delete>
 </mapper>
