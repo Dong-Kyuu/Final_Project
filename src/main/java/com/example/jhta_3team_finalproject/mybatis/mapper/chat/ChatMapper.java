@@ -21,6 +21,8 @@ public interface ChatMapper {
 
     public List<ChatMessage> searchMessages(ChatMessage chatMessage);
 
+    int updateMsgImageUrl(ChatMessage chatMessage);
+
     public List<User> chatUserList(String chatUserId);
 
     public User chatUserProfile(String chatUserId);

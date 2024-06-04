@@ -8,8 +8,8 @@
         <!--        <selectKey resultType="int" order="BEFORE" keyProperty="sender_num">-->
         <!--            SELECT num FROM users WHERE id = #{senderId}-->
         <!--        </selectKey>-->
-        INSERT INTO chat_message(message_num, chat_room_num, sender_id, message_content, read_count, file_origin_name, send_time)
-        VALUES (NULL, #{chatRoomNum}, #{senderId}, #{messageContent}, #{readCount}, #{fileOriginName}, now())
+        INSERT INTO chat_message(message_num, chat_room_num, sender_id, message_content, read_count, file_url, file_origin_name, send_time)
+        VALUES (NULL, #{chatRoomNum}, #{senderId}, #{messageContent}, #{readCount}, #{fileUrl}, #{fileOriginName}, now())
     </insert>
 
     <!-- 채팅방의 채팅 기록 가져오기, 유저 기준으로도 추가 예정 -->
@@ -20,6 +20,11 @@
         ORDER BY message_num ASC
     </select>
     <!-- AND send_time between #{sendTime} and NOW() -->
+
+    <!-- 2024-06-04, 채팅 메시지에서 파일을 업로드할 경우, 해당 내용의 URL을 S3 버킷의 URL로 업데이트-->
+    <update id="updateMsgImageUrl">
+        UPDATE chat_message SET file_url = #{s3url} where file_url = #{fileUrl}
+    </update>
 
     <!-- 채팅방 만들기 -->
     <insert id="createChatRoom" parameterType="chatRoom">

@@ -32,6 +32,10 @@ public class ChattingService {
         return dao.searchMessages(chatMessage);
     }
 
+    public int updateMsgImageUrl(ChatMessage chatMessage) throws Exception {
+        return dao.updateMsgImageUrl(chatMessage);
+    }
+
     public List<ChatRoom> searchRoom(ChatRoom chatRoom) throws Exception {
         return dao.searchRoom(chatRoom);
     }

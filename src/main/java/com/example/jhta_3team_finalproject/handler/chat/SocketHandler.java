@@ -73,19 +73,20 @@ public class SocketHandler extends TextWebSocketHandler {
         log.info(userName);
         log.info(fileName);
 
-        /**
-         * 2024-06-04, URL 을 변경해줄 때 업데이트 해주기 위해 임시 URL 지정
-         */
-        Random random = new Random();
-        s3url = String.valueOf(random.nextLong());
-
         // 상태를 저장하기 위해 vo에 값을 넣어주고 insert
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setChatRoomNum(Long.valueOf(rN));
         chatMessage.setSenderId(userName);
         chatMessage.setMessageContent(content);
         chatMessage.setReadCount(1);
-        chatMessage.setFileUrl(s3url);
+        /**
+         * 2024-06-04, URL 을 변경해줄 때 업데이트 해주기 위해 임시 URL 지정
+         */
+        if(!fileName.equals("")) {
+            Random random = new Random();
+            s3url = String.valueOf(random.nextLong());
+            chatMessage.setFileUrl(s3url);
+        }
         chatMessage.setFileOriginName(fileName);
         chattingService.createMessage(chatMessage);
 
@@ -191,10 +192,20 @@ public class SocketHandler extends TextWebSocketHandler {
 
             amazonS3Client.putObject(new PutObjectRequest(S3Bucket, originalName, multipartFile.getInputStream(), objectMetaData).withCannedAcl(CannedAccessControlList.PublicRead)); // aws s3 저장과정
 
+            /**
+             * 2024-06-04 임시 URL을 S3 버킷이 관리하는 파일 URL로 변경
+             */
             imageurl = amazonS3Client.getUrl(S3Bucket, originalName).toString(); // aws s3 저장된 이미지 불러오기
             log.info("imageurl : {}", imageurl);
+            ChatMessage chatMessage = new ChatMessage();
+            chatMessage.setFileUrl(s3url);
+            chatMessage.setS3url(imageurl);
+            chattingService.updateMsgImageUrl(chatMessage);
+
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
         byteBuffer.position(0); // (17) 파일을 저장하면서 position값이 변경되었으므로 0으로 초기화한다.
@@ -266,6 +277,7 @@ public class SocketHandler extends TextWebSocketHandler {
         for (int i = 0; i < chatMessageList.size(); i++) {
             String content = chatMessageList.get(i).getMessageContent();
             String userDBName = chatMessageList.get(i).getSenderId();
+            String fileUrl = chatMessageList.get(i).getFileUrl();
             log.info("{} 번째", i);
             // 세션등록이 끝나면 발급받은 세션 ID 값의 메시지를 발송한다.
             JSONObject obj = new JSONObject();
@@ -276,6 +288,12 @@ public class SocketHandler extends TextWebSocketHandler {
             obj.put("sessionId", userName); // 유저 아이디임. // 위를 활성화하면 세션과 관련된 obj들이 제거되면서 이 컬럼과 js 조건문이 만나는 조건에서 의도치 않은 결과가 나왔었음.
             obj.put("userName", userDBName);
             obj.put("msg", content);
+            /**
+             * 2024-06-04, URL 이 있는 경우 URL 주소를 put 한다.
+             */
+            if(fileUrl != null && !fileUrl.equals("")) {
+                obj.put("fileUrl", fileUrl);
+            }
             session.sendMessage(new TextMessage(obj.toJSONString()));
         }
     }

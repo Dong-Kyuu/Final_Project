@@ -750,14 +750,21 @@
                     //파일 업로드가 아닌 경우 메시지를 뿌려준다.
                     var d = JSON.parse(msg);
                     console.log(d.type);
+
+                    var url;
+                    if (d.fileUrl != '') {
+                        url = "<img class='msgImg' src='" + d.fileUrl + "'>";
+                    }
+
                     if (d.type == "getId") {
                         var si = d.sessionId != null ? d.sessionId : ""; // sessionId 가 널과 다르면 ""로 하라
                         if (si != '') { // 가져오기
                             if (d.userName == $("#userName").val()) {
-
                                 $("#chating").append(
                                     "<div class='block'><p class='balloon_semo'></p><p class='me balloon_02'>"
-                                    + d.msg + "</p></div>");
+                                    + d.msg +
+                                    + url +
+                                    "</p></div>");
                                 $("#chating").scrollTop(
                                     $("#chating")[0].scrollHeight);
                             } else {
@@ -767,7 +774,9 @@
                                         + d.userName
                                             .substring(0, 1)
                                         + "</p><p class='balloon_03_semo float'><p class='others balloon_03 float'>"
-                                        + d.msg + "</p></div>");
+                                        + d.msg +
+                                        + url +
+                                        "</p></div>");
                                 $("#chating").scrollTop(
                                     $("#chating")[0].scrollHeight);
                             }
