@@ -14,10 +14,10 @@ public class RedisService {
 
     private final ChatMapper dao;
 
-    public List<ChatMessage> getChatMessage(long num, Date date) {
+    public List<ChatMessage> getRedisChatMessage(long num, Date date) {
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setChatRoomNum(num);
         chatMessage.setSendTime(date);
-        return dao.searchMessages(chatMessage);
+        return dao.redisSearchMessages(chatMessage);
     }
 }

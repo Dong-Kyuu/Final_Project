@@ -21,6 +21,8 @@ public interface ChatMapper {
 
     public List<ChatMessage> searchMessages(ChatMessage chatMessage);
 
+    public List<ChatMessage> redisSearchMessages(ChatMessage chatMessage);
+
     int updateMsgImageUrl(ChatMessage chatMessage);
 
     public List<User> chatUserList(String chatUserId);

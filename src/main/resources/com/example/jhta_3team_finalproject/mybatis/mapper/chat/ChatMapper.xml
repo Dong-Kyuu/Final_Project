@@ -21,6 +21,16 @@
     </select>
     <!-- AND send_time between #{sendTime} and NOW() -->
 
+    <!-- 채팅방의 채팅 기록 가져오기, 유저 기준으로도 추가 예정 -->
+    <select id="redisSearchMessages" resultType="chatMessage">
+        SELECT *
+        FROM chat_message
+        WHERE chat_room_num = #{chatRoomNum}
+        AND send_time between #{sendTime} and NOW()
+        ORDER BY message_num ASC
+    </select>
+
+
     <!-- 2024-06-04, 채팅 메시지에서 파일을 업로드할 경우, 해당 내용의 URL을 S3 버킷의 URL로 업데이트-->
     <update id="updateMsgImageUrl">
         UPDATE chat_message SET file_url = #{s3url} where file_url = #{fileUrl}
