@@ -25,6 +25,9 @@ public class UserServicelmpl implements UserService {
     @Override
     public int isId(String id) {
         User remember = dao.isId(id);
+        if(remember == null){
+            logger.info("희한하다");
+        }
         return (remember == null) ? -1 : 1;// -1는 아이디가 존재하지 않는 경우
         // 1은 아이디가 존재하는 경우
     }
@@ -35,8 +38,9 @@ public class UserServicelmpl implements UserService {
     }
 
     @Override
-    public User user_info(String num) {
-        return dao.isId(num);
+    public User user_info(String id) {
+
+        return dao.isId(id);
     }
 
 
@@ -48,8 +52,7 @@ public class UserServicelmpl implements UserService {
 
     @Override
     public int insert(User user) {
-        user.setNum(UUID.randomUUID().toString()); // UUID를 사용하여 num 값 설정
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // 비밀번호 암호화
+        user.setUser_password(passwordEncoder.encode(user.getPassword())); // 비밀번호 암호화
         return dao.insert(user);
     }
 
