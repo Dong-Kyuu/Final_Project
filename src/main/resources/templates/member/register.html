@@ -42,24 +42,24 @@
             <form class="pt-3" th:action="@{/user/joinProcess}" method="post">
               <div class="form-group">
                 <div class="input-group">
-                  <input type="text" name="user_id" class="form-control form-control-lg" id="id" placeholder="아이디">
+                  <input type="text" name="userId" class="form-control form-control-lg" id="id" placeholder="아이디">
                   <span id="id_message"></span>
                 </div>
               </div>
               <div class="form-group">
-                <input type="password" name="user_password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="비밀번호">
+                <input type="password" name="userPassword" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="비밀번호">
               </div>
               <div class="form-group">
-                <input type="text" name="user_name" class="form-control form-control-lg" id="exampleInputUsername" placeholder="이름">
+                <input type="text" name="userName" class="form-control form-control-lg" id="exampleInputUsername" placeholder="이름">
               </div>
               <div class="form-group">
-                <input type="email" name="user_email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="이메일">
+                <input type="email" name="userEmail" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="이메일">
               </div>
               <div class="form-group">
-                <input type="text" name="user_phone_number" class="form-control form-control-lg" id="exampleInputPhone" placeholder="전화번호" oninput="formatPhoneNumber(this)">
+                <input type="text" name="userPhoneNumber" class="form-control form-control-lg" id="exampleInputPhone" placeholder="전화번호" oninput="formatPhoneNumber(this)">
               </div>
               <div class="form-group">
-                <select class="form-control form-control-lg" id="exampleFormControlSelect2" name="user_department" placeholder="부서">
+                <select class="form-control form-control-lg" id="exampleFormControlSelect2" name="userDepartment" placeholder="부서">
                   <option>영업부</option>
                   <option>총무부</option>
                   <option>인사부</option>
@@ -71,12 +71,12 @@
                 <div>
                   <div class="form-check form-check-flat form-check-primary">
                     <label class="form-check-label">
-                      <input class="form-check-input" type="radio" name="user_gender" id="genderMale" value="M"> 남
+                      <input class="form-check-input" type="radio" name="userGender" id="genderMale" value="M"> 남
                     </label>
                   </div>
                   <div class="form-check form-check-flat form-check-primary">
                     <label class="form-check-label">
-                      <input class="form-check-input" type="radio" name="user_gender" id="genderFemale" value="F"> 여
+                      <input class="form-check-input" type="radio" name="userGender" id="genderFemale" value="F"> 여
                     </label>
                   </div>
                 </div>
@@ -125,7 +125,7 @@
   }
   let checkid=false;
   let checkemail=false;
-  $("input[name=user_id]").on('keyup',
+  $("input[name=userId]").on('keyup',
           function () {
             const pattern=/^\w{5,12}$/;
             const id=$(this).val();
@@ -138,7 +138,7 @@
 
             $.ajax({
               url:"idcheck",
-              data: { "user_id" :id}	,
+              data: { "userId" :id}	,
               success : function (resp) {
                 if(resp=='-1'){
                   $("#id_message").html("사용 가능한 아이디 입니다").css('color','green');

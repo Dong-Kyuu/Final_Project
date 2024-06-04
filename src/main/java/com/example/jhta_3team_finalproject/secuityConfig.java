@@ -55,8 +55,8 @@ public class secuityConfig {
         http.
                 formLogin((fo) -> fo.loginPage("/user/login")
                         .loginProcessingUrl("/user/loginProcess")
-                        .usernameParameter("user_id")
-                        .passwordParameter("user_password")
+                        .usernameParameter("userId")
+                        .passwordParameter("userPassword")
                         .successHandler(loginSuccessHandler)
                         .failureHandler(loginFailHandler));
 
