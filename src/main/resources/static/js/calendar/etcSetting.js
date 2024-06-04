@@ -9,7 +9,7 @@ $('.filter').on('change', function () {
 });
 
 $("#type_filter").select2({
-    placeholder: "mbti..",
+    placeholder: "선택..",
     allowClear: true
 });
 

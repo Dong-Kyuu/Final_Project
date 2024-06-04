@@ -26,7 +26,7 @@ var newEvent = function (start, end, eventType) {
     editStart.val(start);
     editEnd.val(end);
     editDesc.val('');
-
+    
     addBtnContainer.show();
     modifyBtnContainer.hide();
     eventModal.modal('show');
@@ -46,7 +46,7 @@ var newEvent = function (start, end, eventType) {
             end: editEnd.val(),
             description: editDesc.val(),
             type: editType.val(),
-            username: '계획 중',
+            username: '사나',
             backgroundColor: editColor.val(),
             textColor: '#ffffff',
             allDay: false
