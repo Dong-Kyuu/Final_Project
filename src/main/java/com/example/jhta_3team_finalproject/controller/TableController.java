@@ -200,11 +200,11 @@ public class TableController {
     }
 
     @PostMapping("/delete")
-    public String BoardDeleteAction(String BOARD_PASS, int num,
+    public String BoardDeleteAction(int bnum,
                                     Model mv, RedirectAttributes rattr,
                                     HttpServletRequest request) {
 
-        int result = BS.boardDelete(num);
+        int result = BS.boardDelete(bnum);
 
         // 삭제 처리 실패한 경우
         if(result == 0) {
