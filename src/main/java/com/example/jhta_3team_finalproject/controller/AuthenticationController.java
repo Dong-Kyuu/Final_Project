@@ -33,7 +33,7 @@ public class AuthenticationController {
         userInfo.setAuthorities(authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
-        userInfo.setDepartment(((User) authentication.getPrincipal()).getDepartment());
+        userInfo.setDepartment(((User) authentication.getPrincipal()).getUserDepartment());
 
         // 로그로 계층적 권한 정보 출력
         authorities.forEach(authority -> {
