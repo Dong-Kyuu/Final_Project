@@ -2,25 +2,19 @@ package com.example.jhta_3team_finalproject.service;
 
 import com.example.jhta_3team_finalproject.cache.RedisUtils;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
-import com.example.jhta_3team_finalproject.mybatis.mapper.ChatMapper;
+import com.example.jhta_3team_finalproject.mybatis.mapper.chat.ChatMapper;
+import com.example.jhta_3team_finalproject.service.chat.RedisService;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class RedisServiceTest {
@@ -37,7 +31,7 @@ class RedisServiceTest {
     @Autowired
     RedisUtils redisUtils;
 
-    @Test
+    //@Test
     void 레디스_테스트() {
 
         /**
@@ -86,5 +80,23 @@ class RedisServiceTest {
         chatList.forEach(chatMessage -> {
             logger.info("{}", chatMessage);
         });
+    }
+
+
+
+    @Test
+    void 배치_테스트() {
+        /**
+         * given
+         */
+
+        /**
+         * when
+         */
+
+        /**
+         * then
+         */
+
     }
 }

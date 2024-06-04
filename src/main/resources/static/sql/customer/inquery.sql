@@ -17,17 +17,17 @@ create table inquery_board
 );
 
 -- auto-generated definition
-create table inquery_comm
+create table inquery_comment
 (
-    num                 bigint auto_increment
+    comm_num                 bigint auto_increment
         primary key,
-    id                  varchar(30)  null,
-    content             varchar(200) null,
-    reg_date            date         null,
-    comment_board_num   bigint       null,
-    comment_re_level    bigint       null,
-    comment_re_sequence bigint       null,
-    comment_re_referer  bigint       null,
-    check (`comment_re_level` in (0, 1, 2))
+    comm_id                  varchar(30)  null,
+    comm_content             varchar(200) null,
+    comm_reg_date            date         null,
+    comm_board_num   bigint       null,
+    comm_re_level    bigint       null,
+    comm_re_sequence bigint       null,
+    comm_re_referer  bigint       null,
+    check (`comm_re_level` in (0, 1, 2))
 );
 

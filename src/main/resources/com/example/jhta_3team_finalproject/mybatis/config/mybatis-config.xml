@@ -10,7 +10,7 @@
 
 
 	<settings>
-<!--		<setting name="mapUnderscoreToCamelCase" value="true"/>-->
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
 
 		<setting name = "jdbcTypeForNull" value="NULL" />
 	</settings>
@@ -20,9 +20,9 @@
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/BoardMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/UpfileMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/Table_CommentMapper.xml"/>
-		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/ChatMapper.xml"/>
-		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/InqCommentMapper.xml"/>
-		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/InqueryBoardMapper.xml"/>
+		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/chat/ChatMapper.xml"/>
+		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/customer/InqCommentMapper.xml"/>
+		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/customer/InqueryBoardMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/TourPackage/TripMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/TourPackage/OptionMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/TourPackage/CartMapper.xml"/>

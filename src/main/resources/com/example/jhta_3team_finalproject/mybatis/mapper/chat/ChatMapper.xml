@@ -2,31 +2,31 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.ChatMapper">
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.chat.ChatMapper">
     <!-- 채팅 추가 -->
     <insert id="createMessage" parameterType="chatMessage">
         <!--        <selectKey resultType="int" order="BEFORE" keyProperty="sender_num">-->
         <!--            SELECT num FROM users WHERE id = #{senderId}-->
         <!--        </selectKey>-->
-        INSERT INTO com_message(message_num, chat_room_num, sender_id, message_content, read_count, send_time)
-        VALUES (NULL, #{chatRoomNum}, #{senderId}, #{messageContent}, #{readCount}, now())
+        INSERT INTO chat_message(message_num, chat_room_num, sender_id, message_content, read_count, file_origin_name, send_time)
+        VALUES (NULL, #{chatRoomNum}, #{senderId}, #{messageContent}, #{readCount}, #{fileOriginName}, now())
     </insert>
 
     <!-- 채팅방의 채팅 기록 가져오기, 유저 기준으로도 추가 예정 -->
     <select id="searchMessages" resultType="chatMessage">
         SELECT *
-        FROM com_message
+        FROM chat_message
         WHERE chat_room_num = #{chatRoomNum}
-          AND send_time between #{sendTime} and NOW()
         ORDER BY message_num ASC
     </select>
+    <!-- AND send_time between #{sendTime} and NOW() -->
 
     <!-- 채팅방 만들기 -->
     <insert id="createChatRoom" parameterType="chatRoom">
         <!--        <selectKey resultType="int" order="BEFORE" keyProperty="chat_room_num">-->
         <!--            SELECT IFNULL(MAX(chat_room_num),0)+1 FROM com_chat_room-->
         <!--        </selectKey>-->
-        INSERT INTO com_chat_room(chat_room_num, room_name, chat_session_id, room_create_date)
+        INSERT INTO chat_room(chat_room_num, room_name, chat_session_id, room_create_date)
         VALUES (NULL, #{roomName}, #{chatSessionId}, now())
     </insert>
 
@@ -52,14 +52,14 @@
     <!-- 방목록 가져오기 -->
     <select id="searchRoom" resultType="chatRoom">
         select *
-        from com_chat_room
+        from chat_room
         ORDER BY chat_room_num ASC
     </select>
 
     <!-- 방목록 가져오기 - 유저 기준 -->
     <select id="searchRoomUser" parameterType="chatRoom" resultType="chatRoom">
         SELECT *
-        FROM com_chat_room
+        FROM chat_room
         WHERE chat_session_id = #{chatSessionId}
     </select>
 </mapper>

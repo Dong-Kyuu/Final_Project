@@ -29,4 +29,6 @@ public class ChatMessage {
     private Date sendTime; // 메시지 보낸 시간
     private String senderId; // 보낸 회원의 아이디
     private long chatRoomNum; // 채팅방 번호
+    private String fileUrl; // 파일이 저장된 업로드 S3 버킷 위치
+    private String fileOriginName; // 파일의 원본 이름
 }

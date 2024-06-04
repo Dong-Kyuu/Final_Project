@@ -1,8 +1,13 @@
 package com.example.jhta_3team_finalproject.handler.chat;
 
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.example.jhta_3team_finalproject.config.chat.FileItemMultipartFile;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
-import com.example.jhta_3team_finalproject.service.ChattingService;
+import com.example.jhta_3team_finalproject.service.chat.ChattingService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -11,15 +16,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -31,37 +42,51 @@ public class SocketHandler extends TextWebSocketHandler {
     @Autowired
     ResourceLoader resourceLoader;
 
+    @Autowired // aws img test
+    AmazonS3Client amazonS3Client;
+
     List<HashMap<String, Object>> rls = new ArrayList<>(); // 웹소켓 세션을 담아둘 리스트 ---roomListSessions
     String FILE_UPLOAD_PATH = "";
+    private String S3Bucket = "mybucketchatupload"; // Bucket 이름 aws img test
     static int fileUploadIdx = 0;
     static String fileUploadSession = "";
     List<ChatMessage> chatMessageList;
     String userName;
+    String s3url;
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-
-        Resource resource = resourceLoader.getResource("classpath:/static/image");
+        Resource resource = resourceLoader.getResource("classpath:/static/upload/chat");
         FILE_UPLOAD_PATH = resource.getURI().getPath();
+
         // 메시지 발송
         String msg = message.getPayload(); // JSON형태의 String메시지를 받는다.
         JSONObject obj = jsonToObjectParser(msg); // JSON데이터를 JSONObject로 파싱한다.
 
-        long rN = (long) obj.get("roomNumber"); // 방의 번호
+        String rN = (String) obj.get("roomNumber"); // 방의 번호
         String content = (String) obj.get("msg"); // 메시지
         String userName = (String) obj.get("userName"); // 유저의 아이디
+        String fileName = (String) obj.get("fileName"); // 파일의 원본 이름
 
         log.info("{}", rN);
         log.info(content);
         log.info(userName);
+        log.info(fileName);
+
+        /**
+         * 2024-06-04, URL 을 변경해줄 때 업데이트 해주기 위해 임시 URL 지정
+         */
+        Random random = new Random();
+        s3url = String.valueOf(random.nextLong());
 
         // 상태를 저장하기 위해 vo에 값을 넣어주고 insert
         ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setChatRoomNum(rN);
+        chatMessage.setChatRoomNum(Long.valueOf(rN));
         chatMessage.setSenderId(userName);
         chatMessage.setMessageContent(content);
         chatMessage.setReadCount(1);
-
+        chatMessage.setFileUrl(s3url);
+        chatMessage.setFileOriginName(fileName);
         chattingService.createMessage(chatMessage);
 
         HashMap<String, Object> temp = new HashMap<String, Object>();
@@ -92,28 +117,105 @@ public class SocketHandler extends TextWebSocketHandler {
         }
     }
 
-    /*
-     * @Override public void handleBinaryMessage(WebSocketSession session,
-     * BinaryMessage message) { // 바이너리 메시지 발송 ByteBuffer byteBuffer =
-     * message.getPayload(); String fileName = "temp.jpg"; File dir = new
-     * File(FILE_UPLOAD_PATH); if (!dir.exists()) { dir.mkdirs(); }
-     *
-     * File file = new File(FILE_UPLOAD_PATH, fileName); FileOutputStream out =
-     * null; FileChannel outChannel = null; try { byteBuffer.flip(); // byteBuffer를
-     * 읽기 위해 세팅 out = new FileOutputStream(file, true); // 생성을 위해 OutputStream을 연다.
-     * outChannel = out.getChannel(); // 채널을 열고 byteBuffer.compact(); // 파일을 복사한다.
-     * outChannel.write(byteBuffer); // 파일을 쓴다. } catch (Exception e) {
-     * e.printStackTrace(); } finally { try { if (out != null) { out.close(); } if
-     * (outChannel != null) { outChannel.close(); } } catch (IOException e) {
-     * e.printStackTrace(); } }
-     *
-     * byteBuffer.position(0); // 파일을 저장하면서 position값이 변경되었으므로 0으로 초기화한다. // 파일쓰기가
-     * 끝나면 이미지를 발송한다. HashMap<String, Object> temp = rls.get(fileUploadIdx); for
-     * (String k : temp.keySet()) { if (k.equals("roomNumber")) { continue; }
-     * WebSocketSession wss = (WebSocketSession) temp.get(k); try {
-     * wss.sendMessage(new BinaryMessage(byteBuffer)); // 초기화된 버퍼를 발송한다. } catch
-     * (IOException e) { e.printStackTrace(); } } }
+    /**
+     * 2024-06-04, 채팅 파일 업로드 -> S3 버킷 저장소 사용 구현
      */
+    @Override
+    public void handleBinaryMessage(WebSocketSession session, BinaryMessage message) { // 바이너리 메시지 발송
+        //바이너리 메시지 발송
+        ByteBuffer byteBuffer = message.getPayload(); // (3)
+        String fileName = "file.jpg";
+
+
+        File dir = new File(FILE_UPLOAD_PATH);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        File Old_File = new File(FILE_UPLOAD_PATH + "/file.jpg"); // (4) 삭제할 파일을 찾아준다
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(Old_File);
+            fileOutputStream.close(); // (5) 파일 삭제시 FileOutputStream을 닫아줘야함
+            Old_File.delete(); // 삭제
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        File file = new File(FILE_UPLOAD_PATH, fileName); // (6) 파일을 새로 생성해준다
+
+        FileOutputStream fileOutputStream = null;
+        FileChannel fileChannel = null;
+        try {
+            byteBuffer.flip(); // (7) byteBuffer를 읽기 위해 세팅
+            fileOutputStream = new FileOutputStream(file, true); // (8) 생성을 위해 OutputStream을 연다.
+            fileChannel = fileOutputStream.getChannel(); // (9) 채널을 열고
+            byteBuffer.compact(); // (10) 파일을 복사한다.
+            fileChannel.write(byteBuffer); // (11) 파일을 쓴다.
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fileOutputStream != null) {
+                    fileOutputStream.close();
+                }
+                if (fileChannel != null) {
+                    fileChannel.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        String imageurl = "";
+        try {
+            FileItem fileItem = new DiskFileItem("mainFile", Files.probeContentType(file.toPath()), false, file.getName(), (int) file.length(), file.getParentFile()); // (12) File을 MultiPartFile로 변환하는 과정 우선 file을 DiskFileItem에 넣어준다
+
+            try {
+                InputStream input = new FileInputStream(file); // (13) 파일에서 바이트 파일로 읽을 수 있게 해줌
+                OutputStream os = fileItem.getOutputStream(); // (14) OutputStream을 생성해준다
+                IOUtils.copy(input, os); // (15) 복사
+                // Or faster..
+                // IOUtils.copy(new FileInputStream(file), fileItem.getOutputStream());
+            } catch (IOException ex) {
+                // do something.
+            }
+
+            MultipartFile multipartFile = new FileItemMultipartFile(fileItem); // (16) File을 MultipartFile로 변환시키기
+
+            String originalName = UUID.randomUUID().toString(); // aws s3 저장과정
+            long multipartFileSize = multipartFile.getSize(); // aws s3 저장과정
+
+            ObjectMetadata objectMetaData = new ObjectMetadata(); // aws s3 저장과정
+            objectMetaData.setContentType(multipartFile.getContentType()); // aws s3 저장과정
+            objectMetaData.setContentLength(multipartFileSize); // aws s3 저장과정
+
+            amazonS3Client.putObject(new PutObjectRequest(S3Bucket, originalName, multipartFile.getInputStream(), objectMetaData).withCannedAcl(CannedAccessControlList.PublicRead)); // aws s3 저장과정
+
+            imageurl = amazonS3Client.getUrl(S3Bucket, originalName).toString(); // aws s3 저장된 이미지 불러오기
+            log.info("imageurl : {}", imageurl);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        byteBuffer.position(0); // (17) 파일을 저장하면서 position값이 변경되었으므로 0으로 초기화한다.
+        //파일쓰기가 끝나면 이미지를 발송한다.
+        HashMap<String, Object> temp = rls.get(fileUploadIdx);
+        for (String k : temp.keySet()) {
+            if (k.equals("roomNumber")) {
+                continue;
+            }
+            WebSocketSession webSocketSession = (WebSocketSession) temp.get(k);
+            try {
+                JSONObject obj = new JSONObject();
+                obj.put("type", "imgurl");
+                obj.put("userName", userName);
+                obj.put("imageurl", imageurl);
+                webSocketSession.sendMessage(new TextMessage(obj.toJSONString())); //초기화된 버퍼를 발송한다.
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @SuppressWarnings("unchecked")
     @Override

@@ -1,4 +1,4 @@
-package com.example.jhta_3team_finalproject.mybatis.mapper;
+package com.example.jhta_3team_finalproject.mybatis.mapper.chat;
 
 
 import com.example.jhta_3team_finalproject.domain.User.User;
@@ -6,7 +6,6 @@ import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 import com.example.jhta_3team_finalproject.domain.chat.ChatRoom;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Mapper
