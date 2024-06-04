@@ -16,4 +16,6 @@ public interface TableCommentMapper {
     List<Comment> getCommentList(Map<String, Integer> map);
 
     int commentsInsert(Comment c);
+
+    int commentsDelete(int num);
 }

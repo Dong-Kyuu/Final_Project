@@ -12,4 +12,6 @@ public interface TableCommentService {
     List<Comment> getCommentList(int boardNum, int page);
 
     int commentsInsert(Comment co);
+
+    int commentsDelete(int num);
 }
