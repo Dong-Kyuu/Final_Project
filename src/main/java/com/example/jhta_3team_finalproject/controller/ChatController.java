@@ -1,7 +1,7 @@
 //package com.example.jhta_3team_finalproject.controller;
 //
 //
-//import com.example.jhta_3team_finalproject.domain.User;
+//import com.example.jhta_3team_finalproject.domain.User.User;
 //import com.example.jhta_3team_finalproject.domain.chat.ChatRoom;
 //import com.example.jhta_3team_finalproject.service.ChattingService;
 //import lombok.RequiredArgsConstructor;

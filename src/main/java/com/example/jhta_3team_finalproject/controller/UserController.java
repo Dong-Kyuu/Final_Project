@@ -1,5 +1,7 @@
 package com.example.jhta_3team_finalproject.controller;
 
+import com.example.jhta_3team_finalproject.domain.User.MailVO;
+import com.example.jhta_3team_finalproject.domain.User.SendMail;
 import com.example.jhta_3team_finalproject.util.PagingUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,7 +12,6 @@ import com.example.jhta_3team_finalproject.service.User.UserService;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.util.Calendar;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 import java.util.Random;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -38,18 +38,15 @@ public class UserController {
     private String saveFolder;
     private UserService userService;
     private PasswordEncoder passwordEncoder;
-
+    private SendMail sendMail;
+    private static final int UPDATE_SUCCESS = 1;
+    private static final int JOIN_SUCCESS = 1;
 
     @Autowired
-    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder,SendMail sendMail) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
-    }
-    //회원가입 폼에서 아이디 검사
-    @ResponseBody
-    @RequestMapping(value ="/idcheck",method=RequestMethod.GET)
-    public int idcheck(@RequestParam("userId") String id) {
-        return userService.isId(id);
+        this.sendMail = sendMail;
     }
 
     //로그인
@@ -59,8 +56,7 @@ public class UserController {
             @CookieValue(value = "remember-me", required = false) Cookie readCookie,
             HttpSession session,
             Principal userPrincipal
-    ) {
-        if (readCookie != null) {
+    ) {if (readCookie != null) {
             //principal.getName():로그인 한 아이디 값을 알 수 있어요
             logger.info("저장됭 아이디:" + userPrincipal.getName());
             mv.setViewName("redirect:/board/list");
@@ -75,11 +71,6 @@ public class UserController {
         return mv;
     }
 
-    // 로그아웃
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public String logout() {
-        return "member/login";
-    }
 
     //회원가입
     @RequestMapping(value = "/join", method = RequestMethod.GET)
@@ -88,16 +79,41 @@ public class UserController {
     }
 
     @RequestMapping(value = "/joinProcess", method = RequestMethod.POST)
-    public String joinProcess(User user) {
+    public String joinProcess(User user ,Model model,  RedirectAttributes rattr,HttpServletRequest request) {
         user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
 
-        Random randomCreate = new Random();
-        int random = randomCreate.nextInt(100000);
-        user.setUserNum(random);
-
         logger.info(("User: " + user.toString()));
-        userService.join(user);
-        return "redirect:/user/login";
+        int result= userService.join(user);
+
+        if(result == JOIN_SUCCESS) {
+             //회원가입 성공 시 메일 전송
+            MailVO vo = new MailVO();
+            vo.setTo(user.getUserEmail());
+            sendMail.sendMail(vo);
+            logger.info(sendMail+"확인");
+
+            rattr.addFlashAttribute("result", "joinSuccess");
+            return "redirect:/user/login";
+        } else {
+            model.addAttribute("url", request.getRequestURI());
+            model.addAttribute("message", "회원가입 실패");
+            return "error";
+        }
+
+
+    }
+
+    //회원가입 폼에서 아이디 검사
+    @ResponseBody
+    @RequestMapping(value ="/idcheck",method=RequestMethod.GET)
+    public int idcheck(@RequestParam("userId") String id) {
+        return userService.getUserId(id);
+    }
+
+    // 로그아웃
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout() {
+        return "member/login";
     }
 
     //비밀번호 찾기
@@ -175,7 +191,7 @@ public class UserController {
         logger.info("Updating user: " + user);
         logger.info("Update result: " + result);
 
-        if (result == 1) {
+        if (result == UPDATE_SUCCESS ) {
             rattr.addFlashAttribute("result", "updateSuccess");
             return "redirect:/user/info";
         } else {
@@ -214,24 +230,25 @@ public class UserController {
         return fileDBName;
     }
 
-//    //사원 출퇴근 관리
-//    @RequestMapping(value = "/commute")
-//    public String user_copmmute(@RequestParam(value = "page", defaultValue = "1") int page, ModelAndView mv) {
-//
-//        int limit = 10;  // 한 화면에 출력할 로우 갯수
-//        int listcount = userService.getListCount();  // 총 리스트 수를 받아옴
-//
-//        PagingUtil.Paging paging= PagingUtil.getPaging(page, limit, listcount);
-//
-//        mv.addObject("page", paging.getPage());
-//        mv.addObject("maxpage", paging.getMaxpage());
-//        mv.addObject("startpage", paging.getStartpage());
-//        mv.addObject("endpage", paging.getEndpage());
-//
-//
-//        mv.setViewName("member/commute");
-//        return "member/commute";
-//    }
+    //사원 출퇴근 관리
+    @RequestMapping(value = "/commute")
+    public String user_copmmute(@RequestParam(value = "page", defaultValue = "1") int page, ModelAndView mv) {
+
+        int limit = 10;  // 한 화면에 출력할 로우 갯수
+        int listcount = userService.getListCount();  // 총 리스트 수를 받아옴
+
+        PagingUtil.Paging paging= PagingUtil.getPaging(page, limit, listcount);
+
+        mv.addObject("page", paging.getPage());
+        mv.addObject("maxpage", paging.getMaxpage());
+        mv.addObject("startpage", paging.getStartpage());
+        mv.addObject("endpage", paging.getEndpage());
+        mv.addObject("rowNum", paging.getRowNum());
+
+
+        mv.setViewName("member/commute");
+        return "member/commute";
+    }
 
     //직원 근태 관리
     //직원 정보 관리

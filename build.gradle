@@ -37,6 +37,9 @@ dependencies {
     implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.31'
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 
+
+
+
     //2024-05-27, 이지훈 - lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -48,6 +51,8 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    //mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {
