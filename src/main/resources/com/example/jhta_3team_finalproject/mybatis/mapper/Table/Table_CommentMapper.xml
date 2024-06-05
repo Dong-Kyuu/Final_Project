@@ -5,28 +5,33 @@
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.Table.TableCommentMapper">
     <select id="getListCount" resultType="int">
         select count(*)
-        from table_comments
+        from board_comment
         where board_num = #{board_num}
     </select>
 
-    <select id = "getCommentList" resultType = "comment">
-        SELECT *
+    <select id = "getCommentList" resultType = "BoardComment">
+        SELECT
+            subquery.*,
+            u.user_department,
+            u.user_profile_picture,
+            u.user_name
         FROM (
-            SELECT *
-            FROM table_comments
-            WHERE board_num = #{board_num}
-            ORDER BY comm_regdate DESC
-        ) AS subquery
-            LIMIT #{start}, #{end};
+                 SELECT *
+                 FROM board_comment
+                 WHERE board_num = #{board_num}
+                 ORDER BY comm_regdate DESC
+                     LIMIT #{start}, #{end}
+             ) AS subquery
+                 JOIN users u ON subquery.user_num = u.user_num;
     </select>
 
     <insert id = "commentsInsert">
-        insert into table_comments(comm_id, comm_name, comm_profile, comm_content, board_num, comm_regdate)
-        values(#{comm_id}, #{comm_name}, #{comm_profile}, #{comm_content}, #{board_num}, NOW())
+        insert into board_comment(user_num, comm_content, board_num)
+        values(#{userNum}, #{commContent}, #{boardNum})
     </insert>
 
     <delete id = "commentsDelete">
-        delete 	from table_comments
+        delete 	from board_comment
 		where 	comm_num = #{num}
     </delete>
 </mapper>

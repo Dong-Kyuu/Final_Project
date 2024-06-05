@@ -6,3 +6,21 @@ th:first-of-type {
     margin-top: 50px;
     float: right;
 }
+
+.department-choice {
+    width : 39.5% !important;
+    height: 43px;
+
+}
+
+.form-group-inline {
+    display: flex;
+    align-items: center;
+}
+.form-group-inline label {
+    margin-right: 10px;
+}
+
+.margin {
+    margin-right: 5px !important;
+}

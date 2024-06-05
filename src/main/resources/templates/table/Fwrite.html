@@ -48,19 +48,28 @@
                                     <div class="form-group row" style="display: none">
                                         <label class="col-sm-1 col-form-label">Name</label>
                                         <div class="col-sm-5">
-                                            <input type="text" class="form-control" name="BOARD_NAME"
-                                                   th:value="${#authentication.principal.name}"/>
-                                            <input type="text" class="form-control" name="BOARD_ID"
-                                                   th:value="${#authentication.principal.id}"/>
+                                            <input type="text" class="form-control" name="userNum"
+                                                   th:value="${#authentication.principal.userNum}"/>
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
                                         <label class="col-sm-1 col-form-label">Title</label>
                                         <div class="col-sm-5">
-                                            <input type="text" class="form-control" name="BOARD_SUBJECT"
+                                            <input type="text" class="form-control" name="boardTitle"
                                                    id="board_subject" placeholder="제목을 입력해주세요."/>
                                         </div>
+                                    </div>
+
+                                    <div class="form-group form-group-inline">
+                                        <label class="col-sm-1 col-form-label margin" for="exampleFormControlSelect2">Department</label>
+                                        <select class="form-control department-choice" id="exampleFormControlSelect2" name="boardDepartment">
+                                            <option>ALL</option>
+                                            <option>인사부</option>
+                                            <option>관리부</option>
+                                            <option>영업부</option>
+                                            <option>총무부</option>
+                                        </select>
                                     </div>
 
                                     <div class="form-group row">
@@ -80,7 +89,7 @@
 
                                     <div class="form-group">
                                         <label for="board_content">Content</label>
-                                        <textarea class="form-control" name="BOARD_CONTENT" id="board_content" rows="10"
+                                        <textarea class="form-control" name="boardContent" id="board_content" rows="20"
                                                   placeholder="내용을 입력해주세요."></textarea>
                                     </div>
                                     <button type="submit" class="btn btn-gradient-primary me-2">등록</button>

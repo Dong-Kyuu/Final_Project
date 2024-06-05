@@ -1,6 +1,6 @@
 package com.example.jhta_3team_finalproject.mybatis.mapper.Table;
 
-import com.example.jhta_3team_finalproject.domain.Table.Comment;
+import com.example.jhta_3team_finalproject.domain.Board.BoardComment;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -13,9 +13,9 @@ public interface TableCommentMapper {
     int getListCount(int board_num);
 
     // 댓글 리스트 가져오기
-    List<Comment> getCommentList(Map<String, Integer> map);
+    List<BoardComment> getCommentList(Map<String, Integer> map);
 
-    int commentsInsert(Comment c);
+    int commentsInsert(BoardComment c);
 
     int commentsDelete(int num);
 }
