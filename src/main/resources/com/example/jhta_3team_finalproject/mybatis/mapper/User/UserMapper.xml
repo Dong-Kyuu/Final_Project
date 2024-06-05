@@ -4,13 +4,13 @@
 
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.User.UserMapper">
 
-    <select id="isId" >
+    <select id="getUserId" >
         SELECT * FROM users WHERE user_id = #{userId}
     </select>
 
     <insert id="join" >
         insert  into users
-            (user_num,user_id, user_password, user_name, user_email,user_phone_number,user_department,user_gender)
+        (user_num,user_id, user_password, user_name, user_email,user_phone_number,user_department,user_gender)
         values ( #{userNum},#{userId},#{userPassword} ,#{userName},#{userEmail},#{userPhoneNumber}, #{userDepartment},#{userGender})
     </insert>
 
@@ -29,7 +29,7 @@
     <!-- 사용자 정보 추가 -->
     <insert id="insert">
         insert  into users
-            (user_num,user_id, user_password, user_email, user_name, user_phone_number, user_department, user_position, user_gender, user_profile_picture, user_created_at, user_updated_at, user_auth)
+        (user_num,user_id, user_password, user_email, user_name, user_phone_number, user_department, user_position, user_gender, user_profile_picture, user_created_at, user_updated_at, user_auth)
         values (#{userNum},#{userId}, #{userPassword}, #{userEmail}, #{userName}, #{userPhoneNumber}, #{userDepartment}, #{userPosition}, #{userGender}, #{userProfilePicture},  NOW(), NOW(), #{userAuth})
     </insert>
 
