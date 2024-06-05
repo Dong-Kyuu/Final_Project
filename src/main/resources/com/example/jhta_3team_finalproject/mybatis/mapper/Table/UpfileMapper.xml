@@ -7,14 +7,14 @@
 
     <!-- 파일 정보 삽입 -->
     <insert id="insertFile">
-        INSERT INTO TABLE_FILES (board_num, original_file_name, file_name, upload_date)
-        VALUES (#{board_num}, #{original_file_name}, #{file_name}, NOW())
+        INSERT INTO board_upfiles(board_num, upfiles_original_file_name, upfiles_file_name, upfiles_upload_date)
+        VALUES (#{boardNum}, #{upfilesOriginalFileName}, #{upfilesFileName}, NOW())
     </insert>
 
     <!-- 특정 게시글의 파일 정보 조회 -->
-    <select id="getFilesbyBoardNum" resultType="com.example.jhta_3team_finalproject.domain.Table.Table_Files">
+    <select id="getFilesbyBoardNum" resultType="com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles">
         SELECT *
-        FROM TABLE_FILES
+        FROM board_upfiles
         WHERE board_num = #{boardNum}
     </select>
 

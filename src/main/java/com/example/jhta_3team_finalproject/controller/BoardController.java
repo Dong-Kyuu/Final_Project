@@ -1,7 +1,7 @@
 package com.example.jhta_3team_finalproject.controller;
 
-import com.example.jhta_3team_finalproject.domain.Table.Board;
-import com.example.jhta_3team_finalproject.domain.Table.Table_Files;
+import com.example.jhta_3team_finalproject.domain.Board.Board;
+import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
 import com.example.jhta_3team_finalproject.service.table.BoardService;
 import com.example.jhta_3team_finalproject.service.table.TableCommentService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -27,17 +26,17 @@ import java.util.Random;
 
 @Controller
 @RequestMapping(value = "/table")
-public class TableController {
+public class BoardController {
 
-    private static final Logger logger = LoggerFactory.getLogger(TableController.class);
+    private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 
-    @Value("${my.savefolder}")
+    @Value("${my.savefolder.board}")
     private String saveFolder;
     private BoardService BS;
     private TableCommentService CS;
 
     @Autowired
-    public TableController(BoardService BS, TableCommentService CS) {
+    public BoardController(BoardService BS, TableCommentService CS) {
         this.BS = BS;
         this.CS = CS;
     }
@@ -49,7 +48,7 @@ public class TableController {
 
         int limit = 10; // 한 화면에 출력할 로우 갯수
         int listcount = BS.getListCount(); // 총 리스트 수를 받아온다.
-
+        logger.info("listcount:" + listcount);
         // 총 페이지 수
         int maxpage = (listcount + limit - 1) / limit;
 
@@ -62,6 +61,7 @@ public class TableController {
             endpage = maxpage;
 
         List<Board> boardlist = BS.getBoardList(page, limit); // 리스트를 받아옴
+
 
         mv.setViewName("table/Free_table");
         mv.addObject("page", page);
@@ -90,9 +90,9 @@ public class TableController {
 
         // Board 객체를 먼저 저장하고, BOARD_NUM을 받아옵니다.
         BS.insertBoard(board); // Board 객체 저장
-        int boardNum = board.getBOARD_NUM(); // 저장된 BOARD_NUM 가져오기
+        int boardNum = board.getBoardNum(); // 저장된 BOARD_NUM 가져오기
 
-        List<Table_Files> files = new ArrayList<>();
+        List<BoardUpfiles> files = new ArrayList<>();
         for (MultipartFile uploadfile : uploadfiles) {
             if (!uploadfile.isEmpty()) {
                 String fileName = uploadfile.getOriginalFilename(); // 원래 파일명
@@ -103,9 +103,9 @@ public class TableController {
                 uploadfile.transferTo(new File(saveFolder + fileDBName));
                 logger.info("transferTo path = " + saveFolder + fileDBName);
 
-                Table_Files file = new Table_Files();
-                file.setOriginal_file_name(fileName);
-                file.setFile_name(fileDBName);
+                BoardUpfiles file = new BoardUpfiles();
+                file.setUpfilesOriginalFileName(fileName);
+                file.setUpfilesFileName(fileDBName);
                 files.add(file);
 
 
@@ -180,7 +180,7 @@ public class TableController {
         }
 
         Board board = BS.getDetail(num);
-        List<Table_Files> upfiles = BS.getFilesByBoardNum(num);
+        List<BoardUpfiles> upfiles = BS.getFilesByBoardNum(num);
         // board = null; // error페이지 이동 확인하고자 임의로 지정.
         if (board == null) {
             logger.info("상세보기 실패");

@@ -114,7 +114,7 @@
 <script th:src="@{/assets/js/hoverable-collapse.js}"></script>
 <script th:src="@{/assets/js/misc.js}"></script>
 <!-- endinject -->
-<script>
+<script th:inline="javascript">
   function formatPhoneNumber(input) {
     // Remove all non-numeric characters
     let phone = input.value.replace(/\D/g, '');

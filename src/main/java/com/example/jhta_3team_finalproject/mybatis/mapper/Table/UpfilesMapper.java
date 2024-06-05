@@ -1,11 +1,11 @@
 package com.example.jhta_3team_finalproject.mybatis.mapper.Table;
 
-import com.example.jhta_3team_finalproject.domain.Table.Table_Files;
+import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
 
 import java.util.List;
 
 public interface UpfilesMapper {
-    void insertFile(Table_Files file);
+    void insertFile(BoardUpfiles file);
 
-    List<Table_Files> getFilesbyBoardNum(int boardNum);
+    List<BoardUpfiles> getFilesbyBoardNum(int boardNum);
 }

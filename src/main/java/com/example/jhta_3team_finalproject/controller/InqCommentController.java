@@ -1,7 +1,7 @@
 package com.example.jhta_3team_finalproject.controller;
 
 import com.example.jhta_3team_finalproject.domain.inquery.InqueryComment;
-import com.example.jhta_3team_finalproject.service.InqCommentService;
+import com.example.jhta_3team_finalproject.service.customer.InqCommentService;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

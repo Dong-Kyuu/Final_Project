@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- SQL 맵퍼 파일은 XML이기 때문에 제일 먼저 XML 선언이 옵니다. -->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- Mapper 인터페이스의 패키지명과 이름을 namespace로 설정합니다. -->
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.customer.InqCommentMapper">
+
+    <select id="getListCount" resultType="int">
+        select count(*)
+        from inquery_comment
+        where comm_board_num = #{commBoardNum}
+    </select>
+
+    <insert id="commentsInsert" parameterType="inqueryComment">
+        <!--		<selectKey resultType="int" order="BEFORE" keyProperty="num">-->
+        <!--			select nvl(max(num),0)+1 from inquery_comm-->
+        <!--		</selectKey>-->
+        insert into inquery_comment
+        (comm_num, comm_id, comm_content, reg_date, comm_board_num,
+        comm_re_level, comm_re_sequence, comm_re_referer)
+        values
+        (NULL, #{commId}, #{commContent}, NOW(), #{commBoardNum},
+        #{commReLevel}, #{commReSequence}, #{commReReferer})
+    </insert>
+
+    <!-- 2024-05-08 $=abc, #='abc' -->
+    <select id="getCommentList" parameterType="map" resultType="inqueryComment">
+        select comm_num, inquery_comment.comm_id, comm_content, reg_date,
+        comm_re_level, comm_re_sequence, comm_re_referer
+        from inquery_comment join user
+        on inquery_comment.comm_id = user.id
+        <where>
+            comm_board_num = #{commBoardNum}
+        </where>
+        order by comm_re_referer ${sort}, comm_re_sequence asc
+    </select>
+
+    <update id="commentsUpdate">
+        update inquery_comment
+        set comm_content=#{commContent}
+        where comm_num = #{commNum}
+    </update>
+
+    <delete id="commentsDelete">
+        delete inquery_comment where comm_num = #{commNum}
+    </delete>
+
+    <update id="commentReplyUpdate">
+        update inquery_comment
+        set comm_re_sequence = comm_re_sequence + 1
+        where comm_re_referer = #{commReReferer}
+        and comm_re_sequence <![CDATA[ > ]]> #{commReSequence}
+    </update>
+
+    <insert id="commentReply">
+        <selectKey resultType="int" order="BEFORE" keyProperty="commNum">
+            select IFNULL(MAX(comm_num),0)+1 from inquery_comment
+        </selectKey>
+        insert into inquery_comment
+        (comm_num, comm_id, comm_content, reg_date, comm_board_num,
+        comm_re_level, comm_re_sequence, comm_re_referer)
+        values
+        (#{commNum}, #{commId}, #{commContent}, NOW(), #{commBoardNum},
+        #{commReLevel}, #{commReSequence}, #{commReReferer})
+    </insert>
+</mapper>

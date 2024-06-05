@@ -51,7 +51,7 @@
                 <div class="header-wrapp">
                     <div class="app-detail">
                         <div class="chat-profile-picture">
-                            <img th:src="@{/image/default.png}" alt="">
+                            <img th:src="@{/image/chat/default.png}" alt="">
                         </div>
                         <div class="chat-profile-name"></div>
                         <div class="status chat-profile-dept"></div>
@@ -132,36 +132,19 @@
                                             </p>
                                             <div class="form-group">
                                                     <span>
-                                                        <i class="material-icons">assignment_ind</i>
+                                                        <i class="material-icons">contacts</i>
                                                     </span>
                                                 <input type="text" name="chat_profile_id" placeholder="아이디" value="" disabled>
                                             </div>
                                             <div class="form-group">
                                                     <span>
-                                                        <i class="material-icons">face</i>
+                                                        <i class="material-icons">account_circle</i>
                                                     </span>
                                                 <input type="text" name="chat_profile_name_input" placeholder="이름" value="" disabled>
                                             </div>
-                                            <!--<div class="form-group">
-                                                    <span>
-                                                        <i class="material-icons">photo</i>
-                                                    </span>
-                                                <label class="prifile-image-tooltip" style="font-size: 12px;"
-                                                       title="프로필 사진">
-                                                    <img th:src="@{/image/customer/attach.png}" alt="파일첨부"
-                                                         id="attach" width="18">
-                                                    <input type="file" id="profile-upfile" name="uploadfile">
-                                                </label>
-                                                <div style="width: 50%; display: inline-block;">
-                                                        <span id="filevalue"
-                                                              style="font-size: 12px; text-align: left;"></span>
-                                                    <img th:src="@{/image/customer/remove.png}" alt="파일삭제"
-                                                         width="10px" class="remove">
-                                                </div>
-                                            </div>-->
                                             <div class="form-group h-80">
                                                     <span>
-                                                        <i class="material-icons">info</i>
+                                                        <i class="material-icons">textsms</i>
                                                     </span>
                                                 <textarea id="chat-profile-status-msg"
                                                           placeholder="상태메시지를 입력해주세요."
@@ -175,22 +158,16 @@
                                             </p>
                                             <div class="form-group">
                                                     <span>
-                                                        <i class="material-icons">local_post_office</i>
+                                                        <i class="material-icons">contact_mail</i>
                                                     </span>
                                                 <input type="text" name="chat_profile_email" placeholder="이메일" value="" disabled>
                                             </div>
                                             <div class="form-group">
                                                     <span>
-                                                        <i class="material-icons">phone</i>
+                                                        <i class="material-icons">contact_phone</i>
                                                     </span>
                                                 <input type="text" name="chat_profile_phone"  placeholder="전화번호" value="" disabled>
                                             </div>
-                                            <!--<div class="form-group">
-                                                    <span>
-                                                        <i class="material-icons">fingerprint</i>
-                                                    </span>
-                                                <input type="text" placeholder="비밀번호" value="">
-                                            </div>-->
                                         </div>
                                     </div>
                                 </div>
@@ -240,7 +217,7 @@
                                 </div> -->
                                 <h1 class="nav-profile-h1"> 홍길동 </h1>
                                 <span class="user-avatar small hasStory">
-                                    <img th:src="@{/image/default.png}">
+                                    <img th:src="@{/image/chat/default.png}">
                                 </span>
                             </div>
                         </div>
@@ -281,25 +258,25 @@
                                 </div>
                                 <div class=avatar-container>
                                         <span class="user-avatar offline small"> <img
-                                                th:src="@{/image/default.png}">
+                                                th:src="@{/image/chat/default.png}">
                                         </span>
                                     <p>홍길동</p>
                                 </div>
                                 <div class=avatar-container>
                                         <span class="user-avatar offline small"> <img
-                                                th:src="@{/image/default.png}">
+                                                th:src="@{/image/chat/default.png}">
                                         </span>
                                     <p>홍동길</p>
                                 </div>
                                 <div class=avatar-container>
                                         <span class="user-avatar offline small"> <img
-                                                th:src="@{/image/default.png}">
+                                                th:src="@{/image/chat/default.png}">
                                         </span>
                                     <p>동길홍</p>
                                 </div>
                                 <div class=avatar-container>
                                         <span class="user-avatar offline small"> <img
-                                                th:src="@{/image/default.png}">
+                                                th:src="@{/image/chat/default.png}">
                                         </span>
                                     <p>동길동 </p>
                                 </div>
@@ -376,7 +353,7 @@
                     <ul class="touch-y">
                         <li class="recive">
                             <div class="avatar-container">
-                                    <span class="user-avatar offline small"> <img th:src="@{/image/default.png}">
+                                    <span class="user-avatar offline small"> <img th:src="@{/image/chat/default.png}">
                                     </span>
                             </div>
                             <p class="chat-nickname">대표님</p>
@@ -875,10 +852,10 @@
                     console.log(rdata);
                     let img = ''; // 이미지 처리 시
                     if (rdata.profile_picture === 'default.png') {
-                        img = "<img src='/image/default.png' />";
+                        img = "<img src='/image/chat/default.png' />";
                     } else {
                         // 업로드된 프로필을 보여주도록 한다.
-                        img = "<img src='/image/default.png' />";
+                        img = "<img src='/image/chat/default.png' />";
                     }
 
                     var $chatProfilePicture = $('.chat-profile-picture');
@@ -892,13 +869,13 @@
 
                     $chatProfilePicture.empty();
                     $chatProfilePicture.html(img);
-                    $chatProfileName.html(rdata.name);
-                    $chatProfileDept.html(rdata.department);
-                    $chatProfileId.val(rdata.id);
-                    $chatProfileNameInput.val(rdata.name);
-                    $chatProfileStatusMsg.html(rdata.chatStatusMsg);
-                    $chatProfileEmail.val(rdata.email);
-                    $chatProfilePhone.val(rdata.phoneNumber);
+                    $chatProfileName.html(rdata.userName);
+                    $chatProfileDept.html(rdata.userDepartment);
+                    $chatProfileId.val(rdata.userId);
+                    $chatProfileNameInput.val(rdata.userName);
+                    $chatProfileStatusMsg.html(rdata.userChatStatusMsg);
+                    $chatProfileEmail.val(rdata.userEmail);
+                    $chatProfilePhone.val(rdata.userPhoneNumber);
                 }
             }) // ajax end
         }
@@ -926,10 +903,10 @@
                     $(rdata).each(function () {
                         let img = ''; // 이미지 처리 시
                         if (this.profile_picture === 'default.png') {
-                            img = "<img src='/image/default.png' />";
+                            img = "<img src='/image/chat/default.png' />";
                         } else {
                             // 업로드된 프로필을 보여주도록 한다.
-                            img = "<img src='/image/default.png' />";
+                            img = "<img src='/image/chat/default.png' />";
                         }
 
                         output += "<li>";
@@ -939,19 +916,19 @@
                         output += "       " + img;
                         output += "    </div>";
                         output += "    <div class='mes-detail'>";
-                        if(this.chat_status_msg === null) { // 2024-06-02, chatStatusMsg로 변경 예정
+                        if(this.userChatStatusMsg === null) { // 2024-06-02, chatStatusMsg로 변경 예정
                             output += "        <div class='mes-col1 chat-friend-list-col1' style='margin-top: 18px;'>";
                             output += "            <div class='sender-name'>";
-                            output += "                "+ this.department + " - " + this.name;
+                            output += "                "+ this.userDepartment + " - " + this.userName;
                             output += "            </div>";
                             output += "        </div>";
                         } else {
                             output += "        <div class='mes-col1 chat-friend-list-col1'>";
                             output += "            <div class='sender-name'>";
-                            output += "                "+ this.department + " - " + this.name;
+                            output += "                "+ this.userDepartment + " - " + this.userName;
                             output += "            </div>";
                             output += "            <div class='mes-preview'>";
-                            output += "                " + this.chatStatusMsg;
+                            output += "                " + this.userChatStatusMsg;
                             output += "            </div>";
                             output += "        </div>";
                         }
@@ -986,10 +963,10 @@
                     res.forEach(function (d, idx) {
                         let img = ''; // 이미지 처리 시
                         if (this.profile_picture === 'default.png') {
-                            img = "<img src='/image/default.png' />";
+                            img = "<img src='/image/chat/default.png' />";
                         } else {
                             // 업로드된 프로필을 보여주도록 한다. (채팅방 화면은 임시 처리)
-                            img = "<img src='/image/default.png' />";
+                            img = "<img src='/image/chat/default.png' />";
                         }
                         var rn = d.roomName;
                         var roomNumber = d.chatRoomNum;

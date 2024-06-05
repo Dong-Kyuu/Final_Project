@@ -1,4 +1,4 @@
-package com.example.jhta_3team_finalproject.service;
+package com.example.jhta_3team_finalproject.service.customer;
 
 
 import com.example.jhta_3team_finalproject.domain.inquery.InqueryBoard;
