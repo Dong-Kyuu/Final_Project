@@ -179,7 +179,7 @@ public class User implements UserDetails {
         return userPhoneNumber;
     }
 
-    public void setUserPhone_number(String userPhoneNumber) {
+    public void setUserPhoneNumber(String userPhoneNumber) {
         this.userPhoneNumber = userPhoneNumber;
     }
 
