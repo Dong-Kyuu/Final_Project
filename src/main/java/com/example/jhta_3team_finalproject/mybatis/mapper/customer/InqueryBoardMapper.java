@@ -1,4 +1,4 @@
-package com.example.jhta_3team_finalproject.mybatis.mapper;
+package com.example.jhta_3team_finalproject.mybatis.mapper.customer;
 
 
 import com.example.jhta_3team_finalproject.domain.inquery.InqueryBoard;

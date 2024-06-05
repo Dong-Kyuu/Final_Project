@@ -1,7 +1,7 @@
-package com.example.jhta_3team_finalproject.service;
+package com.example.jhta_3team_finalproject.service.customer;
 
 import com.example.jhta_3team_finalproject.domain.inquery.InqueryBoard;
-import com.example.jhta_3team_finalproject.mybatis.mapper.InqueryBoardMapper;
+import com.example.jhta_3team_finalproject.mybatis.mapper.customer.InqueryBoardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

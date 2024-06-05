@@ -2,8 +2,8 @@ package com.example.jhta_3team_finalproject.controller;
 
 
 import com.example.jhta_3team_finalproject.domain.inquery.InqueryBoard;
-import com.example.jhta_3team_finalproject.service.InqCommentService;
-import com.example.jhta_3team_finalproject.service.InqueryService;
+import com.example.jhta_3team_finalproject.service.customer.InqCommentService;
+import com.example.jhta_3team_finalproject.service.customer.InqueryService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;

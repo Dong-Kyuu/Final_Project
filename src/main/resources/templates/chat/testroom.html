@@ -596,9 +596,9 @@
             var tag = "<main class='row title'><ul><li class='num'>순서</li><li class='chatRoom'>방 이름</li><li class='sessionId'>작성자</li><li class='go'>참가</li></ul></main>";
             res.forEach(function (d, idx) {
                 // var rn = d.chat_name.trim();
-                var rn = d.room_name;
-                var roomNumber = d.chat_room_num;
-                var sessionId = d.chat_session_id;
+                var rn = d.roomName;
+                var roomNumber = d.chatRoomNum;
+                var sessionId = d.chatSessionId;
                 tag += "<div class='row nfl row-fadeIn-wrapper'>"
                     + "<ul><li class='num'>"
                     + (idx + 1)
