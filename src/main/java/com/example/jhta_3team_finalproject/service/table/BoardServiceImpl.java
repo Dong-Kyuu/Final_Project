@@ -3,8 +3,8 @@ package com.example.jhta_3team_finalproject.service.table;
 import java.util.HashMap;
 import java.util.List;
 
-import com.example.jhta_3team_finalproject.domain.Table.Board;
-import com.example.jhta_3team_finalproject.domain.Table.Table_Files;
+import com.example.jhta_3team_finalproject.domain.Board.Board;
+import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
 import com.example.jhta_3team_finalproject.mybatis.mapper.Table.BoardMapper;
 import com.example.jhta_3team_finalproject.mybatis.mapper.Table.UpfilesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,15 +48,15 @@ public class BoardServiceImpl implements BoardService {
     }
 
     // 글 등록 시 업로드 파일 저장
-    public void insertFile(int boardNum, List<Table_Files> files) {
-        for (Table_Files file : files) {
-            file.setBoard_num(boardNum); // 게시글 번호 생성
+    public void insertFile(int boardNum, List<BoardUpfiles> files) {
+        for (BoardUpfiles file : files) {
+            file.setBoardNum(boardNum); // 게시글 번호 생성
             Fdao.insertFile(file);
         }
     }
 
     // 업로드파일 조회
-    public List<Table_Files> getFilesByBoardNum(int board_num) {
+    public List<BoardUpfiles> getFilesByBoardNum(int board_num) {
         return Fdao.getFilesbyBoardNum(board_num);
     }
 

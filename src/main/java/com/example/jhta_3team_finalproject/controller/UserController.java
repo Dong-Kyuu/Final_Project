@@ -34,7 +34,7 @@ import java.io.*;
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @Value("${my.savefolder}")
+    @Value("${my.savefolder.profile}")
     private String saveFolder;
     private UserService userService;
     private PasswordEncoder passwordEncoder;

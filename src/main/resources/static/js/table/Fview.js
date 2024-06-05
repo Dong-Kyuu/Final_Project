@@ -88,7 +88,7 @@ $(function () {
     $("#comment table").hide(); 					// 1
     let page = 1;
     const count = parseInt($("#count-comment").text());
-    console.log(count);
+    console.log("댓글 수 : " + count);
 
     if (count != 0) { 								// 댓글 갯수가 0이 아니면
         getList(1); 						    // 첫 페이지의 댓글을 구해온다. (한 페이지에 3개씩 가져온다.)
@@ -109,13 +109,12 @@ $(function () {
         if (confirm('댓글을 등록하시겠어요?')) {
             url = "../comment/add";
             data = {
-                "comm_content": comm,
-                "comm_id": $("#loginid").val(),
-                "comm_name": $("#loginname").val(),
-                "comm_profile": $("#loginprofile").val(),
-                "board_num": $("#board_num").val()
+                "commContent": comm,
+                "userNum": $("#loginNum").val(),
+                "boardNum": $("#board_num").val()
             };
             enter = true;
+            $('.write-content').val('');
         }
         console.log(header, token)
         if (enter) {
@@ -163,15 +162,15 @@ $(function () {
                         $(rdata.list).each(function () {
                             let output = '';
 
-                            console.log("로그인한 아이디 = " + $("#loginid").val() + "/ 댓글의 아이디 = " + this.comm_id)
+                            console.log("로그인한 아이디 = " + $("#loginNum").val() + "/ 댓글의 아이디 = " + this.commWriter)
 
                             output += "<div class=\"comment-box\" style=\"margin-bottom:20px;\">\n" +
-                                "               <input type='hidden' class='comment_num' value='" + this.comm_num + "' >" +
+                                "               <input type='hidden' class='comment_num' value='" + this.commNum + "' >" +
                                 "               <div style=\"height: 25px;\">\n" +
                                 // 프사
-                                "                   <img src=\"../image/" + this.comm_profile + "\" alt=\"../image/default.png\" style=\"width:30px !important; float: left; margin: 2px 15px 0px 0px;\">\n"
+                                "                   <img src=\"../upload/user" + this.writerProfilePicture + "\" alt=\"../image/default.png\" style=\"width:30px !important; float: left; margin: 2px 15px 0px 0px;\">\n"
 
-                            if ($("#loginid").val() == this.comm_id) {
+                            if ($("#loginNum").val() == this.userNum) {
                                 output += "     <i class=\"mdi mdi-dots-vertical\" style=\"float: right; font-size: 25px; margin-top:3px;\"></i>\n"
                             } else {
                                 if (userInfo.authorities.includes('ROLE_TEAM') && userInfo.department === '관리부') {
@@ -183,10 +182,11 @@ $(function () {
                             output += "         <div style=\"height:40px; padding-top:0px;\">\n" +
                                 // 댓글 작성자
                                 "                       <span class=\"card-title\" style=\"font-width: bold; font-size:13px\">\n" +
-                                this.comm_name +
+                                this.commWriter +
                                 "                       </span>\n" +
                                 "                       <p class=\"card-description\" style=\"font-size:10px\">\n" +
-                                "                           부서명 <code style=\"font-size:10px\"> 직급 </code> <code style=\"font-size:10px; color:dimgray\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + this.comm_regdate + "</code>\n" +
+                                                           this.writerDepartment +
+                                "                               <code style=\"font-size:10px\"> 직급 </code> <code style=\"font-size:10px; color:dimgray\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + this.commRegdate + "</code>\n" +
                                 "                       </p>\n" +
                                 "                   </div>\n" +
                                 "               </div>\n" +
@@ -201,7 +201,7 @@ $(function () {
                             $("#comment-box").append(output);
 
                             // append한 마지막 tr의 2번째 자식 td를 찾아 text()메서드로 content를 넣는다.
-                            $(".comment-box:last").find(".comm-contentbox").html("<hr>" + this.comm_content + "<br>"); // 3
+                            $(".comment-box:last").find(".comm-contentbox").html("<hr>" + this.commContent + "<br>"); // 3
 
                         }) // each end
 
