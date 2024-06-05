@@ -875,7 +875,7 @@
                     $chatProfileNameInput.val(rdata.userName);
                     $chatProfileStatusMsg.html(rdata.userChatStatusMsg);
                     $chatProfileEmail.val(rdata.userEmail);
-                    $chatProfilePhone.val(rdata.userPhone_number);
+                    $chatProfilePhone.val(rdata.userPhoneNumber);
                 }
             }) // ajax end
         }
@@ -916,7 +916,7 @@
                         output += "       " + img;
                         output += "    </div>";
                         output += "    <div class='mes-detail'>";
-                        if(this.chat_status_msg === null) { // 2024-06-02, chatStatusMsg로 변경 예정
+                        if(this.userChatStatusMsg === null) { // 2024-06-02, chatStatusMsg로 변경 예정
                             output += "        <div class='mes-col1 chat-friend-list-col1' style='margin-top: 18px;'>";
                             output += "            <div class='sender-name'>";
                             output += "                "+ this.userDepartment + " - " + this.userName;
@@ -928,7 +928,7 @@
                             output += "                "+ this.userDepartment + " - " + this.userName;
                             output += "            </div>";
                             output += "            <div class='mes-preview'>";
-                            output += "                " + this.chatStatusMsg;
+                            output += "                " + this.userChatStatusMsg;
                             output += "            </div>";
                             output += "        </div>";
                         }
