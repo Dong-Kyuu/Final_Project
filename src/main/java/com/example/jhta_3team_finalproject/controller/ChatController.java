@@ -24,11 +24,6 @@ public class ChatController {
     List<ChatRoom> chatRoomList;
     static int roomNumber = 0;
 
-    @RequestMapping(value = "scale")
-    public String testscale() {
-        return "chat/testscale";
-    }
-
     @RequestMapping(value = "chatview")
     public String chatView() {
         return "chat/blank-page";

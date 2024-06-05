@@ -9,6 +9,7 @@
             $("#dialog").dialog("open");
         });
 
+        /** 2024-06-06, scale 기능 추가 */
         $(document).ready(function() {
             var scale = 1;
             var $iframe = $('#chatIframe');
@@ -30,16 +31,13 @@
             });
         });
 
-        var startMouseX, startMouseY;
-        var startDialogX, startDialogY;
-
         $("#dialog").dialog({
             autoOpen: false,
             draggable: true,
             resizable: false,
             width: 310,
             maxHeight: 578,
-            position: {
+            position: { /** 2024-06-06, 채팅 Open 위치 변경 */
                 of: '#opener',
                 at: 'right bottom',
                 my: 'left top'
@@ -77,7 +75,6 @@
         $(".ui-widget.ui-widget-content").css('border', '0px');
         $(".ui-widget-content").css('max-height', '578px');
         $(".ui-dialog-titlebar-close").css('right', '0.5em');
-        // $(".ui-dialog-title").html('<i class="mdi mdi-fullscreen" id="zoomButton"></i>');
 
         var $active_line = $("#active-line");
         $active_line.css("left", '115px');
