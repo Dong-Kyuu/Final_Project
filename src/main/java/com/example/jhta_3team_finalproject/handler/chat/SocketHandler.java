@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.jhta_3team_finalproject.config.chat.FileItemMultipartFile;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 import com.example.jhta_3team_finalproject.service.chat.ChattingService;
+import com.example.jhta_3team_finalproject.service.chat.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -38,6 +39,9 @@ public class SocketHandler extends TextWebSocketHandler {
 
     @Autowired
     ChattingService chattingService;
+
+    @Autowired
+    RedisService redisService;
 
     @Autowired
     ResourceLoader resourceLoader;
@@ -248,7 +252,9 @@ public class SocketHandler extends TextWebSocketHandler {
         chatMessage.setChatRoomNum(Long.valueOf(roomNumber));
         log.info("{}", chatMessage);
         log.info("{}", chatMessage.getChatRoomNum());
-        chatMessageList = chattingService.searchMessages(chatMessage);
+        chatMessageList = redisService.getRedisChatMessage(chatMessage);
+        //chatMessageList = chattingService.searchMessages(chatMessage);
+
         log.info("{} : 입니다.", chatMessageList);
 
         int idx = rls.size(); // 방의 사이즈를 조사한다.

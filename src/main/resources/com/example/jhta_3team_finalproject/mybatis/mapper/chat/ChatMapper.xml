@@ -19,14 +19,13 @@
         WHERE chat_room_num = #{chatRoomNum}
         ORDER BY message_num ASC
     </select>
-    <!-- AND send_time between #{sendTime} and NOW() -->
 
-    <!-- 채팅방의 채팅 기록 가져오기, 유저 기준으로도 추가 예정 -->
+    <!-- 채팅방의 채팅 기록 1일씩 가져오기 -->
     <select id="redisSearchMessages" resultType="chatMessage">
         SELECT *
         FROM chat_message
         WHERE chat_room_num = #{chatRoomNum}
-        AND send_time between #{sendTime} and NOW()
+        AND DATE_FORMAT(send_time, '%Y-%m-%d') = #{dateStr}
         ORDER BY message_num ASC
     </select>
 

@@ -16,10 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SpringBootTest
 class RedisServiceTest {
@@ -50,11 +47,12 @@ class RedisServiceTest {
         String oneWeekAgoDateStr = simpleDateFormat.format(oneWeekAgoDate);
         logger.info("{}", oneWeekAgoDate);
         logger.info("1주일 전은 {} 입니다.", oneWeekAgoDateStr);
-        List<ChatMessage> chatMessageList = redisService.getRedisChatMessage(5, oneWeekAgoDate);
+        List<ChatMessage> chatMessageList = redisService.getRedisChatMessage(new ChatMessage());
+        //List<ChatMessage> chatMessageList = redisService.getRedisChatMessage(5, oneWeekAgoDate);
         logger.info("getChatMessage");
 
         /**
-         * when - RDB -> Redis 삽입
+         * when - RDB -> Redis 로 삽입
          */
         chatMessageList.forEach(chatMessage -> {
             //logger.info("chatMessage: {}", chatMessage);
@@ -63,7 +61,7 @@ class RedisServiceTest {
             String dateKey = simpleDateFormat.format(chatMessage.getSendTime());
             String key = roomKey + ":" + dateKey; // 방번호:날짜
             Long expiredTime = 1L; // 만료 시간 1주일 부여
-            redisUtils.setInitList(key, value);
+            redisUtils.setInitSets(key, value);
             redisUtils.setExpired(key, expiredTime);
         });
 
@@ -72,7 +70,11 @@ class RedisServiceTest {
          * String key = "5:2024-06-04"; // 방번호:날짜
          */
         String key = "5:2024-06-04";
-        Set<ChatMessage> chatList = redisUtils.getList(key);
+        Set<ChatMessage> chatSet = redisUtils.getSets(key);
+        List<ChatMessage> chatList = new ArrayList<>(chatSet);
+
+        chatList.sort(Comparator.comparing(ChatMessage::getMessageNum));
+
         chatList.forEach(chatMessage -> {
             logger.info("{}", chatMessage);
         });

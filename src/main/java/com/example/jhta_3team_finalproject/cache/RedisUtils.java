@@ -19,13 +19,16 @@ public class RedisUtils {
         redisTemplate.expire(key, expiredTime, TimeUnit.DAYS);
     }
 
-    public void setInitList(String key, ChatMessage value) {
+    public void setInitSets(String key, ChatMessage value) {
         redisTemplate.opsForSet().add(key, value);
     }
 
-    public Set<ChatMessage> getList(String key) {
-        // -1 인 경우 전체 조회
-        return  redisTemplate.opsForSet().members(key);
+    public Set<ChatMessage> getSets(String key) {
+        return redisTemplate.opsForSet().members(key);
+    }
+
+    public boolean isKeyExists(String key) {
+        return redisTemplate.hasKey(key);
     }
 
     public void setData(String key, ChatMessage value, Long expiredTime){

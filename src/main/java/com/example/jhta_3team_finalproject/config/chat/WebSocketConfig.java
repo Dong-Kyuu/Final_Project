@@ -22,11 +22,11 @@ public class WebSocketConfig implements WebSocketConfigurer {
         registry.addHandler(socketHandler, "/chating/{roomNumber}").setAllowedOrigins("*");
     }
 
-//    @Bean
-//    public ServletServerContainerFactoryBean createWebSocketContainer() {
-//        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
-//        container.setMaxTextMessageBufferSize(500000); // 채팅 버퍼 용량 제한
-//        container.setMaxBinaryMessageBufferSize(500000);
-//        return container;
-//    }
+    @Bean
+    public ServletServerContainerFactoryBean createWebSocketContainer() {
+        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+        container.setMaxTextMessageBufferSize(500000); // 채팅 버퍼 용량 제한
+        container.setMaxBinaryMessageBufferSize(500000);
+        return container;
+    }
 }
