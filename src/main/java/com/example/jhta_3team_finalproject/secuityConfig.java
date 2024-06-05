@@ -49,7 +49,7 @@ public class secuityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, RoleHierarchy roleHierarchy) throws Exception {
 
-       // http.headers().frameOptions().disable();
+       http.headers().frameOptions().disable();
 
         // 내가 만든 페이지로 이동합니다
         http.

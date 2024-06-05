@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -31,7 +32,8 @@
           <div class="content-wrapper">
             <div class="row"></div>
             <div class="col-12 grid-margin stretch-card">
-              <th:block th:replace="~{calendar/mycalendar :: calendar}"></th:block>
+<!--              <th:block th:replace="~{calendar/mycalendar :: calendar}"></th:block>-->
+              <iframe style="width: 1400px; height: 1204px;" th:src="@{/cal/mycalendar}"></iframe>
             </div>
           </div>
           <!-- content-wrapper ends -->
@@ -60,6 +62,8 @@
     <script src="../../assets/js/misc.js"></script>
     <!-- endinject -->
     <!-- Custom js for this page -->
+    <!-- End custom js for this page -->
+    <th:block th:replace="~{chat/chatDrag :: chatDragJS}"></th:block>
     <!-- End custom js for this page -->
   </body>
 </html>

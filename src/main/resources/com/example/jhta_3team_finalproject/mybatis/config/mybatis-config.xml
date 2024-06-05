@@ -26,6 +26,7 @@
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/TourPackage/TripMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/TourPackage/OptionMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/TourPackage/CartMapper.xml"/>
+		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/calendar/Calendar.xml"/>
 	</mappers>
 
 </configuration>
