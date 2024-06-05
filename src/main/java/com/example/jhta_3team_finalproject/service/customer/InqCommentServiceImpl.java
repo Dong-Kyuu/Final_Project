@@ -1,8 +1,8 @@
-package com.example.jhta_3team_finalproject.service;
+package com.example.jhta_3team_finalproject.service.customer;
 
 
 import com.example.jhta_3team_finalproject.domain.inquery.InqueryComment;
-import com.example.jhta_3team_finalproject.mybatis.mapper.InqCommentMapper;
+import com.example.jhta_3team_finalproject.mybatis.mapper.customer.InqCommentMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -55,7 +55,7 @@ public class InqCommentServiceImpl implements InqCommentService {
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("commentBoardNum", commentBoardNum);
+        map.put("commBoardNum", commentBoardNum);
         map.put("sort", sort);
 
         List<InqueryComment> list = dao.getCommentList(map);
@@ -66,14 +66,14 @@ public class InqCommentServiceImpl implements InqCommentService {
 
         list.forEach(inqueryComment -> {
             JsonObject object = new JsonObject();
-            object.addProperty("num", inqueryComment.getNum());
-            object.addProperty("id", inqueryComment.getId());
-            object.addProperty("content", inqueryComment.getContent());
+            object.addProperty("num", inqueryComment.getCommNum());
+            object.addProperty("id", inqueryComment.getCommId());
+            object.addProperty("content", inqueryComment.getCommContent());
             object.addProperty("reg_date", inqueryComment.getRegDate());
-            object.addProperty("comment_board_num", inqueryComment.getCommentBoardNum());
-            object.addProperty("comment_re_lev", inqueryComment.getCommentReLevel());
-            object.addProperty("comment_re_seq", inqueryComment.getCommentReSequence());
-            object.addProperty("comment_re_ref", inqueryComment.getCommentReReferer());
+            object.addProperty("comment_board_num", inqueryComment.getCommBoardNum());
+            object.addProperty("comment_re_lev", inqueryComment.getCommReLevel());
+            object.addProperty("comment_re_seq", inqueryComment.getCommReSequence());
+            object.addProperty("comment_re_ref", inqueryComment.getCommReReferer());
             array.add(object);
         });
         return array;
@@ -89,8 +89,8 @@ public class InqCommentServiceImpl implements InqCommentService {
     public int commentsReply(InqueryComment co) {
         commentReplyUpdate(co);
         // double i = 1/0;
-        co.setCommentReLevel(co.getCommentReLevel() + 1);
-        co.setCommentReSequence(co.getCommentReSequence() + 1);
+        co.setCommReLevel(co.getCommReLevel() + 1);
+        co.setCommReSequence(co.getCommReSequence() + 1);
         return dao.commentReply(co);
     }
 

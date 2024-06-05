@@ -2,64 +2,82 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.ChatMapper">
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.chat.ChatMapper">
     <!-- 채팅 추가 -->
     <insert id="createMessage" parameterType="chatMessage">
         <!--        <selectKey resultType="int" order="BEFORE" keyProperty="sender_num">-->
         <!--            SELECT num FROM users WHERE id = #{senderId}-->
         <!--        </selectKey>-->
-        INSERT INTO com_message(message_num, chat_room_num, sender_id, message_content, read_count, send_time)
-        VALUES (NULL, #{chatRoomNum}, #{senderId}, #{messageContent}, #{readCount}, now())
+        INSERT INTO chat_message(message_num, chat_room_num, sender_id, message_content, read_count, file_url, file_origin_name, send_time)
+        VALUES (NULL, #{chatRoomNum}, #{senderId}, #{messageContent}, #{readCount}, #{fileUrl}, #{fileOriginName}, now())
     </insert>
 
     <!-- 채팅방의 채팅 기록 가져오기, 유저 기준으로도 추가 예정 -->
     <select id="searchMessages" resultType="chatMessage">
         SELECT *
-        FROM com_message
+        FROM chat_message
         WHERE chat_room_num = #{chatRoomNum}
-          AND send_time between #{sendTime} and NOW()
         ORDER BY message_num ASC
     </select>
+
+    <!-- 채팅방의 채팅 기록 1일씩 가져오기 -->
+    <select id="redisSearchMessages" resultType="chatMessage">
+        SELECT *
+        FROM chat_message
+        WHERE chat_room_num = #{chatRoomNum}
+        AND DATE_FORMAT(send_time, '%Y-%m-%d') = #{dateStr}
+        ORDER BY message_num ASC
+    </select>
+<!--    2024-06-05, ROLLUP을 통한 타임 스탬프 구현-->
+<!--    SELECT *, DATE(send_time) as chat_time_stamp-->
+<!--    FROM chat_message-->
+<!--    WHERE DATE_FORMAT(send_time, '%Y-%m-%d') = '2024-06-04'-->
+<!--    group by message_num WITH ROLLUP;-->
+
+    <!-- 2024-06-04, 채팅 메시지에서 파일을 업로드할 경우, 해당 내용의 URL을 S3 버킷의 URL로 업데이트-->
+    <update id="updateMsgImageUrl">
+        UPDATE chat_message SET file_url = #{s3url} where file_url = #{fileUrl}
+    </update>
 
     <!-- 채팅방 만들기 -->
     <insert id="createChatRoom" parameterType="chatRoom">
         <!--        <selectKey resultType="int" order="BEFORE" keyProperty="chat_room_num">-->
         <!--            SELECT IFNULL(MAX(chat_room_num),0)+1 FROM com_chat_room-->
         <!--        </selectKey>-->
-        INSERT INTO com_chat_room(chat_room_num, room_name, chat_session_id, room_create_date)
+        INSERT INTO chat_room(chat_room_num, room_name, chat_session_id, room_create_date)
         VALUES (NULL, #{roomName}, #{chatSessionId}, now())
     </insert>
 
     <!-- 채팅 사원 전체 리스트 가져오기 -->
     <select id="chatUserList" resultType="user">
-        SELECT id, name, department, profile_picture, chat_status_msg FROM users WHERE id NOT IN (#{chatUserId});
+        SELECT user_id, user_name, user_department, user_profile_picture, user_chat_status_msg FROM users WHERE user_id NOT IN (#{chatUserId});
     </select>
 
     <!-- 채팅 자신의 유저 리스트 가져오기 -->
     <select id="chatUserProfile" resultType="user">
-        SELECT id, name, department, profile_picture, chat_status_msg, email, phone_number FROM users WHERE id IN (#{chatUserId});
+        SELECT user_id, user_name, user_department, user_profile_picture, user_chat_status_msg, user_email, user_phone_number FROM users WHERE user_id IN (#{chatUserId});
     </select>
 
     <!-- 채팅 프로필 상태 메시지 변경 -->
     <update id="chatUserProfileMsgUpdate">
         UPDATE users
-        SET chat_status_msg = #{chatStatusMsg}
+        SET user_chat_status_msg = #{userChatStatusMsg}
         <where>
-            id = #{chatUserId}
+            user_id = #{userId}
         </where>
     </update>
 
     <!-- 방목록 가져오기 -->
     <select id="searchRoom" resultType="chatRoom">
         select *
-        from com_chat_room
+        from chat_room
         ORDER BY chat_room_num ASC
     </select>
 
     <!-- 방목록 가져오기 - 유저 기준 -->
     <select id="searchRoomUser" parameterType="chatRoom" resultType="chatRoom">
         SELECT *
-        FROM com_chat_room
+        FROM chat_room
         WHERE chat_session_id = #{chatSessionId}
     </select>
 </mapper>

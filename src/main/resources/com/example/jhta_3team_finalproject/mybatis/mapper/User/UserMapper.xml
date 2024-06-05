@@ -4,7 +4,7 @@
 
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.User.UserMapper">
 
-    <select id="getUserId" >
+    <select id="isId" >
         SELECT * FROM users WHERE user_id = #{userId}
     </select>
 
@@ -15,7 +15,7 @@
     </insert>
 
 
-    <update id="userupdate">
+    <update id="update">
         UPDATE users
         SET
             user_name            = #{userName},

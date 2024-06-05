@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.mybatis.mapper.User.UserMapper;
 
+import java.util.UUID;
+
 @Service
 public class UserServicelmpl implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServicelmpl.class);

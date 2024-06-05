@@ -158,7 +158,7 @@ function del(num) {//num : 댓글 번호
     $.ajax({
         type: 'post',
         url: '/inqcomment/delete',
-        data: {num: num},
+        data: {commNum: num},
         beforeSend: function (xhr) {
             //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
             xhr.setRequestHeader(header, token);
@@ -241,12 +241,12 @@ $(function () {
                 xhr.setRequestHeader(header, token);
             },
             data: {
-                id: $("#comment_id").val(),
-                content: content,
-                commentBoardNum: $("#comment_board_num").val(),
-                commentReLevel: 0, // 원문인 경우 comment_re_seq는 0,
+                commId: $("#comment_id").val(),
+                commContent: content,
+                commBoardNum: $("#comment_board_num").val(),
+                commReLevel: 0, // 원문인 경우 comment_re_seq는 0,
                                    // comment_re_ref는 댓글의 원문 글번호
-                commentReSequence: 0
+                commReSequence: 0
             },
             success: function (rdata) {
                 if (rdata == 1) {
@@ -280,7 +280,7 @@ $(function () {
         $.ajax({
             type: 'post',
             url: '/inqcomment/update',
-            data: {num: num, content: content},
+            data: {commNum: num, commContent: content},
             beforeSend: function (xhr) {
                 //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
                 xhr.setRequestHeader(header, token);
@@ -329,12 +329,12 @@ $(function () {
             type: 'post',
             url: '/inqcomment/reply',
             data: {
-                id: $("#comment_id").val(),
-                content: content,
-                commentBoardNum: $("#comment_board_num").val(),
-                commentReReferer: comment_re_ref,
-                commentReLevel: comment_re_lev,
-                commentReSequence: comment_re_seq
+                commId: $("#comment_id").val(),
+                commContent: content,
+                commBoardNum: $("#comment_board_num").val(),
+                commReReferer: comment_re_ref,
+                commReLevel: comment_re_lev,
+                commReSequence: comment_re_seq
             },
             beforeSend: function (xhr) {
                 //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.

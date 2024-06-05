@@ -8,18 +8,18 @@ import lombok.ToString;
 @Getter
 @Setter
 public class InqueryComment implements Comparable<InqueryComment> {
-    private int num;
-    private String id;
-    private String content;
+    private int commNum;
+    private String commId;
+    private String commContent;
     private String regDate;
-    private int commentBoardNum;
-    private int commentReReferer;
-    private int commentReLevel;
-    private int commentReSequence;
+    private int commBoardNum;
+    private int commReReferer;
+    private int commReLevel;
+    private int commReSequence;
 
     // 2024-05-09 답글 등록순, 최신순 처리
     @Override
     public int compareTo(InqueryComment o) {
-        return this.num - o.num;
+        return this.commNum - o.commNum;
     }
 }

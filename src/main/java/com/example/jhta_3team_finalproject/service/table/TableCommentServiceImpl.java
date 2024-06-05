@@ -1,5 +1,6 @@
 package com.example.jhta_3team_finalproject.service.table;
 
+import com.example.jhta_3team_finalproject.domain.Table.Board;
 import com.example.jhta_3team_finalproject.domain.Table.Comment;
 import com.example.jhta_3team_finalproject.mybatis.mapper.Table.TableCommentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,4 +41,11 @@ public class TableCommentServiceImpl implements TableCommentService {
     public int commentsInsert(Comment c) {
         return dao.commentsInsert(c);
     }
+
+    @Override
+    public int commentsDelete(int num) {
+        return dao.commentsDelete(num);
+    }
+
+
 }
