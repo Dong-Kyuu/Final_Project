@@ -5,7 +5,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.example.jhta_3team_finalproject.config.chat.FileItemMultipartFile;
+import com.example.jhta_3team_finalproject.domain.chat.FileItemMultipartFile;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 import com.example.jhta_3team_finalproject.service.chat.ChattingService;
 import com.example.jhta_3team_finalproject.service.chat.RedisService;
