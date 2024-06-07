@@ -12,5 +12,5 @@ services:
       - "15672:15672"
     environment:
       RABBITMQ_ERLANG_COOKIE: "RabbitMQ-My-Cookies"
-      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_USER: "mbti"
       RABBITMQ_DEFAULT_PASS: "1234"
