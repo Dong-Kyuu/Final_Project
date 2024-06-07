@@ -144,7 +144,7 @@ public class ChatController {
         return mv;
     }
 
-    @RequestMapping("moveChating")
+    @RequestMapping("moveChatting")
     public ModelAndView chating(@RequestParam HashMap<Object, Object> params) {
         log.info("채팅방 이동");
 

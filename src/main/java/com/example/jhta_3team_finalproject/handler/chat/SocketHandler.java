@@ -240,7 +240,7 @@ public class SocketHandler extends TextWebSocketHandler {
         super.afterConnectionEstablished(session);
         boolean flag = false;
         String url = session.getUri().toString();
-        String buffer = url.split("/chating/")[1];
+        String buffer = url.split("/chatting/")[1];
         String roomNumber = buffer.split("&")[0];
         userName = buffer.split("&")[1];
 

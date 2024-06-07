@@ -35,30 +35,49 @@ public class ChattingService {
         int result = dao.createMessage(chatMessage);
         if (result > 0) {
             /**
-             * 2024-06-05, insert가 성공적으로 된 경우 redis에도 저장
+             * 2024-06-05, Insert 가 성공적으로 된 경우 Redis 에도 저장하기 위해 마지막 메시지를 가져옴
              */
+            chatMessage = dao.lastMessage();
             LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
             Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
             String roomKey = String.valueOf(chatMessage.getChatRoomNum());
             String dateKey = simpleDateFormat.format(date.getTime());
             String redisKey = roomKey + ":" + dateKey; // 방번호:날짜
             Long expiredTime = 1L; // 만료 시간 1주일 부여
-            redisUtils.setInitSets(redisKey, chatMessage); // 키, 값
+            redisUtils.setAddSets(redisKey, chatMessage); // 키, 값
             redisUtils.setExpired(redisKey, expiredTime);
         }
         return result;
     }
 
+    public int updateMsgImageUrl(ChatMessage chatMessage) throws Exception {
+        /**
+         * 2024-06-07, Redis 에서 Update 가 필요한 oldChatMessage 를 저장해놓습니다.
+         */
+        ChatMessage oldChatMessage = dao.searchOldMessage(chatMessage);
+        int result = dao.updateMsgImageUrl(chatMessage);
+        if (result > 0) {
+            /**
+             * 2024-06-07, S3의 URL 이 정상적으로 Update 된 경우 Redis도 oldChatMessage를 newMessage로 Update
+             */
+            ChatMessage newChatMessage = dao.searchNewMessage(oldChatMessage);
+            LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
+            Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+            String roomKey = String.valueOf(chatMessage.getChatRoomNum());
+            String dateKey = simpleDateFormat.format(date.getTime());
+            String redisKey = roomKey + ":" + dateKey; // 방번호:날짜
+            Long expiredTime = 1L; // 만료 시간 1주일 부여
+            redisUtils.setUpdateSets(redisKey, oldChatMessage, newChatMessage); // 키, old value, new value
+            redisUtils.setExpired(redisKey, expiredTime);
+        }
+        return result;
+    }
     public int createChatRoom(ChatRoom chatRoom) throws Exception {
         return dao.createChatRoom(chatRoom);
     }
 
     public List<ChatMessage> searchMessages(ChatMessage chatMessage) throws Exception {
         return dao.searchMessages(chatMessage);
-    }
-
-    public int updateMsgImageUrl(ChatMessage chatMessage) throws Exception {
-        return dao.updateMsgImageUrl(chatMessage);
     }
 
     public List<ChatRoom> searchRoom(ChatRoom chatRoom) throws Exception {
