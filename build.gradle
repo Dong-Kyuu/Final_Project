@@ -39,6 +39,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     // file upload
     implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     compileOnly 'commons-io:commons-io:2.11.0'
 
     //2024-06-03, 이지훈 - 레디스
@@ -48,8 +49,6 @@ dependencies {
 
 
     //2024-05-27, 이지훈 - lombok
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -58,8 +57,11 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    //mail
+    //mail 선경
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+// Lombok 설정
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {

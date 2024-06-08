@@ -8,14 +8,7 @@
   <!-- plugins:css -->
   <link rel="stylesheet" th:href="@{/assets/vendors/mdi/css/materialdesignicons.min.css}">
   <link rel="stylesheet" th:href="@{/assets/vendors/css/vendor.bundle.base.css}">
-  <!-- endinject -->
-  <!-- Plugin css for this page -->
-  <!-- End plugin css for this page -->
-  <!-- inject:css -->
-  <!-- endinject -->
-  <!-- Layout styles -->
   <link rel="stylesheet" th:href="@{../css/user/login.css}">
-  <!-- End layout styles -->
   <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}" />
   <style>
     .text-muted {
@@ -59,7 +52,7 @@
                 <input type="text" name="userPhoneNumber" class="form-control form-control-lg" id="exampleInputPhone" placeholder="전화번호" oninput="formatPhoneNumber(this)">
               </div>
               <div class="form-group">
-                <select class="form-control form-control-lg" id="exampleFormControlSelect2" name="userDepartment" placeholder="부서">
+                <select class="form-control form-control-lg" id="exampleFormControlSelect2" name="departmentId" placeholder="부서">
                   <option>영업부</option>
                   <option>총무부</option>
                   <option>인사부</option>
@@ -103,17 +96,11 @@
   </div>
   <!-- page-body-wrapper ends -->
 </div>
-<!-- container-scroller -->
-<!-- plugins:js -->
+
 <script th:src="@{/assets/vendors/js/vendor.bundle.base.js}"></script>
-<!-- endinject -->
-<!-- Plugin js for this page -->
-<!-- End plugin js for this page -->
-<!-- inject:js -->
 <script th:src="@{assets/js/off-canvas.js}"></script>
 <script th:src="@{/assets/js/hoverable-collapse.js}"></script>
 <script th:src="@{/assets/js/misc.js}"></script>
-<!-- endinject -->
 <script th:inline="javascript">
   function formatPhoneNumber(input) {
     // Remove all non-numeric characters
@@ -149,6 +136,20 @@
                 }
               }//success
             })//ajax
+
+
+            // $.ajax({
+            //   type : "post",
+            //   url : "../comment/list",
+            //   data : {
+            //     "board_num" : $("#board_num").val(),
+            //     "page" : currentPage
+            //   },
+            //   dataType : "json",
+            //   beforeSend : function(xhr)
+            //   {   //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
+            //     xhr.setRequestHeader(header, token);
+            //   },
           })
 </script>
 </body>

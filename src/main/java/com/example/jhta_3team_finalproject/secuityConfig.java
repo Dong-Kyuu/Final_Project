@@ -29,7 +29,6 @@ public class secuityConfig {
     private LoginFailHandler loginFailHandler;
     private LoginSuccessHandler loginSuccessHandler;
     private CustomUserDetailsService customUserDetailsService;
-
     private CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Autowired

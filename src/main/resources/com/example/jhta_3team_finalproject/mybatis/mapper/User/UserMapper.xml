@@ -4,19 +4,19 @@
 
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.User.UserMapper">
 
-    <select id="isId" >
-        SELECT * FROM users WHERE user_id = #{userId}
+    <select id="getUserId" >
+        SELECT * FROM user WHERE user_id = #{userId}
     </select>
 
     <insert id="join" >
-        insert  into users
-            (user_num,user_id, user_password, user_name, user_email,user_phone_number,user_department,user_gender)
-        values ( #{userNum},#{userId},#{userPassword} ,#{userName},#{userEmail},#{userPhoneNumber}, #{userDepartment},#{userGender})
+        insert  into user
+            (user_num,user_id, user_password, user_name, user_email,user_phone_number,department_id,user_gender)
+        values ( #{userNum},#{userId},#{userPassword} ,#{userName},#{userEmail},#{userPhoneNumber}, #{departmentId},#{userGender})
     </insert>
 
 
-    <update id="update">
-        UPDATE users
+    <update id="userupdate">
+        UPDATE user
         SET
             user_name            = #{userName},
             user_email           = #{userEmail},
@@ -28,12 +28,23 @@
 
     <!-- 사용자 정보 추가 -->
     <insert id="insert">
-        insert  into users
-            (user_num,user_id, user_password, user_email, user_name, user_phone_number, user_department, user_position, user_gender, user_profile_picture, user_created_at, user_updated_at, user_auth)
-        values (#{userNum},#{userId}, #{userPassword}, #{userEmail}, #{userName}, #{userPhoneNumber}, #{userDepartment}, #{userPosition}, #{userGender}, #{userProfilePicture},  NOW(), NOW(), #{userAuth})
+        insert  into user
+            (user_num,user_id, user_password, user_email, user_name, user_phone_number, department_id, position_id, user_gender, user_profile_picture, user_created_at, user_updated_at, user_auth)
+        values (#{userNum},#{userId}, #{userPassword}, #{userEmail}, #{userName}, #{userPhoneNumber}, #{departmentId}, #{positionId}, #{userGender}, #{userProfilePicture},  NOW(), NOW(), #{userAuth})
     </insert>
 
     <select id="getListCount" resultType="int">  <!-- 페이징 -->
-        select  count(*) from users
+        select  count(*) from user
+    </select>
+
+
+
+
+    <select id="getEmployee" resultType="User" parameterType="int">
+        SELECT u.*, d.department_name AS departmentName, p.position_name AS positionName
+        FROM user u
+                 JOIN user_departments d ON u.department_id = d.department_id
+                 JOIN user_positions p ON u.position_id = p.position_id
+        WHERE u.user_num = #{userNum}
     </select>
 </mapper>
