@@ -8,7 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import com.example.jhta_3team_finalproject.service.User.UserService;
+import com.example.jhta_3team_finalproject.service.User.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.util.Calendar;
@@ -36,19 +36,19 @@ public class UserController {
 
     @Value("${my.savefolder}")
     private String saveFolder;
-    private UserService userService;
+    private UserService UserService;
     private PasswordEncoder passwordEncoder;
     private SendMail sendMail;
     private static final int UPDATE_SUCCESS = 1;
     private static final int JOIN_SUCCESS = 1;
 
     @Autowired
-    public UserController(UserService userService, PasswordEncoder passwordEncoder,SendMail sendMail) {
-        this.userService = userService;
+    public UserController(UserService userService,
+                          PasswordEncoder passwordEncoder, SendMail sendMail) {
+        this.UserService = userService;
         this.passwordEncoder = passwordEncoder;
         this.sendMail = sendMail;
     }
-
     //로그인
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(
@@ -79,13 +79,15 @@ public class UserController {
     }
 
     @RequestMapping(value = "/joinProcess", method = RequestMethod.POST)
-    public String joinProcess(User user ,Model model,  RedirectAttributes rattr,HttpServletRequest request) {
+    public String joinProcess(User user ,Model model,  RedirectAttributes rattr, HttpServletRequest request) {
+        logger.info(("User: " + user.toString()));
+
+        int result = UserService.join(user);
+
         user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
 
-        logger.info(("User: " + user.toString()));
-        int result= userService.join(user);
-
         if(result == JOIN_SUCCESS) {
+            //mailService.sendMail(user);
              //회원가입 성공 시 메일 전송
             MailVO vo = new MailVO();
             vo.setTo(user.getUserEmail());
@@ -99,15 +101,13 @@ public class UserController {
             model.addAttribute("message", "회원가입 실패");
             return "error";
         }
-
-
     }
 
     //회원가입 폼에서 아이디 검사
     @ResponseBody
     @RequestMapping(value ="/idcheck",method=RequestMethod.GET)
     public int idcheck(@RequestParam("userId") String id) {
-        return userService.getUserId(id);
+        return UserService.getUserId(id);
     }
 
     // 로그아웃
@@ -126,18 +126,17 @@ public class UserController {
     //회원 정보  폼
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public ModelAndView user_info(
-            Principal principal,
+            UsernamePasswordAuthenticationToken principal,
             ModelAndView mv,
             HttpServletRequest request) {
 
-        String id = principal.getName();
-
-        User m = userService.user_info(id);
-
-        //m==null;//오류 확인하는 값
-        if (m != null) {
-            mv.setViewName("member/user_info");
-            mv.addObject("memberinfo", m);
+        User userDetails = (User) principal.getPrincipal();
+        var employee = this.UserService.getEmployee(userDetails.getUserNum());
+        if (employee != null) {
+            mv.setViewName("member/user_updateForm");
+            mv.addObject("memberinfo", employee);
+            mv.addObject("departmentName", employee.getDepartmentName());
+            mv.addObject("positionName", employee.getPositionName());
         } else {
             mv.addObject("url", request.getRequestURI());
             mv.addObject("message", "정보 수정실패");
@@ -148,20 +147,19 @@ public class UserController {
 
 
     //회원 정보 수정 폼
-    @RequestMapping(value = "/update")
-    public ModelAndView user_update(ModelAndView mv, Principal principal) {
-        String id = principal.getName();
-
-        if (id == null) {
-            mv.setViewName("redirect:/user/login");
-            logger.info("id is null");
-        } else {
-            User user = userService.user_info(id);
-            mv.setViewName("member/user_updateForm");
-            mv.addObject("memberinfo", user);
-        }
-        return mv;
-    }
+//    @RequestMapping(value = "/update")
+//    public ModelAndView user_update(ModelAndView mv, Principal principal) {
+//        String id = principal.getName();
+//        if (id == null) {
+//            mv.setViewName("redirect:/user/login");
+//            logger.info("id is null");
+//        } else {
+//            User user = UserService.user_info(id);
+//            mv.setViewName("member/user_updateForm");
+//            mv.addObject("memberinfo", user);
+//        }
+//        return mv;
+//    }
 
 
     //회원 수정 저장
@@ -170,7 +168,7 @@ public class UserController {
                                 RedirectAttributes rattr,
                                 HttpServletRequest request,
                                 @RequestParam("profilePictureFile") MultipartFile uploadfile) throws IOException {
-
+        logger.info("수정 전 User 정보: " + user);
         if (!uploadfile.isEmpty()) {
             String fileName = uploadfile.getOriginalFilename();
             String fileDBName = fileDBName(fileName, saveFolder);
@@ -182,10 +180,12 @@ public class UserController {
 
             user.setUserProfilePicture(fileDBName);
         }
-        int result = userService.update(user);
+
+        logger.info("업데이트 전에 User 정보: " + user);
+        int result = UserService.update(user);
 
         UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
+                new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities() );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         logger.info("Updating user: " + user);
@@ -235,7 +235,7 @@ public class UserController {
     public String user_copmmute(@RequestParam(value = "page", defaultValue = "1") int page, ModelAndView mv) {
 
         int limit = 10;  // 한 화면에 출력할 로우 갯수
-        int listcount = userService.getListCount();  // 총 리스트 수를 받아옴
+        int listcount = UserService.getListCount();  // 총 리스트 수를 받아옴
 
         PagingUtil.Paging paging= PagingUtil.getPaging(page, limit, listcount);
 

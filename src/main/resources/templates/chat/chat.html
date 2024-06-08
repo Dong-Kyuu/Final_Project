@@ -235,7 +235,7 @@
                             </div>
                             <div class="activity-container">
                                 <div class="icon-container">
-                                        <span class="add-icon add-action invite-chat-room-users">
+                                        <span class="add-icon add-action invite-chat-room-user">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  style="width: 24px; height: 24px; margin-left: 15px;"
                                                  viewBox="0 0 17 17" fill="none">
@@ -246,7 +246,7 @@
                                         </span>
                                 </div>
                                 <div class="icon-container">
-                                        <span class="add-icon remove-icon remove-action mgr-chat-room-users">
+                                        <span class="add-icon remove-icon remove-action mgr-chat-room-user">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  style="width: 24px; height: 24px; margin-left: 14px;"
                                                  viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
@@ -664,7 +664,7 @@
         getUserChatRoomList();
 
         /** 2024-05-28, 채팅방 유저 관리 화면, - 클릭 시 -> 유저 초대 목록 보여줌 */
-        $(".invite-chat-room-users").click(function () {
+        $(".invite-chat-room-user").click(function () {
             chatContentHidden();
             // 객체 형태로 파라미터 이름과 값을 전달합니다.
             const data = {
@@ -678,7 +678,7 @@
         });
 
         /** 2024-05-28, 채팅방 유저 관리 화면, - 클릭 시 -> 유저 추방, 방 제목 변경 폼 보여줌 */
-        $(".mgr-chat-room-users").click(function () {
+        $(".mgr-chat-room-user").click(function () {
             chatContentHidden();
             const data = {
                 'type': 'chat-mgr',
@@ -870,7 +870,7 @@
                     $chatProfilePicture.empty();
                     $chatProfilePicture.html(img);
                     $chatProfileName.html(rdata.userName);
-                    $chatProfileDept.html(rdata.userDepartment);
+                    $chatProfileDept.html(rdata.departmentId);
                     $chatProfileId.val(rdata.userId);
                     $chatProfileNameInput.val(rdata.userName);
                     $chatProfileStatusMsg.html(rdata.userChatStatusMsg);
@@ -919,13 +919,13 @@
                         if(this.userChatStatusMsg === null) { // 2024-06-02, chatStatusMsg로 변경 예정
                             output += "        <div class='mes-col1 chat-friend-list-col1' style='margin-top: 18px;'>";
                             output += "            <div class='sender-name'>";
-                            output += "                "+ this.userDepartment + " - " + this.userName;
+                            output += "                "+ this.departmentId + " - " + this.userName;
                             output += "            </div>";
                             output += "        </div>";
                         } else {
                             output += "        <div class='mes-col1 chat-friend-list-col1'>";
                             output += "            <div class='sender-name'>";
-                            output += "                "+ this.userDepartment + " - " + this.userName;
+                            output += "                "+ this.departmentId + " - " + this.userName;
                             output += "            </div>";
                             output += "            <div class='mes-preview'>";
                             output += "                " + this.userChatStatusMsg;

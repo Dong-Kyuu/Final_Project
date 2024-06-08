@@ -19,7 +19,9 @@ public class AuthenticationController {
     private final RoleHierarchy roleHierarchy;
 
     @Autowired
-    public AuthenticationController(RoleHierarchy roleHierarchy) {
+    public AuthenticationController(
+            RoleHierarchy roleHierarchy
+    ) {
         this.roleHierarchy = roleHierarchy;
     }
 
@@ -33,7 +35,6 @@ public class AuthenticationController {
         userInfo.setAuthorities(authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
-        userInfo.setDepartment(((User) authentication.getPrincipal()).getUserDepartment());
 
         // 로그로 계층적 권한 정보 출력
         authorities.forEach(authority -> {
@@ -46,13 +47,13 @@ public class AuthenticationController {
 
 class UserInfo {
     private List<String> authorities;
-    private String department;
+    private String  department;
 
-    public String getDepartment() {
+    public String  getDepartment() {
         return department;
     }
 
-    public void setDepartment(String department) {
+    public void setDepartment(String  department) {
         this.department = department;
     }
 

@@ -13,5 +13,6 @@ public interface UserMapper {
     public int userupdate(User user);
     public int insert(User user);
     public  int getListCount();
+    public User getEmployee(int userNum);
 
 }

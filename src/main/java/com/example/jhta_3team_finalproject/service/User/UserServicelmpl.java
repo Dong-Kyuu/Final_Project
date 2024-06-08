@@ -30,6 +30,11 @@ public class UserServicelmpl implements UserService {
     }
 
     @Override
+    public User getEmployee(int userNum) {
+        return dao.getEmployee(userNum);
+    }
+
+    @Override
     public int checkIdPw(String id ,String password) {
         User rmember = dao.getUserId(id);
         int result =NULL_USERID;//아이디가 존재하지 않는 경우 rmember=  null
@@ -50,13 +55,15 @@ public class UserServicelmpl implements UserService {
 
     @Override
     public int join(User user) {
-        logger.info("체크 = " + user.toString());
+ //       user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+//        if (condition) {
+//            throw Error();
+//        }
         return dao.join(user);
     }
 
     @Override
     public User user_info(String id) {
-
         return dao.getUserId(id);
     }
 

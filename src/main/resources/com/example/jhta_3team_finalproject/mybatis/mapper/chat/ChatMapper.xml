@@ -6,7 +6,7 @@
     <!-- 채팅 추가 -->
     <insert id="createMessage" parameterType="chatMessage">
         <!--        <selectKey resultType="int" order="BEFORE" keyProperty="sender_num">-->
-        <!--            SELECT num FROM users WHERE id = #{senderId}-->
+        <!--            SELECT num FROM user WHERE id = #{senderId}-->
         <!--        </selectKey>-->
         INSERT INTO chat_message(message_num, chat_room_num, sender_id, message_content, read_count, file_url, file_origin_name, send_time)
         VALUES (NULL, #{chatRoomNum}, #{senderId}, #{messageContent}, #{readCount}, #{fileUrl}, #{fileOriginName}, now())
@@ -50,17 +50,17 @@
 
     <!-- 채팅 사원 전체 리스트 가져오기 -->
     <select id="chatUserList" resultType="user">
-        SELECT user_id, user_name, user_department, user_profile_picture, user_chat_status_msg FROM users WHERE user_id NOT IN (#{chatUserId});
+        SELECT user_id, user_name, department_id, user_profile_picture, user_chat_status_msg FROM user WHERE user_id NOT IN (#{chatUserId});
     </select>
 
     <!-- 채팅 자신의 유저 리스트 가져오기 -->
     <select id="chatUserProfile" resultType="user">
-        SELECT user_id, user_name, user_department, user_profile_picture, user_chat_status_msg, user_email, user_phone_number FROM users WHERE user_id IN (#{chatUserId});
+        SELECT user_id, user_name, department_id, user_profile_picture, user_chat_status_msg, user_email, user_phone_number FROM user WHERE user_id IN (#{chatUserId});
     </select>
 
     <!-- 채팅 프로필 상태 메시지 변경 -->
     <update id="chatUserProfileMsgUpdate">
-        UPDATE users
+        UPDATE user
         SET user_chat_status_msg = #{userChatStatusMsg}
         <where>
             user_id = #{userId}

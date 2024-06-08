@@ -114,12 +114,12 @@
                                 <div class="form-group">
                                     <label class="profile-label">이름</label>
                                     <p class="profile-text text-black"
-                                       th:text="${#authentication.principal.userName}"></p>
+                                       th:text="${#authentication.principal.username}"></p>
                                 </div>
                                 <div class="form-group">
                                     <label class="profile-label">부서</label>
                                     <p class="profile-text text-black"
-                                       th:text="${#authentication.principal.userDepartment}"></p>
+                                       th:text="${#authentication.principal.departmentName}"></p>
                                 </div>
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-gradient-dark">출근</button>
@@ -131,7 +131,7 @@
                     <div class="col-md-9 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">[[${#authentication.principal.userName}]]님 </h4>
+                                <h4 class="card-title">[[${#authentication.principal.username}]]님 </h4>
                                 <p class="card-description"> 출퇴근 내역</p>
                                 <table class="table" id="comment_table">
                                     <thead>

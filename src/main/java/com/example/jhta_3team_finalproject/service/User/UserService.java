@@ -18,4 +18,5 @@ public interface UserService {
 
     public int getListCount();
 
+    public User getEmployee(int userNum);
 }
