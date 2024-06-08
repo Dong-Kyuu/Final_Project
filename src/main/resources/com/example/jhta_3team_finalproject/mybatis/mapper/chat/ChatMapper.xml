@@ -12,7 +12,7 @@
         VALUES (NULL, #{chatRoomNum}, #{senderId}, #{messageContent}, #{readCount}, #{fileUrl}, #{fileOriginName}, now())
     </insert>
 
-    <!-- 2024-06-08, 채팅을 추가한 경우 해당 메시지를 Redis에 등록하기 위해 message_num 의 최댓값을 구하여 해당 메시지를 조회 -->
+    <!-- 2024-06-08, 채팅 메시지 추가 후 마지막 메시지의 정보를 다시 가져와야 함. -->
     <select id="lastMessage" parameterType="chatMessage">
         select *
         from chat_message
@@ -102,4 +102,31 @@
         FROM chat_room
         WHERE chat_session_id = #{chatSessionId}
     </select>
+
+    <!-- 2024-06-09, 해당 방의 마지막 메시지와 마지막 시간을 가져와서 채팅방 정보와 Join  -->
+    <!--    SELECT a.*, b.*-->
+    <!--    FROM chat_room a-->
+    <!--    JOIN-->
+    <!--    (-->
+    <!--    SELECT MAX(send_time), MAX(message_num), chat_room_num-->
+    <!--    FROM chat_message-->
+    <!--    WHERE chat_room_num in (-->
+    <!--    SELECT chat_room_num-->
+    <!--    FROM chat_room-->
+    <!--    WHERE chat_session_id = 'admin'-->
+    <!--    )-->
+    <!--    GROUP BY chat_room_num-->
+    <!--    ) b-->
+    <!--    ON a.chat_room_num = b.chat_room_num-->
+    <!--    WHERE chat_session_id = 'admin';-->
+
+    <!-- 2024-06-09, 채팅방들의 메시지를 그룹화하여 그 중 가장 마지막 메시지의 정보를 MAX 함수로 가져옴 -->
+    <!--    select MAX(send_time), MAX(message_num), chat_room_num-->
+    <!--    from chat_message-->
+    <!--    where chat_room_num in (-->
+    <!--    select chat_room_num-->
+    <!--    from chat_room-->
+    <!--    where chat_session_id = 'admin'-->
+    <!--    )-->
+    <!--    group by chat_room_num;-->
 </mapper>

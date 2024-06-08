@@ -22,7 +22,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 @Service
-public class ChattingService {
+public class ChatService {
 
     private final ChatMapper dao;
     private final RedisUtils redisUtils;
@@ -31,7 +31,7 @@ public class ChattingService {
     LocalTime localTime = LocalTime.of(0, 0, 0);
     LocalDate localDate = LocalDate.now(); // 오늘 0시 0분 0초
 
-    public int createMessage(ChatMessage chatMessage) throws Exception {
+    public ChatMessage createMessage(ChatMessage chatMessage) throws Exception {
         int result = dao.createMessage(chatMessage);
         if (result > 0) {
             /**
@@ -47,7 +47,7 @@ public class ChattingService {
             redisUtils.setAddSets(redisKey, chatMessage); // 키, 값
             redisUtils.setExpired(redisKey, expiredTime);
         }
-        return result;
+        return chatMessage; // 마지막 메시지를 반환
     }
 
     public int updateMsgImageUrl(ChatMessage chatMessage) throws Exception {

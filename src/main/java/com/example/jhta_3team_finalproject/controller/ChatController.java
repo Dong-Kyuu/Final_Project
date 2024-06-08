@@ -3,7 +3,7 @@ package com.example.jhta_3team_finalproject.controller;
 
 import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.domain.chat.ChatRoom;
-import com.example.jhta_3team_finalproject.service.chat.ChattingService;
+import com.example.jhta_3team_finalproject.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/chat")
 public class ChatController {
 
-    private final ChattingService chattingService;
+    private final ChatService chattingService;
     List<ChatRoom> chatRoomList;
     static int roomNumber = 0;
 
@@ -59,7 +59,8 @@ public class ChatController {
         log.info("아이디별 채팅방 구하기");
         String chatUserId = params.get("chatUserId");
         ChatRoom chatRoom = new ChatRoom();
-        chatRoom.setChatSessionId(chatUserId);
+        //chatRoom.setChatSessionId(chatUserId);
+        chatRoom.setChatSessionId("admin"); // 2024-06-08 테스트용
         chatRoomList = chattingService.searchRoomUser(chatRoom);
         return chatRoomList;
     }
