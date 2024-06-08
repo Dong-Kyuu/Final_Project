@@ -1,16 +1,13 @@
 package com.example.jhta_3team_finalproject.controller;
 
-import com.example.jhta_3team_finalproject.domain.Table.Comment;
+import com.example.jhta_3team_finalproject.domain.Board.BoardComment;
 import com.example.jhta_3team_finalproject.service.table.TableCommentService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +29,7 @@ public class CommentController {
     public Map<String, Object> CommentList(int board_num, int page) {
         logger.info("/list : board_num = "+board_num);
 
-        List<Comment> list = CS.getCommentList(board_num, page);
+        List<BoardComment> list = CS.getCommentList(board_num, page);
 
         int listcount = CS.getListCount(board_num);
         Map<String,Object> map = new HashMap<String, Object>();
@@ -44,7 +41,7 @@ public class CommentController {
     }
 
     @PostMapping(value = "/add")
-    public int CommentAdd(Comment co) {
+    public int CommentAdd(BoardComment co) {
         logger.info(co.toString());
         logger.info("등록실행!");
         return CS.commentsInsert(co);

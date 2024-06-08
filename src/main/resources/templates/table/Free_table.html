@@ -58,23 +58,20 @@
                                                 <tbody>
                                                     <th:block th:with = "num=${listcount -(page -1)*limit}">
                                                         <th:block th:each	= "b, iterStat:${boardlist}">
+
                                                             <tr>
                                                                 <td><span th:text = "${num -(iterStat.index)}"></span></td>
                                                                 <td>
                                                                     <div>
-                                                                        <th:block th:each = "i : ${#numbers.sequence(1, b.BOARD_RE_LEV * 2,1)}">
-                                                                            &nbsp;&nbsp;
-                                                                        </th:block>
-                                                                        <img th:src	= "@{/image/line.gif}" 	th:if 	= "${b.BOARD_RE_LEV != 0}" />
-                                                                        <a th:href = "@{'detail?num=' + ${b.BOARD_NUM}}">
-                                                                            <span>[[${#strings.abbreviate(b.BOARD_SUBJECT,25)}]]</span>
-                                                                            <span class	= "gray" th:text = "'[' + ${b.CNT} + ']'"></span>
+                                                                        <a th:href = "@{'detail?num=' + ${b.boardNum}}">
+                                                                            <span>[[${#strings.abbreviate(b.boardTitle,25)}]]</span>
+                                                                            <span class	= "gray" th:text = "'[' + ${b.Cnt} + ']'"></span>
                                                                         </a>
                                                                     </div>
                                                                 </td>
-                                                                <td><div th:text = "${b.BOARD_NAME}"></div></td>
-                                                                <td><div th:text = "${b.BOARD_DATE}"></div></td>
-                                                                <td><div th:text = "${b.BOARD_READCOUNT}"></div></td>
+                                                                <td><div th:text = "${b.boardWriter}"></div></td>
+                                                                <td><div th:text = "${b.boardDate}"></div></td>
+                                                                <td><div th:text = "${b.boardReadcount}"></div></td>
                                                             </tr>
                                                         </th:block>
                                                     </th:block>
