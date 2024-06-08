@@ -6,11 +6,18 @@
     <!-- 채팅 추가 -->
     <insert id="createMessage" parameterType="chatMessage">
         <!--        <selectKey resultType="int" order="BEFORE" keyProperty="sender_num">-->
-        <!--            SELECT num FROM user WHERE id = #{senderId}-->
+        <!--            SELECT num FROM users WHERE id = #{senderId}-->
         <!--        </selectKey>-->
         INSERT INTO chat_message(message_num, chat_room_num, sender_id, message_content, read_count, file_url, file_origin_name, send_time)
         VALUES (NULL, #{chatRoomNum}, #{senderId}, #{messageContent}, #{readCount}, #{fileUrl}, #{fileOriginName}, now())
     </insert>
+
+    <!-- 2024-06-08, 채팅을 추가한 경우 해당 메시지를 Redis에 등록하기 위해 message_num 의 최댓값을 구하여 해당 메시지를 조회 -->
+    <select id="lastMessage" parameterType="chatMessage">
+        select *
+        from chat_message
+        where message_num = (select max(message_num) from chat_message)
+    </select>
 
     <!-- 채팅방의 채팅 기록 가져오기, 유저 기준으로도 추가 예정 -->
     <select id="searchMessages" resultType="chatMessage">
@@ -34,10 +41,25 @@
 <!--    WHERE DATE_FORMAT(send_time, '%Y-%m-%d') = '2024-06-04'-->
 <!--    group by message_num WITH ROLLUP;-->
 
+
     <!-- 2024-06-04, 채팅 메시지에서 파일을 업로드할 경우, 해당 내용의 URL을 S3 버킷의 URL로 업데이트-->
     <update id="updateMsgImageUrl">
         UPDATE chat_message SET file_url = #{s3url} where file_url = #{fileUrl}
     </update>
+
+    <!-- 2024-06-07, URL이 업데이트된 경우 redis에서도 업데이트를 해야 하므로 이전 데이터를 검색하여 데이터를 임시 저장합니다. -->
+    <select id="searchOldMessage" resultType="chatMessage">
+        SELECT *
+        FROM chat_message
+        WHERE where file_url = #{fileUrl}
+    </select>
+
+    <!-- 2024-06-07, URL이 업데이트된 경우 redis에 새로운 메시지를 적용합니다. -->
+    <select id="searchNewMessage" resultType="chatMessage">
+        SELECT *
+        FROM chat_message
+        WHERE where message_num = #{messageNum}
+    </select>
 
     <!-- 채팅방 만들기 -->
     <insert id="createChatRoom" parameterType="chatRoom">
@@ -50,12 +72,12 @@
 
     <!-- 채팅 사원 전체 리스트 가져오기 -->
     <select id="chatUserList" resultType="user">
-        SELECT user_id, user_name, department_id, user_profile_picture, user_chat_status_msg FROM user WHERE user_id NOT IN (#{chatUserId});
+        SELECT user_id, user_name, user_department, user_profile_picture, user_chat_status_msg FROM user WHERE user_id NOT IN (#{chatUserId});
     </select>
 
     <!-- 채팅 자신의 유저 리스트 가져오기 -->
     <select id="chatUserProfile" resultType="user">
-        SELECT user_id, user_name, department_id, user_profile_picture, user_chat_status_msg, user_email, user_phone_number FROM user WHERE user_id IN (#{chatUserId});
+        SELECT user_id, user_name, user_department, user_profile_picture, user_chat_status_msg, user_email, user_phone_number FROM user WHERE user_id IN (#{chatUserId});
     </select>
 
     <!-- 채팅 프로필 상태 메시지 변경 -->

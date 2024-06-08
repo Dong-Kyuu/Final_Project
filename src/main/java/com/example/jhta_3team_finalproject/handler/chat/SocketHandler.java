@@ -5,7 +5,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.example.jhta_3team_finalproject.config.chat.FileItemMultipartFile;
+import com.example.jhta_3team_finalproject.domain.chat.FileItemMultipartFile;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 import com.example.jhta_3team_finalproject.service.chat.ChattingService;
 import com.example.jhta_3team_finalproject.service.chat.RedisService;
@@ -240,7 +240,7 @@ public class SocketHandler extends TextWebSocketHandler {
         super.afterConnectionEstablished(session);
         boolean flag = false;
         String url = session.getUri().toString();
-        String buffer = url.split("/chating/")[1];
+        String buffer = url.split("/chatting/")[1];
         String roomNumber = buffer.split("&")[0];
         userName = buffer.split("&")[1];
 
