@@ -24,7 +24,7 @@ public class SendMail {
         this.mailSender=mailSender;
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(SendMail.class);
+    private static final Logger log = LoggerFactory.getLogger(SendMail.class);
 
     public void sendMail(MailVO vo)   {
 
@@ -45,7 +45,7 @@ public class SendMail {
             }
         };
         mailSender.send(mp);//메일 전송합니다.
-        logger.info("메일 전송 했습니다");
+        log.info("메일 전송 했습니다");
 
     }
     public String randomToken(int length,MailVO mailVO){

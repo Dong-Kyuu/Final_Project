@@ -1,6 +1,7 @@
 package com.example.jhta_3team_finalproject.security;
 
 import com.example.jhta_3team_finalproject.domain.User.User;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,21 +23,21 @@ import com.example.jhta_3team_finalproject.mybatis.mapper.User.UserMapper;
  */
 
 @Component
+@Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
-    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
     @Autowired
     private UserMapper dao;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        logger.info("username은 로그인 시 입력한 값: " + username);
+        log.info("username은 로그인 시 입력한 값: " + username);
         User user = dao.getUserId(username);
-        logger.info("info=" + user.toString());
+        log.info("info=" + user.toString());
 
 
         if (user == null) {
-            logger.info("username " + username + " not found");
+            log.info("username " + username + " not found");
 
             throw new UsernameNotFoundException("username " + username + " not found");
 
