@@ -2,6 +2,8 @@ package com.example.jhta_3team_finalproject.controller;
 
 
 import com.example.jhta_3team_finalproject.domain.User.User;
+import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
+import com.example.jhta_3team_finalproject.domain.chat.ChatParticipate;
 import com.example.jhta_3team_finalproject.domain.chat.ChatRoom;
 import com.example.jhta_3team_finalproject.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -66,12 +68,23 @@ public class ChatController {
     }
 
     @RequestMapping("getLastMessageContent")
-    public @ResponseBody List<ChatRoom> getLastMessageContent(@RequestParam HashMap<String, String> params) throws Exception {
+    public @ResponseBody ChatMessage getLastMessageContent(@RequestParam HashMap<String, String> params) throws Exception {
         String lastMessageNum = params.get("lastMessageNum");
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.setChatSessionId(lastMessageNum);
-        chatRoomList = chattingService.searchRoomUser(chatRoom);
-        return chatRoomList;
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setMessageNum(Long.valueOf(lastMessageNum));
+        chatMessage = chattingService.getLastMessageContent(chatMessage);
+        return chatMessage;
+    }
+
+    @RequestMapping("getUnreadMessage")
+    public @ResponseBody int getUnreadMessage(@RequestParam HashMap<String, String> params) throws Exception {
+        String sessionId = params.get("sessionId");
+        String roomNumber = params.get("roomNumber");
+        ChatParticipate chatParticipate = new ChatParticipate();
+        chatParticipate.setChatUserId(sessionId);
+        chatParticipate.setChatRoomNum(Long.valueOf(roomNumber));
+        int unreadCount = chattingService.getUnreadMessage(chatParticipate);
+        return unreadCount;
     }
 
     @RequestMapping("getRoom")

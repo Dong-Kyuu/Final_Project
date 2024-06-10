@@ -38,6 +38,10 @@ public interface ChatMapper {
 
     public List<User> chatUserList(String chatUserId);
 
+    public ChatMessage getLastMessageContent(ChatMessage chatMessage);
+
+    public int getUnreadMessage(ChatParticipate chatParticipate);
+
     public User chatUserProfile(String chatUserId);
 
     public int chatUserProfileMsgUpdate(String profileStatusMsg, String chatUserId);

@@ -114,7 +114,7 @@
     <select id="searchRoomUser" parameterType="chatRoom" resultType="chatParticipate">
         select *
         from chat_participate
-        join(
+        left join(
              select max(send_time) as last_send_time, max(message_num) as last_message_num, chat_room_num
              from chat_message
              group by chat_room_num
@@ -128,15 +128,24 @@
         where chat_user_id = #{chatSessionId};
     </select>
 
+    <!-- 2024-06-10, 마지막 메시지 내용 가져오기 -->
+    <select id="getLastMessageContent" parameterType="chatMessage">
+        select message_content
+        from chat_message
+        where message_num = #{messageNum}
+    </select>
+
+
     <!-- 2024-06-10, 안 읽은 메시지 수 구해오기 -->
-    <select id="getUnreadMessage">
+    <select id="getUnreadMessage" parameterType="chatParticipate">
         SELECT COUNT(*)
         FROM chat_message
         WHERE send_time BETWEEN (
                                  SELECT chat_visit_time
                                  FROM chat_participate
                                  WHERE chat_room_num = #{chatRoomNum}
-                                 AND chat_user_id = #{sessionId}
+                                 AND chat_user_id = #{chatUserId}
                                 ) AND NOW()
+        AND chat_room_num = #{chatRoomNum}
     </select>
 </mapper>

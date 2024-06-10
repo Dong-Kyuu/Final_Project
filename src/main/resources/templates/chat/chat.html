@@ -611,7 +611,7 @@
                     setTimeout(function () {
                         loadingEnd();
                         messageScrollFix();
-                    }, 200);
+                    }, 500);
                 }
 
                 $('.view-main').addClass("deactive");
@@ -779,6 +779,9 @@
                 $("#chat-menu").css("display", "none");
                 $(".chat-menu-container-mgr").css("display", "block");
                 ws.close();
+                getChatUserList();
+                getChatUserProfile();
+                getUserChatRoomList();
             })
 
             $("#send-message").click(sendMassage);
@@ -854,11 +857,6 @@
                     // toggle(false)는 선택한 요소에 style="display: none;" 속성이 추가되어 보이지 않도록 합니다.
                     $(this).toggle($(this).find('p').text().toLowerCase().indexOf(value) > -1)
                 });
-                // if ('' === value) {
-                //     $('.activity-container .icon-container').css('display', 'block');
-                // } else {
-                //     $('.activity-container .icon-container').css('display', 'none');
-                // }
             });
 
             /**
@@ -930,9 +928,6 @@
              * 2024-05-28, 관리(채팅방,채팅방 유저) Ajax(요청 + 응답) 구현
              */
             function chatRoomMgrAjax(url, parameter, calbak) {
-                //console.log(header);
-                //console.log(token);
-
                 $.ajax({
                     url: url,
                     data: parameter,
@@ -1176,14 +1171,18 @@
                             }
 
                             var roomNumber = d.chatRoomNum;
-                            var sessionId = d.chatSessionId;
+                            var sessionId = d.chatUserId;
                             var entryTime = d.chatEntryTime;
                             var visitTime = d.chatVisitTime;
+
+                            console.log(sessionId + ' 입니다. !');
 
                             var lastSendTime = d.lastSendTime;
                             var lastMessageNum = d.lastMessageNum;
                             var roomName = d.roomName;
                             var roomCreateDate = d.roomCreateDate;
+                            var lastMessageContent = getLastMessageContent(lastMessageNum);
+                            var unreadMessageCount = getUnreadMessage(roomNumber, sessionId);
 
                             output += "<li>";
                             output += "<input type='hidden' name='chat_room_num' value='" + roomNumber + "' />";
@@ -1197,7 +1196,9 @@
                             output += "                " + roomName;
                             output += "            </div>";
                             output += "            <div class='mes-preview'>";
-                            output += "                " + getLastMessageContent(lastMessageNum);
+                                                    if (lastMessageContent != null) {
+                                                        output += lastMessageContent;
+                                                    }
                             output += "            </div>";
                             output += "        </div>";
                             output += "        <div class='mes-col2'>";
@@ -1207,7 +1208,11 @@
                             output += "                    <span class='new'>new</span>";
                             output += "                </div>";
                             output += "            </div>";
-                            output += "            <span class='mes-count'>" + getUnreadMessage(roomNumber, sessionId) + "</span>";
+                            if (unreadMessageCount != null) {
+                                output += "            <span class='mes-count'>"
+                                output += unreadMessageCount;
+                                output += "            </span>";
+                            }
                             output += "        </div>";
                             output += "    </div>";
                             output += "</li>";
@@ -1219,6 +1224,7 @@
             }
 
             function getLastMessageContent(lastMessageNum) {
+                var resultMessage;
                 $.ajax({
                     type: "post",
                     url: "/chat/getLastMessageContent",
@@ -1226,35 +1232,40 @@
                         "lastMessageNum": lastMessageNum
                     },
                     dataType: "json",
+                    async: false,
                     beforeSend: function (xhr) {
                         //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
                         xhr.setRequestHeader(header, token);
                     },
                     success: function (res) {
-                        console.log(res);
-                        return res;
+                        //console.log(res.messageContent);
+                        resultMessage = res.messageContent;
                     }
                 }) // ajax end
+                return resultMessage;
             }
 
             function getUnreadMessage(roomNumber, sessionId) {
+                var resultCount;
                 $.ajax({
                     type: "post",
                     url: "/chat/getUnreadMessage",
                     data: {
-                        "sessionId": roomNumber,
-                        "roomNumber": sessionId
+                        "sessionId": sessionId,
+                        "roomNumber":roomNumber
                     },
                     dataType: "json",
+                    async: false,
                     beforeSend: function (xhr) {
                         //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
                         xhr.setRequestHeader(header, token);
                     },
                     success: function (res) {
                         console.log(res);
-                        return res;
+                        resultCount = res;
                     }
                 }) // ajax end
+                return resultCount;
             }
 
 

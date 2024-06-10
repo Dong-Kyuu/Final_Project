@@ -73,6 +73,7 @@ public class ChatService {
         }
         return result;
     }
+
     public int createChatRoom(ChatRoom chatRoom, String chatInviteUserList) throws Exception {
         int result = dao.createChatRoom(chatRoom);
         chatRoom = dao.lastChatRoom();
@@ -113,6 +114,14 @@ public class ChatService {
 
     public List<User> chatUserList(String chatUserId) {
         return dao.chatUserList(chatUserId);
+    }
+
+    public ChatMessage getLastMessageContent(ChatMessage chatMessage) throws Exception {
+        return dao.getLastMessageContent(chatMessage);
+    }
+
+    public int getUnreadMessage(ChatParticipate chatParticipate) throws Exception {
+        return dao.getUnreadMessage(chatParticipate);
     }
 
     public User chatUserProfile(String chatUserId) {
