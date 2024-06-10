@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.Table.AnnounceBoardMapper">
+
+    <select id="getListCount" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM announce_board b
+        JOIN user u ON b.user_num = u.user_num
+        <if test="search_field != null and search_word != null and target_department == ''">
+            WHERE ${search_field} LIKE #{search_word}
+        </if>
+        <if test="search_field != null and search_word != null and target_department != ''">
+            WHERE ${search_field} LIKE #{search_word}
+            AND annboard_department = #{target_department}
+        </if>
+        <if test="search_field == null and search_word == null and target_department != ''">
+            WHERE annboard_department = #{target_department}
+        </if>
+    </select>
+
+
+    <select id="getBoardList" parameterType="map" resultType="com.example.jhta_3team_finalproject.domain.Board.AnnounceBoard">
+        SELECT *
+        FROM (SELECT (@rownum := @rownum + 1) AS rnum, b.*
+        FROM (SELECT announce_board.*, user.user_name
+        FROM announce_board
+        LEFT JOIN user
+        ON announce_board.user_num = user.user_num
+        <if test="search_field != null and search_word != null and target_department == ''">
+            WHERE ${search_field} LIKE #{search_word}
+        </if>
+        <if test="search_field != null and search_word != null and target_department != ''">
+            WHERE ${search_field} LIKE #{search_word}
+            AND annboard_department = #{target_department}
+        </if>
+        <if test="search_field == null and search_word == null and target_department != ''">
+            WHERE annboard_department = #{target_department}
+        </if>
+        ORDER BY annboard_date desc
+        ) b,
+        (SELECT @rownum := 0) r) temp
+        WHERE rnum BETWEEN #{start} AND #{end}
+    </select>
+
+    <insert id="insertBoard">
+        <selectKey resultType="int" order="BEFORE" keyProperty="annboardNum">
+            SELECT IFNULL(MAX(annboard_num), 0) + 1 FROM announce_board
+        </selectKey>
+        INSERT INTO announce_board
+        (annboard_num, user_num, annboard_title, annboard_content,
+        annboard_department, annboard_importance, annboard_fix, annboard_date)
+        VALUES
+        (#{annboardNum}, #{userNum}, #{annboardTitle}, #{annboardContent},
+        #{annboardDepartment}, #{annboardImportance}, #{annboardFix}, NOW())
+    </insert>
+
+    <update id="setReadCountUpdate">
+        UPDATE announce_board
+        SET annboard_readcount = annboard_readcount+ 1
+        WHERE annboard_num = #{number}
+    </update>
+
+    <select id="getDetail" resultType="AnnounceBoard">
+        SELECT announce_board.*, user.user_profile_picture, user.user_department, user.user_name
+        FROM announce_board
+                 LEFT JOIN user ON announce_board.user_num = user.user_num
+        WHERE announce_board.annboard_num = #{number}
+    </select>
+
+    <delete id="boardDelete">
+        DELETE FROM announce_board
+        WHERE annboard_num = #{annboardNum}
+	</delete>
+</mapper>

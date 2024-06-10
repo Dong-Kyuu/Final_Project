@@ -23,3 +23,8 @@
     border-color: #f8f9fa !important;
     color:red !important;
 }
+
+.department {
+    font-size : 40px;
+    font-weight: bold
+}

@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="Male_Fashion Template">
-    <meta name="keywords" content="Male_Fashion, unica, creative, html">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- CSRF 토큰 추가 -->
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
@@ -13,15 +11,28 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>장바구니 페이지</title>
+    <title>Trip Cart</title>
 
-    <!-- Google Font -->
-
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="../../assets/images/favicon.ico"/>
     <!-- Css Styles -->
     <link rel="stylesheet" href="/css/mainpage/bootstrap.min.css" th:href="@{/css/mainpage/bootstrap.min.css}">
     <link rel="stylesheet" href="/css/mainpage/font-awesome.min.css" th:href="@{/css/mainpage/font-awesome.min.css}">
     <link rel="stylesheet" href="/css/mainpage/style.css" th:href="@{/css/mainpage/style.css}">
     <style>
+        .content-wrapper{
+            background: none;
+        }
         .IMG__item {
             height: 150px;
             width: 100px;
@@ -41,126 +52,161 @@
             margin: 20px auto; /* 가운데 정렬을 위해 추가 */
         }
 
+        .shopping__cart__table table tbody tr td.cart__close i{
+            background: none;
+        }
+
+        .mdi:before{
+            font-size: x-large;
+        }
+
+        .cart__total ul li span {
+            float:none;
+        }
     </style>
 </head>
-
 <body>
-<!-- Page Preloder -->
-<div id="preloder">
-    <div class="loader"></div>
-</div>
-
-<!-- Breadcrumb Section Begin -->
-<section class="breadcrumb-option">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb__text">
-                    <h4>Shopping Cart</h4>
-                    <div class="breadcrumb__links">
-                        <a href="./index.html">Home</a>
-                        <a href="./shop.html">Shop</a>
-                        <span>Shopping Cart</span>
+<div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    <th:block th:replace="~{TripHSF/_navbar :: navbar}"></th:block>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_sidebar.html -->
+        <th:block th:replace="~{TripHSF/_sidebar :: sidebar}"></th:block>
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <!-- Shopping Cart Section Begin -->
+                <section class="shopping-cart spad">
+                    <div class="container">
+                        <div class="shopping__cart__table">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- 메인 상품 -->
+                                <tr th:if="${not #lists.isEmpty(trip)}">
+                                    <td><img th:src="${trip.tripMainIMG}" class="IMG__item"></td>
+                                    <td class="product__cart__item">
+                                        <div class="product__cart__item__text">
+                                            <h5 th:text="${trip.tripName}"></h5>
+                                            <h6>
+                                                <span th:text="${#strings.substring(trip.tripDate, 2, 4) + '년 ' + #strings.substring(trip.tripDate, 5, 7) + '월 ' + #strings.substring(trip.tripDate, 8) + '일 출발'}"></span>
+                                            </h6>
+                                        </div>
+                                    </td>
+                                    <td class="quantity__item">
+                                        <div class="quantity">
+                                            <div class="pro-qty-2">
+                                                <input type="text" value="1">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="cart__price" th:text="${trip.tripPrice}"></td>
+                                    <td class="cart__close">
+                                        <button class="delete-btn"
+                                                th:data-cart-no="${cart.cartNo}"
+                                                th:data-trip-no="${trip.tripNo}"
+                                                th:data-item-type="'trip'"
+                                                th:data-cart-total="${total_price}">
+                                            <i class="mdi mdi-delete-forever"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- 옵션 상품 -->
+                                <tr th:each="option : ${options}">
+                                    <td><img th:src="${option.optionMainIMG}" class="IMG__item" alt=""></td>
+                                    <td class="product__cart__item">
+                                        <div class="product__cart__item__text">
+                                            <h6 th:text="${option.optionName}"></h6>
+                                        </div>
+                                    </td>
+                                    <td class="quantity__item">
+                                        <div class="quantity">
+                                            <div class="pro-qty-2">
+                                                <input type="text" value="1">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="cart__price" th:text="${option.optionPrice}"></td>
+                                    <td class="cart__close">
+                                        <button class="delete-btn"
+                                                th:data-cart-no="${cart.cartNo}"
+                                                th:data-option-id="${option.optionId}"
+                                                th:data-item-type="'option'"
+                                                th:data-cart-total="${total_price}">
+                                            <i class="mdi mdi-delete-forever"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="continue__btn">
+                                    <a href="tripPage">Continue Shopping</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6"></div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Breadcrumb Section End -->
+                    <div class="cart__total">
+                        <h6>Cart total</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                            <ul>
+                                <li>상품 갯수 : <span th:text="${product_Num}"></span> 개</li>
+                                <li>총 가격 : <span th:text="${total_price}"></span> 원</li>
+                            </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul>
+                                    <li><h6 th:text="'메인 상품 : '+${trip.tripName}"></h6></li>
+                                    <li>옵션 상품 : <h10 th:each="option : ${options}" th:text="${option.optionName}+' '"></h10></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <a href="#" class="primary-btn" data-trip-no="${trip.tripNo}" onclick="proceedToCheckout(this)">Proceed to checkout</a>
+                    </div>
+                </section>
+                <!-- Shopping Cart Section End -->
 
-<!-- Shopping Cart Section Begin -->
-<section class="shopping-cart spad">
-    <div class="container">
-        <div class="shopping__cart__table">
-            <table>
-                <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <!-- 메인 상품 -->
-                <tr th:if="${not #lists.isEmpty(trip)}">
-                    <td><img th:src="${trip.tripMainIMG}" class="IMG__item"></td>
-                    <td class="product__cart__item">
-                        <div class="product__cart__item__text">
-                            <h5 th:text="${trip.tripName}"></h5>
-                            <h6>
-                                <span th:text="${#strings.substring(trip.tripDate, 2, 4) + '년 ' + #strings.substring(trip.tripDate, 5, 7) + '월 ' + #strings.substring(trip.tripDate, 8) + '일 출발'}"></span>
-                            </h6>
-                        </div>
-                    </td>
-                    <td class="quantity__item">
-                        <div class="quantity">
-                            <div class="pro-qty-2">
-                                <input type="text" value="1">
-                            </div>
-                        </div>
-                    </td>
-                    <td class="cart__price" th:text="${trip.tripPrice}"></td>
-                    <td class="cart__close">
-                            <button class="delete-btn"
-                                    th:data-cart-no="${cart.cartNo}"
-                                    th:data-trip-no="${trip.tripNo}"
-                                    th:data-item-type="'trip'"
-                                    th:data-cart-total="${total_price}">
-                            <i class="fa fa-close"></i>
-                        </button>
-                    </td>
-                </tr>
-                <!-- 옵션 상품 -->
-                <tr th:each="option : ${options}">
-                    <td><img th:src="${option.optionMainIMG}" class="IMG__item" alt=""></td>
-                    <td class="product__cart__item">
-                        <div class="product__cart__item__text">
-                            <h6 th:text="${option.optionName}"></h6>
-                        </div>
-                    </td>
-                    <td class="quantity__item">
-                        <div class="quantity">
-                            <div class="pro-qty-2">
-                                <input type="text" value="1">
-                            </div>
-                        </div>
-                    </td>
-                    <td class="cart__price" th:text="${option.optionPrice}"></td>
-                    <td class="cart__close">
-                        <button class="delete-btn"
-                                th:data-cart-no="${cart.cartNo}"
-                                th:data-option-id="${option.optionId}"
-                                th:data-item-type="'option'"
-                                th:data-cart-total="${total_price}">
-                            <i class="fa fa-close"></i>
-                        </button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="continue__btn">
-                    <a href="tripPage">Continue Shopping</a>
-                </div>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-6"></div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            <footer class="footer">
+                <div class="container-fluid d-flex justify-content-between">
+                    <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © bootstrapdash.com 2021</span>
+                    <span class="float-none float-sm-end mt-1 mt-sm-0 text-end"> Free <a
+                            href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin template</a> from Bootstrapdash.com</span>
+                </div>
+            </footer>
+            <!-- partial -->
         </div>
+        <!-- main-panel ends -->
     </div>
-    <div class="cart__total">
-        <h6>Cart total</h6>
-        <ul>
-            <li>상품 갯수 <span th:text="${product_Num}"></span>개</li>
-            <li>총 가격 <span th:text="${total_price}"></span>원</li>
-        </ul>
-        <a href="#" class="primary-btn" data-trip-no="${trip.tripNo}" onclick="proceedToCheckout(this)">Proceed to checkout</a>
-    </div>
-</section>
-<!-- Shopping Cart Section End -->
+    <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="../../assets/js/off-canvas.js"></script>
+<script src="../../assets/js/hoverable-collapse.js"></script>
+<script src="../../assets/js/misc.js"></script>
+<!-- endinject -->
+<!-- Custom js for this page -->
 
 <!-- Js Plugins -->
 <script src="/js/mainpage/jquery-3.3.1.min.js"></script>
@@ -212,6 +258,7 @@
 
     function proceedToCheckout(element) {
         var tripNo = element.getAttribute('data-trip-no');
+
         // tripNo가 null이면 장바구니가 비어있음을 알림
         if (tripNo == null) {
             alert("장바구니가 비어 있습니다.");

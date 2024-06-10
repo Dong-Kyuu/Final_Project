@@ -25,5 +25,11 @@ public interface TripMapper {
     List<Trip> getTripList(int startRow, int endRow, String sort);
 
     List<Trip> getTripListByKeyword(int startRow, int endRow, String keyword, String sort);
+
+    List<Trip> getAllTrip();
+
+    void insertTrip(String tripNumber, String tripName, int tripPrice, int stockNumber, String regDate, String expireDate, String mainIMG, String category, String optionIds, String fileId);
+
+    void insertTripFile(String fileId, String mainIMG, String introIMG, String routeIMG, String scheduleIMG, String detailIMG);
 }
 

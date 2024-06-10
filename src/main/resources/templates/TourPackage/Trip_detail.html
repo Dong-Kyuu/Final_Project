@@ -1,15 +1,22 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:c="http://java.sun.com/jsp/jstl/core"
-      xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="description" content="Male_Fashion Template"/>
-    <meta name="keywords" content="Male_Fashion, unica, creative, html"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>상품 상세 페이지</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Trip Detail</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="../../assets/images/favicon.ico"/>
 
     <!-- Css Styles -->
     <link th:href="@{/css/mainpage/bootstrap.min.css}" rel="stylesheet" type="text/css"/>
@@ -20,48 +27,42 @@
             min-width: 1000px;
         }
 
-        #detail_page {
-            background: white;
-            padding-top: 100px;
-            padding-bottom: 100px;
-        }
-
         #trip_checkbox {
-            display: flex;
-            background: white;
+            text-align: center;
+            padding-left:15px;
+            padding-right: 15px;
             flex-wrap: wrap;
             flex: 0 0 35%;
             min-width: 306px;
-            max-width: 35%;
-            right: 20px;
+            right: 0px;
             display: inline-block;
             min-height: 400px;
             max-height: 600px;
             overflow: hidden;
         }
 
-        .small_IMG {
-            flex: 0 0 calc(15% - 10px);
+        #small_IMG {
+            /*flex: 0 0 calc(15% - 10px);
             max-width: calc(15% - 10px);
             position: relative;
-            width: calc(100% - 20px);
+            width: calc(100% - 20px);*/
             padding-right: 15px;
             padding-left: 15px;
             display: inline-block;
         }
 
-        .big_IMG {
-            flex: 0 0 calc(50% - 10px);
+        #big_IMG {
+            /*flex: 0 0 calc(50% - 10px);
             max-width: calc(50% - 10px);
             position: relative;
-            width: calc(100% - 20px);
+            width: calc(100% - 20px);*/
             padding-right: 15px;
             padding-left: 15px;
             display: inline-block;
-            margin-right: 20px;
+      /*      margin-right: 20px;*/
         }
 
-        .big_IMG .row {
+        #big_IMG .row {
             margin-top: 10px;
             padding-top: 25px;
             border: 1px black solid;
@@ -69,8 +70,8 @@
             background: #f3f2ee;
         }
 
-        .big_IMG img {
-            min-width: 470px;
+        #big_IMG img {
+         /*   min-width: 470px;*/
         }
 
         .product__details__pic__item {
@@ -101,6 +102,7 @@
         }
 
         .cart-btn-detail1 {
+            text-align: center;
             display: table-cell;
             padding: 2px;
             vertical-align: top;
@@ -109,6 +111,7 @@
         }
 
         .cart-btn-detail2 {
+            text-align: center;
             display: table-cell;
             padding: 2px;
             vertical-align: top;
@@ -168,160 +171,172 @@
         .product__details__pic .nav-tabs .nav-item .nav-link .product__thumb__pic {
             min-width: 95px;
         }
+
+        .nav-tabs .nav-link.active{
+            background-color:#edf3f3;
+            border : #edf3f3;
+        }
+
+        .checkout__total__all li span{
+            float: none;
+        }
+
+
     </style>
 </head>
+<body>
+<div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+  <th:block th:replace="~{TripHSF/_navbar :: navbar}"></th:block>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_sidebar.html -->
+       <th:block th:replace="~{TripHSF/_sidebar :: sidebar}"></th:block>
 
-<body id="trip_body">
-<!-- Page Preloder -->
-<div id="preloder">
-    <div class="loader"></div>
-</div>
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <!-- Shop Details Section Begin -->
+                <section class="shop-details">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-2" id="small_IMG">
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">
+                                                <div class="product__thumb__pic set-bg">
+                                                    <img th:src="@{${tripFile.mainIMG}}" alt="Main Image">
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">
+                                                <div class="product__thumb__pic set-bg">
+                                                    <img th:src="@{${tripFile.introIMG}}" alt="Intro Image">
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">
+                                                <div class="product__thumb__pic set-bg">
+                                                    <img th:src="@{${tripFile.routeIMG}}" alt="Route Image">
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#tabs-4" role="tab">
+                                                <div class="product__thumb__pic set-bg">
+                                                    <img th:src="@{${tripFile.scheduleIMG}}" alt="Schedule Image">
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#tabs-5" role="tab">
+                                                <div class="product__thumb__pic set-bg">
+                                                    <img th:src="@{${tripFile.detailIMG}}" alt="Detail Image">
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
 
-<!-- Header Section Begin -->
-<!--
-<c:if test="${empty member_id}">
-    <jsp:include page="../mainpage/header.jsp"/>
-</c:if>
-<c:if test="${!empty member_id}">
-    <jsp:include page="../member/memberHeader.jsp"/>
-</c:if>
--->
-<!-- Header Section End -->
+                                <div class="col-lg-5 col-md-5 col-sm-5" id="big_IMG">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                                            <div class="product__details__pic__item">
+                                                <img th:src="@{${tripFile.mainIMG}}" alt="Main Image">
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="tabs-2" role="tabpanel">
+                                            <div class="product__details__pic__item">
+                                                <img th:src="@{${tripFile.introIMG}}" alt="Intro Image">
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="tabs-3" role="tabpanel">
+                                            <div class="product__details__pic__item">
+                                                <img th:src="@{${tripFile.routeIMG}}" alt="Route Image">
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="tabs-4" role="tabpanel">
+                                            <div class="product__details__pic__item">
+                                                <img th:src="@{${tripFile.scheduleIMG}}" alt="Schedule Image">
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" id="tabs-5" role="tabpanel">
+                                            <div class="product__details__pic__item">
+                                                <img th:src="@{${tripFile.detailIMG}}" alt="Detail Image">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-<!-- Breadcrumb Section Begin -->
-<section class="breadcrumb-option">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb__text">
-                    <h4>Shop</h4>
-                    <div class="breadcrumb__links">
-                        <a th:href="@{/index.html}">Home</a>
-                        <span>Shop</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<!-- Breadcrumb Section End -->
+                                <div class="col-lg-5 col-md-5 col-sm-5" id="trip_checkbox">
+                                    <div class="checkout__order">
+                                        <h4 class="order__title" th:text="${trip.tripName}"></h4>
+                                        <h4 class="order__title">[<span th:text="${#strings.substring(trip.tripDate, 2, 4)} + '년' + ${#strings.substring(trip.tripDate, 5, 7)} + '월'+${#strings.substring(trip.tripDate, 8)} + '일 '+ '출발'"></span>
+                                            ]</h4>
+                                        <ul class="checkout__total__products">
+                                            <div class="multiselect">
+                                                <div class="selectBox" onclick="showCheckboxes()">
+                                                    <select>
+                                                        <option>옵션 선택</option>
+                                                    </select>
+                                                    <div class="overSelect"></div>
+                                                </div>
+                                                <div id="checkboxes">
+                                                    <div th:each="opt, status : ${options}">
+                                                        <label th:for="'product' + ${status.index}">
+                                                            <input type="checkbox" th:id="'product' + ${status.index}" th:data-price="${opt.optionPrice}" th:data-optionName="${opt.optionId}" onclick="calculateTotal()"/>
+                                                            <span th:text="${opt.optionName + ' (+₩' + opt.optionPrice div 10000 + '만)'}"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ul>
+                                        <ul class="checkout__total__all">
+                                            <li>Option Price: ₩<span id="totalPrice">0</span></li>
+                                        </ul>
 
-<!-- Shop Details Section Begin -->
-<section class="shop-details">
-    <div class="product__details__pic" id="detail_page">
-        <div class="container">
-            <div class="row">
-                <div class="small_IMG">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">
-                                <div class="product__thumb__pic set-bg">
-                                    <img th:src="@{${tripFile.mainIMG}}" alt="Main Image">
-                                </div>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">
-                                <div class="product__thumb__pic set-bg">
-                                    <img th:src="@{${tripFile.introIMG}}" alt="Intro Image">
-                                </div>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">
-                                <div class="product__thumb__pic set-bg">
-                                    <img th:src="@{${tripFile.routeIMG}}" alt="Route Image">
-                                </div>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-4" role="tab">
-                                <div class="product__thumb__pic set-bg">
-                                    <img th:src="@{${tripFile.scheduleIMG}}" alt="Schedule Image">
-                                </div>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-5" role="tab">
-                                <div class="product__thumb__pic set-bg">
-                                    <img th:src="@{${tripFile.detailIMG}}" alt="Detail Image">
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="big_IMG">
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
-                            <div class="product__details__pic__item">
-                                <img th:src="@{${tripFile.mainIMG}}" alt="Main Image">
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tabs-2" role="tabpanel">
-                            <div class="product__details__pic__item">
-                                <img th:src="@{${tripFile.introIMG}}" alt="Intro Image">
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tabs-3" role="tabpanel">
-                            <div class="product__details__pic__item">
-                                <img th:src="@{${tripFile.routeIMG}}" alt="Route Image">
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tabs-4" role="tabpanel">
-                            <div class="product__details__pic__item">
-                                <img th:src="@{${tripFile.scheduleIMG}}" alt="Schedule Image">
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tabs-5" role="tabpanel">
-                            <div class="product__details__pic__item">
-                                <img th:src="@{${tripFile.detailIMG}}" alt="Detail Image">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6" id="trip_checkbox">
-                    <div class="checkout__order">
-                        <h4 class="order__title" th:text="${trip.tripName}"></h4>
-                        <h4 class="order__title">[<span th:text="${#strings.substring(trip.tripDate, 2, 4)} + '년' + ${#strings.substring(trip.tripDate, 5, 7)} + '월'+${#strings.substring(trip.tripDate, 8)} + '일 '+ '출발'"></span>
-                            ]</h4>
-                        <ul class="checkout__total__products">
-                            <div class="multiselect">
-                                <div class="selectBox" onclick="showCheckboxes()">
-                                    <select>
-                                        <option>옵션 선택</option>
-                                    </select>
-                                    <div class="overSelect"></div>
-                                </div>
-                                <div id="checkboxes">
-                                    <div th:each="opt, status : ${options}">
-                                        <label th:for="'product' + ${status.index}">
-                                            <input type="checkbox" th:id="'product' + ${status.index}" th:data-price="${opt.optionPrice}" th:data-optionName="${opt.optionId}" onclick="calculateTotal()"/>
-                                            <span th:text="${opt.optionName + ' (+₩' + opt.optionPrice div 10000 + '만)'}"></span>
-                                        </label>
+                                        <div class="cart-btn">
+                                            <div class="cart-btn-detail1"><a href="#" class="site-btn">찜하기</a></div>
+                                            <div class="cart-btn-detail2"><a href="#" class="site-btn" id="Cart-btn" onclick="redirectToCart()">구매하기</a></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </ul>
-                        <ul class="checkout__total__all">
-                            <li>Option Price: ₩<span id="totalPrice">0</span></li>
-                        </ul>
-                        <div class="cart-btn">
-                            <div class="cart-btn-detail1"><a href="#" class="site-btn">찜하기</a></div>
-                            <div class="cart-btn-detail2"><a href="#" class="site-btn" id="Cart-btn" onclick="redirectToCart()">구매 하기</a></div>
                         </div>
-                    </div>
-                </div>
+                </section>
+                <!-- Shop Details Section End -->
+
             </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            <footer class="footer">
+                <div class="container-fluid d-flex justify-content-between">
+                    <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © bootstrapdash.com 2021</span>
+                    <span class="float-none float-sm-end mt-1 mt-sm-0 text-end"> Free <a
+                            href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin template</a> from Bootstrapdash.com</span>
+                </div>
+            </footer>
+            <!-- partial -->
         </div>
+        <!-- main-panel ends -->
     </div>
-</section>
-<!-- Shop Details Section End -->
-
-<!-- Footer Section Begin -->
-
-<!-- Footer Section End -->
+    <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="../../assets/js/off-canvas.js"></script>
+<script src="../../assets/js/hoverable-collapse.js"></script>
+<script src="../../assets/js/misc.js"></script>
+<!-- endinject -->
+<!-- Custom js for this page -->
+<!-- End custom js for this page -->
 
 <!-- Js Plugins -->
 <script src="/js/mainpage/jquery-3.3.1.min.js"></script>
@@ -372,9 +387,9 @@
             }
         });
 
-        var tripNo = [[${tripNo}]];
-        var cartNo = [[${cartTripNo}]];
-        var check = [[${check}]];
+        var tripNo = /*[[${tripNo}]]*/ '0';
+        var cartNo = /*[[${cartTripNo}]]*/ '0';
+        var check = /*[[${check}]]*/ '0';
         console.log("tripNo ="+tripNo);
         console.log("cartNo ="+cartNo);
         console.log("check ="+check);
@@ -393,7 +408,5 @@
     }
 </script>
 <!-- 옵션버튼 -->
-
 </body>
 </html>
-

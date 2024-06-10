@@ -2,6 +2,7 @@ package com.example.jhta_3team_finalproject.service.TourPackage;
 
 import com.example.jhta_3team_finalproject.domain.TourPackage.*;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,4 +26,8 @@ public interface TripService {
     List<Trip> getCategoryTripList(@Param("startRow") int startRow, @Param("endRow") int endRow, @Param("category") String category, @Param("sort") String sort);
 
     List<Trip> getTripListByKeyword(@Param("startRow") int startRow, @Param("endRow") int endRow, String keyword, String sort);
+
+    List<Trip> getAllTrip();
+
+    void saveTrip(String tripName, String tripNumber, int tripPrice, int stockNumber, String regDate, String expireDate, String category, String optionIds, MultipartFile[] images);
 }

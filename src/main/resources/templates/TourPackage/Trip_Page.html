@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Purple Admin</title>
+    <title>Trip Main Page</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
@@ -82,10 +82,12 @@
 <body>
 <div class="container-scroller">
     <!-- partial:../../partials/_navbar.html -->
-    <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
+   <th:block th:replace="~{TripHSF/_navbar :: navbar}"></th:block>
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
         <!-- partial:../../partials/_sidebar.html -->
+        <th:block th:replace="~{TripHSF/_sidebar :: sidebar}"></th:block>
+        <!--
         <div class="col-lg-2">
             <div class="shop__sidebar">
                 <div class="shop__sidebar__search">
@@ -159,6 +161,7 @@
                 </div>
             </div>
         </div>
+        -->
         <!-- partial -->
         <div class="col-lg-10">
             <div class="content-wrapper">

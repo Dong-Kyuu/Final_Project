@@ -6,23 +6,23 @@
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.TourPackage.TripMapper">
 
     <select id="getListCount" resultType="int">
-        SELECT count(*) FROM Trip
+        SELECT count(*) FROM trip
     </select>
 
     <select id="getCategoryListCount" resultType="int">
-        SELECT count(*) FROM Trip WHERE tripCategory = #{category}
+        SELECT count(*) FROM trip WHERE trip_category = #{category}
     </select>
 
     <select id="getDetail" resultType="Trip" parameterType="int">
-        SELECT * FROM Trip WHERE tripNo = #{num}
+        SELECT * FROM trip WHERE trip_no = #{num}
     </select>
 
     <select id="getTripFileByNo" resultType="TripFile" parameterType="String">
-        SELECT * FROM TripFile WHERE fileId = #{fileNo}
+        SELECT * FROM tripfile WHERE file_id = #{fileNo}
     </select>
 
     <select id="getOptionIds" resultType="String" parameterType="int">
-        SELECT optionIds FROM Trip WHERE tripNo = #{num}
+        SELECT option_ids FROM trip WHERE trip_no = #{num}
     </select>
 
     <select id="getTripList" resultType="Trip">
@@ -30,26 +30,26 @@
         SELECT
         ROW_NUMBER() OVER (
         <choose>
-            <when test="sort == 'date_asc'">ORDER BY tripDate ASC</when>
-            <when test="sort == 'date_desc'">ORDER BY tripDate DESC</when>
-            <when test="sort == 'price_low'">ORDER BY tripPrice ASC</when>
-            <when test="sort == 'price_high'">ORDER BY tripPrice DESC</when>
-            <otherwise>ORDER BY expireDate ASC</otherwise>
+            <when test="sort == 'date_asc'">ORDER BY trip_date ASC</when>
+            <when test="sort == 'date_desc'">ORDER BY trip_date DESC</when>
+            <when test="sort == 'price_low'">ORDER BY trip_price ASC</when>
+            <when test="sort == 'price_high'">ORDER BY trip_price DESC</when>
+            <otherwise>ORDER BY expire_date ASC</otherwise>
         </choose>
         ) AS rnum,
-        tripName,
-        tripNo,
-        tripPrice,
-        tripStock,
-        tripMaxStock,
-        regDate,
-        expireDate,
-        tripDate,
-        fileId,
-        tripMainIMG,
-        tripCategory
-        FROM Trip
-        ) AS TripAlias
+        trip_name,
+        trip_no,
+        trip_price,
+        trip_stock,
+        trip_max_stock,
+        reg_date,
+        expire_date,
+        trip_date,
+        file_id,
+        trip_main_img,
+        trip_category
+        FROM trip
+        ) AS tripAlias
         WHERE rnum BETWEEN #{startRow} AND #{endRow}
     </select>
 
@@ -57,22 +57,22 @@
         SELECT * FROM (
         SELECT ROW_NUMBER() OVER (
         <choose>
-            <when test="sort == 'date_asc'">ORDER BY STR_TO_DATE(tripDate, '%Y-%m-%d') ASC</when>
-            <when test="sort == 'date_desc'">ORDER BY STR_TO_DATE(tripDate, '%Y-%m-%d') DESC</when>
-            <when test="sort == 'price_low'">ORDER BY tripPrice ASC</when>
-            <when test="sort == 'price_high'">ORDER BY tripPrice DESC</when>
-            <otherwise>ORDER BY tripNo ASC</otherwise>
+            <when test="sort == 'date_asc'">ORDER BY STR_TO_DATE(trip_date, '%Y-%m-%d') ASC</when>
+            <when test="sort == 'date_desc'">ORDER BY STR_TO_DATE(trip_date, '%Y-%m-%d') DESC</when>
+            <when test="sort == 'price_low'">ORDER BY trip_price ASC</when>
+            <when test="sort == 'price_high'">ORDER BY trip_price DESC</when>
+            <otherwise>ORDER BY trip_no ASC</otherwise>
         </choose>
         ) AS rnum,
-        tripName, tripNo, tripPrice, tripStock, tripMaxStock,
-        regDate, expireDate, tripDate, fileId, tripMainIMG, tripCategory
-        FROM Trip WHERE tripCategory = #{category}
+        trip_name, trip_no, trip_price, trip_stock, trip_max_stock,
+        reg_date, expire_date, trip_date, file_id, trip_main_img, trip_category
+        FROM trip WHERE trip_category = #{category}
         ) AS derived_table_alias
          where rnum BETWEEN #{startRow} AND #{endRow}
     </select>
 
     <select id="getKeywordListCount" resultType="int">
-        SELECT count(*) FROM Trip WHERE tripName LIKE CONCAT('%', #{keyword}, '%')
+        SELECT count(*) FROM trip WHERE trip_name LIKE CONCAT('%', #{keyword}, '%')
     </select>
 
     <select id="getTripListByKeyword" resultType="Trip">
@@ -80,27 +80,41 @@
         SELECT
         ROW_NUMBER() OVER (
         <choose>
-            <when test="sort == 'date_asc'">ORDER BY tripDate ASC</when>
-            <when test="sort == 'date_desc'">ORDER BY tripDate DESC</when>
-            <when test="sort == 'price_low'">ORDER BY tripPrice ASC</when>
-            <when test="sort == 'price_high'">ORDER BY tripPrice DESC</when>
-            <otherwise>ORDER BY expireDate ASC</otherwise>
+            <when test="sort == 'date_asc'">ORDER BY trip_date ASC</when>
+            <when test="sort == 'date_desc'">ORDER BY trip_date DESC</when>
+            <when test="sort == 'price_low'">ORDER BY trip_price ASC</when>
+            <when test="sort == 'price_high'">ORDER BY trip_price DESC</when>
+            <otherwise>ORDER BY expire_date ASC</otherwise>
         </choose>
         ) AS rnum,
-        tripName,
-        tripNo,
-        tripPrice,
-        tripStock,
-        tripMaxStock,
-        regDate,
-        expireDate,
-        tripDate,
-        fileId,
-        tripMainIMG,
-        tripCategory
-        FROM Trip
-        WHERE tripName LIKE CONCAT('%', #{keyword}, '%')
-        ) AS TripAlias WHERE rnum BETWEEN #{startRow} AND #{endRow}
+        trip_name,
+        trip_no,
+        trip_price,
+        trip_stock,
+        trip_max_stock,
+        reg_date,
+        expire_date,
+        trip_date,
+        file_id,
+        trip_main_img,
+        trip_category
+        FROM trip
+        WHERE trip_name LIKE CONCAT('%', #{keyword}, '%')
+        ) AS tripAlias WHERE rnum BETWEEN #{startRow} AND #{endRow}
     </select>
+
+    <select id="getAllTrip" resultType="Trip">
+        SELECT * FROM trip
+    </select>
+
+    <insert id="insertTrip" parameterType="Trip">
+        INSERT INTO trip (trip_no, trip_name, trip_price, trip_stock, reg_date, expire_date, trip_main_img, trip_category, option_ids, file_id)
+        VALUES (#{tripNo}, #{tripName}, #{tripPrice}, #{tripStock}, #{regDate}, #{expireDate}, #{tripMainIMG}, #{tripCategory}, #{optionIds}, #{fileId})
+    </insert>
+
+    <insert id="insertTripFile" parameterType="TripFile">
+        INSERT INTO tripfile (file_id, main_img, intro_img, route_img, schedule_img, detail_img)
+        VALUES (#{fileId}, #{mainIMG}, #{introIMG}, #{routeIMG}, #{scheduleIMG}, #{detailIMG})
+    </insert>
 </mapper>
 

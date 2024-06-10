@@ -1,4 +1,4 @@
-package com.example.jhta_3team_finalproject.service.table;
+package com.example.jhta_3team_finalproject.service.board;
 
 import com.example.jhta_3team_finalproject.domain.Board.BoardComment;
 
