@@ -1,7 +1,5 @@
-<!-- templates/fragments/navbar.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Navbar Fragment</title>
     <meta name="_csrf" th:content="${_csrf.token}">
@@ -10,10 +8,12 @@
 <body>
 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row" th:fragment="navbar">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a class="navbar-brand brand-logo" th:href="@{/dashboard}"><img th:src="@{/assets/images/LOGO_2.png}"
-                                                                        alt="logo"/></a>
-        <a class="navbar-brand brand-logo-mini" th:href="@{/dashboard}">
-            <img th:src="@{/assets/images/logo-mini.svg}" alt="logo"/></a>
+        <a class="navbar-brand brand-logo" th:href="@{/tripPage}">
+            <img th:src="@{/assets/images/LOGO_2.png}" alt="logo"/>
+        </a>
+        <a class="navbar-brand brand-logo-mini" th:href="@{/tripPage}">
+            <img th:src="@{/assets/images/logo-mini.svg}" alt="logo"/>
+        </a>
     </div>
     <div class="navbar-menu-wrapper d-flex align-items-stretch">
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -33,21 +33,18 @@
             <li class="nav-item nav-profile dropdown">
                 <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown"
                    aria-expanded="false">
-                    <div class="nav-profile-img">
-                        <th:block th:with="profilePicture=${#authentication.principal.profile_picture}">
-                            <img th:src="@{|../image/${profilePicture}|}" alt="image">
-                        </th:block>
-                        <span class="availability-status online"></span>
+                    <div class="nav-profile-text" th:if="${customer != null}">
+                        <p class="mb-1 text-black" th:text="${customer.customerId}"></p>
                     </div>
-                    <div class="nav-profile-text">
-                        <p class="mb-1 text-black" th:text="${#authentication.principal.name}"></p>
+                    <div class="nav-profile-text" th:if="${customer == null}">
+                        <p class="mb-1 text-black">Guest</p>
                     </div>
                 </a>
                 <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
-                    <a class="dropdown-item" th:href="@{/user/logout}">
+                    <a class="dropdown-item" th:href="@{/triplogout}">
                         <i class="mdi mdi-cached me-2 text-success"></i> 내 정보 </a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" th:href="@{/user/logout}">
+                    <a class="dropdown-item" th:href="@{/triplogout}">
                         <i class="mdi mdi-logout me-2 text-primary" id="logout"></i> 로그아웃 </a>
                 </div>
             </li>
