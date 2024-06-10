@@ -13,6 +13,7 @@ java {
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }//2024-06-09, 김산 - Iamport
 }
 
 dependencies {
@@ -57,6 +58,9 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
+
+    //2024-06-09, 김산 - Iamport
+    implementation 'com.github.iamport:iamport-rest-client-java:0.2.23'
 
     //mail 선경
     implementation 'org.springframework.boot:spring-boot-starter-mail'
