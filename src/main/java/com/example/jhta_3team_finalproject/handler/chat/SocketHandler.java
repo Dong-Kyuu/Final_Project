@@ -7,9 +7,12 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.jhta_3team_finalproject.config.chat.FileItemMultipartFile;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
-import com.example.jhta_3team_finalproject.service.chat.ChattingService;
+//import com.example.jhta_3team_finalproject.service.chat.ChattingService;
 import com.example.jhta_3team_finalproject.service.chat.RedisService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -23,9 +26,6 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItem;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -38,9 +38,9 @@ import java.util.*;
 public class SocketHandler extends TextWebSocketHandler {
 
     @Autowired
-    ChattingService chattingService;
+//    ChattingService chattingService;
 
-    @Autowired
+//    @Autowired
     RedisService redisService;
 
     @Autowired
@@ -92,7 +92,7 @@ public class SocketHandler extends TextWebSocketHandler {
             chatMessage.setFileUrl(s3url);
         }
         chatMessage.setFileOriginName(fileName);
-        chattingService.createMessage(chatMessage);
+//        chattingService.createMessage(chatMessage);
 
         HashMap<String, Object> temp = new HashMap<String, Object>();
         if (rls.size() > 0) {
@@ -204,7 +204,7 @@ public class SocketHandler extends TextWebSocketHandler {
             ChatMessage chatMessage = new ChatMessage();
             chatMessage.setFileUrl(s3url);
             chatMessage.setS3url(imageurl);
-            chattingService.updateMsgImageUrl(chatMessage);
+//            chattingService.updateMsgImageUrl(chatMessage);
 
         } catch (IOException e) {
             e.printStackTrace();

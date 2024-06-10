@@ -3,7 +3,7 @@ package com.example.jhta_3team_finalproject.controller;
 
 import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.domain.chat.ChatRoom;
-import com.example.jhta_3team_finalproject.service.ChattingService;
+import com.example.jhta_3team_finalproject.service.chat.ChattingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
