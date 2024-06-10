@@ -41,10 +41,10 @@
                         </div>
                         <!-- 로그인한 유저 정보 -->
                         <th:block>
-                            <input type="hidden" id="loginname" th:value="${#authentication.principal.userName}">
+                            <input type="hidden" id="loginname" th:value="${#authentication.principal.username}">
                             <input type="hidden" id="loginNum" th:value="${#authentication.principal.userNum}">
                             <input type="hidden" id="loginprofile" th:value="${#authentication.principal.userProfilePicture}">
-                            <input type="hidden" id="loginDPM" th:value="${#authentication.principal.userDepartment}">
+                            <input type="hidden" id="loginDPM" th:value="${#authentication.principal.departmentId}">
                             <input type="hidden" id="writerNum" th:value="${boarddata.userNum}">
                             <input type="hidden" id="department" th:value="${boarddata.annboardDepartment}">
                         </th:block>
@@ -68,7 +68,7 @@
                                                 <th:block th:with="pinfo=${#authentication.principal}">
                                                     <th:block th:if="${pinfo.userNum}!=${boarddata.getUserNum()}">
                                                         <th:block sec:authorize="hasAuthority('ROLE_TEAM')">
-                                                            <th:block th:if="${pinfo.userDepartment=='관리부'}">
+                                                            <th:block th:if="${pinfo.departmentId==2}">
                                                                 <i class="mdi mdi-dots-horizontal table-menu" style="float: right; font-size: 30px; margin-top:0px;"></i>
                                                             </th:block>
                                                         </th:block>

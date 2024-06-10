@@ -34,6 +34,7 @@ public class AnnounceBoardServiceImpl implements AnnounceBoardService{
         }
         map.put("target_department", targetDepartment);
         return AnnounceBoardMapper.getListCount(map);
+
     }
 
     @Override
