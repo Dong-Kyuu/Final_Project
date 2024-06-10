@@ -5,14 +5,11 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.example.jhta_3team_finalproject.config.chat.FileItemMultipartFile;
+import com.example.jhta_3team_finalproject.domain.chat.FileItemMultipartFile;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
-//import com.example.jhta_3team_finalproject.service.chat.ChattingService;
+import com.example.jhta_3team_finalproject.service.chat.ChatService;
 import com.example.jhta_3team_finalproject.service.chat.RedisService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -26,11 +23,15 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItem;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Slf4j
@@ -38,9 +39,9 @@ import java.util.*;
 public class SocketHandler extends TextWebSocketHandler {
 
     @Autowired
-//    ChattingService chattingService;
+    ChatService chatService;
 
-//    @Autowired
+    @Autowired
     RedisService redisService;
 
     @Autowired
@@ -55,7 +56,7 @@ public class SocketHandler extends TextWebSocketHandler {
     static int fileUploadIdx = 0;
     static String fileUploadSession = "";
     List<ChatMessage> chatMessageList;
-    String userName;
+    String userId;
     String s3url;
 
     @Override
@@ -92,7 +93,10 @@ public class SocketHandler extends TextWebSocketHandler {
             chatMessage.setFileUrl(s3url);
         }
         chatMessage.setFileOriginName(fileName);
-//        chattingService.createMessage(chatMessage);
+        chatMessage = chatService.createMessage(chatMessage);
+
+        obj.put("readCount", chatMessage.getReadCount());
+        obj.put("sendTime", chatMessage.getSendTime().getTime());
 
         HashMap<String, Object> temp = new HashMap<String, Object>();
         if (rls.size() > 0) {
@@ -204,7 +208,7 @@ public class SocketHandler extends TextWebSocketHandler {
             ChatMessage chatMessage = new ChatMessage();
             chatMessage.setFileUrl(s3url);
             chatMessage.setS3url(imageurl);
-//            chattingService.updateMsgImageUrl(chatMessage);
+            chatService.updateMsgImageUrl(chatMessage);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -223,7 +227,7 @@ public class SocketHandler extends TextWebSocketHandler {
             try {
                 JSONObject obj = new JSONObject();
                 obj.put("type", "imgurl");
-                obj.put("userName", userName);
+                obj.put("userId", userId);
                 obj.put("imageurl", imageurl);
                 webSocketSession.sendMessage(new TextMessage(obj.toJSONString())); //초기화된 버퍼를 발송한다.
             } catch (IOException e) {
@@ -240,12 +244,13 @@ public class SocketHandler extends TextWebSocketHandler {
         super.afterConnectionEstablished(session);
         boolean flag = false;
         String url = session.getUri().toString();
-        String buffer = url.split("/chating/")[1];
+        String buffer = url.split("/chatting/")[1];
         String roomNumber = buffer.split("&")[0];
-        userName = buffer.split("&")[1];
+        userId = buffer.split("&")[1];
+        String type = buffer.split("&")[2];
 
         log.info("{} : 방번호 ", roomNumber);
-        log.info("{} : 유저이름", userName);
+        log.info("{} : 유저아이디", userId);
 
         // 방번호를 기준으로 다 받아온다.
         ChatMessage chatMessage = new ChatMessage();
@@ -282,8 +287,11 @@ public class SocketHandler extends TextWebSocketHandler {
         // 포문으로 연속 메시지를 보낸다. list 크기 만큼 돌린다.
         for (int i = 0; i < chatMessageList.size(); i++) {
             String content = chatMessageList.get(i).getMessageContent();
-            String userDBName = chatMessageList.get(i).getSenderId();
+            String senderId = chatMessageList.get(i).getSenderId(); // 2024-06-08, 현재는 아이디 -> 나중에 이름으로 가져올 예정
             String fileUrl = chatMessageList.get(i).getFileUrl();
+            int readCount = chatMessageList.get(i).getReadCount();
+            Date sendTime = chatMessageList.get(i).getSendTime();
+
             log.info("{} 번째", i);
             // 세션등록이 끝나면 발급받은 세션 ID 값의 메시지를 발송한다.
             JSONObject obj = new JSONObject();
@@ -291,9 +299,11 @@ public class SocketHandler extends TextWebSocketHandler {
             log.info("{}", session);
             obj.put("type", "getId");
             //obj.put(session.getId(),session); // 활성화하면 새로고침 시 소켓이 종료되면서 같은 세션 값을 가지고 있던 obj들이 제거되었었음.
-            obj.put("sessionId", userName); // 유저 아이디임. // 위를 활성화하면 세션과 관련된 obj들이 제거되면서 이 컬럼과 js 조건문이 만나는 조건에서 의도치 않은 결과가 나왔었음.
-            obj.put("userName", userDBName);
+            obj.put("sessionId", userId); // 유저 아이디임. // 위를 활성화하면 세션과 관련된 obj들이 제거되면서 이 컬럼과 js 조건문이 만나는 조건에서 의도치 않은 결과가 나왔었음.
+            obj.put("userName", senderId);
             obj.put("msg", content);
+            obj.put("readCount", readCount);
+            obj.put("sendTime", sendTime.getTime()); // milliseconds 밀리초로 구해진 값으로 JS와 호환
             /**
              * 2024-06-04, URL 이 있는 경우 URL 주소를 put 한다.
              */

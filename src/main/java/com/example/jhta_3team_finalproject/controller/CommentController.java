@@ -1,7 +1,7 @@
 package com.example.jhta_3team_finalproject.controller;
 
 import com.example.jhta_3team_finalproject.domain.Board.BoardComment;
-import com.example.jhta_3team_finalproject.service.table.TableCommentService;
+import com.example.jhta_3team_finalproject.service.board.TableCommentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

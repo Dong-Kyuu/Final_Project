@@ -31,7 +31,7 @@
                             <h4 class="page-title"> 자유 게시판 </h4>
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="#">게시판</a></li>
+                                    <li class="breadcrumb-item">게시판</li>
                                     <li class="breadcrumb-item active" aria-current="page">자유 게시판</li>
                                 </ol>
                             </nav>
@@ -40,10 +40,23 @@
                             <div class="col-lg-12 grid-margin stretch-card">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h4 class="card-title">전체 보기</h4>
+                                        <h4 class="card-title">
+                                            <div id="listTitle">
+                                                <th:block th:if = "${targetDepartment}==''">
+                                                    전체보기
+                                                </th:block>
+                                                [[${targetDepartment}]]
+                                                <i class="mdi mdi-chevron-right main-chevron-icon" id="target"></i>
+
+                                                <div>
+
+                                                </div>
+                                            </div>
+                                        </h4>
                                         <p class="card-description">
                                             글 갯수 <code> [[${listcount}]]</code>
                                         </p>
+
                                         <th:block th:if = "${listcount > 0}">
                                             <table class="table">
                                                 <thead>
@@ -58,16 +71,16 @@
                                                 <tbody>
                                                     <th:block th:with = "num=${listcount -(page -1)*limit}">
                                                         <th:block th:each	= "b, iterStat:${boardlist}">
-
-                                                            <tr>
+                                                            <tr th:data-department="${b.boardDepartment}">
                                                                 <td><span th:text = "${num -(iterStat.index)}"></span></td>
                                                                 <td>
-                                                                    <div>
-                                                                        <a th:href = "@{'detail?num=' + ${b.boardNum}}">
-                                                                            <span>[[${#strings.abbreviate(b.boardTitle,25)}]]</span>
-                                                                            <span class	= "gray" th:text = "'[' + ${b.Cnt} + ']'"></span>
-                                                                        </a>
-                                                                    </div>
+                                                                    <a class='title-table' th:href = "@{'detail?num=' + ${b.boardNum}}">
+                                                                        <div class='title-table'>
+                                                                            <span class="department"><[[${#strings.substring(b.boardDepartment, 0, b.boardDepartment.length() - 1)}]]>&nbsp;</span>
+                                                                                <span class='title-table'>[[${#strings.abbreviate(b.boardTitle,25)}]]</span>
+                                                                                <span class	= "gray title-table" th:text = "'[' + ${b.Cnt} + ']'"></span>
+                                                                        </div>
+                                                                    </a>
                                                                 </td>
                                                                 <td><div th:text = "${b.boardWriter}"></div></td>
                                                                 <td><div th:text = "${b.boardDate}"></div></td>
@@ -78,38 +91,105 @@
                                                 </tbody>
                                             </table>
 
+                                            <!-- 검색 -->
+                                            <form action="freelist" method="get">
+                                                <div class = "center-box">
+                                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                                    <div class="search-space">
+                                                        <div class="search-target">
+                                                            <select id="searchField" name="searchField">
+                                                                <option value="0" selected>제목</option>
+                                                                <option value="1">내용</option>
+                                                                <option value="2">작성자</option>
+                                                            </select>
+                                                        </div>
+                                                        <input type="text" name="search" class="search-input" placeholder="검색어를 입력하세요." th:value = "${search_word}">
+                                                        <i class="mdi mdi-magnify magnify-icon" id="submit-icon"></i>
+                                                    </div>
+                                                </div>
+                                            </form>
+
                                             <div class = "container ">
                                                 <div class = "center-block mt-5">
                                                     <ul class = "pagination justify-content-center">
                                                         <li class = "page-item">
                                                             <a class = "page-link"
                                                                th:classappend = "${page<=1} ? 'gray' : ''"
-                                                               th:href = "${page>1} ? 'freelist?page=' + ${page -1} : ''">
+                                                               th:href = "${page>1} ? 'freelist?page=' + ${page -1} + '&searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=' + ${targetDepartment} : ''">
                                                                     이전&nbsp;
                                                             </a>
                                                         </li>
                                                         <li th:class = "${a == page} ? 'page-item active' : 'page-item'"
                                                             th:each = "a : ${#numbers.sequence(startpage, endpage)}">
-                                                            <a th:href = "${a == page} ? '' : 'freelist?page=' + ${a}" class = "page-link">
+                                                            <a th:href = "${a == page} ? '' : 'freelist?page=' + ${a} + '&searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=' + ${targetDepartment}" class = "page-link">
                                                                 <span th:text = "${a}"></span>
                                                             </a>
                                                         </li>
                                                         <li class = "page-item">
                                                             <a class = "page-link"
                                                                th:classappend = "${page >= maxpage} ? 'gray' : ''"
-                                                               th:href = "${page < maxpage} ? 'freelist?page=' + ${page+1} : ''">다음&nbsp;</a>
+                                                               th:href = "${page < maxpage} ? 'freelist?page=' + ${page+1} + '&searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=' + ${targetDepartment} : ''">다음&nbsp;</a>
                                                         </li>
                                                     </ul>
                                                 </div>
                                             </div>
+
                                         </th:block>
 
-                                        <th:block th:if = "${listcount == 0}">
+                                        <th:block th:if = "${listcount == 0 && search_word == ''}">
                                             <span class="no-list">등록된 글이 없습니다.</span>
                                         </th:block>
+                                        <th:block th:if = "${listcount == 0 && search_word != ''}">
+                                            <span class="no-list">검색 결과가 없습니다.</span>
+                                            <!-- 검색 -->
+                                            <form action="freelist" method="get">
+                                                <div class = "center-box">
+                                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                                    <div class="search-space">
+                                                        <div class="search-target">
+                                                            <select id="searchField" name="searchField">
+                                                                <option value="0" selected>제목</option>
+                                                                <option value="1">내용</option>
+                                                                <option value="2">작성자</option>
+                                                            </select>
+                                                        </div>
+                                                        <input type="text" name="search" class="search-input" placeholder="검색어를 입력하세요." th:value = "${search_word}">
+                                                        <i class="mdi mdi-magnify magnify-icon" id="submit-icon"></i>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </th:block>
+
+                                        <div id="DepartmentModal" class="tablemodal">
+                                            <a class="departmentList" th:href="'freelist?searchField=' + ${search_field} + '&search=' + ${search_word}">
+                                                <button class="btn btn-inverse-light btn-fw menu-M2 remo">전체보기</button>
+                                            </a>
+                                            <hr style="margin: 0px 0px">
+                                            <a class="departmentList" th:href="'freelist?searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=ALL'" >
+                                                <button class="btn btn-inverse-light btn-fw menu-M2 modi">ALL</button>
+                                            </a>
+                                            <hr style="margin: 0px 0px">
+                                            <a class="departmentList" th:href="'freelist?searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=인사부'">
+                                                <button class="menu-M2 btn btn-inverse-light btn-fw modi">인사부</button>
+                                            </a>
+                                            <hr style="margin: 0px 0px">
+                                            <a class="departmentList" th:href="'freelist?searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=관리부'">
+                                                <button class="btn btn-inverse-light btn-fw menu-M2 modi">관리부</button>
+                                            </a>
+                                            <hr style="margin: 0px 0px">
+                                            <a class="departmentList" th:href="'freelist?searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=영업부'">
+                                                <button class="btn btn-inverse-light btn-fw menu-M2 modi">영업부</button>
+                                            </a>
+                                            <hr style="margin: 0px 0px">
+                                            <a class="departmentList" th:href="'freelist?searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=총무부'">
+                                                <button class="btn btn-inverse-light btn-fw menu-M2 modi">총무부</button>
+                                            </a>
+
+
+                                        </div>
 
                                         <div class = "write-button">
-                                            <button type="button" class="btn btn-gradient-dark btn-rounded btn-fw"> 글 쓰 기 </button>
+                                            <button type="button" class="btn btn-gradient-dark btn-rounded btn-fw write-btn"> 글 쓰 기 </button>
                                         </div>
                                     </div>
                                 </div>

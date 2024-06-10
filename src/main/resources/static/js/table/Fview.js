@@ -3,6 +3,16 @@
 $(function () {
     let token = $("meta[name='_csrf']").attr("content");
     let header = $("meta[name='_csrf_header']").attr("content");
+
+    // 부서 색 표시
+    console.log($('#department').val())
+    if($('#department').val() == '관리부') {
+        $('.department').css('color','blue');
+    } else if(($('#department').val() == '인사부')) {
+        $('.department').css('color','#00ff33');
+    } else if(($('#department').val() == '영업부')) {
+        $('.department').css('color','red');
+    }
     // 메뉴 열기
     $(".table-menu").click(function (event) {
         var modal = $("#table-view-M");
@@ -52,6 +62,7 @@ $(function () {
 
     });
 
+    // 댓글 삭제
     $('#delete-menuform2').on('submit', function(event) {
         event.preventDefault(); // 폼의 기본 서브밋 동작을 막습니다.
 
@@ -168,7 +179,7 @@ $(function () {
                                 "               <input type='hidden' class='comment_num' value='" + this.commNum + "' >" +
                                 "               <div style=\"height: 25px;\">\n" +
                                 // 프사
-                                "                   <img src=\"../upload/user" + this.writerProfilePicture + "\" alt=\"../image/default.png\" style=\"width:30px !important; float: left; margin: 2px 15px 0px 0px;\">\n"
+                                "                   <img src=\"../upload/user" + this.writerProfilePicture + "\" alt=\"../image/default.png\" style=\"width:30px !important; height:30px; border-radius:15px; float: left; margin: 2px 15px 0px 0px;\">\n"
 
                             if ($("#loginNum").val() == this.userNum) {
                                 output += "     <i class=\"mdi mdi-dots-vertical\" style=\"float: right; font-size: 25px; margin-top:3px;\"></i>\n"
@@ -235,14 +246,19 @@ $(function () {
 });
 
 // 삭제 확인
-function confirmSubmit(event) {
+function confirmDelete() {
     // 확인 메시지를 표시
-    var result = confirm("정말 삭제하시겠어요?");
+    return confirm("정말 삭제하시겠어요?");
+}
 
-    // "취소"를 선택한 경우 폼 제출을 중지
-    if (!result) {
-        event.preventDefault();
+// 수정 확인
+function confirmModify() {
+    if($("#loginNum").val() != $("#writerNum").val()){
+       alert("수정은 본인만 가능합니다.");
+       return false;
     }
+    // 확인 메시지를 표시
+    return confirm("글을 수정하시겠어요?");
 }
 
 // 권한 확인 메서드

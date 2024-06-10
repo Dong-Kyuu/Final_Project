@@ -15,5 +15,4 @@ public class ChatRoom {
     private String chatSessionId;
     private String roomName;
     private Date roomCreateDate;
-
 }

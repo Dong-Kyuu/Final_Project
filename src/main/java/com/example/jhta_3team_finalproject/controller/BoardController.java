@@ -2,8 +2,8 @@ package com.example.jhta_3team_finalproject.controller;
 
 import com.example.jhta_3team_finalproject.domain.Board.Board;
 import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
-import com.example.jhta_3team_finalproject.service.table.BoardService;
-import com.example.jhta_3team_finalproject.service.table.TableCommentService;
+import com.example.jhta_3team_finalproject.service.board.BoardService;
+import com.example.jhta_3team_finalproject.service.board.TableCommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +44,14 @@ public class BoardController {
     // 리스트 가져오기
     @RequestMapping(value = "/freelist", method = RequestMethod.GET)
     public ModelAndView freeTable(@RequestParam(value = "page", defaultValue = "1") int page,
-                                  ModelAndView mv) {
+                                  @RequestParam(value = "searchField", defaultValue = "-1") int index,
+                                  @RequestParam(value = "search", defaultValue = "") String searchWord,
+                                  @RequestParam(value = "targetDepartment", defaultValue = "") String targetDepartment,
 
+                                  ModelAndView mv) {
+        logger.info("타겟보기="+targetDepartment);
         int limit = 10; // 한 화면에 출력할 로우 갯수
-        int listcount = BS.getListCount(); // 총 리스트 수를 받아온다.
+        int listcount = BS.getListCount(index, searchWord, targetDepartment); // 총 리스트 수를 받아온다.
         logger.info("listcount:" + listcount);
         // 총 페이지 수
         int maxpage = (listcount + limit - 1) / limit;
@@ -60,8 +64,7 @@ public class BoardController {
         if (endpage > maxpage)
             endpage = maxpage;
 
-        List<Board> boardlist = BS.getBoardList(page, limit); // 리스트를 받아옴
-
+        List<Board> boardlist = BS.getBoardList(index, searchWord, targetDepartment, page, limit); // 리스트를 받아옴
 
         mv.setViewName("table/Free_table");
         mv.addObject("page", page);
@@ -71,6 +74,10 @@ public class BoardController {
         mv.addObject("listcount", listcount);
         mv.addObject("boardlist", boardlist);
         mv.addObject("limit", limit);
+        mv.addObject("search_field", index);
+        mv.addObject("search_word", searchWord);
+        mv.addObject("targetDepartment", targetDepartment);
+
 
         return mv;
 
@@ -218,6 +225,99 @@ public class BoardController {
             rattr.addFlashAttribute("result", "deleteSuccess");
             return "redirect:freelist";
         }
+    }
+
+    @PostMapping("/modifyView")
+    public ModelAndView BoardModifyView(
+            int num, ModelAndView mv,
+            HttpServletRequest request) {
+
+        Board board = BS.getDetail(num);
+        List<BoardUpfiles> upfiles = BS.getFilesByBoardNum(num);
+
+        logger.info("upfiles = " + upfiles.toString());
+
+        // 글 내용 불러오기 실패한 경우
+        if(board == null) {
+            logger.info("수정보기 실패");
+            mv.setViewName("error/error");
+            mv.addObject("url", request.getRequestURL());
+            mv.addObject("message", "수정폼을 불러오는데 실패하였습니다.");
+        } else {
+            logger.info("수정폼 불러오기 성공");
+            mv.setViewName("table/Fmodify");
+            mv.addObject("bdata", board);
+            mv.addObject("upfiles", upfiles);
+        }
+        return mv;
+    }
+
+    @PostMapping("/modifyAction")
+    public String BoardModifyAction(
+            Board bdata, Model mv,
+            @RequestParam(value = "check", required = false, defaultValue = "false") boolean check,
+            HttpServletRequest request,
+            RedirectAttributes rattr,
+            @RequestParam("uploadfile[]") MultipartFile[] uploadfiles
+    ) throws Exception {
+
+        String url = "";
+        int boardNum = bdata.getBoardNum();
+        List<BoardUpfiles> files = new ArrayList<>();
+        logger.info(String.valueOf(check));
+        // String saveFolder = request.getSession().getServletContext().getRealPath("resources") + "/upload";
+
+        if(!check) { 					// 기존 파일을 그대로 사용하는 경우
+            logger.info("기존 파일 그대로 사용");
+        } else {
+            int result;
+            result = BS.deleteFile(boardNum);
+            logger.info(String.valueOf(result));
+
+            if(uploadfiles != null) {
+                logger.info("파일 변경되었습니다.");
+
+                for (MultipartFile uploadfile : uploadfiles) {
+                    if (!uploadfile.isEmpty()) {
+
+                        String fileName = uploadfile.getOriginalFilename(); // 원래 파일명
+
+                        String fileDBName = fileDBName(fileName, saveFolder);
+                        logger.info("fileDBName = " + fileDBName);
+
+                        uploadfile.transferTo(new File(saveFolder + fileDBName));
+                        logger.info("transferTo path = " + saveFolder + fileDBName);
+
+                        BoardUpfiles file = new BoardUpfiles();
+                        file.setUpfilesOriginalFileName(fileName);
+                        file.setUpfilesFileName(fileDBName);
+                        files.add(file);
+                    }
+                }
+
+                BS.insertFile(boardNum, files); // 저장메서드 호출
+            } else { // 기존 파일이 없는데 파일 선택하지 않은 경우 또는 기존 파일이 있었는데 삭제한 경우
+                logger.info("선택 파일이 없음");
+            }
+        }
+
+        // DAO에서 수정 메서드 호출하여 수정.
+        int result = BS.boardModify(bdata);
+        // 수정에 실패한 경우
+        if(result == 0) {
+            logger.info("게시판 수정 실패");
+            mv.addAttribute("url", request.getRequestURL());
+            mv.addAttribute("message", "게시판 수정 실패");
+            url="error/error";
+
+        } else { // 수정 성공의 경우
+            logger.info("게시판 수정 완료");
+            // 수정한 글 내용을 보여주기 위해 글 내용 보기. 보기페이지로 이동하기 위해 경로를 설정.
+            url = "redirect:detail";
+            rattr.addAttribute("num", bdata.getBoardNum());
+        }
+        return url;
+
     }
 
     @ResponseBody

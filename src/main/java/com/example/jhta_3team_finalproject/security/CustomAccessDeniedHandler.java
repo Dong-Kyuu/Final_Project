@@ -2,6 +2,7 @@ package com.example.jhta_3team_finalproject.security;
 
 import java.io.IOException;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
@@ -14,14 +15,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
+@Slf4j
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
-    private static final Logger logger = LoggerFactory.getLogger(CustomAccessDeniedHandler.class);
 
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        logger.error("Access Denied Handler");
+        log.error("Access Denied Handler");
         String url = "/error/403";
         RequestDispatcher dispatcher = request.getRequestDispatcher(url);
         dispatcher.forward(request, response);

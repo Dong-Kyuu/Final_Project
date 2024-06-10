@@ -8,4 +8,10 @@ public interface UpfilesMapper {
     void insertFile(BoardUpfiles file);
 
     List<BoardUpfiles> getFilesbyBoardNum(int boardNum);
+
+    int deleteFile(int boardNum);
+
+    void insertAnnounceFile(BoardUpfiles file);
+
+    List<BoardUpfiles> getFilesbyAnnBoardNum(int num);
 }
