@@ -29,10 +29,11 @@
         ORDER BY message_num ASC
     </select>
 <!--    2024-06-05, ROLLUP을 통한 타임 스탬프 구현-->
-<!--    SELECT *, DATE(send_time) as chat_time_stamp-->
+<!--    SELECT *, DATE(send_time) as time_stamp-->
 <!--    FROM chat_message-->
-<!--    WHERE DATE_FORMAT(send_time, '%Y-%m-%d') = '2024-06-04'-->
-<!--    group by message_num WITH ROLLUP;-->
+<!--    WHERE DATE_FORMAT(send_time, '%Y-%m-%d') = '2024-06-05'-->
+<!--    GROUP BY message_num WITH ROLLUP-->
+<!--    ORDER BY chat_time_stamp, message_num-->
 
     <!-- 2024-06-04, 채팅 메시지에서 파일을 업로드할 경우, 해당 내용의 URL을 S3 버킷의 URL로 업데이트-->
     <update id="updateMsgImageUrl">
