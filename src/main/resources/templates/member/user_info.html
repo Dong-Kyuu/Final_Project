@@ -112,15 +112,15 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="profile-label">이름</label>
-                                    <p class="profile-text text-black" th:text="${#authentication.principal.userName}"></p>
+                                    <p class="profile-text text-black" th:text="${#authentication.principal.username}"></p>
                                 </div>
                                 <div class="form-group">
                                     <label class="profile-label">부서</label>
-                                    <p class="profile-text text-black" th:text="${#authentication.principal.userDepartment}"></p>
+                                    <p class="profile-text text-black" th:text="${#authentication.principal.departmentId}"></p>
                                 </div>
                                 <div class="form-group">
                                     <label class="profile-label">직급</label>
-                                    <p class="profile-text text-black" th:text="${#authentication.principal.userPosition}"></p>
+                                    <p class="profile-text text-black" th:text="${#authentication.principal.positionId}"></p>
                                 </div>
                             </div>
                         </div>
@@ -132,7 +132,7 @@
                                 <form class="forms-sample">
                                     <div class="form-group">
                                         <label for="exampleInputName1">이름</label>
-                                        <input type="text" class="form-control no-outline no-click" id="exampleInputName1" th:value="${#authentication.principal.userName}" readonly>
+                                        <input type="text" class="form-control no-outline no-click" id="exampleInputName1" th:value="${#authentication.principal.username}" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail3">이메일</label>
@@ -144,11 +144,11 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputDepartment">부서</label>
-                                        <input type="text" class="form-control no-outline no-click" id="exampleInputDepartment" th:value="${#authentication.principal.userDepartment}" readonly>
+                                        <input type="text" class="form-control no-outline no-click" id="exampleInputDepartment" th:value="${#authentication.principal.departmentId}" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputPosition">직급</label>
-                                        <input type="text" class="form-control no-outline no-click" id="exampleInputPosition" th:value="${#authentication.principal.userPosition}" readonly>
+                                        <input type="text" class="form-control no-outline no-click" id="exampleInputPosition" th:value="${#authentication.principal.positionId}" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputCity1">사원 번호</label>
@@ -182,6 +182,7 @@
                                     </div>
                                     <button type="submit" class="btn btn-gradient-dark btn-rounded btn-fw">저장</button>
                                     <button type="reset" class="btn btn-gradient-light btn-rounded btn-fw" onclick="location.href='/user/info'">취소</button>
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                 </form>
                             </div>
                                 </form>

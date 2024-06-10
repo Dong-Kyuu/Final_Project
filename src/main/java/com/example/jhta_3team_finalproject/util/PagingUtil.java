@@ -30,16 +30,16 @@ public class PagingUtil  {
         private void calculatePaging() {
 
             // 총 페이지 수
-            int maxpage = (listcount + limit - 1) / limit;
+            this.maxpage = (listcount + limit - 1) / limit;
 
             // 현재 페이지에 보여줄 시작 페이지 수
-            int startpage = ((page - 1) / 10) * 10 + 1;
+            this.startpage = ((page - 1) / 10) * 10 + 1;
             // 현재 페이지에 보여줄 마지막 페이지 수
-            int endpage = startpage + 10 - 1;
+            this.endpage = startpage + 10 - 1;
 
             if (endpage > maxpage) endpage = maxpage;
 
-            int rowNum = listcount - (page - 1) * limit;
+            this.rowNum = listcount - (page - 1) * limit;
         }
 
         public int getPage() { return page; }

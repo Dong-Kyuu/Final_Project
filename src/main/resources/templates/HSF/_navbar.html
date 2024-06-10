@@ -8,7 +8,7 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
 </head>
 <body>
-<nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row" >
+<nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
     <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
         <a class="navbar-brand brand-logo" th:href="@{/dashboard}"><img th:src="@{/assets/images/LOGO_2.png}"
                                                                         alt="logo"/></a>
@@ -40,11 +40,11 @@
                         <span class="availability-status online"></span>
                     </div>
                     <div class="nav-profile-text">
-                        <p class="mb-1 text-black" th:text="${#authentication.principal.userName}"></p>
+                        <p class="mb-1 text-black" th:text="${#authentication.principal.username}"></p>
                     </div>
                 </a>
                 <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown" >
-                    <a class="dropdown-item" th:href="@{/user/update}">
+                    <a class="dropdown-item" th:href="@{/user/info}">
                         <i class="mdi mdi-cached me-2 text-success"></i> 내 정보 수정 </a>
                     <a class="dropdown-item" th:href="@{/user/logout}">
                         <i class="mdi mdi-logout me-2 text-primary" id="logout"></i> 로그아웃 </a>
@@ -172,8 +172,8 @@
             <span class="mdi mdi-menu"></span>
         </button>
     </div>
-    <div id="dialog" title="Chat" style="width: 330px; height: 587px; display: none;">
-        <iframe style="width: 330px; height: 587px;" th:src="@{/chat/chat}"></iframe>
+    <div id="dialog" title="" style="width: 330px; height: 587px; display: none;">
+        <iframe id="chatIframe" style="width: 330px; height: 587px;" th:src="@{/chat/chat}"></iframe>
     </div>
 </nav>
 </body>

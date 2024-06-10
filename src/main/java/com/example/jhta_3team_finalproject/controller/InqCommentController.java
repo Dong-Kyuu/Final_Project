@@ -25,23 +25,23 @@ public class InqCommentController {
         this.inqCommentService = inqCommentService;
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(InqCommentController.class);
+    private static final Logger log = LoggerFactory.getLogger(InqCommentController.class);
 
     @PostMapping(value = "/add")
     public int CommentAdd(InqueryComment co) {
-        logger.info("답변 추가");
+        log.info("답변 추가");
         return inqCommentService.commentsInsert(co);
     }
 
     @PostMapping(value = "/reply")
     public int CommentReply(InqueryComment co) {
-        logger.info("답글 추가");
+        log.info("답글 추가");
         return inqCommentService.commentsReply(co);
     }
 
     @PostMapping(value = "/list")
     public String CommentList(int commentBoardNum, int state) {
-        logger.info("답변 리스트");
+        log.info("답변 리스트");
         int listcount = inqCommentService.getListCount(commentBoardNum);
 
         JsonObject object = new JsonObject();
@@ -55,13 +55,13 @@ public class InqCommentController {
 
     @PostMapping(value = "/update")
     public int CommentUpdate(InqueryComment co) {
-        logger.info("답변 수정");
+        log.info("답변 수정");
         return inqCommentService.commentsUpdate(co);
     }
 
     @PostMapping(value = "/delete")
     public int CommentDelete(int num) {
-        logger.info("답변 삭제");
+        log.info("답변 삭제");
         return inqCommentService.commentsDelete(num);
     }
 

@@ -1,4 +1,4 @@
-package com.example.jhta_3team_finalproject.config.chat;
+package com.example.jhta_3team_finalproject.domain.chat;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.fileupload.FileItem;
