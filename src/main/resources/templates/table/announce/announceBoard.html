@@ -14,7 +14,7 @@
 
         <!-- js -->
         <script th:src="@{/js/jquery-3.7.1.js}"></script>
-        <script th:src="@{../js/table/Ftable.js}"></script>
+        <script th:src="@{../js/table/AnnounceList.js}"></script>
 
     </head>
     <body>
@@ -28,11 +28,11 @@
                 <div class="main-panel">
                     <div class="content-wrapper">
                         <div class="page-header">
-                            <h4 class="page-title"> 자유 게시판 </h4>
+                            <h4 class="page-title"> 공지 게시판 </h4>
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item">게시판</li>
-                                    <li class="breadcrumb-item active" aria-current="page">자유 게시판</li>
+                                    <li class="breadcrumb-item active" aria-current="page">공지 게시판</li>
                                 </ol>
                             </nav>
                         </div>
@@ -69,24 +69,21 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <th:block th:with = "num=${listcount -(page -1)*limit}">
-                                                        <th:block th:each	= "b, iterStat:${boardlist}">
-                                                            <tr th:data-department="${b.boardDepartment}">
-                                                                <td><span th:text = "${num -(iterStat.index)}"></span></td>
-                                                                <td>
-                                                                    <a class='title-table' th:href = "@{'detail?num=' + ${b.boardNum}}">
-                                                                        <div class='title-table'>
-                                                                            <span class="department"><[[${#strings.substring(b.boardDepartment, 0, b.boardDepartment.length() - 1)}]]>&nbsp;</span>
-                                                                                <span class='title-table'>[[${#strings.abbreviate(b.boardTitle,25)}]]</span>
-                                                                                <span class	= "gray title-table" th:text = "'[' + ${b.Cnt} + ']'"></span>
-                                                                        </div>
-                                                                    </a>
-                                                                </td>
-                                                                <td><div th:text = "${b.boardWriter}"></div></td>
-                                                                <td><div th:text = "${b.boardDate}"></div></td>
-                                                                <td><div th:text = "${b.boardReadcount}"></div></td>
-                                                            </tr>
-                                                        </th:block>
+                                                    <th:block th:each	= "b, iterStat:${boardlist}">
+                                                        <tr th:data-department="${b.annboardDepartment}">
+                                                            <td><span th:text = "${rownum -(iterStat.index)}"></span></td>
+                                                            <td>
+                                                                <a class='title-table' th:href = "@{'detail?num=' + ${b.annboardNum}}">
+                                                                    <div class='title-table'>
+                                                                        <span class="department"><[[${#strings.substring(b.annboardDepartment, 0, b.annboardDepartment.length() - 1)}]]>&nbsp;</span>
+                                                                            <span class='title-table'>[[${#strings.abbreviate(b.annboardTitle,25)}]]</span>
+                                                                    </div>
+                                                                </a>
+                                                            </td>
+                                                            <td><div th:text = "${b.boardWriter}"></div></td>
+                                                            <td><div th:text = "${#dates.format(b.annboardDate, 'yy-MM-dd HH:mm')}"></div></td>
+                                                            <td><div th:text = "${b.annboardReadcount}"></div></td>
+                                                        </tr>
                                                     </th:block>
                                                 </tbody>
                                             </table>
@@ -115,20 +112,20 @@
                                                         <li class = "page-item">
                                                             <a class = "page-link"
                                                                th:classappend = "${page<=1} ? 'gray' : ''"
-                                                               th:href = "${page>1} ? 'freelist?page=' + ${page -1} + '&searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=' + ${targetDepartment} : ''">
+                                                               th:href = "${page>1} ? 'announceList?page=' + ${page -1} + '&searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=' + ${targetDepartment} : ''">
                                                                     이전&nbsp;
                                                             </a>
                                                         </li>
                                                         <li th:class = "${a == page} ? 'page-item active' : 'page-item'"
                                                             th:each = "a : ${#numbers.sequence(startpage, endpage)}">
-                                                            <a th:href = "${a == page} ? '' : 'freelist?page=' + ${a} + '&searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=' + ${targetDepartment}" class = "page-link">
+                                                            <a th:href = "${a == page} ? '' : 'announceList?page=' + ${a} + '&searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=' + ${targetDepartment}" class = "page-link">
                                                                 <span th:text = "${a}"></span>
                                                             </a>
                                                         </li>
                                                         <li class = "page-item">
                                                             <a class = "page-link"
                                                                th:classappend = "${page >= maxpage} ? 'gray' : ''"
-                                                               th:href = "${page < maxpage} ? 'freelist?page=' + ${page+1} + '&searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=' + ${targetDepartment} : ''">다음&nbsp;</a>
+                                                               th:href = "${page < maxpage} ? 'announceList?page=' + ${page+1} + '&searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=' + ${targetDepartment} : ''">다음&nbsp;</a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -161,27 +158,27 @@
                                         </th:block>
 
                                         <div id="DepartmentModal" class="tablemodal">
-                                            <a class="departmentList" th:href="'freelist?searchField=' + ${search_field} + '&search=' + ${search_word}">
+                                            <a class="departmentList" th:href="'announceList?searchField=' + ${search_field} + '&search=' + ${search_word}">
                                                 <button class="btn btn-inverse-light btn-fw menu-M2 remo">전체보기</button>
                                             </a>
                                             <hr style="margin: 0px 0px">
-                                            <a class="departmentList" th:href="'freelist?searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=ALL'" >
+                                            <a class="departmentList" th:href="'announceList?searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=ALL'" >
                                                 <button class="btn btn-inverse-light btn-fw menu-M2 modi">ALL</button>
                                             </a>
                                             <hr style="margin: 0px 0px">
-                                            <a class="departmentList" th:href="'freelist?searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=인사부'">
+                                            <a class="departmentList" th:href="'announceList?searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=인사부'">
                                                 <button class="menu-M2 btn btn-inverse-light btn-fw modi">인사부</button>
                                             </a>
                                             <hr style="margin: 0px 0px">
-                                            <a class="departmentList" th:href="'freelist?searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=관리부'">
+                                            <a class="departmentList" th:href="'announceList?searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=관리부'">
                                                 <button class="btn btn-inverse-light btn-fw menu-M2 modi">관리부</button>
                                             </a>
                                             <hr style="margin: 0px 0px">
-                                            <a class="departmentList" th:href="'freelist?searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=영업부'">
+                                            <a class="departmentList" th:href="'announceList?searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=영업부'">
                                                 <button class="btn btn-inverse-light btn-fw menu-M2 modi">영업부</button>
                                             </a>
                                             <hr style="margin: 0px 0px">
-                                            <a class="departmentList" th:href="'freelist?searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=총무부'">
+                                            <a class="departmentList" th:href="'announceList?searchField=' + ${search_field} + '&search=' + ${search_word} + '&targetDepartment=총무부'">
                                                 <button class="btn btn-inverse-light btn-fw menu-M2 modi">총무부</button>
                                             </a>
 

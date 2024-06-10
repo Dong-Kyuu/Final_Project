@@ -30,12 +30,12 @@
                 <div class="main-panel">
                     <div class="content-wrapper">
                         <div class="page-header">
-                            <h4 class="page-title"> 자유게시판 </h4>
+                            <h4 class="page-title"> 공지게시판 </h4>
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item">게시판</li>
-                                    <li class="breadcrumb-item"><a href="freelist">자유 게시판</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page"> No. [[${boarddata.boardNum}]]</li>
+                                    <li class="breadcrumb-item"><a href="announceList">공지 게시판</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page"> No. [[${boarddata.annboardNum}]]</li>
                                 </ol>
                             </nav>
                         </div>
@@ -46,7 +46,7 @@
                             <input type="hidden" id="loginprofile" th:value="${#authentication.principal.userProfilePicture}">
                             <input type="hidden" id="loginDPM" th:value="${#authentication.principal.departmentId}">
                             <input type="hidden" id="writerNum" th:value="${boarddata.userNum}">
-                            <input type="hidden" id="department" th:value="${boarddata.boardDepartment}">
+                            <input type="hidden" id="department" th:value="${boarddata.annboardDepartment}">
                         </th:block>
                         <!-- 백색 카드 -->
                         <div class="row">
@@ -55,8 +55,8 @@
                                     <div class="card-body">
                                         <!-- 제목 -->
                                         <div style="font-size:40px; font-weight: bold">
-                                            <span class="department"><[[${#strings.substring(boarddata.boardDepartment, 0, boarddata.boardDepartment.length() - 1)}]]>&nbsp;</span>
-                                            [[${boarddata.boardTitle}]]
+                                            <span class="department"><[[${#strings.substring(boarddata.annboardDepartment, 0, boarddata.annboardDepartment.length() - 1)}]]>&nbsp;</span>
+                                            [[${boarddata.annboardTitle}]]
                                         </div>
                                         <br><br>
                                         <!-- 글쓴이/생성일/조회수/메뉴 버튼 -->
@@ -86,14 +86,14 @@
                                                     [[${boarddata.writerDepartment}]]
                                                     <code style="font-size:11px"> 직급 </code>
                                                 </p>
-                                                <code style="font-size:11px; color:dimgray; margin-left: 45px;">[[${boarddata.boardDate}]]</code>
-                                                <code style="font-size:11px; ">Views [[${boarddata.boardReadcount}]]</code>
+                                                <code style="font-size:11px; color:dimgray; margin-left: 45px;">[[${boarddata.annboardDate}]]</code>
+                                                <code style="font-size:11px; ">Views [[${boarddata.annboardReadcount}]]</code>
                                             </div>
                                         </div>
                                         <br><br><hr><br><br>
                                         <!-- 내용 -->
                                         <div style="font-size:20px;">
-                                            [[${boarddata.boardContent}]]
+                                            [[${boarddata.annboardContent}]]
                                         </div>
                                         <br><br><br>
                                         <!-- 업로드한 파일 -->
@@ -120,85 +120,8 @@
                                             <i class="mdi mdi-share-variant" style="font-size: 20px; margin-top:15px; float:right; margin-left: auto;"></i>
                                         </div>
                                         <br><br><br>
-                                        <!-- 댓글 입력 폼 -->
-                                        <div class="comment-add" style="margin-bottom: 30px; display:flex; ">
-                                            <input type="text" class="form-control form-control-sm write-content" placeholder="댓글을 입력하세요." style="width:95%; height:20px">
-                                            <button type="button" id="write" class="btn btn-inverse-danger btn-icon" ><i class="mdi mdi-send" style=""></i>
-                                            </button>
+
                                         </div>
-                                        <div id="comment-box" style="display:none">
-                                            <!-- 댓글 -->
-<!--                                            <div class="comment-box" style="margin-bottom:20px;">-->
-<!--                                                <div style="height: 25px;">-->
-<!--                                                    <th:block th:with="profilePicture=${#authentication.principal.userProfilePicture}">-->
-<!--                                                        <img th:src="@{|../image/|}" alt="image" style="width:30px !important; float: left; margin: 2px 15px 0px 0px;">-->
-<!--                                                    </th:block>-->
-<!--                                                    <i class="mdi mdi-dots-vertical" style="float: right; font-size: 25px; margin-top:3px;"></i>-->
-<!--                                                    <div style="height:40px; padding-top:0px;">-->
-<!--                                                    <span class="card-title" style="font-width: bold; font-size:12px">-->
-<!--                                                        [[${boarddata.boardWriter}]]-->
-<!--                                                    </span>-->
-<!--                                                        <p class="card-description" style="font-size:10px">-->
-<!--                                                            부서명 <code style="font-size:10px"> 직급 </code> <code style="font-size:10px; color:dimgray">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${boarddata.boardDate}]]</code>-->
-<!--                                                        </p>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                                <div class="comm-contentbox" style="margin-left:45px; margin-top:8px; font-size:12px">-->
-<!--                                                    <br>-->
-<!--                                                    대충 댓글내용-->
-<!--                                                    <br>-->
-<!--                                                </div>-->
-<!--                                                <div class="iconbox" style="display: flex; align-items: center; height: 20px;">-->
-<!--                                                <i class="mdi mdi-tooltip-outline" style="font-size: 15px; margin-top:20px; margin-left:45px;"></i>-->
-<!--                                                <span class="card-description" style="font-size:13px !important; margin:19px 20px 0px 5px">[[${count}]]</span>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            <div class="comment-box" style="margin-bottom:20px;">-->
-<!--                                                <div style="height: 25px;">-->
-<!--                                                    <th:block th:with="profilePicture=${#authentication.principal.getUserProfilePicture()}">-->
-<!--                                                        <img th:src="@{|../image/${profilePicture}|}" alt="image" style="width:30px !important; float: left; margin: 2px 15px 0px 0px;">-->
-<!--                                                    </th:block>-->
-<!--                                                    <i class="mdi mdi-dots-vertical" style="float: right; font-size: 25px; margin-top:3px;"></i>-->
-<!--                                                    <div style="height:40px; padding-top:0px;">-->
-<!--                                                    <span class="card-title" style="font-width: bold; font-size:12px">-->
-<!--                                                        [[${boarddata.boardWriter}]]-->
-<!--                                                    </span>-->
-<!--                                                        <p class="card-description" style="font-size:10px">-->
-<!--                                                            부서명 <code style="font-size:10px"> 직급 </code> <code style="font-size:10px; color:dimgray">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${boarddata.boardDate}]]</code>-->
-<!--                                                        </p>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                                <div class="comm-contentbox" style="margin-left:45px; margin-top:8px; font-size:12px">-->
-<!--                                                    <br>-->
-<!--                                                    대충 댓글내용-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                            &lt;!&ndash; 대댓글 &ndash;&gt;-->
-<!--                                            <div class="comment-lev2" style="display: flex; margin-top:20px;">-->
-<!--                                                <i class="mdi mdi-subdirectory-arrow-right" style=" font-size: 25px; margin :3px 15px 0px 10px"></i>-->
-<!--                                                <div class="comment-box" style="margin-bottom:15px; width:100%">-->
-<!--                                                    <div style="height: 25px;">-->
-<!--                                                        <th:block th:with="profilePicture=${#authentication.principal.getUserProfilePicture()}">-->
-<!--                                                            <img th:src="@{|../image/${profilePicture}|}" alt="image" style="width:30px !important; float: left; margin: 2px 15px 0px 0px;">-->
-<!--                                                        </th:block>-->
-<!--                                                        <i class="mdi mdi-dots-vertical" style="float: right; font-size: 25px; margin-top:3px;"></i>-->
-<!--                                                        <div style="height:40px; padding-top:0px;">-->
-<!--                                                        <span class="card-title" style="font-width: bold; font-size:12px">-->
-<!--                                                            [[${boarddata.boardWriter}]]-->
-<!--                                                        </span>-->
-<!--                                                            <p class="card-description" style="font-size:10px">-->
-<!--                                                                부서명 <code style="font-size:10px"> 직급 </code> <code style="font-size:10px; color:dimgray">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${boarddata.boardDate}]]</code>-->
-<!--                                                            </p>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                    <div class="comm-contentbox" style="margin-left:45px; margin-top:8px; font-size:12px">-->
-<!--                                                        <br>-->
-<!--                                                        대충 대댓글내용-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-                                        </div>
-                                        <div id="message"></div>
                                     </div>
                                 </div>
                             </div>

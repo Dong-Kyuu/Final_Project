@@ -15,7 +15,8 @@
 
     <!-- js -->
     <script th:src="@{/js/jquery-3.7.1.js}"></script>
-    <script th:src="@{../js/table/Fwrite.js}"></script>
+    <script th:src="@{../js/table/Fmodify.js}"></script>
+
 </head>
 <body>
 
@@ -28,12 +29,12 @@
         <div class="main-panel">
             <div class="content-wrapper">
                 <div class="page-header">
-                    <h4 class="page-title"> 자유게시판 - 글 쓰기 </h4>
+                    <h4 class="page-title"> 자유게시판 - 글 수정 </h4>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">게시판</li>
                             <li class="breadcrumb-item"><a href="freelist">자유 게시판</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">글 쓰기</li>
+                            <li class="breadcrumb-item active" aria-current="page">글 수정</li>
                         </ol>
                     </nav>
                 </div>
@@ -42,9 +43,13 @@
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <form class="forms-sample" action="add" method="post" enctype="multipart/form-data"
+                                <form class="forms-sample" action="modifyAction" method="post" enctype="multipart/form-data"
                                       name="freewrite" id="writeForm">
                                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    <input type="hidden" th:name="boardNum" th:value="${bdata.boardNum}">
+                                    <input type="hidden" id="getDepartment" th:value="${bdata.boardDepartment}">
+
+                                    <input type="hidden" id="checkupfile" th:name="check" th:value="false">
                                     <div class="form-group row" style="display: none">
                                         <label class="col-sm-1 col-form-label">Name</label>
                                         <div class="col-sm-5">
@@ -57,7 +62,7 @@
                                         <label class="col-sm-1 col-form-label">Title</label>
                                         <div class="col-sm-5">
                                             <input type="text" class="form-control" name="boardTitle"
-                                                   id="board_subject" placeholder="제목을 입력해주세요."/>
+                                                   id="board_subject" placeholder="제목을 입력해주세요." th:value="${bdata.boardTitle}"/>
                                         </div>
                                     </div>
 
@@ -75,7 +80,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-1 col-form-label">Upload</label>
                                         <div class="col-sm-6 make-flex" style="display:flex">
-                                            <textarea class="W-control2 form-control H-control upfileview"
+                                            <textarea type="text" class="W-control2 form-control H-control upfileview" id="uploaded-files"
                                                       placeholder="파일을 업로드하세요." readonly></textarea>
 
                                             <button type="button" id="upload-btn"
@@ -90,9 +95,9 @@
                                     <div class="form-group">
                                         <label for="board_content">Content</label>
                                         <textarea class="form-control" name="boardContent" id="board_content" rows="20"
-                                                  placeholder="내용을 입력해주세요."></textarea>
+                                                  placeholder="내용을 입력해주세요.">[[${bdata.boardContent}]]</textarea>
                                     </div>
-                                    <button type="submit" class="btn btn-gradient-primary me-2">등록</button>
+                                    <button type="submit" class="btn btn-gradient-primary me-2">수정</button>
                                     <button class="btn btn-light">취소</button>
                                 </form>
                             </div>
@@ -112,6 +117,17 @@
 <script th:src="@{../assets/js/hoverable-collapse.js}"></script>
 <script th:src="@{../assets/js/misc.js}"></script>
 <script th:src="@{../assets/js/file-upload.js}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var upfiles = /*[[${upfiles}]]*/ [];
+    console.log("upfiles = ", upfiles);
 
+    var fileNames = upfiles.map(function(file) {
+        return file.upfilesOriginalFileName;
+    }).join('\n\n ');
+
+    $('#uploaded-files').val(fileNames);
+    /*]]>*/
+</script>
 </body>
 </html>
