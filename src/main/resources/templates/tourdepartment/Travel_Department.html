@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"><head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Purple Admin</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{../../assets/vendors/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{../../assets/vendors/css/vendor.bundle.base.css}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" th:href="@{../../assets/css/style.css}">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" th:href="@{../../assets/images/favicon.ico}"/>
+
+    <style>
+        #productList{
+            padding : 0 3rem;
+        }
+
+        .product__item__pic {
+            /* 이미지를 화면에 꽉 채우도록 설정 */
+            background-size: cover;
+            /* 이미지가 잘릴 수 없도록 설정 */
+            background-position: center;
+            /* 배경 이미지가 적용된 div의 크기를 지정 */
+            width: 100%;
+            height: 60%; /* 이미지의 높이를 원하는 값으로 지정 */
+
+            object-fit: scale-down;
+
+
+        }
+        .product__item__pic img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .product__item__text{
+            padding-top:30px;
+        }
+
+        .product__pagination{
+            text-align: center
+        }
+
+        .button-tripRegister{
+            float: right;
+            padding-right: 3rem;
+        }
+        /*
+        .modal{
+            position:fixed;
+            display:none;
+
+            justify-content: center;
+            top:0;
+            left:0;
+
+            width:100%;
+            height:100%;
+
+
+
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal_body{
+            position:absolute;
+            top:50%;
+
+            width:400px;
+            height:600px;
+            padding:40px;
+            text-align: center;
+
+            background-color: rgb(255,255,255);
+            border-radius:10px;
+            box-shadow:0 2px 3px 0 rgba(34,36,38,0.15);
+            transform:translateY(-50%);
+        }
+*/
+        .modal {
+            position: fixed;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal_header {
+            text-align: center;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modal_header h1 {
+            margin: 5px;
+            font-size: 1.5em;
+        }
+        .close_button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            float: right;
+        }
+
+        .modal_body {
+            width: 400px;
+            height: 600px;
+            padding: 20px;
+            background-color: rgb(255, 255, 255);
+            border-radius: 10px;
+            box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .section {
+            height: 40%;
+            display: flex;
+            flex-direction: column;
+        }
+        .section h2 {
+            margin: 0;
+            padding: 10px 0;
+            text-align: center;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        .section ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .section ul li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+
+
+    </style>
+
+</head>
+<body>
+<div class="container-scroller">
+    <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
+    <div class="container-fluid page-body-wrapper">
+        <th:block th:replace="~{HSF/_sidebar :: sidebar}"></th:block>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h3 class="page-title"> Travel Department </h3>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Basic tables</li>
+                        </ol>
+                    </nav>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Confirm</h4>
+                                <p class="card-description"> Add class <code>.table</code>
+                                </p>
+                                <ul class="list-group">
+                                    <!-- 여행 일정 변경 요청 리스트 아이템 -->
+                                    <li class="list-group-item">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <h5 class="mb-1">상품 등록 승인 #1</h5>
+                                                <p class="mb-1">내용: 서유럽 클래식 15일 / 2024.05.16 / 340만원</p>
+                                            </div>
+                                            <div class="col-sm-6 text-right">
+                                                <!-- 승인 또는 거부 버튼 -->
+                                                <button type="button" class="btn btn-success mr-2">승인</button>
+                                                <button type="button" class="btn btn-danger">거부</button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <h5 class="mb-1">상품 변경 승인 #2</h5>
+                                                <p class="mb-1">변경 사항 설명: 가격변경 380만원</p>
+                                            </div>
+                                            <div class="col-sm-6 text-right">
+                                                <!-- 승인 또는 거부 버튼 -->
+                                                <button type="button" class="btn btn-success mr-2">승인</button>
+                                                <button type="button" class="btn btn-danger">거부</button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <!-- 기타 요청들 추가 -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--병훈이형 캘린더(여행부서 사람들의 일정 공유 캘린더) -->
+                    <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">병훈's Calendar Work</h4>
+                                <p class="card-description"> Add class <code>.table-hover</code>
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!---->
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body" >
+                                <h4 class="card-title">Booking List</h4>
+                                <p class="card-description"> Add class <code>.table-striped</code>
+                                </p>
+                                <table class="table table-striped" >
+                                    <thead>
+                                    <tr>
+                                        <th> 예약번호</th>
+                                        <th> 예약자</th>
+                                        <th> 예약 상품 + 날짜</th>
+                                        <th> 신청 시간</th>
+                                        <th> 처리 현황</th>
+                                        <th> 관리</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                    <!--
+                                    <tr th:each="user : ${users}">
+                                        <td th:text="${user.purchaseNo}"></td>
+                                        <td th:text="${user.userName}"></td>
+                                        <td th:text="${user.TripName}"></td>
+                                        <td th:text="${user.paymentDate}"></td>
+                                        <td th:text="${user.status}"></td>
+                                        <button type="button" class="btn btn-gradient-success">수정</button>
+                                        <button type="button" class="btn btn-gradient-danger">삭제</button>
+                                    </tr>
+                                    -->
+
+                                    <tr>
+                                        <td>
+                                            M433123456
+                                        </td>
+                                        <td> Herman Beck</td>
+                                        <td>
+                                            서유럽 11일 2024년06월07일
+                                        </td>
+                                        <td> 2024년 05월 13일 08:00:17</td>
+                                        <td> 예약 대기</td>
+                                        <td> <div class="button-UserProfile">
+                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
+                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
+                                        </div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            M343312345
+                                        </td>
+                                        <td> Hank Thomas</td>
+                                        <td>
+                                            서유럽 11일 2024년06월07일
+                                        </td>
+                                        <td> 2024년 05월 13일 06:01:34</td>
+                                        <td> 예약 대기</td>
+                                        <td> <div class="button-UserProfile">
+                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
+                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
+                                        </div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            M234312345
+                                        </td>
+                                        <td> Frank DeJong</td>
+                                        <td>
+                                            동유럽 11일 2024년06월07일
+                                        </td>
+                                        <td> 2024년 05월 13일 01:02:54</td>
+                                        <td> 예약 대기</td>
+                                        <td> <div class="button-UserProfile">
+                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
+                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
+                                        </div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            M121232345
+                                        </td>
+                                        <td> Didier Drogba</td>
+                                        <td>
+                                            서유럽 11일 2024년06월07일
+                                        </td>
+                                        <td> 2024년 05월 12일 19:08:44</td>
+                                        <td> 예약 대기</td>
+                                        <td> <div class="button-UserProfile">
+                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
+                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
+                                        </div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            M343398765
+                                        </td>
+                                        <td> Frank Sinatra</td>
+                                        <td>
+                                            서유럽 11일 2024년06월07일
+                                        </td>
+                                        <td> 2024년 05월 12일 12:01:34</td>
+                                        <td> 예약 승인</td>
+                                        <td> <div class="button-UserProfile">
+                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
+                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
+                                        </div></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title"> Trip Info</h4>
+
+                                <!-- 상품페이지 상단 -->
+                                <div class="shop__product__option">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                            <div class="shop__product__option__left">
+                                                <p th:text="'Showing ' + ${pagefirst} + '-' + ${pagelast} + ' of ' + ${listcount} + ' results'"></p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                            <div class="button-tripRegister">
+                                                <button type="button" id="trip_register" class="btn btn-gradient-success" onclick="window.location.href='/tripRegister'">등록</button>
+
+                                                <div class="modal">
+                                                    <div class="modal_body">
+                                                        <div class="modal_header">
+                                                            <h1>여행선택 <button class="close_button" onclick="closeModal()">×</button> </h1>
+                                                        </div>
+                                                        <div class="section">
+                                                            <h2>Main Trip</h2>
+                                                            <ul>
+                                                                <li th:each="list,status : ${triplistAll}" >
+                                                                    <a th:href="'tripUpdate?num='+${list.tripNo}" th:text="${status.count}+'. '+${list.tripName}+' '+${list.tripDate}"></a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="section">
+                                                            <h2>Option Trip</h2>
+                                                            <ul>
+                                                                <li th:each="list,status : ${optionlistAll}" >
+                                                                    <a th:href="'tripUpdate?num='+${list.optionId}" th:text="${status.count}+'. '+${list.optionName}"></a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="button" id="trip_update"class="btn btn-gradient-danger btn-open-modal">수정</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 상품페이지 상단 -->
+                                <!-- 실제 적용할 상품 리스트 -->
+
+                                <div class="row" id="productList">
+                                    <div th:each="goods : ${triplist}" class="col-lg-4 col-md-6 col-sm-6">
+                                        <div class="product__item__text">
+                                            <h6 th:text="${goods.tripName}"></h6>
+                                        </div>
+                                        <div class="product__item">
+                                            <a th:href="'TLManagement?num=' + ${goods.tripNo}"> <!-- 이동 경로 -->
+                                                <div class="product__item__pic set-bg">
+                                                    <img th:src="${goods.tripMainIMG}" alt="Main Image">
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 실제 적용할 상품 리스트 -->
+
+
+                                <!-- 페이징 처리-->
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="product__pagination">
+                                            <span th:if="${page <= 1}">&lt;&nbsp;</span>
+                                            <a th:if="${page > 1}" th:href="|?page=${page - 1}&category=${category}&sort=${sort}&keyword=${keyword}|">&lt;&nbsp;</a>
+
+                                            <th:block th:each="a : ${#numbers.sequence(startpage, endpage)}">
+                                                <a th:if="${a == page}" th:text="${a}"></a>
+                                                <a th:if="${a != page}" th:href="|?page=${a}&category=${category}&sort=${sort}&keyword=${keyword}|" th:text="${a}"></a>
+                                            </th:block>
+
+                                            <span th:if="${page >= maxpage}">&nbsp;&gt;</span>
+                                            <a th:if="${page < maxpage}" th:href="|?page=${page + 1}&category=${category}&sort=${sort}&keyword=${keyword}|">&nbsp;&gt;</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 페이징 처리 -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            <footer class="footer">
+                <div class="container-fluid d-flex justify-content-between">
+                    <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © bootstrapdash.com 2021</span>
+                    <span class="float-none float-sm-end mt-1 mt-sm-0 text-end"> Free <a
+                            href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin template</a> from Bootstrapdash.com</span>
+                </div>
+            </footer>
+            <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script th:src="@{../../assets/vendors/js/vendor.bundle.base.js}"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script th:src="@{../../assets/js/off-canvas.js}"></script>
+<script th:src="@{../../assets/js/hoverable-collapse.js}"></script>
+<script th:src="@{../../assets/js/misc.js}"></script>
+<!-- endinject -->
+<!-- Custom js for this page -->
+<!-- End custom js for this page -->
+<script>
+    /*
+    const modal = document.querySelector('.modal');
+    const btnOpenModal=document.querySelector('.btn-open-modal');
+
+    btnOpenModal.addEventListener("click", ()=>{
+        modal.style.display="flex";
+    });
+
+    function closeModal() {
+        document.querySelector('.modal').style.display = 'none';
+    }
+*/
+    // Function to open the modal
+    function openModal() {
+        document.querySelector('.modal').style.display = 'flex';
+    }
+
+    // Function to close the modal
+    function closeModal() {
+        document.querySelector('.modal').style.display = 'none';
+    }
+
+    // Attach the openModal function to the trip_register button
+    document.getElementById('trip_update').addEventListener('click', openModal);
+</script>
+</body>
+</html>

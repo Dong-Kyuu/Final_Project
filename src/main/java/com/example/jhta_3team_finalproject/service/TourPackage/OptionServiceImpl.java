@@ -5,6 +5,8 @@ import com.example.jhta_3team_finalproject.mybatis.mapper.TourPackage.OptionMapp
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OptionServiceImpl implements OptionService {
 
@@ -18,6 +20,11 @@ public class OptionServiceImpl implements OptionService {
     @Override
     public TripOption getOptionsByOptionId(String optionId) {
         return optionMapper.getOptionsByOptionId(optionId);
+    }
+
+    @Override
+    public List<TripOption> getAllOptions() {
+        return optionMapper.getAllOptions();
     }
 
 }

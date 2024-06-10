@@ -5,7 +5,10 @@
 
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.TourPackage.OptionMapper">
     <select id="getOptionsByOptionId" resultType="com.example.jhta_3team_finalproject.domain.TourPackage.TripOption" parameterType="string">
-        SELECT * FROM TripOption WHERE optionId = #{optionId}
+        SELECT * FROM trip_option WHERE option_id = #{optionId}
     </select>
 
+    <select id="getAllOptions" resultType="TripOption">
+        SELECT * FROM trip_option
+    </select>
 </mapper>

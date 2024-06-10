@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="Male_Fashion Template">
-    <meta name="keywords" content="Male_Fashion, unica, creative, html">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Purchase</title>
-
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Trip Purchase</title>
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Css Styles -->
@@ -16,275 +15,247 @@
     <link rel="stylesheet" href="/css/mainpage/style.css" type="text/css">
     <link rel="stylesheet" href="/css/mainpage/font-awesome.min.css" type="text/css">
 
-    <style>
-        .gender { height: 50px; display: block; margin-bottom: 6px; }
-    </style>
+
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="../../assets/images/favicon.ico"/>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(function(){
-            let checkemail = false;
 
-            $("input[name=Email]").on('keyup', function(){
-                const pattern = /^\w+@\w+[.][A-Za-z0-9]{3}$/;
-                const email_value = $(this).val();
+    <script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 
-                if(!pattern.test(email_value)){
-                    $("#email_message").css('color','red').html('이메일 형식이 맞지 않습니다.');
-                    checkemail = false;
-                } else {
-                    $("#email_message").css('color','green').html('이메일 형식이 맞습니다.');
-                    checkemail = true;
-                }
-            });
+    <style>
+        .checkout__order ul.checkout__total__products li:nth-child(2) span:nth-child(1) {
+            float: none;
+        }
 
-            $('form').submit(function(){
-                if(!checkemail){
-                    alert("email 형식을 확인하세요");
-                    $("input[name=Email]").focus();
-                    return false;
-                }
-            });
-        });
-    </script>
+        .checkout__order ul.checkout__total__products li:nth-child(n+3) span:nth-child(1) {
+            float: none;
+        }
+
+        .checkout__order ul.checkout__total__products li:nth-child(n+3) span:nth-child(2) {
+            float: none;
+        }
+
+    </style>
 </head>
-
 <body>
-<!-- Page Preloder -->
-<div id="preloder">
-    <div class="loader"></div>
-</div>
+<div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+  <th:block th:replace="~{TripHSF/_navbar :: navbar}"></th:block>
 
-<!-- Header Section Begin -->
-<!--
-<div th:if="${#strings.isEmpty(member_id)}">
-    <th:insert th:src="~{../mainpage/header :: header}"/>
-</div>
-<div th:if="${!#strings.isEmpty(member_id)}">
-    <th:insert th:src="~{../member/memberHeader :: memberHeader}"/>
-</div>
--->
-<!-- Header Section End -->
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:../../partials/_sidebar.html -->
+        <th:block th:replace="~{TripHSF/_sidebar :: sidebar}"></th:block>
+        <!---->
+        <div class="main-panel">
+            <div class="content-wrapper">
 
-<!-- Breadcrumb Section Begin -->
-<section class="breadcrumb-option">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="breadcrumb__text">
-                    <h4>Check Out</h4>
-                    <div class="breadcrumb__links">
-                        <a th:href="@{/}">Home</a>
-                        <a th:href="@{/shop}">Shop</a>
-                        <span>Check Out</span>
+                <section class="checkout spad">
+                    <div class="container">
+                        <div class="checkout__form">
+                                <div class="row">
+                                    <!-- 예약자 정보 시작  -->
+                                    <div class="col-lg-12 grid-margin stretch-card">
+                                        <div class="card">
+                                            <div class="card-body">
+
+                                        <h6 class="checkout__title">예약자 정보</h6>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="checkout__input">
+                                                    <p>성명<span>*</span></p>
+                                                    <input type="text" name="NameKor" placeholder="" th:value="${customer.customerNameKor}">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="checkout__input">
+                                                    <p>영문 성명<span>*</span></p>
+                                                    <input type="text" name="NameEng" placeholder="" th:value="${customer.customerNameEng}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="checkout__input">
+                                                    <p>예약자 여권번호<span>*</span></p>
+                                                    <input type="text" name="Passport" placeholder="" th:value="${customer.customerPassportNo}">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="checkout__input">
+                                                    <p>예약자 성별<span>*</span></p>
+                                                </div>
+                                                <div class="gender">
+                                                    <input type="radio" name="gender" value="man" th:checked="${customer.customerGender == 'M'}"> 남
+                                                    <input type="radio" name="gender" value="woman" th:checked="${customer.customerGender == 'F'}"> 여
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="checkout__input">
+                                                    <p>Phone<span>*</span></p>
+                                                    <input type="text" name="Phone" placeholder="" th:value="${customer.customerPhone}">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="checkout__input">
+                                                    <p>Email<span>*</span></p>
+                                                    <input type="text" name="Email" placeholder="email@domain.com" th:value="${customer.customerEmail}">
+                                                    <div id="email_message"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-lg-12 col-md-12">
+                                        <div class="checkout__order">
+                                            <h4 class="order__title">Your order</h4>
+                                            <ul class="checkout__total__products">
+                                                <li>Trip<span>Price</span></li>
+                                                <li>메인상품 : <span th:text="${trip.tripName}"></span> <span th:text="${trip.tripPrice} + '₩'"></span></li>
+                                                <li th:each="option, status : ${options}">
+                                                    옵션 <span th:text="${status.count}"></span> : <span th:text="${option.optionName}"></span> <span th:text="${option.optionPrice} + '₩'"></span>
+                                                </li>
+                                            </ul>
+                                            <ul class="checkout__total__all">
+                                                <li>Total <span th:text="${cart.cartTotal} + '₩'"></span></li>
+                                            </ul>
+
+                                            <div id="orderDetails"
+                                                 th:data-trip-price="${trip.tripPrice}"
+                                                 th:data-customer-email="${customer.customerEmail}"
+                                                 th:data-customer-name="${customer.customerNameKor}"
+                                                th:data-customer-phone="${customer.customerPhone}"
+                                                th:data-trip-name="${trip.tripName}">
+                                            </div>
+                                            <button id="payBtn" type="submit" class="site-btn">PLACE ORDER</button>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
                     </div>
-                </div>
+                </section>
+
             </div>
+            <!-- content-wrapper ends -->
+
         </div>
+        <!-- main-panel ends -->
     </div>
-</section>
-<!-- Breadcrumb Section End -->
-
-<!-- Checkout Section Begin -->
-<section class="checkout spad">
-    <div class="container">
-        <div class="checkout__form">
-            <form th:action="@{/PurchaseInfo}" id="orderForm" method="post">
-                <div class="row">
-                    <!-- 예약자 정보 시작  -->
-                    <div class="col-lg-8 col-md-6">
-                        <h6 class="checkout__title">예약자 정보</h6>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="checkout__input">
-                                    <p>이름<span>*</span></p>
-                                    <input type="text" name="FirstNameKor" placeholder="" th:value="${memberInfo.memberName}">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="checkout__input">
-                                    <p>성<span>*</span></p>
-                                    <input type="text" name="LastNameKor">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="checkout__input">
-                                    <p>First Name<span>*</span></p>
-                                    <input type="text" name="FirstNameEng" placeholder="" th:value="${memberInfo.englishName}">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="checkout__input">
-                                    <p>Last Name<span>*</span></p>
-                                    <input type="text" name="LastNameEng">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="checkout__input">
-                                    <p>예약자 여권번호<span>*</span></p>
-                                    <input type="text" name="Passport" placeholder="" th:value="${memberInfo.passportNumber}">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="checkout__input">
-                                    <p>예약자 성별<span>*</span></p>
-                                </div>
-                                <div class="gender">
-                                    <input type="radio" name="gender" value="man" th:checked="${memberInfo.gender == 'man'}"> 남
-                                    <input type="radio" name="gender" value="woman" th:checked="${memberInfo.gender == 'woman'}"> 여
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="checkout__input">
-                                    <p>Phone<span>*</span></p>
-                                    <input type="text" name="Phone" placeholder="" th:value="${memberInfo.phoneNumber}">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="checkout__input">
-                                    <p>Email<span>*</span></p>
-                                    <input type="text" name="Email" placeholder="email@domain.com" th:value="${memberInfo.email}">
-                                    <div id="email_message"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="checkout__order">
-                            <h4 class="order__title">Your order</h4>
-                            <div class="checkout__order__products">Trip <span>Price</span></div>
-                            <ul class="checkout__total__products">
-                                <li>메인상품 : <span th:text="${trip.tripName}"></span> <span th:text="${trip.tripPrice} + '₩'"></span></li>
-                                <li th:each="option, status : ${options}">
-                                    옵션 <span th:text="${status.count}"></span> : <span th:text="${option.optionName}"></span> <span th:text="${option.optionPrice} + '₩'"></span>
-                                </li>
-                            </ul>
-                            <ul class="checkout__total__all">
-                                <li>Subtotal(excl.tax) <span th:text="${subTotal} + '₩'"></span></li>
-                                <li>Total <span th:text="${cartTotal} + '₩'"></span></li>
-                            </ul>
-
-                            <div class="cart__discount">
-                                <h6>Discount codes</h6>
-                                <input type="text" placeholder="Coupon code">
-                                <button type="submit">Apply</button>
-                            </div>
-
-                            <div class="checkout__input__checkbox">
-                                <label for="payment">
-                                    Check Payment
-                                    <input type="checkbox" id="payment">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="checkout__input__checkbox">
-                                <label for="paypal">
-                                    Paypal
-                                    <input type="checkbox" id="paypal">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <button id="imsi-register" type="submit" class="site-btn">PLACE ORDER</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</section>
-<!-- Checkout Section End -->
-
-<!-- Footer Section Begin -->
-<footer class="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="footer__about">
-                    <div class="footer__logo">
-                        <a href="#"><img src="/img/footer-logo.png" alt=""></a>
-                    </div>
-                    <p>The customer is at the heart of our unique business model, which includes design.</p>
-                    <a href="#"><img src="/img/payment.png" alt=""></a>
-                </div>
-            </div>
-            <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
-                <div class="footer__widget">
-                    <h6>Shopping</h6>
-                    <ul>
-                        <li><a href="#">Clothing Store</a></li>
-                        <li><a href="#">Trending Shoes</a></li>
-                        <li><a href="#">Accessories</a></li>
-                        <li><a href="#">Sale</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-2 col-md-3 col-sm-6">
-                <div class="footer__widget">
-                    <h6>Shopping</h6>
-                    <ul>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Payment Methods</a></li>
-                        <li><a href="#">Delivary</a></li>
-                        <li><a href="#">Return & Exchanges</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
-                <div class="footer__widget">
-                    <h6>NewLetter</h6>
-                    <div class="footer__newslatter">
-                        <p>Be the first to know about new arrivals, look books, sales & promos!</p>
-                        <form action="#">
-                            <input type="text" placeholder="Your email">
-                            <button type="submit"><span class="icon_mail_alt"></span></button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-<!-- Footer Section End -->
-<!-- Search Begin -->
-<div class="search-model" th:fragment="searchModel">
-    <div class="h-100 d-flex align-items-center justify-content-center">
-        <div class="search-close-switch">+</div>
-        <form class="search-model-form">
-            <input type="text" id="search-input" placeholder="Search here.....">
-        </form>
-    </div>
+    <!-- page-body-wrapper ends -->
 </div>
-<!-- Search End -->
+<!-- container-scroller -->
 
-<!-- Js Plugins -->
-<script th:src="@{/js/mainpage/jquery-3.3.1.min.js}"></script>
-<script th:src="@{/js/mainpage/bootstrap.min.js}"></script>
-<script th:src="@{/js/mainpage/jquery.nice-select.min.js}"></script>
-<script th:src="@{/js/mainpage/jquery.nicescroll.min.js}"></script>
-<script th:src="@{/js/mainpage/jquery.magnific-popup.min.js}"></script>
-<script th:src="@{/js/mainpage/jquery.countdown.min.js}"></script>
-<script th:src="@{/js/mainpage/jquery.slicknav.js}"></script>
-<script th:src="@{/js/mainpage/mixitup.min.js}"></script>
-<script th:src="@{/js/mainpage/owl.carousel.min.js}"></script>
-<script th:src="@{/js/mainpage/main.js}"></script>
-
+<script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 <script>
-    // 버튼을 클릭할 때 이벤트 처리
-    document.getElementById("imsi-register").addEventListener("click", function() {
-        // TripRegister.net으로 이동
-        window.location.href = "PurchaseInfo.net";
-    });
 
-    // form의 submit 이벤트를 감지하여 처리
-    document.getElementById("orderForm").addEventListener("submit", function(event) {
-        // form의 기본 동작을 막음
-        event.preventDefault();
-        // 필요한 작업을 수행
+    document.getElementById('payBtn').addEventListener('click', function () {
+
+       // event.preventDefault(); // 기본 동작 막기
+
+        var IMP = window.IMP;
+        IMP.init('imp51036440'); // Replace with your actual Iamport customer identification key
+
+        var orderDetails = document.getElementById('orderDetails');
+        var tripPrice = orderDetails.getAttribute('data-trip-price');
+        var customerEmail = orderDetails.getAttribute('data-customer-email');
+        var customerName = orderDetails.getAttribute('data-customer-name');
+        var customerPhone = orderDetails.getAttribute('data-customer-phone');
+        var tripName = orderDetails.getAttribute('data-trip-name');
+
+        var csrfTokenValue = $("meta[name='_csrf']").attr("content");
+        var csrfHeaderName = $("meta[name='_csrf_header']").attr("content");
+
+        console.log("Trip Price:", tripPrice);
+        console.log("Customer Email:", customerEmail);
+        console.log("Customer Name:", customerName);
+        console.log("csrfHeaderName:",csrfHeaderName);
+        console.log("csrfTokenValue",csrfTokenValue);
+
+        IMP.request_pay({
+            pg: 'kakaopay.TC0ONETIME', // 카카오페이 사용
+            pay_method: 'card',
+            merchant_uid: 'merchant_' + new Date().getTime(),
+            name: '주문명: '+tripName,
+            amount: 1,
+            buyer_email: customerEmail,
+            buyer_name: customerName,
+            buyer_tel: customerPhone
+        }, function (rsp) {
+            console.log("결제 금액:", rsp.paid_amount);
+            if (rsp.success) {
+                //[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기
+                $.ajax({
+                    url: "/api/payments/complete", // 서버측 결제 완료 핸들러
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    beforeSend: function(xhr){
+                        xhr.setRequestHeader(csrfHeaderName,csrfTokenValue);
+                    },
+                    data: JSON.stringify({
+                        imp_uid: rsp.imp_uid,
+                        merchant_uid: rsp.merchant_uid,
+                        paid_amount: rsp.paid_amount,
+                        apply_num : rsp.apply_num
+                        // 기타 필요한 데이터가 있으면 추가 전달
+                    })
+                }).done(function (data,xhr, status, error) {
+                    //서버에서 REST API로 결제정보확인 및 서비스루틴이 정상적인 경우
+                    if (data.success) {
+                        var msg = '결제가 완료되었습니다.';
+                        msg += '\n고유ID : ' + rsp.imp_uid;
+                        msg += '\n상점 거래ID : ' + rsp.merchant_uid;
+                        msg += '\n결제 금액 : ' + rsp.paid_amount;
+                        msg += '\n카드 승인번호 : ' + rsp.apply_num;
+                        alert(msg);
+                        window.location.href = "PurchaseSuccess";
+                    } else {
+                        console.log("Status:", status);
+                        console.log("Error:", error);
+                        console.log("Response Text:", xhr.responseText);
+                        alert('결제 처리 중 오류가 발생했습니다.(ajax)');
+                    }
+                }).fail(function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    alert('서버와의 통신 중 오류가 발생했습니다.');
+                });
+            } else {
+                var msg = '결제에 실패하였습니다.';
+                msg += '에러내용 : ' + rsp.error_msg;
+
+                alert(msg);
+            }
+        });
     });
 </script>
+<!-- plugins:js -->
+<script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="../../assets/js/off-canvas.js"></script>
+<script src="../../assets/js/hoverable-collapse.js"></script>
+<script src="../../assets/js/misc.js"></script>
+<!-- endinject -->
+<!-- Custom js for this page -->
+<!-- End custom js for this page -->
 </body>
 </html>
