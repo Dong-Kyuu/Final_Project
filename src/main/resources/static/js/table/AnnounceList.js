@@ -1,6 +1,6 @@
 $(function () {
     $(".write-btn").click(function () {
-        location.href = "f_write";
+        location.href = "announceWrite";
     });
 
     $('tbody tr').each(function() {

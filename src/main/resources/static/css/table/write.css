@@ -3,8 +3,8 @@
 }
 
 .H-control {
-    height: 43px;
     margin-right: 20px;
+    height : 43px;
 }
 
 .W-control {
@@ -13,4 +13,10 @@
 
 .W-control2 {
     width: 83% !important;
+}
+
+.upfileview {
+    max-height: 150px!important;     /* 최대 높이를 설정합니다 */
+    white-space: pre-wrap; /* 줄바꿈을 적용 */
+
 }

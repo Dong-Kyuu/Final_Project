@@ -22,7 +22,7 @@
                  ORDER BY comm_regdate DESC
                      LIMIT #{start}, #{end}
              ) AS subquery
-                 JOIN users u ON subquery.user_num = u.user_num;
+                 JOIN user u ON subquery.user_num = u.user_num;
     </select>
 
     <insert id = "commentsInsert">

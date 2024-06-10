@@ -1,13 +1,21 @@
 $(function () {
+
+    var fileChanged = false;
+
+    // 파일업로드 버튼 클릭
     $('#upload-btn').on('click', function () {
         $('#upfile').click();
     });
 
+    // 파일 첨부
     $('#upfile').on('change', function () {
+        fileChanged = true;
         var fileNames = $.map(this.files, function (file) {
             return file.name;
-        }).join('\n\n');  // 쉼표 없이 한 줄씩 나오게 수정
+
+        }).join('\n\n');
         $('.upfileview').val(fileNames);
+        $('#checkupfile').val(fileChanged);
 
         // 파일 이름에 따라 textarea의 높이를 조정합니다.
         var baseHeight = 43; // 기본 높이
@@ -51,4 +59,20 @@ $(function () {
             event.preventDefault();
         }
     });
-});
+
+    var selectedDepartment = $('#getDepartment').val();
+    console.log(selectedDepartment);
+    $('#exampleFormControlSelect2').val(selectedDepartment);
+
+    // 파일첨부를 변경하지 않으면 $('#filevalue').text()의 파일명을
+    // 파라미터 'check'라는 이름으로 form에 추가하여 전송.
+    // if (check==0) {
+        const value = $('#filevalue').text();
+        const html = "<input type='hidden' value='" + value + "' name='check'>";
+        console.log(html);
+        $(this).append(html);
+    //}
+
+
+
+})

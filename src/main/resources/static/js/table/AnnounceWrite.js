@@ -1,4 +1,6 @@
 $(function () {
+    $('#importance').val(1);
+
     $('#upload-btn').on('click', function () {
         $('#upfile').click();
     });
@@ -51,4 +53,42 @@ $(function () {
             event.preventDefault();
         }
     });
+
+    $('.dropdown-item').on('click', function () {
+       var choice = $(this).text();
+       var choiceVal = $(this).val();
+       $('.importance').text(choice);
+       $('#importance').val(choiceVal);
+    });
+
+    // 권한 확인 및 체크박스 표시/숨기기
+    getUserInfo().then(data => {
+        console.log(data);
+        if (data.department === '관리부' && data.authorities.includes('ROLE_HEAD')) {
+            $('#defaultCheckbox').hide();
+        } else if (data.authorities.includes('ROLE_SUB_MASTER')) {
+            $('#defaultCheckbox').hide();
+        }
+    }).catch(error => {
+        console.error('Error fetching user info:', error);
+    });
+
 });
+
+// 권한 확인 메서드
+function getUserInfo() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            type: "GET",
+            url: "/scan/auth",
+            dataType: "json",
+            success: function (data) {
+                resolve(data);
+            },
+            error: function (error) {
+                console.error("삭제 권한 없음", error);
+                reject(error);
+            }
+        });
+    });
+}

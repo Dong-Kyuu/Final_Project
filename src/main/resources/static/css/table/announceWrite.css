@@ -1,0 +1,14 @@
+.dropdown-toggle .dropdown-text {
+    margin-right: 10px; /* 텍스트와 아이콘 사이의 간격 */
+}
+
+.dropdown-toggle::after {
+    float: left; /* 아이콘을 왼쪽으로 정렬 */
+    margin-right: 8px; /* 텍스트와 아이콘 사이의 간격 */
+    margin-left: 0; /* 기본 마진 제거 */
+    margin-top:6px;
+}
+
+.selectImportance {
+    padding-left: 0px !important;
+}

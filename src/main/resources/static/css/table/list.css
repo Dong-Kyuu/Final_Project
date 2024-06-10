@@ -24,3 +24,148 @@ th:first-of-type {
 .margin {
     margin-right: 5px !important;
 }
+
+.dept-blue {
+    border-left: 4px solid #4f4faf;
+}
+
+.dept-black {
+    border-left: 4px solid black;
+}
+
+.dept-red {
+    border-left: 4px solid #ff7b7b;
+}
+
+.dept-yellow {
+    border-left: 4px solid #fd9bdb;
+}
+
+.dept-green {
+    border-left: 4px solid #93cab3;
+}
+
+.yellow {
+    color: #fd9bdb
+}
+
+.black {
+    display : none;
+}
+
+.blue {
+    color : #4f4faf;
+}
+
+.red {
+    color: #ff7b7b;
+}
+
+.green {
+    color: #93cab3;
+}
+
+.search-space {
+    display:flex;
+    justify-content: center; /* 수평 중앙 정렬 */
+    flex-direction: row; /* 자식 요소를 세로로 나열 */
+    align-items: center; /* 자식 요소를 수평 중앙 정렬 */
+    font-size : 30px;
+    margin-top : 50px;
+    border : 1px #8f8d8d solid;
+    width : 63%;
+    border-radius: 14px;
+}
+
+.magnify-icon {
+
+}
+
+.search-input {
+    border : none;
+    font-size : 15px;
+    padding : 3px 3px 3px 6px;
+    height : 30px;
+    width : 75%;
+}
+
+.center-box {
+    display:flex;
+    justify-content: center; /* 수평 중앙 정렬 */
+    flex-direction: column; /* 자식 요소를 세로로 나열 */
+    align-items: center; /* 자식 요소를 수평 중앙 정렬 */
+}
+
+.search-target-list {
+    display:none;
+    border-right : 1px #8f8d8d solid;
+}
+
+.search-target {
+    font-size : 18px;
+    margin-right : 10px;
+    margin-left : 10px;
+
+    border-right : 1px #8f8d8d solid;
+    padding-right:10px;
+    padding-top : 6px;
+    padding-bottom : 6px;
+
+}
+
+.chevron-icon {
+    margin-left: 3px;
+}
+
+.tablemodal {
+    display: none;
+    position: absolute !important; /* 포지션을 fixed로 변경 */
+    z-index: 1;
+    background-color: #fefefe;
+
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-radius: 5px; /* 모서리를 둥글게 설정 */
+}
+
+.menu-M {
+    font-size : 14px;
+    text-align: center;
+    align-content: center;
+    height: 40px !important;
+    width: 70px !important;
+    padding-top:0px!important;
+    padding-bottom:0px!important;
+
+}
+
+#searchField {
+    border : none;
+}
+
+li .gray {
+    color: gray;
+}
+
+.departmentList {
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit; /* 텍스트 색상을 상속 */
+}
+
+.department {
+    font-size : 16px;
+    font-weight: bold;
+}
+
+
+
+tr td:nth-child(2):hover {
+    background-color: #f1f1f1; /* 배경색 변경 */
+    cursor: pointer; /* 커서 모양 변경 */
+    color: #333; /* 텍스트 색상 변경 */
+}
+
+.title-table {
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit; /* 텍스트 색상을 상속 */
+}
+

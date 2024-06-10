@@ -18,4 +18,19 @@
         WHERE board_num = #{boardNum}
     </select>
 
+    <delete id="deleteFile">
+        DELETE FROM board_upfiles
+        WHERE board_num = #{boardNum}
+	</delete>
+
+    <insert id="insertAnnounceFile">
+        INSERT INTO board_upfiles(announ_board_num, upfiles_original_file_name, upfiles_file_name, upfiles_upload_date)
+        VALUES (#{boardNum}, #{upfilesOriginalFileName}, #{upfilesFileName}, NOW())
+    </insert>
+
+    <select id="getFilesbyAnnBoardNum" resultType="com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles">
+        SELECT *
+        FROM board_upfiles
+        WHERE announ_board_num = #{boardNum}
+    </select>
 </mapper>
