@@ -1,16 +1,13 @@
 package com.example.jhta_3team_finalproject.controller;
 
-import com.example.jhta_3team_finalproject.domain.Table.Comment;
+import com.example.jhta_3team_finalproject.domain.Board.BoardComment;
 import com.example.jhta_3team_finalproject.service.table.TableCommentService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +16,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value="/comment")
 public class CommentController {
-    private static final Logger log = LoggerFactory.getLogger(CommentController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
 
     private TableCommentService CS;
 
@@ -30,23 +27,23 @@ public class CommentController {
 
     @PostMapping(value = "/list")
     public Map<String, Object> CommentList(int board_num, int page) {
-        log.info("/list : board_num = "+board_num);
+        logger.info("/list : board_num = "+board_num);
 
-        List<Comment> list = CS.getCommentList(board_num, page);
+        List<BoardComment> list = CS.getCommentList(board_num, page);
 
         int listcount = CS.getListCount(board_num);
         Map<String,Object> map = new HashMap<String, Object>();
         map.put("list", list);
         map.put("listcount", listcount);
-        log.info("map=" + map.toString());
-        log.info("/comment/list");
+        logger.info("map=" + map.toString());
+        logger.info("/comment/list");
         return map;
     }
 
     @PostMapping(value = "/add")
-    public int CommentAdd(Comment co) {
-        log.info(co.toString());
-        log.info("등록실행!");
+    public int CommentAdd(BoardComment co) {
+        logger.info(co.toString());
+        logger.info("등록실행!");
         return CS.commentsInsert(co);
     }
 

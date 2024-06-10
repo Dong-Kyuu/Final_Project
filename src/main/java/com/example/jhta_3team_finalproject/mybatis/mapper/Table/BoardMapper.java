@@ -1,6 +1,6 @@
 package com.example.jhta_3team_finalproject.mybatis.mapper.Table;
 
-import com.example.jhta_3team_finalproject.domain.Table.Board;
+import com.example.jhta_3team_finalproject.domain.Board.Board;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.HashMap;
