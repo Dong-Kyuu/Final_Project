@@ -3,6 +3,7 @@ package com.example.jhta_3team_finalproject.mybatis.mapper.chat;
 
 import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
+import com.example.jhta_3team_finalproject.domain.chat.ChatParticipate;
 import com.example.jhta_3team_finalproject.domain.chat.ChatRoom;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -16,6 +17,10 @@ public interface ChatMapper {
     public ChatMessage lastMessage();
 
     public int createChatRoom(ChatRoom chatRoom);
+
+    public ChatRoom lastChatRoom();
+
+    public int addChatParticipate(ChatParticipate chatParticipate);
 
     public List<ChatRoom> searchRoom(ChatRoom chatRoom);
 

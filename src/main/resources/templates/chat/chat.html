@@ -468,8 +468,8 @@
     <script>
         $(document).ready(function () {
 
-            const token = $("meta[name='_csrf']").attr("content");
-            const header = $("meta[name='_csrf_header']").attr("content");
+            let token = $("meta[name='_csrf']").attr("content");
+            let header = $("meta[name='_csrf_header']").attr("content");
 
             var distX = 0, distY = 0;
             var viewportX, viewportY;
@@ -611,7 +611,7 @@
                     setTimeout(function () {
                         loadingEnd();
                         messageScrollFix();
-                    }, 1000);
+                    }, 200);
                 }
 
                 $('.view-main').addClass("deactive");
@@ -718,6 +718,10 @@
                                     output += "</li>";
 
                                     $("#chat-message-list").append(output);
+                                    setTimeout(function () {
+                                        $(document).find(".goto").removeClass("goto");
+                                        messageScrollFix();
+                                    }, 50);
                                 } else {
                                     output = "";
                                     output += "<li class='recive goto'>";
@@ -910,7 +914,8 @@
                 const data = {
                     'type': 'room-exit',
                     'name': '채팅방 나가기',
-                    'roomButton': '방 나가기'
+                    'roomButton': '방 나가기',
+                    "chatUserId": $("#chat_user_id").val()
                 };
                 chatRoomMgrAjax('/chat/chatRoomExitView', data, function (html) {
                     chatRoomMgrDisplay(html);
@@ -925,8 +930,8 @@
              * 2024-05-28, 관리(채팅방,채팅방 유저) Ajax(요청 + 응답) 구현
              */
             function chatRoomMgrAjax(url, parameter, calbak) {
-                console.log(header);
-                console.log(token);
+                //console.log(header);
+                //console.log(token);
 
                 $.ajax({
                     url: url,
@@ -1169,9 +1174,16 @@
                                 // 업로드된 프로필을 보여주도록 한다. (채팅방 화면은 임시 처리)
                                 img = "<img src='/image/chat/default.png' />";
                             }
-                            var rn = d.roomName;
+
                             var roomNumber = d.chatRoomNum;
                             var sessionId = d.chatSessionId;
+                            var entryTime = d.chatEntryTime;
+                            var visitTime = d.chatVisitTime;
+
+                            var lastSendTime = d.lastSendTime;
+                            var lastMessageNum = d.lastMessageNum;
+                            var roomName = d.roomName;
+                            var roomCreateDate = d.roomCreateDate;
 
                             output += "<li>";
                             output += "<input type='hidden' name='chat_room_num' value='" + roomNumber + "' />";
@@ -1182,10 +1194,10 @@
                             output += "    <div class='mes-detail'>";
                             output += "        <div class='mes-col1'>";
                             output += "            <div class='sender-name'>";
-                            output += "                " + rn;
+                            output += "                " + roomName;
                             output += "            </div>";
                             output += "            <div class='mes-preview'>";
-                            output += "                오늘 영업은 잘 되었나요? 결과에 따라 월급 없음";
+                            output += "                " + getLastMessageContent(lastMessageNum);
                             output += "            </div>";
                             output += "        </div>";
                             output += "        <div class='mes-col2'>";
@@ -1193,10 +1205,9 @@
                             output += "                <div class='send-time'>10:26 AM</div>";
                             output += "                <div class='mes-seen-status'>";
                             output += "                    <span class='new'>new</span>";
-                            output += "                    <!-- <i class='material-icons'>done_all</i> -->";
                             output += "                </div>";
                             output += "            </div>";
-                            output += "            <span class='mes-count'>3</span>";
+                            output += "            <span class='mes-count'>" + getUnreadMessage(roomNumber, sessionId) + "</span>";
                             output += "        </div>";
                             output += "    </div>";
                             output += "</li>";
@@ -1206,6 +1217,47 @@
                     }
                 }) // ajax end
             }
+
+            function getLastMessageContent(lastMessageNum) {
+                $.ajax({
+                    type: "post",
+                    url: "/chat/getLastMessageContent",
+                    data: {
+                        "lastMessageNum": lastMessageNum
+                    },
+                    dataType: "json",
+                    beforeSend: function (xhr) {
+                        //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (res) {
+                        console.log(res);
+                        return res;
+                    }
+                }) // ajax end
+            }
+
+            function getUnreadMessage(roomNumber, sessionId) {
+                $.ajax({
+                    type: "post",
+                    url: "/chat/getUnreadMessage",
+                    data: {
+                        "sessionId": roomNumber,
+                        "roomNumber": sessionId
+                    },
+                    dataType: "json",
+                    beforeSend: function (xhr) {
+                        //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (res) {
+                        console.log(res);
+                        return res;
+                    }
+                }) // ajax end
+            }
+
+
 
             /**
              * 2024-05-29, 상태 메시지 변경 구현

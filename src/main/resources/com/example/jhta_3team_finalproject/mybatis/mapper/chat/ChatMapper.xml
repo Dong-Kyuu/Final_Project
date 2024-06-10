@@ -9,14 +9,14 @@
         <!--            SELECT num FROM users WHERE id = #{senderId}-->
         <!--        </selectKey>-->
         INSERT INTO chat_message(message_num, chat_room_num, sender_id, message_content, read_count, file_url, file_origin_name, send_time)
-        VALUES (NULL, #{chatRoomNum}, #{senderId}, #{messageContent}, #{readCount}, #{fileUrl}, #{fileOriginName}, now())
+        VALUES (NULL, #{chatRoomNum}, #{senderId}, #{messageContent}, #{readCount}, #{fileUrl}, #{fileOriginName}, NOW())
     </insert>
 
     <!-- 2024-06-08, 채팅 메시지 추가 후 마지막 메시지의 정보를 다시 가져와야 함. -->
     <select id="lastMessage" parameterType="chatMessage">
         select *
-        from chat_message
-        where message_num = (select max(message_num) from chat_message)
+        FROM chat_message
+        WHERE message_num = (SELECT MAX(message_num) FROM chat_message)
     </select>
 
     <!-- 채팅방의 채팅 기록 가져오기, 유저 기준으로도 추가 예정 -->
@@ -52,14 +52,14 @@
     <select id="searchOldMessage" resultType="chatMessage">
         SELECT *
         FROM chat_message
-        WHERE where file_url = #{fileUrl}
+        WHERE file_url = #{fileUrl}
     </select>
 
     <!-- 2024-06-07, URL이 업데이트된 경우 redis에 새로운 메시지를 적용합니다. -->
     <select id="searchNewMessage" resultType="chatMessage">
         SELECT *
         FROM chat_message
-        WHERE where message_num = #{messageNum}
+        WHERE message_num = #{messageNum}
     </select>
 
     <!-- 채팅방 만들기 -->
@@ -68,12 +68,25 @@
         <!--            SELECT IFNULL(MAX(chat_room_num),0)+1 FROM com_chat_room-->
         <!--        </selectKey>-->
         INSERT INTO chat_room(chat_room_num, room_name, chat_session_id, room_create_date)
-        VALUES (NULL, #{roomName}, #{chatSessionId}, now())
+        VALUES (NULL, #{roomName}, #{chatSessionId}, NOW())
+    </insert>
+
+    <!-- 2024-06-10, 마지막으로 생성된 채팅방 번호를 가져와서 참여 관계를 나타내는 테이블에서 사용 -->
+    <select id="lastChatRoom" parameterType="chatRoom">
+        SELECT *
+        FROM chat_room
+        WHERE chat_room_num = (SELECT MAX(chat_room_num) FROM chat_room);
+    </select>
+
+    <!-- 2024-06-10, 채팅방 생성 시 해당 채팅방에 참여 관계를 나타내는 테이블에 정보를 입력 -->
+    <insert id="addChatParticipate" parameterType="chatParticipate">
+        INSERT INTO chat_participate(chat_room_num, chat_user_id, chat_entry_time, chat_visit_time)
+        VALUES (#{chatRoomNum}, #{chatUserId}, NOW(), NOW())
     </insert>
 
     <!-- 채팅 사원 전체 리스트 가져오기 -->
     <select id="chatUserList" resultType="user">
-        SELECT user_id, user_name, user_department, user_profile_picture, user_chat_status_msg FROM user WHERE user_id NOT IN (#{chatUserId});
+        SELECT user_id, user_name, user_department, user_profile_picture, user_chat_status_msg, user_email FROM user WHERE user_id NOT IN (#{chatUserId});
     </select>
 
     <!-- 채팅 자신의 유저 리스트 가져오기 -->
@@ -90,44 +103,40 @@
         </where>
     </update>
 
-    <!-- 방목록 가져오기 -->
+    <!-- 방목록 가져오기 - 관리자용 -->
     <select id="searchRoom" resultType="chatRoom">
-        select *
-        from chat_room
-        ORDER BY chat_room_num ASC
-    </select>
-
-    <!-- 방목록 가져오기 - 유저 기준 -->
-    <select id="searchRoomUser" parameterType="chatRoom" resultType="chatRoom">
         SELECT *
         FROM chat_room
-        WHERE chat_session_id = #{chatSessionId}
+        ORDER BY chat_room_num DESC
     </select>
 
-    <!-- 2024-06-09, 해당 방의 마지막 메시지와 마지막 시간을 가져와서 채팅방 정보와 Join  -->
-    <!--    SELECT a.*, b.*-->
-    <!--    FROM chat_room a-->
-    <!--    JOIN-->
-    <!--    (-->
-    <!--    SELECT MAX(send_time), MAX(message_num), chat_room_num-->
-    <!--    FROM chat_message-->
-    <!--    WHERE chat_room_num in (-->
-    <!--    SELECT chat_room_num-->
-    <!--    FROM chat_room-->
-    <!--    WHERE chat_session_id = 'admin'-->
-    <!--    )-->
-    <!--    GROUP BY chat_room_num-->
-    <!--    ) b-->
-    <!--    ON a.chat_room_num = b.chat_room_num-->
-    <!--    WHERE chat_session_id = 'admin';-->
+    <!-- 2024-06-10, 방목록 가져오기 -> 마지막 메시지와 방 정보 -->
+    <select id="searchRoomUser" parameterType="chatRoom" resultType="chatParticipate">
+        select *
+        from chat_participate
+        join(
+             select max(send_time) as last_send_time, max(message_num) as last_message_num, chat_room_num
+             from chat_message
+             group by chat_room_num
+            ) cm
+        on chat_participate.chat_room_num = cm.chat_room_num
+        join(
+             select *
+             from chat_room
+            ) cr
+        on chat_participate.chat_room_num = cr.chat_room_num
+        where chat_user_id = #{chatSessionId};
+    </select>
 
-    <!-- 2024-06-09, 채팅방들의 메시지를 그룹화하여 그 중 가장 마지막 메시지의 정보를 MAX 함수로 가져옴 -->
-    <!--    select MAX(send_time), MAX(message_num), chat_room_num-->
-    <!--    from chat_message-->
-    <!--    where chat_room_num in (-->
-    <!--    select chat_room_num-->
-    <!--    from chat_room-->
-    <!--    where chat_session_id = 'admin'-->
-    <!--    )-->
-    <!--    group by chat_room_num;-->
+    <!-- 2024-06-10, 안 읽은 메시지 수 구해오기 -->
+    <select id="getUnreadMessage">
+        SELECT COUNT(*)
+        FROM chat_message
+        WHERE send_time BETWEEN (
+                                 SELECT chat_visit_time
+                                 FROM chat_participate
+                                 WHERE chat_room_num = #{chatRoomNum}
+                                 AND chat_user_id = #{sessionId}
+                                ) AND NOW()
+    </select>
 </mapper>

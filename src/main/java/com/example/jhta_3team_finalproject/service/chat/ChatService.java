@@ -5,6 +5,7 @@ package com.example.jhta_3team_finalproject.service.chat;
 import com.example.jhta_3team_finalproject.cache.RedisUtils;
 import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
+import com.example.jhta_3team_finalproject.domain.chat.ChatParticipate;
 import com.example.jhta_3team_finalproject.domain.chat.ChatRoom;
 import com.example.jhta_3team_finalproject.mybatis.mapper.chat.ChatMapper;
 import lombok.RequiredArgsConstructor;
@@ -72,8 +73,30 @@ public class ChatService {
         }
         return result;
     }
-    public int createChatRoom(ChatRoom chatRoom) throws Exception {
-        return dao.createChatRoom(chatRoom);
+    public int createChatRoom(ChatRoom chatRoom, String chatInviteUserList) throws Exception {
+        int result = dao.createChatRoom(chatRoom);
+        chatRoom = dao.lastChatRoom();
+
+        /**
+         * 2024-06-10, 자신의 정보도 채팅방 참여 테이블에 등록
+         */
+        ChatParticipate chatParticipate = new ChatParticipate();
+        chatParticipate.setChatRoomNum(chatRoom.getChatRoomNum());
+        chatParticipate.setChatUserId(chatRoom.getChatSessionId());
+        dao.addChatParticipate(chatParticipate);
+
+        /**
+         * 2024-06-10, 채팅방을 생성하기 전 초대된 유저들을 관리할 수 있는 채팅 참여 테이블에 등록
+         */
+        String[] chatInviteUserArray = chatInviteUserList.split(",");
+        for(String inviteUserId : chatInviteUserArray) {
+            chatParticipate = new ChatParticipate();
+            chatParticipate.setChatRoomNum(chatRoom.getChatRoomNum());
+            chatParticipate.setChatUserId(inviteUserId);
+            dao.addChatParticipate(chatParticipate);
+        }
+
+        return result;
     }
 
     public List<ChatMessage> searchMessages(ChatMessage chatMessage) throws Exception {

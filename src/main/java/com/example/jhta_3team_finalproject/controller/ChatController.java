@@ -22,6 +22,7 @@ public class ChatController {
 
     private final ChatService chattingService;
     List<ChatRoom> chatRoomList;
+    List<User> chatUserList;
     static int roomNumber = 0;
 
     @RequestMapping(value = "chatview")
@@ -57,10 +58,18 @@ public class ChatController {
     @RequestMapping("userChatRoomList")
     public @ResponseBody List<ChatRoom> userChatRoomList(@RequestParam HashMap<String, String> params) throws Exception {
         log.info("아이디별 채팅방 구하기");
-        String chatUserId = params.get("chatUserId");
+        String chatSessionId = params.get("chatUserId");
         ChatRoom chatRoom = new ChatRoom();
-        //chatRoom.setChatSessionId(chatUserId);
-        chatRoom.setChatSessionId("admin"); // 2024-06-08 테스트용
+        chatRoom.setChatSessionId(chatSessionId);
+        chatRoomList = chattingService.searchRoomUser(chatRoom);
+        return chatRoomList;
+    }
+
+    @RequestMapping("getLastMessageContent")
+    public @ResponseBody List<ChatRoom> getLastMessageContent(@RequestParam HashMap<String, String> params) throws Exception {
+        String lastMessageNum = params.get("lastMessageNum");
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.setChatSessionId(lastMessageNum);
         chatRoomList = chattingService.searchRoomUser(chatRoom);
         return chatRoomList;
     }
@@ -79,11 +88,15 @@ public class ChatController {
                                            @RequestParam(value = "name") String name,
                                            @RequestParam(value = "roomButton") String roomButton,
                                            @RequestParam(value = "chatUserId") String chatUserId) {
+
+        chatUserList = chattingService.chatUserList(chatUserId);
+
         mv.setViewName("chat/roomMgr");
         mv.addObject("type", type);
         mv.addObject("name", name);
         mv.addObject("roomButton", roomButton);
         mv.addObject("chatUserId", chatUserId);
+        mv.addObject("chatUserList", chatUserList);
         return mv;
     }
 
@@ -91,16 +104,13 @@ public class ChatController {
     public @ResponseBody List<ChatRoom> createRoomProcess(@RequestParam HashMap<Object, Object> params) throws Exception {
         String roomName = (String) params.get("roomName");
         String sessionId = (String) params.get("sessionId");
-
-        ChatRoom chatRoom_empty = new ChatRoom();
-        chatRoomList = chattingService.searchRoom(chatRoom_empty);
+        String chatInviteUserList = (String) params.get("chatInviteUserList");
 
         if (roomName != null && !roomName.trim().equals("")) {
             ChatRoom chatRoom = new ChatRoom();
-            chatRoom.setChatRoomNum(++roomNumber);
             chatRoom.setRoomName(roomName);
             chatRoom.setChatSessionId(sessionId);
-            chattingService.createChatRoom(chatRoom);
+            chattingService.createChatRoom(chatRoom, chatInviteUserList);
             chatRoomList = chattingService.searchRoom(chatRoom);
         }
 
@@ -111,11 +121,20 @@ public class ChatController {
     public ModelAndView chatRoomExitView(ModelAndView mv,
                                          @RequestParam(value = "type") String type,
                                          @RequestParam(value = "name") String name,
-                                         @RequestParam(value = "roomButton") String roomButton) {
+                                         @RequestParam(value = "roomButton") String roomButton,
+                                         @RequestParam(value = "chatUserId") String chatUserId) throws Exception {
+
+        ChatRoom chatRoom = new ChatRoom();
+        //chatRoom.setChatSessionId(chatUserId);
+        chatRoom.setChatSessionId("admin"); // 2024-06-08 테스트용
+        chatRoomList = chattingService.searchRoomUser(chatRoom);
+
         mv.setViewName("chat/roomMgr");
         mv.addObject("type", type);
         mv.addObject("name", name);
         mv.addObject("roomButton", roomButton);
+        mv.addObject("chatUserId", chatUserId);
+        mv.addObject("chatRoomList", chatRoomList);
         return mv;
     }
 
@@ -145,37 +164,37 @@ public class ChatController {
         return mv;
     }
 
-    @RequestMapping("moveChatting")
-    public ModelAndView chating(@RequestParam HashMap<Object, Object> params) {
-        log.info("채팅방 이동");
+//    @RequestMapping("moveChatting")
+//    public ModelAndView chatting(@RequestParam HashMap<Object, Object> params) {
+//        log.info("채팅방 이동");
+//
+//        ModelAndView mv = new ModelAndView();
+//        int roomNumber = Integer.parseInt((String) params.get("roomNumber"));
+//
+//        List<ChatRoom> new_list = chatRoomList.stream().filter(o -> o.getChatRoomNum() == roomNumber)
+//                .collect(Collectors.toList());
+//        if (new_list != null && new_list.size() > 0) {
+//            mv.addObject("roomName", params.get("roomName"));
+//            mv.addObject("roomNumber", params.get("roomNumber"));
+//            mv.setViewName("chat/testchat");
+//        } else {
+//            mv.setViewName("chat/testroom");
+//        }
+//        return mv;
+//    }
 
-        ModelAndView mv = new ModelAndView();
-        int roomNumber = Integer.parseInt((String) params.get("roomNumber"));
-
-        List<ChatRoom> new_list = chatRoomList.stream().filter(o -> o.getChatRoomNum() == roomNumber)
-                .collect(Collectors.toList());
-        if (new_list != null && new_list.size() > 0) {
-            mv.addObject("roomName", params.get("roomName"));
-            mv.addObject("roomNumber", params.get("roomNumber"));
-            mv.setViewName("chat/testchat");
-        } else {
-            mv.setViewName("chat/testroom");
-        }
-        return mv;
-    }
-
-    @RequestMapping("testchat")
-    public ModelAndView chat() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("chat/testchat");
-        return mv;
-    }
-
-    @RequestMapping("testroom")
-    public ModelAndView room() {
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("chat/testroom");
-        return mv;
-    }
+//    @RequestMapping("testchat")
+//    public ModelAndView chat() {
+//        ModelAndView mv = new ModelAndView();
+//        mv.setViewName("chat/testchat");
+//        return mv;
+//    }
+//
+//    @RequestMapping("testroom")
+//    public ModelAndView room() {
+//        ModelAndView mv = new ModelAndView();
+//        mv.setViewName("chat/testroom");
+//        return mv;
+//    }
 
 }
