@@ -1,98 +1,94 @@
 package com.example.jhta_3team_finalproject.controller;
 
-import com.example.jhta_3team_finalproject.domain.User.MailVO;
-import com.example.jhta_3team_finalproject.domain.User.SendMail;
-import com.example.jhta_3team_finalproject.util.PagingUtil;
+import com.example.jhta_3team_finalproject.domain.User.*;
+import com.example.jhta_3team_finalproject.service.User.UserService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import com.example.jhta_3team_finalproject.service.User.*;
-import org.springframework.web.multipart.MultipartFile;
-import java.io.File;
-import java.util.Calendar;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import com.example.jhta_3team_finalproject.domain.User.User;
 
-import java.io.*;
-
+@Slf4j
 @Controller
 @RequestMapping("/user")
 public class UserController {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Value("${my.savefolder}")
     private String saveFolder;
-    private UserService UserService;
+    private UserService userservice;
     private PasswordEncoder passwordEncoder;
     private SendMail sendMail;
     private static final int UPDATE_SUCCESS = 1;
     private static final int JOIN_SUCCESS = 1;
 
     @Autowired
-    public UserController(UserService userService,
+    public UserController(UserService userservicece,
                           PasswordEncoder passwordEncoder, SendMail sendMail) {
-        this.UserService = userService;
+        this.userservice = userservicece;
         this.passwordEncoder = passwordEncoder;
         this.sendMail = sendMail;
     }
-    //로그인
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(
             ModelAndView mv,
             @CookieValue(value = "remember-me", required = false) Cookie readCookie,
             HttpSession session,
             Principal userPrincipal
-    ) {if (readCookie != null) {
-            //principal.getName():로그인 한 아이디 값을 알 수 있어요
-            logger.info("저장됭 아이디:" + userPrincipal.getName());
+    ) {
+        if (readCookie != null) {
+            log.info("저장된 아이디:" + userPrincipal.getName());
             mv.setViewName("redirect:/board/list");
         } else {
             mv.setViewName("member/login");
-
-            //세션에 저장된 값을 한 번만 실행 될 수 있도록 model에 저장
             mv.addObject("loginfail", session.getAttribute("loginfail"));
-            session.removeAttribute("loginfail");//세션의 값은 제거합니다
+            session.removeAttribute("loginfail");
         }
-        logger.info("login 페이지");
+        log.info("login 페이지");
         return mv;
     }
 
-
-    //회원가입
     @RequestMapping(value = "/join", method = RequestMethod.GET)
     public String join() {
         return "member/register";
     }
 
     @RequestMapping(value = "/joinProcess", method = RequestMethod.POST)
-    public String joinProcess(User user ,Model model,  RedirectAttributes rattr, HttpServletRequest request) {
-        logger.info(("User: " + user.toString()));
+    public String joinProcess(User user, Model model, RedirectAttributes rattr, HttpServletRequest request) {
+        log.info("User: " + user.toString());
 
-        int result = UserService.join(user);
+        int result = userservice.join(user);
 
         user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
 
-        if(result == JOIN_SUCCESS) {
-            //mailService.sendMail(user);
-             //회원가입 성공 시 메일 전송
+        if (result == JOIN_SUCCESS) {
             MailVO vo = new MailVO();
             vo.setTo(user.getUserEmail());
             sendMail.sendMail(vo);
-            logger.info(sendMail+"확인");
+            log.info(sendMail + "확인");
 
             rattr.addFlashAttribute("result", "joinSuccess");
             return "redirect:/user/login";
@@ -103,27 +99,21 @@ public class UserController {
         }
     }
 
-    //회원가입 폼에서 아이디 검사
-    @ResponseBody
-    @RequestMapping(value ="/idcheck",method=RequestMethod.GET)
+    @RequestMapping(value = "/getUserId", method = RequestMethod.GET)
     public int idcheck(@RequestParam("userId") String id) {
-        return UserService.getUserId(id);
+        return userservice.getUserId(id);
     }
 
-    // 로그아웃
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout() {
         return "member/login";
     }
 
-    //비밀번호 찾기
     @RequestMapping(value = "/findPassword", method = RequestMethod.POST)
     public String findPassword() {
         return "member/findPassword";
     }
 
-
-    //회원 정보  폼
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public ModelAndView user_info(
             UsernamePasswordAuthenticationToken principal,
@@ -131,7 +121,7 @@ public class UserController {
             HttpServletRequest request) {
 
         User userDetails = (User) principal.getPrincipal();
-        var employee = this.UserService.getEmployee(userDetails.getUserNum());
+        var employee = this.userservice.getEmployee(userDetails.getUserNum());
         if (employee != null) {
             mv.setViewName("member/user_updateForm");
             mv.addObject("memberinfo", employee);
@@ -145,53 +135,35 @@ public class UserController {
         return mv;
     }
 
-
-    //회원 정보 수정 폼
-//    @RequestMapping(value = "/update")
-//    public ModelAndView user_update(ModelAndView mv, Principal principal) {
-//        String id = principal.getName();
-//        if (id == null) {
-//            mv.setViewName("redirect:/user/login");
-//            logger.info("id is null");
-//        } else {
-//            User user = UserService.user_info(id);
-//            mv.setViewName("member/user_updateForm");
-//            mv.addObject("memberinfo", user);
-//        }
-//        return mv;
-//    }
-
-
-    //회원 수정 저장
-    @RequestMapping(value = "/updateProcess", method = RequestMethod.POST)
+    @PostMapping(value = "/updateProcess")
     public String updateProcess(User user, Model model,
                                 RedirectAttributes rattr,
                                 HttpServletRequest request,
                                 @RequestParam("profilePictureFile") MultipartFile uploadfile) throws IOException {
-        logger.info("수정 전 User 정보: " + user);
+        log.info("수정 전 User 정보: " + user);
         if (!uploadfile.isEmpty()) {
             String fileName = uploadfile.getOriginalFilename();
             String fileDBName = fileDBName(fileName, saveFolder);
-            logger.info("fileDBName = " + fileDBName);
+            log.info("fileDBName = " + fileDBName);
 
             File destinationFile = new File(saveFolder + fileDBName);
             uploadfile.transferTo(destinationFile);
-            logger.info("File saved to: " + destinationFile.getAbsolutePath());
+            log.info("File saved to: " + destinationFile.getAbsolutePath());
 
             user.setUserProfilePicture(fileDBName);
         }
 
-        logger.info("업데이트 전에 User 정보: " + user);
-        int result = UserService.update(user);
+        log.info("업데이트 전에 User 정보: " + user);
+        int result = userservice.update(user);
 
         UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities() );
+                new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        logger.info("Updating user: " + user);
-        logger.info("Update result: " + result);
+        log.info("Updating user: " + user);
+        log.info("Update result: " + result);
 
-        if (result == UPDATE_SUCCESS ) {
+        if (result == UPDATE_SUCCESS) {
             rattr.addFlashAttribute("result", "updateSuccess");
             return "redirect:/user/info";
         } else {
@@ -208,7 +180,7 @@ public class UserController {
         int date = c.get(Calendar.DATE);
 
         String homedir = saveFolder + "/" + year + "-" + month + "-" + date;
-        logger.info(homedir);
+        log.info(homedir);
         File path1 = new File(homedir);
         if (!path1.exists()) {
             path1.mkdirs();
@@ -219,42 +191,98 @@ public class UserController {
 
         int index = fileName.lastIndexOf(".");
         String fileExtension = fileName.substring(index + 1);
-        logger.info("fileExtension = " + fileExtension);
+        log.info("fileExtension = " + fileExtension);
 
         String refileName = "bbs" + year + month + date + random + "." + fileExtension;
-        logger.info("refileName = " + refileName);
+        log.info("refileName = " + refileName);
 
         String fileDBName = "/" + year + "-" + month + "-" + date + "/" + refileName;
-        logger.info("fileDBName = " + fileDBName);
+        log.info("fileDBName = " + fileDBName);
 
         return fileDBName;
     }
 
-    //사원 출퇴근 관리
-    @RequestMapping(value = "/commute")
-    public String user_copmmute(@RequestParam(value = "page", defaultValue = "1") int page, ModelAndView mv) {
+    // 출퇴근 관리 페이지로 이동
+    @GetMapping(value = "/commute")
+    public ModelAndView commutePage(Principal principal, ModelAndView mv) {
+        log.info("출퇴근 페이지");
+        User userDetails = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        int userNum = userDetails.getUserNum();
 
-        int limit = 10;  // 한 화면에 출력할 로우 갯수
-        int listcount = UserService.getListCount();  // 총 리스트 수를 받아옴
+//        List<Attendence> attendanceList = userservice.(userNum);
+        Attendence todayAttendance = userservice.getTodayAttendance(userNum);
 
-        PagingUtil.Paging paging= PagingUtil.getPaging(page, limit, listcount);
+        mv.setViewName("member/attendance");
 
-        mv.addObject("page", paging.getPage());
-        mv.addObject("maxpage", paging.getMaxpage());
-        mv.addObject("startpage", paging.getStartpage());
-        mv.addObject("endpage", paging.getEndpage());
-        mv.addObject("rowNum", paging.getRowNum());
+        mv.addObject("userNum", userNum);
+        mv.addObject("username", userDetails.getUsername());
+        return mv;
 
-
-        mv.setViewName("member/commute");
-        return "member/commute";
     }
 
-    //직원 근태 관리
-    //직원 정보 관리
-    //신규 등록 사원
+    // 사원 출퇴근 시간 기록
+    @PostMapping("/attendance")
+    @ResponseBody
+    public Map<String, Object> recordAttendance(String action, Principal principal, Model model, @AuthenticationPrincipal User userDetails) {
+        log.info("출퇴근 입력");
+        int userNum = userDetails.getUserNum();
 
+        Attendence attendence = userservice.recordAttendance(userNum, action);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", action.equalsIgnoreCase("checkIn") ? "출근 완료" : "퇴근 완료");
+        response.put("attendance", attendence);
+        return response;
+    }
+
+    // 오늘의 출퇴근 기록 조회
+    @GetMapping("/todayAttendance")
+    @ResponseBody
+    public Map<String, Object> getTodayAttendance(@AuthenticationPrincipal User userDetails) {
+        int userNum = userDetails.getUserNum();
+
+        Attendence attendance = userservice.getTodayAttendance(userNum);
+
+        Map<String, Object> response = new HashMap<>();
+
+        if (attendance == null) {
+            response.put("status","0");  // 출,퇴근이 데이터 베이스에 들어가지 않은 경우 -0
+        } else {
+            if (attendance.getCheckInTime() != null && attendance.getCheckOutTime() != null) {
+                response.put("status","2"); //출,퇴근이 데이터베이스에 들어간 경우 2
+                response.put("checkInTime",attendance.getCheckInTime());
+                response.put("checkOutTime",attendance.getCheckOutTime());
+
+            } else if (attendance.getCheckOutTime() == null) {
+                response.put("status","1"); //출근만 디비에 들어간 경우 1번
+                response.put("checkInTime",attendance.getCheckInTime());
+            }
+
+        }
+             return response;
+
+
+
+    }
 }
+
+
+//    @PostMapping("/check-in")
+//    public String checkIn( Principal principal) {
+//        User userDetails = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+//        int userNum = userDetails.getUserNum();
+//        userservice.checkIn(userNum);
+//        return "출근 완료";
+//    }
+//
+//    @PostMapping("/check-out")
+//    public String checkOut(Principal principal) {
+//        User userDetails = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+//        int userNum = userDetails.getUserNum();
+//        userservice.checkOut(userNum);
+//        return "퇴근 완료";
+//    }
+
 
 
 

@@ -51,47 +51,40 @@ public class secuityConfig {
         http.headers().frameOptions().disable();
 
         // 내가 만든 페이지로 이동합니다
-        http.
-                formLogin((fo) -> fo.loginPage("/user/login")
-                        .loginProcessingUrl("/user/loginProcess")
-                        .usernameParameter("userId")
-                        .passwordParameter("userPassword")
-                        .successHandler(loginSuccessHandler)
-                        .failureHandler(loginFailHandler));
+        http.formLogin(fo -> fo.loginPage("/user/login")
+                .loginProcessingUrl("/user/loginProcess")
+                .usernameParameter("userId")
+                .passwordParameter("userPassword")
+                .successHandler(loginSuccessHandler)
+                .failureHandler(loginFailHandler));
 
-
-        http.logout((fo) -> fo.logoutSuccessUrl("/user/login")
+        http.logout(fo -> fo.logoutSuccessUrl("/user/login")
                 .logoutUrl("/user/logout")
                 .invalidateHttpSession(true)
-                .deleteCookies("remember-me","JSESSION_ID"));
+                .deleteCookies("remember-me", "JSESSION_ID"));
 
-
-
-        http.rememberMe((me) -> me.rememberMeParameter("remember-me")
+        http.rememberMe(me -> me.rememberMeParameter("remember-me")
                 .userDetailsService(customUserDetailsService)
                 .tokenValiditySeconds(2419200)
-                .tokenRepository(tokenRepository())); //데이터 베이스에 토큰을 저장합니다
+                .tokenRepository(tokenRepository())); // 데이터 베이스에 토큰을 저장합니다
 
-
-        http.authorizeHttpRequests((au)->au
+        http.authorizeHttpRequests(au -> au
                 .requestMatchers("/user/list", "/user/delete")
                 .hasAuthority("ROLE_MASTER")
-                .requestMatchers("/user/update","/user/updateProcess","/user/info")
-                .hasAnyAuthority("ROLE_MASTER","ROLE_MEMBER")
-                .requestMatchers("/board/**","/comment/**")
-                .hasAnyAuthority("ROLE_MASTER","ROLE_MEMBER")
+                .requestMatchers("/user/update", "/user/updateProcess", "/user/info", "/user/attendance", "/user/commute")
+                .hasAnyAuthority("ROLE_MASTER", "ROLE_MEMBER")
+                .requestMatchers("/board/**", "/comment/**")
+                .hasAnyAuthority("ROLE_MASTER", "ROLE_MEMBER")
                 .requestMatchers("/**").permitAll()
         );
-        http.exceptionHandling((ex)->ex.accessDeniedHandler(customAccessDeniedHandler));
+
+        http.exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler));
 
         // RoleHierarchy 설정 추가
         http.setSharedObject(RoleHierarchy.class, roleHierarchy);
 
-
         return http.build();
     }
-
-
 
     @Bean
     public BCryptPasswordEncoder encodePassword() {
@@ -100,9 +93,8 @@ public class secuityConfig {
 
     @Bean
     public PersistentTokenRepository tokenRepository() {
-        //PersistentTokenRepository 의 구현체인 JdbcTokenRepositoryImpl 클래스 사용합니다
-        JdbcTokenRepositoryImpl jdbcTokenRepository =new JdbcTokenRepositoryImpl();
-        jdbcTokenRepository.setDataSource(dataSource);//import javax.sql.DataSource;
+        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+        jdbcTokenRepository.setDataSource(dataSource); // import javax.sql.DataSource;
         return jdbcTokenRepository;
     }
 
