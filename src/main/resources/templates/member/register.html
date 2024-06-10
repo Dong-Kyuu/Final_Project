@@ -101,6 +101,7 @@
 <script th:src="@{assets/js/off-canvas.js}"></script>
 <script th:src="@{/assets/js/hoverable-collapse.js}"></script>
 <script th:src="@{/assets/js/misc.js}"></script>
+
 <script th:inline="javascript">
   function formatPhoneNumber(input) {
     // Remove all non-numeric characters
@@ -112,8 +113,10 @@
   }
   let checkid=false;
   let checkemail=false;
-  $("input[name=userId]").on('keyup',
-          function () {
+
+  $("input[name='userId']").on('keyup', function () {
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
             const pattern=/^\w{5,12}$/;
             const id=$(this).val();
             if( !pattern.test(id)){
@@ -124,8 +127,11 @@
             }
 
             $.ajax({
-              url:"idcheck",
+              url:"/user/getUserId",
               data: { "userId" :id}	,
+              beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+              },
               success : function (resp) {
                 if(resp=='-1'){
                   $("#id_message").html("사용 가능한 아이디 입니다").css('color','green');
@@ -140,7 +146,7 @@
 
             // $.ajax({
             //   type : "post",
-            //   url : "../comment/list",
+            //   url : "../user/idcheck",
             //   data : {
             //     "board_num" : $("#board_num").val(),
             //     "page" : currentPage

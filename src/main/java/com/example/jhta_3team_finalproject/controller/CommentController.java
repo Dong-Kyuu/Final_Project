@@ -19,7 +19,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value="/comment")
 public class CommentController {
-    private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
+    private static final Logger log = LoggerFactory.getLogger(CommentController.class);
 
     private TableCommentService CS;
 
@@ -30,7 +30,7 @@ public class CommentController {
 
     @PostMapping(value = "/list")
     public Map<String, Object> CommentList(int board_num, int page) {
-        logger.info("/list : board_num = "+board_num);
+        log.info("/list : board_num = "+board_num);
 
         List<Comment> list = CS.getCommentList(board_num, page);
 
@@ -38,15 +38,15 @@ public class CommentController {
         Map<String,Object> map = new HashMap<String, Object>();
         map.put("list", list);
         map.put("listcount", listcount);
-        logger.info("map=" + map.toString());
-        logger.info("/comment/list");
+        log.info("map=" + map.toString());
+        log.info("/comment/list");
         return map;
     }
 
     @PostMapping(value = "/add")
     public int CommentAdd(Comment co) {
-        logger.info(co.toString());
-        logger.info("등록실행!");
+        log.info(co.toString());
+        log.info("등록실행!");
         return CS.commentsInsert(co);
     }
 

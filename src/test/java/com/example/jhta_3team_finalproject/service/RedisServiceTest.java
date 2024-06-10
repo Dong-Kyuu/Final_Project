@@ -21,7 +21,7 @@
 //@SpringBootTest
 //class RedisServiceTest {
 //
-//    private final static Logger logger = LoggerFactory.getLogger(RedisServiceTest.class);
+//    private final static Logger log = LoggerFactory.getLogger(RedisServiceTest.class);
 //
 //
 //    @Autowired
@@ -45,17 +45,17 @@
 //        LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
 //        Date oneWeekAgoDate = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 //        String oneWeekAgoDateStr = simpleDateFormat.format(oneWeekAgoDate);
-//        logger.info("{}", oneWeekAgoDate);
-//        logger.info("1주일 전은 {} 입니다.", oneWeekAgoDateStr);
+//        log.info("{}", oneWeekAgoDate);
+//        log.info("1주일 전은 {} 입니다.", oneWeekAgoDateStr);
 //        List<ChatMessage> chatMessageList = redisService.getRedisChatMessage(new ChatMessage());
 //        //List<ChatMessage> chatMessageList = redisService.getRedisChatMessage(5, oneWeekAgoDate);
-//        logger.info("getChatMessage");
+//        log.info("getChatMessage");
 //
 //        /**
 //         * when - RDB -> Redis 로 삽입
 //         */
 //        chatMessageList.forEach(chatMessage -> {
-//            //logger.info("chatMessage: {}", chatMessage);
+//            //log.info("chatMessage: {}", chatMessage);
 //            String roomKey = String.valueOf(chatMessage.getChatRoomNum());
 //            ChatMessage value = chatMessage;
 //            String dateKey = simpleDateFormat.format(chatMessage.getSendTime());
@@ -76,7 +76,7 @@
 //        chatList.sort(Comparator.comparing(ChatMessage::getMessageNum));
 //
 //        chatList.forEach(chatMessage -> {
-//            logger.info("{}", chatMessage);
+//            log.info("{}", chatMessage);
 //        });
 //    }
 //}

@@ -29,7 +29,7 @@ import java.util.Random;
 @RequestMapping(value = "/table")
 public class TableController {
 
-    private static final Logger logger = LoggerFactory.getLogger(TableController.class);
+    private static final Logger log = LoggerFactory.getLogger(TableController.class);
 
     @Value("${my.savefolder}")
     private String saveFolder;
@@ -98,10 +98,10 @@ public class TableController {
                 String fileName = uploadfile.getOriginalFilename(); // 원래 파일명
 
                 String fileDBName = fileDBName(fileName, saveFolder);
-                logger.info("fileDBName = " + fileDBName);
+                log.info("fileDBName = " + fileDBName);
 
                 uploadfile.transferTo(new File(saveFolder + fileDBName));
-                logger.info("transferTo path = " + saveFolder + fileDBName);
+                log.info("transferTo path = " + saveFolder + fileDBName);
 
                 Table_Files file = new Table_Files();
                 file.setOriginal_file_name(fileName);
@@ -113,7 +113,7 @@ public class TableController {
         }
 
         BS.insertFile(boardNum, files); // 저장메서드 호출
-        logger.info(board.toString()); //selectKey로 정의한 BOARD_NUM 값 확인
+        log.info(board.toString()); //selectKey로 정의한 BOARD_NUM 값 확인
         return "redirect:freelist";
 
     }
@@ -127,7 +127,7 @@ public class TableController {
         int date = c.get(Calendar.DATE);            //오늘 일
 
         String homedir = saveFolder + "/" + year + "-" + month + "-" + date;
-        logger.info(homedir);
+        log.info(homedir);
         File path1 = new File(homedir);
         if (!(path1.exists())) {
             path1.mkdirs(); // 새로운 폴더 생성
@@ -143,21 +143,21 @@ public class TableController {
         // indexOf가 처음 발견되는 문자열에 대한 Index를 반환하는 반면,
         // lastIndexOf는 마지막으로 발견되는 문자열의 Index를 반환
         // (파일명에 점이 여러개 있을 경우 맨 마지막에 발견되는 문자열의 위치를 리턴한다.
-        logger.info("index = " + index);
+        log.info("index = " + index);
 
         String fileExtension = fileName.substring(index + 1);
-        logger.info("fileExtension = " + fileExtension);
+        log.info("fileExtension = " + fileExtension);
         // 확장자 구하기 끝
 
         // 새로운 파일명
         String refileName = "bbs" + year + month + date + random + "." + fileExtension;
-        logger.info("refileName = " + refileName);
+        log.info("refileName = " + refileName);
 
         // MySQL 디비에 저장될 파일 명
         // String fileDBName = "/" + year + "-" month + "-" + date + "/" + refileName;
         String fileDBName = File.separator + year + "-" + month + "-" + date
                 + File.separator + refileName;
-        logger.info("fileDBName = " + fileDBName);
+        log.info("fileDBName = " + fileDBName);
 
         return fileDBName;
     }
@@ -174,7 +174,7 @@ public class TableController {
 			3. myhome4/board/list에서 제목을 클릭한 경우 조회수가 증가하도록 한다.
 		 */
 
-        logger.info("referer : " + beforeURL);
+        log.info("referer : " + beforeURL);
         if (beforeURL != null && beforeURL.endsWith("list")) {
             BS.setReadCountUpdate(num);
         }
@@ -183,12 +183,12 @@ public class TableController {
         List<Table_Files> upfiles = BS.getFilesByBoardNum(num);
         // board = null; // error페이지 이동 확인하고자 임의로 지정.
         if (board == null) {
-            logger.info("상세보기 실패");
+            log.info("상세보기 실패");
             mv.setViewName("error/error");
             mv.addObject("url", request.getRequestURL());
             mv.addObject("message", "실패하였습니다.");
         } else {
-            logger.info("상세보기 성공");
+            log.info("상세보기 성공");
             int count = CS.getListCount(num);
             mv.setViewName("table/Fview");
             mv.addObject("count", count);
@@ -208,13 +208,13 @@ public class TableController {
 
         // 삭제 처리 실패한 경우
         if(result == 0) {
-            logger.info("삭제 실패!");
+            log.info("삭제 실패!");
             mv.addAttribute("url", request.getRequestURL());
             mv.addAttribute("message", "삭제 실패");
             return "error/error";
         } else {
             // 삭제 처리 성공한 경우 - 글 목록 보기 요청을 전송하는 부분
-            logger.info("삭제 완료!");
+            log.info("삭제 완료!");
             rattr.addFlashAttribute("result", "deleteSuccess");
             return "redirect:freelist";
         }
