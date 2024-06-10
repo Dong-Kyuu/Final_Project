@@ -6,7 +6,9 @@ public interface UserService {
 
     public int insert(User user);
 
-    public int isId(String id);
+    public int getUserId(String id);
+
+    int checkIdPw(String id, String password);
 
     public int join(User user);
 
@@ -14,4 +16,7 @@ public interface UserService {
 
     public int update(User user);
 
+    public int getListCount();
+
+    public User getEmployee(int userNum);
 }

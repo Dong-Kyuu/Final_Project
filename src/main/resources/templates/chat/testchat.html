@@ -733,7 +733,7 @@
 
         function wsOpen() {
             //웹소켓 전송시 현재 방의 번호를 넘겨서 보낸다.
-            ws = new WebSocket("ws://" + location.host + "/chating/"
+            ws = new WebSocket("ws://" + location.host + "/chatting/"
                 + $("#roomNumber").val() + "&" + $("#userName").val());
             wsEvt();
         }
@@ -841,6 +841,32 @@
             });
         }
 
+        function fileSend() {
+            var file = document.querySelector("#fileUpload").files[0];
+            var fileReader = new FileReader();
+
+            console.log();
+
+            fileReader.onload = function () {
+                var param = {
+                    type: "fileUpload",
+                    file: file,
+                    fileName: file.name,
+                    roomNumber: $("#roomNumber").val(),
+                    sessionId: $("#sessionId").val(),
+                    msg: $("#chatting").val(),
+                    userName: $("#userName").val()
+                }
+
+                ws.send(JSON.stringify(param)); //파일 보내기전 메시지를 보내서 파일을 보냄을 명시한다.
+
+                arrayBuffer = this.result;
+                ws.send(arrayBuffer); //파일 소켓 전송
+            };
+            fileReader.readAsArrayBuffer(file);
+            adjustHeight();
+        }
+
         function send() {
             if ($('#chatting').val() == '') {
                 alert('채팅을 입력해주세요.');
@@ -913,32 +939,6 @@
          textEle.on('keyup', function() {
          adjustHeight();
          }); */
-
-        function fileSend() {
-            var file = document.querySelector("#fileUpload").files[0];
-            var fileReader = new FileReader();
-
-            console.log();
-
-            fileReader.onload = function () {
-                var param = {
-                    type: "fileUpload",
-                    file: file,
-                    fileName: file.name,
-                    roomNumber: $("#roomNumber").val(),
-                    sessionId: $("#sessionId").val(),
-                    msg: $("#chatting").val(),
-                    userName: $("#userName").val()
-                }
-
-                ws.send(JSON.stringify(param)); //파일 보내기전 메시지를 보내서 파일을 보냄을 명시한다.
-
-                arrayBuffer = this.result;
-                ws.send(arrayBuffer); //파일 소켓 전송
-            };
-            fileReader.readAsArrayBuffer(file);
-            adjustHeight();
-        }
     </script>
 </head>
 <body>

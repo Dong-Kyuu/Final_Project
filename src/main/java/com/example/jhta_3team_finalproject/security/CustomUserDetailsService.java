@@ -18,7 +18,7 @@ import com.example.jhta_3team_finalproject.mybatis.mapper.User.UserMapper;
 		이를 구현하는 클래스는 DB에서 유저의 정보를 가져와서 UserDetails 타입으로 리턴해 주는 작업을 합니다.
 
   3. UserDetails 인터페이스를 구힌한 클래스는 실제로 사용자의 정보와 사용자가가 가진 권한의 정보를 처리해서 반환하게 됩니다.
-		UserDetails user = new User(username, users.getPassword(), roles);
+		UserDetails user = new User(username, user.getPassword(), roles);
  */
 
 @Component
@@ -31,8 +31,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.info("username은 로그인 시 입력한 값: " + username);
-        User user = dao.isId(username);
-        //logger.info("info=" + users.toString());
+        User user = dao.getUserId(username);
+        logger.info("info=" + user.toString());
 
 
         if (user == null) {
@@ -44,7 +44,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         //GrantedAuthority : 인증 개체에 부여된 권한을 나타내기 위한 인터페이스로 이를 구현한 구현체는
         //      			생성자에 권한을 문자열로 넣어주면 됩니다
         //SimpleGrantedAuthority : GrantedAuthority의 구현체입니다.
-
+        //String departmentName = dao.getDepartmentNameById(user.getDepartmentId());
+        //user.setDepartmentName(departmentName);
         return user;
     }
 

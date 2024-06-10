@@ -19,7 +19,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(socketHandler, "/chating/{roomNumber}").setAllowedOrigins("*");
+        registry.addHandler(socketHandler, "/chatting/{roomNumber}").setAllowedOrigins("*");
     }
 
     @Bean

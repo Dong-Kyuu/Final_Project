@@ -72,6 +72,19 @@
 <script th:src="@{../assets/js/hoverable-collapse.js}"></script>
 <script th:src="@{../assets/js/misc.js}"></script>
 <script th:src="@{../assets/js/file-upload.js}"></script>
+
+<script th:inline="javascript">
+  let result=[[${result}]];
+  let loginfail=[[${loginfail}]];
+
+  /*회원가입 성공 메시지 또는 로그인 실패 메시지를 처리합니다*/
+  if (result=='joinSucess') {
+    alert("회원가입을 축하합니다")
+  }else if("${loginfail}"=='loginFailMsg'){
+    alert("아이디나 비밀번호 오류입니다 ");
+  }
+
+</script>
 <!-- endinject -->
 </body>
 </html>

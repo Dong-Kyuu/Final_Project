@@ -13,6 +13,8 @@ public interface ChatMapper {
 
     public int createMessage(ChatMessage chatMessage);
 
+    public ChatMessage lastMessage();
+
     public int createChatRoom(ChatRoom chatRoom);
 
     public List<ChatRoom> searchRoom(ChatRoom chatRoom);
@@ -23,7 +25,11 @@ public interface ChatMapper {
 
     public List<ChatMessage> redisSearchMessages(ChatMessage chatMessage);
 
-    int updateMsgImageUrl(ChatMessage chatMessage);
+    public int updateMsgImageUrl(ChatMessage chatMessage);
+
+    public ChatMessage searchOldMessage(ChatMessage chatMessage);
+
+    public ChatMessage searchNewMessage(ChatMessage chatMessage);
 
     public List<User> chatUserList(String chatUserId);
 
@@ -31,5 +37,5 @@ public interface ChatMapper {
 
     public int chatUserProfileMsgUpdate(String profileStatusMsg, String chatUserId);
 
-    int chatUserProfileMsgUpdate(User user);
+    public int chatUserProfileMsgUpdate(User user);
 }

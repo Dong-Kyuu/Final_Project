@@ -5,9 +5,9 @@
 }
 
 $body-bg: #84a0f4;
-$button-bg: #67a3e4;
+$button-bg: #60a5fa;
 $list-bg: #fff;
-$text-color: #67a3e4;
+$text-color: #60a5fa;
 $text-color-hover: #000;
 $menu-icon-transition: transform 300ms cubic-bezier(0.52, -0.80, 0.52, 0.52);
 
@@ -93,7 +93,7 @@ $menu-icon-transition: transform 300ms cubic-bezier(0.52, -0.80, 0.52, 0.52);
 
   &-mgr {
     background-color: $button-bg;
-    box-shadow: 0px 0px 0px 4px rgba(80, 152, 230, 0.3);
+    //box-shadow: 0px 0px 0px 4px rgba(80, 152, 230, 0.3);
     border-radius: 50%;
     width: 40px;
     height: 40px;

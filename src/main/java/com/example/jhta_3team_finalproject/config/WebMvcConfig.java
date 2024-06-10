@@ -11,12 +11,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Value("${my.savepath}")
     private String savepath;
+    @Value("${my.savepath.board}")
+    private String savepath_board;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/upload/user/**")
                 .addResourceLocations( savepath  );
-
+        registry.addResourceHandler("/upload/board/**")
+                .addResourceLocations( savepath_board  );
     }
 
 }

@@ -1,7 +1,7 @@
 package com.example.jhta_3team_finalproject.service.table;
 
-import com.example.jhta_3team_finalproject.domain.Table.Board;
-import com.example.jhta_3team_finalproject.domain.Table.Table_Files;
+import com.example.jhta_3team_finalproject.domain.Board.Board;
+import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public interface BoardService {
     void insertBoard(Board board);
 
     // 글 등록 시 업로드 파일 저장
-    void insertFile(int boardNum, List<Table_Files> files);
+    void insertFile(int boardNum, List<BoardUpfiles> files);
 
     // 조회수 증가
     int setReadCountUpdate(int num);
@@ -26,7 +26,7 @@ public interface BoardService {
     Board getDetail(int num);
 
     // 업로드했던 파일 가져오기
-    List<Table_Files> getFilesByBoardNum(int board_num);
+    List<BoardUpfiles> getFilesByBoardNum(int board_num);
 
     // 게시글 삭제
     int boardDelete(int num);

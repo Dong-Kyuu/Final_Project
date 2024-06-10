@@ -29,7 +29,6 @@ public class secuityConfig {
     private LoginFailHandler loginFailHandler;
     private LoginSuccessHandler loginSuccessHandler;
     private CustomUserDetailsService customUserDetailsService;
-
     private CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Autowired
@@ -48,6 +47,8 @@ public class secuityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, RoleHierarchy roleHierarchy) throws Exception {
+
+        //http.csrf().disable();
 
         http.headers().frameOptions().disable();
 

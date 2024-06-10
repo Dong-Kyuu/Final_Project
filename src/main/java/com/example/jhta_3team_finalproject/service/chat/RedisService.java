@@ -68,7 +68,7 @@ public class RedisService {
                     String dateKey = simpleDateFormat.format(chatMsg.getSendTime());
                     String redisKey = roomKey + ":" + dateKey; // 방번호:날짜
                     Long expiredTime = 1L; // 만료 시간 1주일 부여
-                    redisUtils.setInitSets(redisKey, chatMsg); // 키, 값
+                    redisUtils.setAddSets(redisKey, chatMsg); // 키, 값
                     redisUtils.setExpired(redisKey, expiredTime);
                 });
             }
