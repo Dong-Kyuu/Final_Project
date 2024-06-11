@@ -33,14 +33,7 @@ public class UserServicelmpl implements UserService {
 
     @Override
     public int insert(User user) {
-        user.setUserPassword(passwordEncoder.encode(user.getUserPassword())); // 비밀번호 암호화
         return userMapper.insert(user);
-    }
-
-    @Override
-    public int getUserId(String id) {
-        User remember = userMapper.getUserId(id);
-        return (remember == null) ? -1 : 1; // -1은 아이디가 존재하지 않는 경우, 1은 아이디가 존재하는 경우
     }
 
     @Override
@@ -55,6 +48,11 @@ public class UserServicelmpl implements UserService {
             }
         }
         return result;
+    }
+
+    @Override
+    public User departmentPositionInfo(int department_id, int position_id) {
+        return userMapper.departmentPositionInfo(department_id,position_id);
     }
 
     @Override
@@ -83,6 +81,11 @@ public class UserServicelmpl implements UserService {
     }
 
     @Override
+    public int getUserId(String id) {
+        User remember = userMapper.getUserId(id);
+        return (remember == null) ? -1 : 1; // -1은 아이디가 존재하지 않는 경우, 1은 아이디가 존재하는 경우
+    }
+    @Override
     public void checkIn(int userNum) {
         LocalDateTime dateTime =LocalDateTime.now();
         attendenceMapper.CheckIn(userNum,dateTime);
@@ -107,6 +110,11 @@ public class UserServicelmpl implements UserService {
             attendenceMapper.checkOut(userNum, dateTime);
         }
         return  attendenceMapper.getTodayAttendance(userNum);
+    }
+
+    @Override
+    public List<Attendence> getMonthlyAttendances(int userNum){
+        return attendenceMapper.getMonthlyAttendances(userNum);
     }
 
     @Override

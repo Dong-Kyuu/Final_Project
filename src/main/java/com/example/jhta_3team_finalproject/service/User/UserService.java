@@ -13,8 +13,11 @@ public interface UserService {
 
     int getUserId(String id);
 
+//    int userIdExists(String id);
+
     int checkIdPw(String id, String password);
 
+    User departmentPositionInfo(int department_id, int position_id);
     int join(User user);
 
     User user_info(String id);
@@ -30,8 +33,12 @@ public interface UserService {
     void checkOut(int userNum);
 
     //오늘의 출 퇴근 기록을 가져오는 메서드!
-    Attendence  getTodayAttendance(int userNum);
-    Attendence recordAttendance(int userNum, String action );
+    Attendence getTodayAttendance(int userNum);
+
+    Attendence recordAttendance(int userNum, String action);
+
+    //한 사람의 출퇴근 한달 정보를 가져오는 메서드
+    List<Attendence> getMonthlyAttendances(int userNum);
 }
 
 
