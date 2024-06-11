@@ -11,7 +11,11 @@ import java.time.LocalDateTime;
 @Mapper
 public interface UserMapper {
 
+    public User getUserDetails(String userId);
+
     public User getUserId(String id);
+
+    User departmentPositionInfo(int department_id, int position_id);
 
     public int join(User user);
 

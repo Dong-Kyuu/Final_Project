@@ -27,6 +27,13 @@
 
     </select>
 
+    <!-- 한 사람의 한달 출퇴근 기록 조회-->
+    <select id="getMonthlyAttendances">
+        select *
+        from user_attendance
+
+    </select>
+
 
 
 </mapper>
