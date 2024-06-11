@@ -51,8 +51,18 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
         this.sendMail = sendMail;
     }
+//    @ModelAttribute
+//    public void addAttribute( @AuthenticationPrincipal  User user , Model model){
+////        User userDetails = (User) principal.getPrincipal();
+//       // var employee = this.userservice.getEmployee(userDetails.getUserNum());
+//        if (user != null) {
+//            model.addAttribute("departmentName", user.getDepartmentId());
+//
+//            model.addAttribute("positionName", user.getPositionId());
+//        }
+//    }
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @GetMapping(value = "/login")
     public ModelAndView login(
             ModelAndView mv,
             @CookieValue(value = "remember-me", required = false) Cookie readCookie,
@@ -76,14 +86,12 @@ public class UserController {
         return "member/register";
     }
 
-    @RequestMapping(value = "/joinProcess", method = RequestMethod.POST)
+    @PostMapping(value = "/joinProcess")
     public String joinProcess(User user, Model model, RedirectAttributes rattr, HttpServletRequest request) {
         log.info("User: " + user.toString());
-
+        user.setUserPassword(passwordEncoder.encode(user.getPassword()));
+        log.info(user.getPassword());
         int result = userservice.join(user);
-
-        user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
-
         if (result == JOIN_SUCCESS) {
             MailVO vo = new MailVO();
             vo.setTo(user.getUserEmail());
@@ -99,9 +107,10 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/getUserId", method = RequestMethod.GET)
-    public int idcheck(@RequestParam("userId") String id) {
-        return userservice.getUserId(id);
+    @RequestMapping(value = "/idcheck", method = RequestMethod.GET)
+    public @ResponseBody int idcheck(@RequestParam("userId") String id) {
+        int result = userservice.getUserId(id);
+        return result;
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -122,6 +131,7 @@ public class UserController {
 
         User userDetails = (User) principal.getPrincipal();
         var employee = this.userservice.getEmployee(userDetails.getUserNum());
+        log.info(employee.getDepartmentName());
         if (employee != null) {
             mv.setViewName("member/user_updateForm");
             mv.addObject("memberinfo", employee);
@@ -209,7 +219,7 @@ public class UserController {
         User userDetails = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         int userNum = userDetails.getUserNum();
 
-//        List<Attendence> attendanceList = userservice.(userNum);
+         List<Attendence> attendanceList = userservice.getMonthlyAttendances(userNum);
         Attendence todayAttendance = userservice.getTodayAttendance(userNum);
 
         mv.setViewName("member/attendance");
