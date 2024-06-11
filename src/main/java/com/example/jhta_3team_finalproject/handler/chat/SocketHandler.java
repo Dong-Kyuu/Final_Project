@@ -10,6 +10,9 @@ import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 import com.example.jhta_3team_finalproject.service.chat.ChatService;
 import com.example.jhta_3team_finalproject.service.chat.RedisService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -23,9 +26,6 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItem;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -39,6 +39,7 @@ import java.util.*;
 public class SocketHandler extends TextWebSocketHandler {
 
     @Autowired
+
     ChatService chatService;
 
     @Autowired
@@ -93,6 +94,7 @@ public class SocketHandler extends TextWebSocketHandler {
             chatMessage.setFileUrl(s3url);
         }
         chatMessage.setFileOriginName(fileName);
+
         chatMessage = chatService.createMessage(chatMessage);
 
         obj.put("readCount", chatMessage.getReadCount());
@@ -208,6 +210,7 @@ public class SocketHandler extends TextWebSocketHandler {
             ChatMessage chatMessage = new ChatMessage();
             chatMessage.setFileUrl(s3url);
             chatMessage.setS3url(imageurl);
+
             chatService.updateMsgImageUrl(chatMessage);
 
         } catch (IOException e) {

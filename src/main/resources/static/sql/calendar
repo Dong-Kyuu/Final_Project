@@ -1,0 +1,13 @@
+CREATE TABLE calendar (
+	cal_id INT AUTO_INCREMENT PRIMARY KEY,
+	cal_title VARCHAR(255) NOT NULL,
+	cal_description VARCHAR(255),
+	cal_start VARCHAR(16) NOT NULL,
+	cal_end VARCHAR(16) NOT NULL,
+	cal_type VARCHAR(255),
+	cal_background_color VARCHAR(7),
+	cal_text_color VARCHAR(7),
+	cal_all_day TINYINT(1),
+	users_num INT, --유저 num 참조키
+    FOREIGN KEY (users_num) REFERENCES users(user_num)
+);
