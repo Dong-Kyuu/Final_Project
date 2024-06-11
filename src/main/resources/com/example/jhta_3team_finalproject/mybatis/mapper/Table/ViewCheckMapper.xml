@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.Table.ViewCheckMapper">
+
+    <!-- 로그인한 사람이 어떤 글을 보면 글을 봤다는 기록을 남긴다 -->
+    <insert id="createView">
+        INSERT INTO view_check(user_num, announce_board_num, view)
+        VALUES (#{loginNum}, #{annboardNum}, 1)
+    </insert>
+
+    <select id="ExistViewRecord" resultType="int">
+        SELECT COALESCE((SELECT view
+                         FROM view_check
+                         WHERE announce_board_num = #{annboardNum}
+                         AND user_num = #{loginNum}), 0)
+    </select>
+
+    <update id="addCheck">
+        UPDATE view_check
+        SET checked = 1
+        WHERE announce_board_num = #{annboardNum}
+        AND user_num = #{loginNum}
+    </update>
+
+    <update id="deleteCheck">
+        UPDATE view_check
+        SET checked = 0
+        WHERE announce_board_num = #{annboardNum}
+          AND user_num = #{loginNum}
+    </update>
+
+    <select id="Checkedcheck" resultType="int">
+        SELECT checked
+        FROM view_check
+        WHERE announce_board_num = #{annboardNum}
+        AND user_num = #{loginNum}
+    </select>
+
+    <insert id="autoCheck">
+        INSERT INTO view_check(user_num, announce_board_num, view, checked)
+        VALUES (#{userNum}, #{boardNum}, 1, 1)
+    </insert>
+</mapper>

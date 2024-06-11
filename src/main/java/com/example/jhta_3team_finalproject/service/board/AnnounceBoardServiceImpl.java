@@ -5,6 +5,7 @@ import com.example.jhta_3team_finalproject.domain.Board.Board;
 import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
 import com.example.jhta_3team_finalproject.mybatis.mapper.Table.AnnounceBoardMapper;
 import com.example.jhta_3team_finalproject.mybatis.mapper.Table.UpfilesMapper;
+import com.example.jhta_3team_finalproject.mybatis.mapper.Table.ViewCheckMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +18,13 @@ public class AnnounceBoardServiceImpl implements AnnounceBoardService{
 
     private AnnounceBoardMapper AnnounceBoardMapper;
     private UpfilesMapper UpfilesMapper;
+    private ViewCheckMapper ViewCheckMapper;
 
     @Autowired
-    public AnnounceBoardServiceImpl(AnnounceBoardMapper AnnounceBoardMapper, UpfilesMapper UpfilesMapper) {
+    public AnnounceBoardServiceImpl(AnnounceBoardMapper AnnounceBoardMapper, UpfilesMapper UpfilesMapper, ViewCheckMapper ViewCheckMapper) {
         this.AnnounceBoardMapper = AnnounceBoardMapper;
         this.UpfilesMapper = UpfilesMapper;
+        this.ViewCheckMapper = ViewCheckMapper;
     }
 
     @Override
@@ -91,5 +94,40 @@ public class AnnounceBoardServiceImpl implements AnnounceBoardService{
             result = AnnounceBoardMapper.boardDelete(AnnounceBoard);
         }
         return result;
+    }
+
+    @Override
+    public String viewChecking(int loginNum, int annboardNum) {
+        int result =  ViewCheckMapper.createView(loginNum, annboardNum);
+        if(result == 1) {
+            return "글 확인 기록됨";
+        }
+        return "글 확인 기록실패";
+    }
+
+    @Override
+    public int Exist(int loginNum, int annboardNum) {
+
+        return ViewCheckMapper.ExistViewRecord(loginNum, annboardNum);
+    }
+
+    @Override
+    public int addCheck(int loginNum, int annboardNum) {
+        return ViewCheckMapper.addCheck(loginNum, annboardNum);
+    }
+
+    @Override
+    public int deleteCheck(int loginNum, int annboardNum) {
+        return ViewCheckMapper.deleteCheck(loginNum, annboardNum);
+    }
+
+    @Override
+    public int checkedcheck(int loginNum, int annboardNum) {
+        return ViewCheckMapper.Checkedcheck(loginNum, annboardNum);
+    }
+
+    @Override
+    public void autoCheck(int userNum, int boardNum) {
+        ViewCheckMapper.autoCheck(userNum, boardNum);
     }
 }

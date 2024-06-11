@@ -10,6 +10,7 @@
         <link rel="stylesheet" th:href="@{../assets/vendors/css/vendor.bundle.base.css}">
         <link rel="stylesheet" th:href="@{../assets/css/style.css}">
         <link rel="stylesheet" th:href="@{../css/table/list.css}">
+        <link rel="stylesheet" th:href="@{../css/table/announcelist.css}">
         <link rel="shortcut icon" th:href="@{../assets/images/favicon.ico}" />
 
         <!-- js -->
@@ -18,7 +19,7 @@
 
     </head>
     <body>
-
+        <input type="hidden" id="loginNum" th:value="${#authentication.principal.userNum}">
         <div class="container-scroller">
             <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
 
@@ -47,10 +48,6 @@
                                                 </th:block>
                                                 [[${targetDepartment}]]
                                                 <i class="mdi mdi-chevron-right main-chevron-icon" id="target"></i>
-
-                                                <div>
-
-                                                </div>
                                             </div>
                                         </h4>
                                         <p class="card-description">
@@ -65,31 +62,34 @@
                                                         <th>Title</th>
                                                         <th>Writer</th>
                                                         <th>Date</th>
-                                                        <th>Views</th>
+                                                        <th>Check</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <th:block th:each	= "b, iterStat:${boardlist}">
-                                                        <tr th:data-department="${b.annboardDepartment}">
+                                                        <tr th:data-department="${b.annboardDepartment}"
+                                                            th:data-importance="${b.annboardImportance}"
+                                                            th:data-annboardNum="${b.annboardNum}">
                                                             <td><span th:text = "${rownum -(iterStat.index)}"></span></td>
                                                             <td>
+                                                                <th:block th:value="${b.annboardImportance}" id="importancelev"></th:block>
                                                                 <a class='title-table' th:href = "@{'detail?num=' + ${b.annboardNum}}">
-                                                                    <div class='title-table'>
-                                                                        <span class="department"><[[${#strings.substring(b.annboardDepartment, 0, b.annboardDepartment.length() - 1)}]]>&nbsp;</span>
-                                                                            <span class='title-table'>[[${#strings.abbreviate(b.annboardTitle,25)}]]</span>
+                                                                    <div class='title-td'>
+                                                                        <span class="department title"><[[${#strings.substring(b.annboardDepartment, 0, b.annboardDepartment.length() - 1)}]]>&nbsp;</span>
+                                                                        <span class='title-table title'>[[${#strings.abbreviate(b.annboardTitle,25)}]]</span>
                                                                     </div>
                                                                 </a>
                                                             </td>
                                                             <td><div th:text = "${b.boardWriter}"></div></td>
                                                             <td><div th:text = "${#dates.format(b.annboardDate, 'yy-MM-dd HH:mm')}"></div></td>
-                                                            <td><div th:text = "${b.annboardReadcount}"></div></td>
+                                                            <td><div><i class="mdi mdi-checkbox-blank-outline" id="check-icon"></i></div></td>
                                                         </tr>
                                                     </th:block>
                                                 </tbody>
                                             </table>
 
                                             <!-- 검색 -->
-                                            <form action="freelist" method="get">
+                                            <form action="announceList" method="get">
                                                 <div class = "center-box">
                                                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                                     <div class="search-space">
@@ -139,7 +139,7 @@
                                         <th:block th:if = "${listcount == 0 && search_word != ''}">
                                             <span class="no-list">검색 결과가 없습니다.</span>
                                             <!-- 검색 -->
-                                            <form action="freelist" method="get">
+                                            <form action="announceList" method="get">
                                                 <div class = "center-box">
                                                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                                     <div class="search-space">
