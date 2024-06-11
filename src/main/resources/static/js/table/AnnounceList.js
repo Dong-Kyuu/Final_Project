@@ -1,10 +1,19 @@
 $(function () {
+
+    let token = $("meta[name='_csrf']").attr("content");
+    let header = $("meta[name='_csrf_header']").attr("content");
+    var loginNum = $("#loginNum").val()
     $(".write-btn").click(function () {
         location.href = "announceWrite";
     });
 
     $('tbody tr').each(function() {
         var department= $(this).data('department');
+        var importance= $(this).data('importance');
+        var annboardNum = $(this).data('annboardnum');
+
+        console.log("loginNum : " + loginNum + ", annboardNum : " + annboardNum)
+
         var listcolor = ""
         if(department == '관리부') {
             listcolor = 'blue';
@@ -17,11 +26,47 @@ $(function () {
         } else if (department == '총무부') {
             listcolor = 'green';
         }
-        console.log('타겟 부서 : ' + department)
+
+        var importanceLev = ""
+        if(importance == '3') {
+            importanceLev = '-lev3'
+        } else if (importance == '2') {
+            importanceLev = '-lev2'
+        }
 
         $(this).addClass('dept-' + listcolor);
+        $(this).children('td:first').addClass('dept-' + listcolor + importanceLev);
         $(this).find('.department').addClass(listcolor);
+        var dis = $(this)
+        $.ajax({
+            url : '../annboard/ViewCheck',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            data : {
+                loginNum : loginNum,
+                annboardNum : annboardNum
+            },
+            type : "post",
+            dataType : "json",
+            success : function(rdata) {
+                if(rdata.OX == 1){
+                    console.log("OX : " + rdata.OX)
+                    dis.find('#check-icon').attr('class', 'mdi mdi-checkbox-marked-outline');
+                }
+            }
+        })
     })
+
+    $('#importancelev').each(function() {
+        // 해당 요소의 값이 3인지 확인
+        if ($(this).val() == '3') {
+            // 가장 가까운 부모 tr 요소에 클래스 lev3 추가
+            $(this).closest('tr').addClass('lev3');
+        } else if ($(this).val() =='2') {
+            $(this).closest('tr').addClass('lev2');
+        }
+    });
 
     // // 검색 모달관련
     // $(document).on('click', '.chevron-icon', function() {
