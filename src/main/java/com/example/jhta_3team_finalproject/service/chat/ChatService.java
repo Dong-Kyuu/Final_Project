@@ -2,7 +2,7 @@ package com.example.jhta_3team_finalproject.service.chat;
 
 
 
-import com.example.jhta_3team_finalproject.cache.RedisUtils;
+import com.example.jhta_3team_finalproject.cache.RedisChatUtils;
 import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 import com.example.jhta_3team_finalproject.domain.chat.ChatParticipate;
@@ -26,7 +26,7 @@ import java.util.List;
 public class ChatService {
 
     private final ChatMapper dao;
-    private final RedisUtils redisUtils;
+    private final RedisChatUtils redisChatUtils;
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     LocalTime localTime = LocalTime.of(0, 0, 0);
@@ -45,8 +45,8 @@ public class ChatService {
             String dateKey = simpleDateFormat.format(date.getTime());
             String redisKey = roomKey + ":" + dateKey; // 방번호:날짜
             Long expiredTime = 1L; // 만료 시간 1주일 부여
-            redisUtils.setAddSets(redisKey, chatMessage); // 키, 값
-            redisUtils.setExpired(redisKey, expiredTime);
+            redisChatUtils.setAddSets(redisKey, chatMessage); // 키, 값
+            redisChatUtils.setExpired(redisKey, expiredTime);
         }
         return chatMessage; // 마지막 메시지를 반환
     }
@@ -68,12 +68,13 @@ public class ChatService {
             String dateKey = simpleDateFormat.format(date.getTime());
             String redisKey = roomKey + ":" + dateKey; // 방번호:날짜
             Long expiredTime = 1L; // 만료 시간 1주일 부여
-            redisUtils.setUpdateSets(redisKey, oldChatMessage, newChatMessage); // 키, old value, new value
-            redisUtils.setExpired(redisKey, expiredTime);
+            redisChatUtils.setUpdateSets(redisKey, oldChatMessage, newChatMessage); // 키, old value, new value
+            redisChatUtils.setExpired(redisKey, expiredTime);
         }
         return result;
     }
-    public int createChatRoom(ChatRoom chatRoom, String chatInviteUserList) throws Exception {
+
+    public ChatParticipate createChatRoom(ChatRoom chatRoom, String chatInviteUserList) throws Exception {
         int result = dao.createChatRoom(chatRoom);
         chatRoom = dao.lastChatRoom();
 
@@ -96,23 +97,33 @@ public class ChatService {
             dao.addChatParticipate(chatParticipate);
         }
 
-        return result;
+        chatParticipate = dao.searchLastRoomUser(chatRoom);
+
+        return chatParticipate;
     }
 
     public List<ChatMessage> searchMessages(ChatMessage chatMessage) throws Exception {
         return dao.searchMessages(chatMessage);
     }
 
-    public List<ChatRoom> searchRoom(ChatRoom chatRoom) throws Exception {
+    public List<ChatParticipate> searchRoom(ChatRoom chatRoom) throws Exception {
         return dao.searchRoom(chatRoom);
     }
 
-    public List<ChatRoom> searchRoomUser(ChatRoom chatRoom) throws Exception {
+    public List<ChatParticipate> searchRoomUser(ChatRoom chatRoom) throws Exception {
         return dao.searchRoomUser(chatRoom);
     }
 
     public List<User> chatUserList(String chatUserId) {
         return dao.chatUserList(chatUserId);
+    }
+
+    public ChatMessage getLastMessageContent(ChatMessage chatMessage) throws Exception {
+        return dao.getLastMessageContent(chatMessage);
+    }
+
+    public int getUnreadMessage(ChatParticipate chatParticipate) throws Exception {
+        return dao.getUnreadMessage(chatParticipate);
     }
 
     public User chatUserProfile(String chatUserId) {

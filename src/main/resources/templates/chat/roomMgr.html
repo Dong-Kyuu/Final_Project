@@ -225,6 +225,8 @@
             $(".mgr-room-screen").fadeOut(300);
         });
 
+
+
         /**
          * 2024-06-10, 초대 유저 검색
          */
@@ -305,53 +307,88 @@
             });
         }
 
-        function createChattingRoom(res) {
-            if (res != null) {
-                console.log(res);
+        function createChattingRoom(d) {
+            if (d != null) {
+                console.log(d);
+
                 let output = '';
-                res.forEach(function (d, idx) {
-                    let img = ''; // 이미지 처리 시
-                    if (this.profile_picture === 'default.png') {
-                        img = "<img src='/image/chat/default.png' />";
+                let img = ''; // 이미지 처리 시
+
+                if (d.profile_picture === 'default.png') {
+                    img = "<img src='/image/chat/default.png' />";
+                } else {
+                    // 업로드된 프로필을 보여주도록 한다. (채팅방 화면은 임시 처리)
+                    img = "<img src='/image/chat/default.png' />";
+                }
+
+                var roomNumber = d.chatRoomNum;
+                var sessionId = d.chatUserId;
+                var entryTime = d.chatEntryTime;
+                var visitTime = d.chatVisitTime;
+                var lastSendTime = d.sendTime;
+                var lastMessageContent = d.messageContent;
+                var roomName = d.roomName;
+                var roomCreateDate = d.roomCreateDate;
+                //var unreadMessageCount = getUnreadMessage(roomNumber, sessionId);
+
+                output += "<li>";
+                output += "<input type='hidden' name='chat_room_num' value='" + roomNumber + "' />";
+                output += "    <input type='hidden' name='chat_room_type' value='multi'/>";
+                output += "    <div class='sender-image'>";
+                output += "        " + img;
+                output += "    </div>";
+                output += "    <div class='mes-detail'>";
+                output += "        <div class='mes-col1' style='padding-top: 20px;'>";
+                output += "            <div class='sender-name'>";
+                output += "                " + roomName;
+                output += "            </div>";
+                output += "            <div class='mes-preview'>";
+                if (lastMessageContent != null) {
+                    output += lastMessageContent.substr(0, 20);
+                }
+                output += "            </div>";
+                output += "        </div>";
+                output += "        <div class='mes-col2'>";
+                output += "            <div>";
+                if(lastSendTime != null) {
+                    if(diffNowTime(lastSendTime)) {
+                        lastSendTime = getTime(lastSendTime);
+                        output += "                <div class='send-time'>" + lastSendTime + "</div>";
+                        output += "                <div class='mes-seen-status'>";
+                        output += "                <span class='new'>new</span>";
+                        output += "                </div>";
                     } else {
-                        // 업로드된 프로필을 보여주도록 한다. (채팅방 화면은 임시 처리)
-                        img = "<img src='/image/chat/default.png' />";
+                        lastSendTime = getDate(lastSendTime);
+                        output += "                <div class='send-time'>" + lastSendTime + "</div>";
                     }
-                    var rn = d.roomName;
-                    var roomNumber = d.chatRoomNum;
-                    var sessionId = d.chatSessionId;
+                }
+                output += "            </div>";
+                output += "        </div>";
+                output += "    </div>";
+                output += "</li>";
 
-                    output += "<li>";
-                    output += "<input type='hidden' name='chat_room_num' value='" + roomNumber + "' />";
-                    output += "    <input type='hidden' name='chat_room_type' value='multi'/>";
-                    output += "    <div class='sender-image'>";
-                    output += "        " + img;
-                    output += "    </div>";
-                    output += "    <div class='mes-detail'>";
-                    output += "        <div class='mes-col1'>";
-                    output += "            <div class='sender-name'>";
-                    output += "                " + rn;
-                    output += "            </div>";
-                    output += "            <div class='mes-preview'>";
-                    output += "                오늘 영업은 잘 되었나요? 결과에 따라 월급 없음";
-                    output += "            </div>";
-                    output += "        </div>";
-                    output += "        <div class='mes-col2'>";
-                    output += "            <div>";
-                    output += "                <div class='send-time'>10:26 AM</div>";
-                    output += "                <div class='mes-seen-status'>";
-                    output += "                    <span class='new'>new</span>";
-                    output += "                    <!-- <i class='material-icons'>done_all</i> -->";
-                    output += "                </div>";
-                    output += "            </div>";
-                    output += "            <span class='mes-count'>3</span>";
-                    output += "        </div>";
-                    output += "    </div>";
-                    output += "</li>";
-
-                }); // each end
-                $(".touch-chatroom").empty().html(output);
+                $(".touch-chatroom").prepend(output);
+                $(".touch-chatroom").off('click');
+                $(".touch-chatroom").bind('click');
             }
+        }
+
+        function getDate(time) {
+            var date = new Date(time);
+            var lastMessageDayStr = `${new Date(time).getFullYear()}-${new Date(time).getMonth() + 1}-${new Date(time).getDate()}`;
+            return lastMessageDayStr;
+        }
+
+        function getTime(time) {
+            var date = new Date(time);
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            var strTime = hours + ':' + minutes + ' ' + ampm;
+            return strTime;
         }
     </script>
     </body>

@@ -1,6 +1,6 @@
 package com.example.jhta_3team_finalproject.service.chat;
 
-import com.example.jhta_3team_finalproject.cache.RedisUtils;
+import com.example.jhta_3team_finalproject.cache.RedisChatUtils;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 import com.example.jhta_3team_finalproject.mybatis.mapper.chat.ChatMapper;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import java.util.*;
 public class RedisService {
 
     private final ChatMapper dao;
-    private final RedisUtils redisUtils;
+    private final RedisChatUtils redisChatUtils;
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     LocalTime localTime = LocalTime.of(0, 0, 0);
 
@@ -50,9 +50,9 @@ public class RedisService {
      * false, 키가 없다면 레디스에 올려준 후 해당 List 는 바로 return
      */
     private List<ChatMessage> getChatMessageList(long num, String key, String dateStr) {
-        if (redisUtils.isKeyExists(key)) {
+        if (redisChatUtils.isKeyExists(key)) {
             log.info("RedisGet");
-            Set<ChatMessage> chatMessageSet = redisUtils.getSets(key);
+            Set<ChatMessage> chatMessageSet = redisChatUtils.getSets(key);
             List<ChatMessage> chatMessageList = new ArrayList<>(chatMessageSet);
             chatMessageList.sort(Comparator.comparing(ChatMessage::getMessageNum));
             return chatMessageList;
@@ -68,8 +68,8 @@ public class RedisService {
                     String dateKey = simpleDateFormat.format(chatMsg.getSendTime());
                     String redisKey = roomKey + ":" + dateKey; // 방번호:날짜
                     Long expiredTime = 1L; // 만료 시간 1주일 부여
-                    redisUtils.setAddSets(redisKey, chatMsg); // 키, 값
-                    redisUtils.setExpired(redisKey, expiredTime);
+                    redisChatUtils.setAddSets(redisKey, chatMsg); // 키, 값
+                    redisChatUtils.setExpired(redisKey, expiredTime);
                 });
             }
             return chatMessageList;

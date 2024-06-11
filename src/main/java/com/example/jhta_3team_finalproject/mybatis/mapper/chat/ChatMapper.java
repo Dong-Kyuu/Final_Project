@@ -22,9 +22,11 @@ public interface ChatMapper {
 
     public int addChatParticipate(ChatParticipate chatParticipate);
 
-    public List<ChatRoom> searchRoom(ChatRoom chatRoom);
+    public List<ChatParticipate> searchRoom(ChatRoom chatRoom);
 
-    public List<ChatRoom> searchRoomUser(ChatRoom chatRoom);
+    public List<ChatParticipate> searchRoomUser(ChatRoom chatRoom);
+
+    public ChatParticipate searchLastRoomUser(ChatRoom chatRoom);
 
     public List<ChatMessage> searchMessages(ChatMessage chatMessage);
 
@@ -37,6 +39,10 @@ public interface ChatMapper {
     public ChatMessage searchNewMessage(ChatMessage chatMessage);
 
     public List<User> chatUserList(String chatUserId);
+
+    public ChatMessage getLastMessageContent(ChatMessage chatMessage);
+
+    public int getUnreadMessage(ChatParticipate chatParticipate);
 
     public User chatUserProfile(String chatUserId);
 

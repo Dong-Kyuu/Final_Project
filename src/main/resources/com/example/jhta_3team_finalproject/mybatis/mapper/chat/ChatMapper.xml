@@ -113,30 +113,56 @@
     <!-- 2024-06-10, 방목록 가져오기 -> 마지막 메시지와 방 정보 -->
     <select id="searchRoomUser" parameterType="chatRoom" resultType="chatParticipate">
         select *
-        from chat_participate
-        join(
-             select max(send_time) as last_send_time, max(message_num) as last_message_num, chat_room_num
-             from chat_message
-             group by chat_room_num
-            ) cm
-        on chat_participate.chat_room_num = cm.chat_room_num
+        from chat_participate cp
+        left join(
+                  select *
+                  from chat_message
+                  where message_num in (select max(message_num)
+                                        from chat_message
+                                        group by chat_room_num)
+                 ) cm
+        on cp.chat_room_num = cm.chat_room_num
         join(
              select *
              from chat_room
             ) cr
-        on chat_participate.chat_room_num = cr.chat_room_num
-        where chat_user_id = #{chatSessionId};
+        on cp.chat_room_num = cr.chat_room_num
+        where chat_user_id = #{chatSessionId}
+        order by send_time desc, room_create_date desc
+    </select>
+
+    <!-- 2024-06-10, 방목록 가져오기 -> 마지막 메시지와 방 정보 -->
+    <select id="searchLastRoomUser" parameterType="chatRoom" resultType="chatParticipate">
+        select *
+        from chat_participate cp
+        left join(
+                  select *
+                  from chat_message
+                  where message_num in (select max(message_num)
+                                        from chat_message
+                                        group by chat_room_num)
+                 ) cm
+        on cp.chat_room_num = cm.chat_room_num
+        join(
+             select *
+             from chat_room
+            ) cr
+        on cp.chat_room_num = cr.chat_room_num
+        where chat_user_id = #{chatSessionId}
+        and cp.chat_room_num = (select max(chat_room_num) from chat_room)
+        order by send_time desc
     </select>
 
     <!-- 2024-06-10, 안 읽은 메시지 수 구해오기 -->
-    <select id="getUnreadMessage">
+    <select id="getUnreadMessage" parameterType="chatParticipate">
         SELECT COUNT(*)
         FROM chat_message
         WHERE send_time BETWEEN (
                                  SELECT chat_visit_time
                                  FROM chat_participate
                                  WHERE chat_room_num = #{chatRoomNum}
-                                 AND chat_user_id = #{sessionId}
+                                 AND chat_user_id = #{chatUserId}
                                 ) AND NOW()
+        AND chat_room_num = #{chatRoomNum}
     </select>
 </mapper>

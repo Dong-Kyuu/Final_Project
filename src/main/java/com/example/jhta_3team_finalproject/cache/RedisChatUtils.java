@@ -3,16 +3,14 @@ package com.example.jhta_3team_finalproject.cache;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Service
-public class RedisUtils {
+public class RedisChatUtils {
 
     private final RedisTemplate<String, ChatMessage> redisTemplate;
 
