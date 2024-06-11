@@ -1,11 +1,23 @@
 package com.example.jhta_3team_finalproject.domain.TourPackage;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
 public class Trip {
     String tripNo;
+
+    @NotBlank(message = "상품 이름을 입력하세요.")
     String tripName;
+
+    @NotNull(message = "상품 가격을 입력하세요.")
+    @Min(value = 0, message = "상품 가격은 0 이상이어야 합니다.")
     int tripPrice;
+
     int tripStock;
     int tripMaxStock;
+
     String regDate;
     String expireDate;
     String tripDate;

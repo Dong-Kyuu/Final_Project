@@ -15,7 +15,8 @@ public class PagingUtil  {
         private int startpage;
         private int endpage;
         private int rowNum;
-
+        private int pagefirst;
+        private int pagelast;
 //        public int getTemp(int listCount, int page, int limit){
 //            return listCount - (page - 1) * limit;
 //        }
@@ -40,8 +41,13 @@ public class PagingUtil  {
             if (endpage > maxpage) endpage = maxpage;
 
             this.rowNum = listcount - (page - 1) * limit;
+
+            this.pagefirst = (page - 1) * limit + 1;//startrow
+            this.pagelast = Math.min(pagefirst + limit - 1, listcount);//endrow
         }
 
+        public int getPagefirst() {return pagefirst;}
+        public int getPagelast() {return pagelast;}
         public int getPage() { return page; }
         public int getLimit() { return limit; }
         public int getListcount() { return listcount; }

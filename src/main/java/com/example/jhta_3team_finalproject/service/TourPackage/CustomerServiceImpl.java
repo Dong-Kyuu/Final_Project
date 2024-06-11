@@ -43,4 +43,9 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer findByCustomerId(String customerId) {
         return customerMapper.findByCustomerId(customerId);
     }
+
+    @Override
+    public void update(Customer customer) {
+        customerMapper.update(customer);
+    }
 }

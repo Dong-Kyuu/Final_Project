@@ -20,4 +20,16 @@
         SELECT * FROM customer WHERE customer_id = #{customerId}
     </select>
 
+    <update id="update">
+        UPDATE customer
+        SET
+            customer_name_kor = #{customerNameKor},
+            customer_name_eng = #{customerNameEng},
+            customer_passport_no = #{customerPassportNo},
+            customer_gender = #{customerGender},
+            customer_phone = #{customerPhone},
+            customer_email = #{customerEmail}
+        WHERE customer_no = #{customerNo}
+    </update>
+
 </mapper>

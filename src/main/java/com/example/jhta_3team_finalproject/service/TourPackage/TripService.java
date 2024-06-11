@@ -29,5 +29,5 @@ public interface TripService {
 
     List<Trip> getAllTrip();
 
-    void saveTrip(String tripName, String tripNumber, int tripPrice, int stockNumber, String regDate, String expireDate, String category, String optionIds, MultipartFile[] images);
+    void saveTrip(Trip trip,MultipartFile[] images);
 }
