@@ -108,8 +108,8 @@
     </select>
 
     <insert id="insertTrip" parameterType="Trip">
-        INSERT INTO trip (trip_no, trip_name, trip_price, trip_stock, reg_date, expire_date, trip_main_img, trip_category, option_ids, file_id)
-        VALUES (#{tripNo}, #{tripName}, #{tripPrice}, #{tripStock}, #{regDate}, #{expireDate}, #{tripMainIMG}, #{tripCategory}, #{optionIds}, #{fileId})
+        INSERT INTO trip (trip_no, trip_name, trip_price, trip_max_stock, reg_date, expire_date, trip_main_img, trip_category, option_ids, file_id)
+        VALUES (#{tripNo}, #{tripName}, #{tripPrice}, #{tripMaxStock}, #{regDate}, #{expireDate}, #{tripMainIMG}, #{tripCategory}, #{optionIds}, #{fileId})
     </insert>
 
     <insert id="insertTripFile" parameterType="TripFile">

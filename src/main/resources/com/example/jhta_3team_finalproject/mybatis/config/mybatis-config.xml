@@ -19,6 +19,7 @@
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/User/UserMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/User/AttendenceMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/AnnounceBoardMapper.xml"/>
+		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/ViewCheckMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/BoardMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/UpfileMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/Table_CommentMapper.xml"/>
@@ -28,6 +29,7 @@
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/TourPackage/TripMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/TourPackage/OptionMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/TourPackage/CartMapper.xml"/>
+		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/calendar/Calendar.xml"/>
 	</mappers>
 
 </configuration>

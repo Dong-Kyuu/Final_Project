@@ -28,12 +28,11 @@
     <div id="contextMenu" class="dropdown clearfix">
         <ul class="dropdown-menu dropNewEvent" role="menu" aria-labelledby="dropdownMenu"
             style="display:block;position:static;margin-bottom:5px;">
-            <li><a tabindex="-1" href="#">카테고리1</a></li>
-            <li><a tabindex="-1" href="#">카테고리2</a></li>
-            <li><a tabindex="-1" href="#">카테고리3</a></li>
-            <li><a tabindex="-1" href="#">카테고리4</a></li>
+            <li><a tabindex="-1" href="#">상품부</a></li>
+            <li><a tabindex="-1" href="#">관리부</a></li>
+            <li><a tabindex="-1" href="#">영업부</a></li>
             <li class="divider"></li>
-            <li><a tabindex="-1" href="#" data-role="close">Close</a></li>
+            <li><a tabindex="-1" href="#" data-role="close">취소</a></li>
         </ul>
     </div>
 
@@ -84,10 +83,9 @@
                         <div class="col-xs-12">
                             <label class="col-xs-4" for="edit-type">구분</label>
                             <select class="inputModal" type="text" name="edit-type" id="edit-type">
-                                <option value="카테고리1">카테고리1</option>
-                                <option value="카테고리2">카테고리2</option>
-                                <option value="카테고리3">카테고리3</option>
-                                <option value="카테고리4">카테고리4</option>
+                                <option value="상품부">상품부</option>
+                                <option value="관리부">관리부</option>
+                                <option value="영업부">영업부</option>
                             </select>
                         </div>
                     </div>
@@ -135,51 +133,43 @@
         </div>
 
         <div class="panel-body">
+            <div class="col-lg-6">
+                <label for="calendar_view">등록자별</label>
+                <div class="input-group" id="names">
+                    <label class="checkbox-inline">
+                        <input class='filter' type="checkbox" value="주선경"
+                               checked>주선경</label>
+                </div>
+            </div>
 
             <div class="col-lg-6">
                 <label for="calendar_view">구분별</label>
                 <div class="input-group">
                     <select class="filter" id="type_filter" multiple="multiple">
-                        <option value="카테고리1">카테고리1</option>
-                        <option value="카테고리2">카테고리2</option>
-                        <option value="카테고리3">카테고리3</option>
-                        <option value="카테고리4">카테고리4</option>
+                        <option value="상품부">상품부</option>
+                        <option value="관리부">관리부</option>
+                        <option value="영업부">영업부</option>
                     </select>
                 </div>
             </div>
 
-            <div class="col-lg-6">
-                <label for="calendar_view">등록자별</label>
-                <div class="input-group">
-                    <label class="checkbox-inline"><input class='filter' type="checkbox" value="정연"
-                                                          checked>정연</label>
-                    <label class="checkbox-inline"><input class='filter' type="checkbox" value="다현"
-                                                          checked>다현</label>
-                    <label class="checkbox-inline"><input class='filter' type="checkbox" value="사나"
-                                                          checked>사나</label>
-                    <label class="checkbox-inline"><input class='filter' type="checkbox" value="나연"
-                                                          checked>나연</label>
-                    <label class="checkbox-inline"><input class='filter' type="checkbox" value="지효"
-                                                          checked>지효</label>
-                </div>
-            </div>
 
         </div>
     </div>
     <!-- /.filter panel -->
 </div>
 <!-- /.container -->
-                <script th:src="@{/js/calendar/jquery.min.js}"></script>
-                <script th:src="@{/js/calendar/bootstrap.min.js}"></script>
-                <script th:src="@{/js/calendar/moment.min.js}"></script>
-                <script th:src="@{/js/calendar/fullcalendar.min.js}"></script>
-                <script th:src="@{/js/calendar/ko.js}"></script>
-                <script th:src="@{/js/calendar/select2.min.js}"></script>
-                <script th:src="@{/js/calendar/bootstrap-datetimepicker.min.js}"></script>
-                <script th:src="@{/js/calendar/main.js}"></script>
-                <script th:src="@{/js/calendar/addEvent.js}"></script>
-                <script th:src="@{/js/calendar/editEvent.js}"></script>
-                <script th:src="@{/js/calendar/etcSetting.js}"></script>
+<script th:src="@{/js/calendar/jquery.min.js}"></script>
+<script th:src="@{/js/calendar/bootstrap.min.js}"></script>
+<script th:src="@{/js/calendar/moment.min.js}"></script>
+<script th:src="@{/js/calendar/fullcalendar.min.js}"></script>
+<script th:src="@{/js/calendar/ko.js}"></script>
+<script th:src="@{/js/calendar/select2.min.js}"></script>
+<script th:src="@{/js/calendar/bootstrap-datetimepicker.min.js}"></script>
+<script th:src="@{/js/calendar/main.js}"></script>
+<script th:src="@{/js/calendar/addEvent.js}"></script>
+<script th:src="@{/js/calendar/editEvent.js}"></script>
+<script th:src="@{/js/calendar/etcSetting.js}"></script>
 </body>
 
 </html>

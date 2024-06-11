@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/annboard")
@@ -45,6 +45,7 @@ public class AnnounceBoardController {
                                   @RequestParam(value = "search", defaultValue = "") String searchWord,
                                   @RequestParam(value = "targetDepartment", defaultValue = "") String targetDepartment,
                                   ModelAndView mv) {
+
 
 
         int limit = 10; // 한 화면에 출력할 로우 갯수
@@ -111,6 +112,7 @@ public class AnnounceBoardController {
         }
 
         AnnounceBoardService.insertFile(boardNum, files); // 저장메서드 호출
+        AnnounceBoardService.autoCheck(AnnounceBoard.getUserNum(), boardNum);
         logger.info(AnnounceBoardService.toString()); //selectKey로 정의한 BOARD_NUM 값 확인
         return "redirect:announceList";
 
@@ -164,7 +166,8 @@ public class AnnounceBoardController {
     public ModelAndView Detail(
             int num, ModelAndView mv,
             HttpServletRequest request,
-            @RequestHeader(value = "referer", required = false) String beforeURL) {
+            @RequestHeader(value = "referer", required = false) String beforeURL
+            ) {
 		/*
 			1. String BeforeURL = request.getHeader("referer"); 의미로
 			   어느 주소에서 Detail로 이동했는지 header의 정보 중 "referer"을 통해 알 수 있다.
@@ -216,5 +219,84 @@ public class AnnounceBoardController {
             rattr.addFlashAttribute("result", "deleteSuccess");
             return "redirect:announceList";
         }
+    }
+
+    @PostMapping("/ViewAction")
+    @ResponseBody
+    public Map<String, Object> viewAction(@RequestParam("loginNum") int loginNum,
+                                          @RequestParam("annboardNum") int annboardNum) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        int beforecheck=AnnounceBoardService.Exist(loginNum, annboardNum);
+        logger.info(String.valueOf(beforecheck));
+        String result = "본적 있는 글입니다.";
+        if(beforecheck != 1) {
+            result = AnnounceBoardService.viewChecking(loginNum, annboardNum);
+            logger.info(result);
+            result="뷰 기록 완료";
+        }
+
+        int OX = AnnounceBoardService.checkedcheck(loginNum, annboardNum);
+        logger.info("OX : " + OX);
+        response.put("status", "success");
+        response.put("result", result);
+        response.put("OX", OX);
+
+
+        return response;
+    }
+
+    @PostMapping("/ViewCheck")
+    @ResponseBody
+    public Map<String, Object> viewCheck(@RequestParam("loginNum") int loginNum,
+                                          @RequestParam("annboardNum") int annboardNum) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        int Checking=AnnounceBoardService.Exist(loginNum, annboardNum);
+        logger.info("뷰 기록 확인");
+        response.put("status", "success");
+        response.put("OX", Checking);
+
+        return response;
+    }
+
+    @PostMapping("/checkAction")
+    @ResponseBody
+    public Map<String, Object> checkAction(@RequestParam("loginNum") int loginNum,
+                                          @RequestParam("annboardNum") int annboardNum) {
+
+        Map<String, Object> response = new HashMap<>();
+        String result = "확인";
+        int addcheck=AnnounceBoardService.addCheck(loginNum, annboardNum);
+
+        if(addcheck != 1) {
+            result = "체킹 실패";
+        }
+        logger.info(result);
+        response.put("status", "success");
+        response.put("result", result);
+
+        return response;
+    }
+
+    @PostMapping("/checkDelete")
+    @ResponseBody
+    public Map<String, Object> checkDelete(@RequestParam("loginNum") int loginNum,
+                                           @RequestParam("annboardNum") int annboardNum) {
+
+        Map<String, Object> response = new HashMap<>();
+        String result = "확인 취소";
+        int addcheck=AnnounceBoardService.deleteCheck(loginNum, annboardNum);
+
+        if(addcheck != 1) {
+            result = "체킹 실패";
+        }
+        logger.info(result);
+        response.put("status", "success");
+        response.put("result", result);
+
+        return response;
     }
 }

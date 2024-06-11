@@ -36,7 +36,7 @@
         <if test="search_field == null and search_word == null and target_department != ''">
             WHERE annboard_department = #{target_department}
         </if>
-        ORDER BY annboard_date desc
+        ORDER BY annboard_fix desc, annboard_importance desc, annboard_date desc
         ) b,
         (SELECT @rownum := 0) r) temp
         WHERE rnum BETWEEN #{start} AND #{end}

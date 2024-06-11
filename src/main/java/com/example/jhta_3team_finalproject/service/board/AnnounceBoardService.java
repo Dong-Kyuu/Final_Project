@@ -22,4 +22,17 @@ public interface AnnounceBoardService {
     List<BoardUpfiles> getFilesByBoardNum(int num);
 
     int boardDelete(int bnum);
+
+    // 글 확인했는지 처리
+    String viewChecking(int loginNum, int annboardNum);
+
+    int Exist(int loginNum, int annboardNum);
+
+    int addCheck(int loginNum, int annboardNum);
+
+    int deleteCheck(int loginNum, int annboardNum);
+
+    int checkedcheck(int loginNum, int annboardNum);
+
+    void autoCheck(int userNum, int boardNum);
 }

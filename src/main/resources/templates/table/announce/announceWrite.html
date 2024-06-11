@@ -88,20 +88,20 @@
                                         <th:block sec:authorize="hasAuthority('ROLE_SUB_MASTER')">
                                             <div class="form-check form-check-success" style="margin-left:30px">
                                                 <label class="form-check-label">
-                                                    <input type="checkbox" class="form-check-input" value="1"> Top Fix
+                                                    <input type="checkbox" class="form-check-input" name="annboardFix" value="1"> Top Fix
                                                 </label>
                                             </div>
                                         </th:block>
-                                        <th:block th:if="${#authentication.principal.getUserDepartment()}=='관리부' and ${#authentication.principal.getUserAuth()}=='ROLE_HEAD'">
+                                        <th:block th:if="${#authentication.principal.getDepartmentId()}==1 and ${#authentication.principal.getUserAuth()}=='ROLE_HEAD'">
                                             <div class="form-check form-check-success" style="margin-left:30px">
                                                 <label class="form-check-label">
-                                                    <input type="checkbox" class="form-check-input" value="1"> Top Fix
+                                                    <input type="checkbox" class="form-check-input" name="annboardFix" value="1"> Top Fix
                                                 </label>
                                             </div>
                                         </th:block>
                                         <div id="defaultCheckbox" class="form-check form-check-success" style="margin-left:30px">
                                             <label class="form-check-label">
-                                                <input type="checkbox" class="form-check-input" disabled value="1"> Top Fix
+                                                <input type="checkbox" class="form-check-input" name="annboardFix" disabled value="1"> Top Fix
                                             </label>
                                         </div>
                                     </div>

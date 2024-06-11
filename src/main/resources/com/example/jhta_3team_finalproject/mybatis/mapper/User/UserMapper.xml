@@ -10,11 +10,25 @@
         WHERE user_id = #{userId}
     </select>
 
+    <select id="departmentPositionInfo" resultType="User">
+        select (select user_departments.department_name from user_departments where department_id=#{department_id}) as departmentName,
+               (select user_positions.position_name  from user_positions where position_id=#{position_id}) as positionName
+        from dual
+    </select>
+
+    <select id="getEmployee" resultType="User" parameterType="int">
+        SELECT u.*, d.department_name AS departmentName, p.position_name AS positionName
+        FROM user u
+                 JOIN user_departments d ON u.department_id = d.department_id
+                 JOIN user_positions p ON u.position_id = p.position_id
+        WHERE u.user_num = #{userNum}
+    </select>
+
+
     <insert id="join">
         insert into user
-        (user_num, user_id, user_password, user_name, user_email, user_phone_number, department_id, user_gender)
-        values (#{userNum}, #{userId}, #{userPassword}, #{userName}, #{userEmail}, #{userPhoneNumber}, #{departmentId},
-                #{userGender})
+        (user_num, user_id, user_password, user_name, user_email, user_phone_number, user_gender)
+        values (#{userNum}, #{userId}, #{userPassword}, #{userName}, #{userEmail}, #{userPhoneNumber},#{userGender})
     </insert>
 
 
@@ -31,10 +45,9 @@
     <!-- 사용자 정보 추가 -->
     <insert id="insert">
         insert into user
-        (user_num, user_id, user_password, user_email, user_name, user_phone_number, department_id, position_id,
-         user_gender, user_profile_picture, user_created_at, user_updated_at, user_auth)
-        values (#{userNum}, #{userId}, #{userPassword}, #{userEmail}, #{userName}, #{userPhoneNumber}, #{departmentId},
-                #{positionId}, #{userGender}, #{userProfilePicture}, NOW(), NOW(), #{userAuth})
+        (user_num, user_id, user_password, user_email, user_name, user_phone_number,user_gender, user_profile_picture, user_created_at, user_updated_at, user_auth)
+        values (#{userNum}, #{userId}, #{userPassword}, #{userEmail}, #{userName}, #{userPhoneNumber}, #{userGender},
+                #{userProfilePicture}, NOW(), NOW(), #{userAuth})
     </insert>
 
     <select id="getListCount" resultType="int">  <!-- 페이징 -->
@@ -42,12 +55,5 @@
     </select>
 
 
-    <select id="getEmployee" resultType="User" parameterType="int">
-        SELECT u.*, d.department_name AS departmentName, p.position_name AS positionName
-        FROM user u
-                 JOIN user_departments d ON u.department_id = d.department_id
-                 JOIN user_positions p ON u.position_id = p.position_id
-        WHERE u.user_num = #{userNum}
-    </select>
 
 </mapper>

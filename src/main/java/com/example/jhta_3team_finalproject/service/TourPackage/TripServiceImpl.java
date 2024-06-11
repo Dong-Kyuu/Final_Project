@@ -2,6 +2,7 @@ package com.example.jhta_3team_finalproject.service.TourPackage;
 import com.example.jhta_3team_finalproject.domain.TourPackage.*;
 import com.example.jhta_3team_finalproject.mybatis.mapper.TourPackage.TripMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,13 +12,17 @@ import java.util.UUID;
 @Service
 public class TripServiceImpl implements TripService{
 
-    private S3Service s3Service;
-
+    private final S3Service s3Service;
     private final TripMapper tripMapper;
+    private final RedisTemplate<String, Integer> redisTemplate;
+
+    private static final String STOCK_PREFIX = "trip:stock:";
 
     @Autowired
-    public TripServiceImpl(TripMapper tripMapper) {
+    public TripServiceImpl(S3Service s3Service, TripMapper tripMapper, RedisTemplate<String, Integer> redisTemplate) {
+        this.s3Service = s3Service;
         this.tripMapper = tripMapper;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -71,7 +76,9 @@ public class TripServiceImpl implements TripService{
     }
 
     @Override
-    public void saveTrip(String tripName, String tripNumber, int tripPrice, int stockNumber, String regDate, String expireDate, String category, String optionIds, MultipartFile[] images) {
+    public void saveTrip(Trip trip,MultipartFile[] images) {
+
+        // S3에 파일 업로드
         String fileId = UUID.randomUUID().toString();
         String mainIMG = s3Service.uploadFile(images[0]);
         String introIMG = s3Service.uploadFile(images[1]);
@@ -79,8 +86,23 @@ public class TripServiceImpl implements TripService{
         String scheduleIMG = s3Service.uploadFile(images[3]);
         String detailIMG = s3Service.uploadFile(images[4]);
 
-        tripMapper.insertTrip(tripNumber, tripName, tripPrice, stockNumber, regDate, expireDate, mainIMG, category, optionIds, fileId);
+        // Trip 객체 저장
+        tripMapper.insertTrip(trip.getTripNo(), trip.getTripName(), trip.getTripPrice(),
+                trip.getTripMaxStock(), trip.getRegDate(), trip.getExpireDate(),
+                mainIMG, trip.getTripCategory(), trip.getOptionIds(), fileId);
         tripMapper.insertTripFile(fileId, mainIMG, introIMG, routeIMG, scheduleIMG, detailIMG);
+
+        // 재고를 Redis에 저장
+        redisTemplate.opsForValue().set(STOCK_PREFIX + trip.getTripNo(), trip.getTripStock());
+    }
+
+    public int getTripStock(String tripNo) {
+        Integer tripStock = redisTemplate.opsForValue().get(STOCK_PREFIX + tripNo);
+        return tripStock != null ? tripStock : 0;
+    }
+
+    public void updateTripStock(String tripNo, int tripStock) {
+        redisTemplate.opsForValue().set(STOCK_PREFIX + tripNo, tripStock);
     }
 
 }

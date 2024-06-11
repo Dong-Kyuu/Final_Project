@@ -3,6 +3,8 @@ package com.example.jhta_3team_finalproject.domain.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,16 +15,19 @@ import java.util.Collection;
 @Getter
 @Setter
 @ToString
+@Slf4j
 public class User implements UserDetails {
     private int userNum;
     private String userId;
+
+
     private String userPassword;
     private String userEmail;
     private String employeeNumber;
     private String userName;
     private String userPhoneNumber;
     private String userAge;
-    private int  departmentId;
+    private int departmentId= 0; // 기본값 설정
     private String departmentName;
     private String userGender; // 기본값 설정
     private int positionId;
@@ -55,10 +60,18 @@ public class User implements UserDetails {
 //        return this.getUserId();
 //    }
 
+
+
+    public int getDepartmentId() {return departmentId;}
+
+
+
     @Override
     public String getPassword() {
         return this.getUserPassword();
     }
+
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -83,4 +96,6 @@ public class User implements UserDetails {
     public void setDepartment(String department) {
         this.departmentName = department;
     }
+
+
 }
