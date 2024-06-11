@@ -4,8 +4,21 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.calendar.CalendarMapper">
     <select id="getlist" resultType="calendar">
-        select cal_id as id, cal_title as title, cal_description as description, cal_start as start, cal_end as end,
-        cal_type as type, cal_background_color as backgroundColor, cal_text_color as textColor, cal_all_day as allDay, users_num as username
+        select cal_id as _id, cal_title as title, cal_description as description, cal_start as start, cal_end as end,
+        cal_type as type, cal_background_color as backgroundColor, cal_text_color as textColor, cal_all_day as allDay, user_name as username
         from calendar
     </select>
+    
+    <insert id="insert" >
+        insert into calendar(cal_title, cal_description, cal_start, cal_end, cal_type, cal_background_color, cal_text_color, cal_all_day, user_name )
+        values(#{title}, #{description}, #{start}, #{end}, #{type},#{backgroundColor}, #{textColor}, #{allDay}, #{username});
+    </insert>
+
+    <update id="update">
+        update calendar
+        set cal_title=#{title}, cal_description =#{description}, cal_start= #{start}, cal_end=#{end}, cal_type = #{type}, cal_background_color=#{backgroundColor}, cal_text_color=#{textColor}, cal_all_day=#{allDay}
+        where cal_id = #{id}
+    </update>
+
+
 </mapper>
