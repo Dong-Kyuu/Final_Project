@@ -8,4 +8,6 @@ public interface CustomerMapper {
     Customer getcustomerId(String id);
 
     Customer findByCustomerId(String customerId);
+
+    void update(Customer customer);
 }

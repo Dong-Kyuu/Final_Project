@@ -1,6 +1,7 @@
 package com.example.jhta_3team_finalproject.cache;
 
 
+import com.example.jhta_3team_finalproject.domain.TourPackage.Trip;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
@@ -61,6 +62,15 @@ public class RedisCacheConfig {
         redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ChatMessage.class)); // ChatDto 클래스를 직렬화
+        return redisTemplate;
+    }
+
+    @Bean
+    public RedisTemplate<String, Integer> tripStockRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Integer> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate;
     }
 }

@@ -69,54 +69,67 @@
                                     <div class="col-lg-12 grid-margin stretch-card">
                                         <div class="card">
                                             <div class="card-body">
+                                                <form id="updateCustomerForm" enctype="multipart/form-data" class="forms-sample">
 
-                                        <h6 class="checkout__title">예약자 정보</h6>
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="checkout__input">
-                                                    <p>성명<span>*</span></p>
-                                                    <input type="text" name="NameKor" placeholder="" th:value="${customer.customerNameKor}">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="checkout__input">
-                                                    <p>영문 성명<span>*</span></p>
-                                                    <input type="text" name="NameEng" placeholder="" th:value="${customer.customerNameEng}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="checkout__input">
-                                                    <p>예약자 여권번호<span>*</span></p>
-                                                    <input type="text" name="Passport" placeholder="" th:value="${customer.customerPassportNo}">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="checkout__input">
-                                                    <p>예약자 성별<span>*</span></p>
-                                                </div>
-                                                <div class="gender">
-                                                    <input type="radio" name="gender" value="man" th:checked="${customer.customerGender == 'M'}"> 남
-                                                    <input type="radio" name="gender" value="woman" th:checked="${customer.customerGender == 'F'}"> 여
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="checkout__input">
-                                                    <p>Phone<span>*</span></p>
-                                                    <input type="text" name="Phone" placeholder="" th:value="${customer.customerPhone}">
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="checkout__input">
-                                                    <p>Email<span>*</span></p>
-                                                    <input type="text" name="Email" placeholder="email@domain.com" th:value="${customer.customerEmail}">
-                                                    <div id="email_message"></div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                                    <h6 class="checkout__title">예약자 정보</h6>
+                                                    <input type="hidden" id="customerNo" name="customerNo" th:value="${customer.customerNo}">
+
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group checkout__input">
+                                                                <p>성명<span>*</span></p>
+                                                                <input type="text" class="form-control" id="customerNameKor" name="customerNameKor"
+                                                                       placeholder="" th:value="${customer.customerNameKor}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group checkout__input">
+                                                                <p>영문 성명<span>*</span></p>
+                                                                <input type="text" class="form-control" id="customerNameEng" name="customerNameEng"
+                                                                       placeholder="" th:value="${customer.customerNameEng}" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group checkout__input">
+                                                                <p>예약자 여권번호<span>*</span></p>
+                                                                <input type="text" class="form-control" id="customerPassportNo" name="customerPassportNo"
+                                                                       placeholder="" th:value="${customer.customerPassportNo}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="checkout__input">
+                                                                <p>성별<span>*</span></p>
+                                                            </div>
+                                                            <div class="gender">
+                                                                <input type="radio" name="customerGender" value="M" th:checked="${customer.customerGender == 'M'}"> 남
+                                                                <input type="radio" name="customerGender" value="F" th:checked="${customer.customerGender == 'F'}"> 여
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group checkout__input">
+                                                                <p>전화번호<span>*</span></p>
+                                                                <input type="text" class="form-control" id="customerPhone" name="customerPhone"
+                                                                       placeholder="" th:value="${customer.customerPhone}" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group checkout__input">
+                                                                <p>Email<span>*</span></p>
+                                                                <input type="text" class="form-control" id="customerEmail" name="customerEmail"
+                                                                       placeholder="email@domain.com" th:value="${customer.customerEmail}" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                                                    <button type="reset" class="btn btn-light">Cancel</button>
+                                                </form>
 
                                             </div>
                                         </div>
@@ -164,6 +177,46 @@
 
 <script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 <script>
+
+    $(document).ready(function () {
+        $('#updateCustomerForm').on('submit', function(event) {
+            event.preventDefault();
+
+            var formData = {
+                customerNo: $("#customerNo").val(),
+                customerNameKor: $("#customerNameKor").val(),
+                customerNameEng: $("#customerNameEng").val(),
+                customerPassportNo: $("#customerPassportNo").val(),
+                customerGender: $("input[name='customerGender']:checked").val(),
+                customerPhone: $("#customerPhone").val(),
+                customerEmail: $("#customerEmail").val()
+            };
+
+            console.log(formData); // formData 객체를 콘솔에 출력
+
+
+            var csrfTokenValue = $("meta[name='_csrf']").attr("content");
+            var csrfHeaderName = $("meta[name='_csrf_header']").attr("content");
+
+            $.ajax({
+                url: "/UpdateCustomer",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(formData),
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+                },
+                success: function (response) {
+                    alert("Customer information updated successfully");
+                    //window.location.href = "/your-redirect-page"; // Replace with the appropriate redirect URL
+                },
+                error: function (xhr, status, error) {
+                    console.error("error : ", error);
+                    alert("An error occurred: " + xhr.responseText);
+                }
+            });
+        });
+    });
 
     document.getElementById('payBtn').addEventListener('click', function () {
 

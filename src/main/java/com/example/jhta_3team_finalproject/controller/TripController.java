@@ -4,18 +4,23 @@ import com.example.jhta_3team_finalproject.domain.TourPackage.tripMailVO;
 import com.example.jhta_3team_finalproject.domain.TourPackage.tripSendMail;
 import com.example.jhta_3team_finalproject.service.TourPackage.*;
 import com.example.jhta_3team_finalproject.domain.TourPackage.*;
+import com.example.jhta_3team_finalproject.util.PagingUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.*;
 
 @Controller
@@ -41,6 +47,7 @@ public class TripController {
     private OptionService optionService;
     private CartService cartService;
 
+    private static final int ANONYMOUS_CUSTOMER_NO = 0;
 
 
     @Autowired
@@ -176,6 +183,9 @@ public class TripController {
 
         // customerNo 이용하여 필요한 작업 수행
         String cookieValue = getCookieValue(request);// 쿠키 내용을 갖고오는 메서드
+
+        DeleteCartCookie(cookieValue,customerNo,response);
+/*
         if(cookieValue!=null) {
             String cartNoValue = getValueBetweenEquals(cookieValue, "cartNo");
             if(!cartNoValue.equals(String.valueOf(customerNo))) {//쿠키의 cartNo와 mem_id비교
@@ -183,20 +193,21 @@ public class TripController {
                 System.out.println("<카트 쿠키 삭제>");
             }
         }
-
-        if(customerNo==0) {
+*/
+        if(customerNo==ANONYMOUS_CUSTOMER_NO) {
             deleteCookie(response, "cart");
             System.out.println("삭제");
             cartService.deleteCart("0");//비로그인회원에게 제공되는 cartNo="0"
         }
         // -----------------------------------------
 
-        int listcount = 0;
-        List<Trip> triplist;
 
         int startRow = (page - 1) * limit + 1;
         int endRow = startRow + limit - 1;
 
+        int listcount = this.getListcount(category,keyword);
+        List<Trip> triplist = this.getTriplist(category,keyword,startRow,endRow,sort);
+/*
         if (category != null && !category.isEmpty() && !Objects.equals(category, "null")) {
             listcount = tripService.getCategoryListCount(category);
             triplist = tripService.getCategoryTripList(startRow, endRow,category, sort);
@@ -207,7 +218,10 @@ public class TripController {
             listcount = tripService.getListCount();
             triplist = tripService.getTripList(startRow, endRow, sort);
         }
+*/
 
+        PagingUtil.Paging pageService = new PagingUtil.Paging(page,limit,listcount);
+        /*
         int maxpage = (listcount + limit - 1) / limit;
         int startpage = ((page - 1) / 10) * 10 + 1;
         int endpage = startpage + 10 - 1;
@@ -217,16 +231,16 @@ public class TripController {
 
         int pagefirst = (page - 1) * limit + 1;//startrow
         int pagelast = Math.min(pagefirst + limit - 1, listcount);//endrow
-
+*/
         model.addAttribute("page", page);
-        model.addAttribute("maxpage", maxpage);
-        model.addAttribute("startpage", startpage);
-        model.addAttribute("endpage", endpage);
+        model.addAttribute("maxpage", pageService.getMaxpage());
+        model.addAttribute("startpage", pageService.getStartpage());
+        model.addAttribute("endpage", pageService.getEndpage());
         model.addAttribute("listcount", listcount);
         model.addAttribute("triplist", triplist);
         model.addAttribute("limit", limit);
-        model.addAttribute("pagefirst", pagefirst);
-        model.addAttribute("pagelast", pagelast);
+        model.addAttribute("pagefirst", pageService.getPagefirst());
+        model.addAttribute("pagelast", pageService.getPagelast());
         model.addAttribute("sort", sort);  // 현재 정렬 기준 추가
         model.addAttribute("keyword", keyword);  // 현재 검색어 추가
         return "tourpackage/Trip_Page";
@@ -254,6 +268,9 @@ public class TripController {
 
         // customerNo 이용하여 필요한 작업 수행
         String cookieValue = getCookieValue(request);// 쿠키 내용을 갖고오는 메서드
+
+        DeleteCartCookie(cookieValue,customerNo,response);
+        /*
         if(cookieValue!=null) {
             String cartNoValue = getValueBetweenEquals(cookieValue, "cartNo");
             if(!cartNoValue.equals(String.valueOf(customerNo))) {//쿠키의 cartNo와 mem_id비교
@@ -261,8 +278,8 @@ public class TripController {
                 System.out.println("<카트 쿠키 삭제>");
             }
         }
-
-        if(customerNo==0) {
+*/
+        if(customerNo==ANONYMOUS_CUSTOMER_NO) {
             System.out.println("삭제");
             deleteCookie(response, "cart");
             cartService.deleteCart("0");//비로그인회원에게 제공되는 cartNo="0"
@@ -311,6 +328,7 @@ public class TripController {
         return "tourpackage/Trip_Detail";
     }
 
+
     @GetMapping("/tripCart")
     public String tripCart(@RequestParam(name = "num", required = false) Integer num,
                            @RequestParam(name="selectedOptions", required = false) String selectedOptions,
@@ -355,7 +373,7 @@ public class TripController {
         System.out.println("cartcheck = " + cartcheck);
 
         /*
-        if(customerNo==0 ||cartcheck==0){
+        if(customerNo==ANONYMOUS_CUSTOMER_NO ||cartcheck==0){
             cartService.insertCart(String.valueOf(customerNo),null,0,null);
             System.out.println("insert CartNo 0");
         }
@@ -488,25 +506,24 @@ public class TripController {
         } else {
             // customer 정보가 없는 경우
             System.out.println("로그인된 사용자가 없습니다.");
+            customer = customerService.findByCustomerId("rlatks15");//임시
         }
-
-        customer = customerService.findByCustomerId("rlatks15");//임시
 
         model.addAttribute("customer",customer);
 
-        int customerNo = customer != null ? customer.getCustomerNo() : 0;
+        int customerNo = customer != null ? customer.getCustomerNo() : ANONYMOUS_CUSTOMER_NO;
+        System.out.println("customerNo = " + customerNo);
 
-        customerNo=1;//임시
+        System.out.println("customerNo = " + customerNo);
 
         Cart cart = cartService.getDetail(String.valueOf(customerNo));
         model.addAttribute("cart",cart);
 
-      //  Trip trip = tripService.getDetail(Integer.parseInt(cart.getTripNo()));
-        Trip trip = tripService.getDetail(1);//임시
+        Trip trip = tripService.getDetail(Integer.parseInt(cart.getTripNo()));
         model.addAttribute("trip",trip);
 
-      //  String optionIds = cart.getOptionIds();
-        String optionIds ="010101-020101";//임시
+        String optionIds = cart.getOptionIds();
+
         List<TripOption> options = getOptions(optionIds);
         model.addAttribute("options",options);
 
@@ -517,6 +534,18 @@ public class TripController {
     public String purchaseSuccess() {
         return"tourpackage/PurchaseSuccess";
     }
+
+    @PostMapping("/UpdateCustomer")
+    public ResponseEntity<String> updateCustomer(@RequestBody Customer customer) {
+
+        System.out.println("udaptecustomer start");
+
+        System.out.println("customer = " + customer.getCustomerId());
+
+        customerService.update(customer);
+        return ResponseEntity.ok("Customer information updated successfully");
+    }
+
 
 
 
@@ -646,9 +675,52 @@ public class TripController {
     @GetMapping("/tripRegister")
     public String tripRegister(Model model) {
         List<TripOption> optionlistAll = optionService.getAllOptions();
-
         model.addAttribute("optionlistAll", optionlistAll);
+        Trip trip = new Trip();
+        model.addAttribute("trip", trip);
         return "tourdepartment/Tour_Register";
+    }
+
+    @PostMapping("/addMainTrip")
+    public String addMainTrip(@RequestParam("TripName") String tripName,
+                              @RequestParam("TripNumber") String tripNumber,
+                              @RequestParam("TripPrice") int tripPrice,
+                              @RequestParam("TripMaxStock") int tripMaxStock,
+                              @RequestParam("RegDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate regDate,
+                              @RequestParam("ExprDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate expireDate,
+                              @RequestParam("category") String category,
+                              @RequestParam("optionIds") String optionIds,
+                              @RequestParam("img") MultipartFile[] images,
+                              Model model) {
+
+        System.out.println("======addMainTrip tripName=" + tripName);
+        System.out.println("======addMainTrip tripNumber=" + tripNumber);
+        System.out.println("======addMainTrip tripPrice=" + tripPrice);
+        System.out.println("======addMainTrip tripMaxStock=" + tripMaxStock);
+        System.out.println("======addMainTrip expireDate=" + expireDate);
+        System.out.println("======addMainTrip category=" + category);
+        System.out.println("======addMainTrip optionIds=" + optionIds);
+
+        try {
+            // Trip 객체 생성 및 저장
+            Trip trip = new Trip();
+            trip.setTripName(tripName);
+            trip.setTripNo(tripNumber);
+            trip.setTripPrice(tripPrice);
+            trip.setTripMaxStock(tripMaxStock);
+            trip.setRegDate(regDate.toString());
+            trip.setExpireDate(expireDate.toString());
+            trip.setTripCategory(category);
+            trip.setOptionIds(optionIds);
+
+            tripService.saveTrip(trip, images);
+
+            model.addAttribute("message", "Trip registered successfully!");
+        } catch (Exception e) {
+            model.addAttribute("error", "Error registering trip: " + e.getMessage());
+        }
+
+        return "redirect:/tripRegister";
     }
 
     @GetMapping("/tripUpdate")
@@ -694,42 +766,37 @@ public class TripController {
         }
         // -----------------------------------------
 
-        int listcount = 0;
-        List<Trip> triplist;
-
         int startRow = (page - 1) * limit + 1;
         int endRow = startRow + limit - 1;
 
-        if (category != null && !category.isEmpty() && !Objects.equals(category, "null")) {
-            listcount = tripService.getCategoryListCount(category);
-            triplist = tripService.getCategoryTripList(startRow, endRow,category, sort);
-        } else if (keyword != null && !keyword.isEmpty() && !Objects.equals(keyword, "null")) {
-            listcount = tripService.getKeywordListCount(keyword);
-            triplist = tripService.getTripListByKeyword(startRow, endRow,keyword,  sort);
-        } else {
-            listcount = tripService.getListCount();
-            triplist = tripService.getTripList(startRow, endRow, sort);
-        }
+        int listcount = this.getListcount(category,keyword);
+        List<Trip> triplist = this.getTriplist(category,keyword,startRow,endRow,sort);
 
-        int maxpage = (listcount + limit - 1) / limit;
-        int startpage = ((page - 1) / 10) * 10 + 1;
-        int endpage = startpage + 10 - 1;
-        if (endpage > maxpage) {
-            endpage = maxpage;
-        }
 
-        int pagefirst = (page - 1) * limit + 1;//startrow
-        int pagelast = Math.min(pagefirst + limit - 1, listcount);//endrow
+        //
+        PagingUtil.Paging pageService = new PagingUtil.Paging(page,limit,listcount);
+
+     /*
+int maxpage = (listcount + limit - 1) / limit;
+int startpage = ((page - 1) / 10) * 10 + 1;
+int endpage = startpage + 10 - 1;
+if (endpage > maxpage) {
+    endpage = maxpage;
+}
+
+int pagefirst = (page - 1) * limit + 1;//startrow
+int pagelast = Math.min(pagefirst + limit - 1, listcount);//endrow
+*/
 
         model.addAttribute("page", page);
-        model.addAttribute("maxpage", maxpage);
-        model.addAttribute("startpage", startpage);
-        model.addAttribute("endpage", endpage);
+        model.addAttribute("maxpage",pageService.getMaxpage());
+        model.addAttribute("startpage",pageService.getStartpage());
+        model.addAttribute("endpage", pageService.getEndpage());
         model.addAttribute("listcount", listcount);
         model.addAttribute("triplist", triplist);
         model.addAttribute("limit", limit);
-        model.addAttribute("pagefirst", pagefirst);
-        model.addAttribute("pagelast", pagelast);
+        model.addAttribute("pagefirst", pageService.getPagefirst());
+        model.addAttribute("pagelast", pageService.getPagelast());
         model.addAttribute("sort", sort);  // 현재 정렬 기준 추가
         model.addAttribute("keyword", keyword);  // 현재 검색어 추가
         //--------------------------------------------------------------------------------
@@ -754,27 +821,7 @@ public class TripController {
         return "tourdepartment/Tour_Management";
     }
 
-    @PostMapping("/addMainTrip")
-    public String addMainTrip(@RequestParam("TripName") String tripName,
-                              @RequestParam("TripNumber") String tripNumber,
-                              @RequestParam("TripPrice") int tripPrice,
-                              @RequestParam("StockNumber") int stockNumber,
-                              @RequestParam("RegDate") String regDate,
-                              @RequestParam("ExprDate") String expireDate,
-                              @RequestParam("category") String category,
-                              @RequestParam("optionid") String optionIds,
-                              @RequestParam("img") MultipartFile[] images,
-                              Model model) {
 
-        try {
-            tripService.saveTrip(tripName, tripNumber, tripPrice, stockNumber, regDate, expireDate, category, optionIds, images);
-            model.addAttribute("message", "Trip registered successfully!");
-        } catch (Exception e) {
-            model.addAttribute("error", "Error registering trip: " + e.getMessage());
-        }
-
-        return "redirect:/tripRegister";
-    }
 
     //------------------------------
     //model.addAttribute
@@ -919,5 +966,42 @@ public class TripController {
         System.out.println("Cart.TripNo="+cart.getTripNo());
         modelAttribute(model, trip, cart, total_price, product_Num, options);
     }
+
+//---------
+    private int getListcount(String category,String keyword){
+        if (isValidString(category)) {
+            return tripService.getCategoryListCount(category);
+        } else if (isValidString(keyword)) {
+            return tripService.getKeywordListCount(keyword);
+        } else {
+            return tripService.getListCount();
+        }
+    }
+
+    private List<Trip> getTriplist(String category,String keyword,int startRow,int endRow,String sort){
+        if (isValidString(category)) {
+            return tripService.getCategoryTripList(startRow, endRow,category, sort);
+        } else if (isValidString(keyword)) {
+            return tripService.getTripListByKeyword(startRow, endRow,keyword,  sort);
+        } else {
+            return tripService.getTripList(startRow, endRow, sort);
+        }
+    }
+
+    private boolean isValidString(String str) {
+        return str != null && !str.isEmpty() && !Objects.equals(str, "null");
+    }
+//--------------
+
+    private void DeleteCartCookie(String cookieValue, int customerNo, HttpServletResponse response) {
+        if(cookieValue!=null) {
+            String cartNoValue = getValueBetweenEquals(cookieValue, "cartNo");
+            if(!cartNoValue.equals(String.valueOf(customerNo))) {//쿠키의 cartNo와 mem_id비교
+                deleteCookie(response, "cart");
+                System.out.println("<카트 쿠키 삭제>");
+            }
+        }
+    }
+
     //------------------------------
 }
