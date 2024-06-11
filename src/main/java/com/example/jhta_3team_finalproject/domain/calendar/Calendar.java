@@ -9,9 +9,9 @@ import java.io.Serializable;
 @ToString
 @Setter
 @Getter
-public class Calendar implements Serializable {
+public class Calendar  {
     private int _id;
-    transient private int id;
+    private int id;
     private String title;
     private String description;
     private String start;
@@ -22,10 +22,16 @@ public class Calendar implements Serializable {
     private boolean allDay;
     private String username;
 
-    public void set_id(){
+    public void set_id(int id){
         this._id = id;
+        this.id= id;
     }
     public int get_id(){
         return id;
+    }
+
+    public void setId(int id){
+        this._id = id;
+        this.id = id;
     }
 }

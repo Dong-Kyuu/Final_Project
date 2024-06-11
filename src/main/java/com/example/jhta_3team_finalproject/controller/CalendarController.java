@@ -1,10 +1,11 @@
 package com.example.jhta_3team_finalproject.controller;
 
+import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.domain.calendar.Calendar;
 import com.example.jhta_3team_finalproject.service.calendar.CalendarService;
-import com.example.jhta_3team_finalproject.service.table.TableCommentService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,10 +36,28 @@ public class CalendarController {
         return  cs.getlist();
     }
 
-
     @RequestMapping(value = "/mycalendar", method = RequestMethod.GET)
     public String test() {
         return "calendar/mycalendar";
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/insert", method = RequestMethod.GET)
+    public int insert(Calendar calendar, @AuthenticationPrincipal User user) {
+
+        calendar.setUsername(user.getUsername());
+
+        return cs.insert(calendar);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/update", method = RequestMethod.GET)
+    public int update(Calendar calendar, @AuthenticationPrincipal User user) {
+
+        calendar.setUsername(user.getUsername());
+
+        return cs.update(calendar);
+    }
+
 
 }

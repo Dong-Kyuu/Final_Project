@@ -119,6 +119,18 @@ var calendar = $('#calendar').fullCalendar({
           if (array.allDay && array.start !== array.end) {
             array.end = moment(array.end).add(1, 'days'); // 이틀 이상 AllDay 일정인 경우 달력에 표기시 하루를 더해야 정상출력
           }
+
+          let output = "";
+
+          $(response).each(function (index, item){
+            output += '<label class="checkbox-inline">';
+            output += '<input class="filter" type="checkbox" value='+ item.username;
+            output +=   ' checked >'+ item.username+'</label> </div>';
+          })
+
+          $(".panel .col-lg-6 .input-group#names").html(output)
+
+
           return array;
         });
         console.log(response)
@@ -142,10 +154,17 @@ var calendar = $('#calendar').fullCalendar({
     //리사이즈한 일정 업데이트
     $.ajax({
       type: "get",
-      url: "",
+      url: "/cal/update",
       data: {
-        //id: event._id,
-        //....
+          id : event._id,
+          title: event.title,
+          start: event.start,
+          end: event.end,
+          description: event.description,
+          type: event.type,
+          backgroundColor: event.backgroundColor,
+          textColor: event.textColor,
+          allDay: event.allDay
       },
       success: function (response) {
         alert('수정: ' + newDates.startDate + ' ~ ' + newDates.endDate);

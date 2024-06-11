@@ -11,4 +11,7 @@ public interface CalendarMapper {
     public List<Calendar> getlist();
 
 
+    int insert(Calendar calendar);
+
+    int update(Calendar calendar);
 }

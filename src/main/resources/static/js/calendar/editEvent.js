@@ -81,9 +81,18 @@ var editEvent = function (event, element, view) {
         //일정 업데이트
         $.ajax({
             type: "get",
-            url: "",
+            url: "/cal/update",
             data: {
-                //...
+                id : event._id,
+                title: event.title,
+                start: event.start,
+                end: event.end,
+                description: event.description,
+                type: event.type,
+                backgroundColor: event.backgroundColor,
+                textColor: event.textColor,
+                allDay: event.allDay
+
             },
             success: function (response) {
                 alert('수정되었습니다.')
