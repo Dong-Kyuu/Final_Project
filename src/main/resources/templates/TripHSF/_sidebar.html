@@ -2,38 +2,25 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Sidebar Fragment</title>
-    <th:block th:replace="~{HSF/_navbar ::navbar}"></th:block>
+    <th:block th:replace="~{TripHSF/_navbar ::navbar}"></th:block>
+
+    <style>
+
+        #sidebar .nav {
+            position: fixed;
+        }
+
+    </style>
 </head>
 <body>
 <nav class="sidebar sidebar-offcanvas" id="sidebar" th:fragment="sidebar">
-    <ul class="nav">
-        <li class="nav-item nav-profile">
-            <a href="#" class="nav-link">
-                <div class="nav-profile-image">
-                    <th:block th:with="profilePicture=${#authentication.principal.profile_picture}">
-                        <img th:src="@{|../image/${profilePicture}|}" alt="profile">
-                    </th:block>
-                    <span class="login-status online"></span>
-                    <!--change to offline or busy as needed-->
-                </div>
-                <div class="nav-profile-text d-flex flex-column">
-                    <span class="font-weight-bold mb-2" th:text="${#authentication.principal.name}"></span>
-                    <span class="text-secondary text-small" th:text="${#authentication.principal.department}"></span>
-                </div>
-                <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
-            </a>
-        </li>
+    <ul class="nav" style=" position: fixed;">
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#dashboard-pages" aria-expanded="false" aria-controls="dashboard-pages">
-                <span class="menu-title">대시보드</span>
-                <i class="menu-arrow"></i>
+            <a class="nav-link" data-bs-toggle="collapse" href="tripPage" aria-expanded="false" aria-controls="dashboard-pages">
+                <span class="menu-title">Home</span>
                 <i class="mdi mdi-home menu-icon"></i>
             </a>
-            <div class="collapse" id="dashboard-pages">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/cal/show}">캘린더</a></li>
-                </ul>
-            </div>
+
         </li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
@@ -43,22 +30,20 @@
             </a>
             <div class="collapse" id="general-pages">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/user/info}">내 정보</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/user/updateProcess}">내 정보 수정</a></li>
-                    <li class="nav-item"><a class="nav-link">출퇴근 관리</a></li>
+                    <li class="nav-item"><a class="nav-link" >내 정보</a></li>
+                    <li class="nav-item"><a class="nav-link" >내 정보 수정</a></li>
                 </ul>
             </div>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-                <span class="menu-title">사내 게시판</span>
+                <span class="menu-title">게시판</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-crosshairs-gps menu-icon"></i>
             </a>
             <div class="collapse" id="ui-basic">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/table/freelist}">자유게시판</a></li>
-                    <li class="nav-item"><a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li>
+                    <li class="nav-item"><a class="nav-link"> 자유게시판</a></li>
                 </ul>
             </div>
         </li>
@@ -70,51 +55,55 @@
             </a>
             <div class="collapse" id="chat-pages">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/chat/chatview}">채팅</a></li>
+                    <li class="nav-item"><a class="nav-link" >채팅</a></li>
                 </ul>
             </div>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#trip-pages" aria-expanded="false" aria-controls="trip-pages">
-                <span class="menu-title">여행부서</span>
+                <span class="menu-title">여행</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-airplane menu-icon"></i>
             </a>
             <div class="collapse" id="trip-pages">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/tripDepartment}">여행부</a></li>
+                    <li class="nav-item"><a class="nav-link" href="tripPage">전체보기</a></li>
+                    <li class="nav-item"><a class="nav-link" href="tripPage?category=WEU">서유럽</a></li>
+                    <li class="nav-item"><a class="nav-link" href="tripPage?category=CEU">센트럴유럽</a></li>
+                    <li class="nav-item"><a class="nav-link" href="tripPage?category=EEU">동유럽</a></li>
+                    <li class="nav-item"><a class="nav-link" href="tripPage?category=SEU">스위트유럽 22일</a></li>
+                    <li class="nav-item"><a class="nav-link" href="tripPage?category=DEU">돌체비타유럽 26일</a></li>
                 </ul>
             </div>
         </li>
-        <li class="nav-item" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-            <a class="nav-link" data-bs-toggle="collapse" href="#admin-pages" aria-expanded="false" aria-controls="admin-pages">
-                <span class="menu-title">관리</span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-settings menu-icon"></i>
-            </a>
-            <div class="collapse" id="admin-pages">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link" href="#">근태 관리</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">직원 정보 관리</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">신규 등록 사원</a></li>
-                </ul>
-            </div>
-        </li>
+
         <li class="nav-item">
-            <a class="nav-link" href="pages/icons/mdi.html">
-                <span class="menu-title">Icons</span>
-                <i class="mdi mdi-contacts menu-icon"></i>
+            <a class="nav-link" data-bs-toggle="collapse" href="#general-pages1" aria-expanded="false" aria-controls="general-pages">
+                <span class="menu-title">장바구니</span>
+                <i class="menu-arrow"></i>
+                <i class="mdi mdi-cart-outline menu-icon ::before"></i>
             </a>
+            <div class="collapse" id="general-pages1">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"><a class="nav-link" href="tripCart" >장바구니</a></li>
+                </ul>
+            </div>
         </li>
+
         <li class="nav-item sidebar-actions">
             <span class="nav-link">
                 <div class="border-bottom">
-                    <h6 class="font-weight-normal mb-3">Projects</h6>
                 </div>
-                <button class="btn btn-block btn-lg btn-gradient-primary mt-4">+ Add a project</button>
+                <div class="shop__sidebar__search" style="padding-top: 20px;">
+                    <form action="/tripPage">
+                        <input type="text" name="keyword" placeholder="Search..." th:value="${keyword}" onchange="sortProducts()">
+                        <button type="submit"> <i class="mdi mdi-magnify"></i></button>
+                    </form>
+                </div>
             </span>
         </li>
     </ul>
 </nav>
+
 </body>
 </html>

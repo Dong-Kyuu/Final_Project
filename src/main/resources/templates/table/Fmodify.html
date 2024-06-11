@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Purple Admin</title>
+    <link rel="stylesheet" th:href="@{../assets/vendors/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{../assets/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{../css/table/list.css}">
+    <link rel="stylesheet" th:href="@{../css/table/write.css}">
+    <link rel="stylesheet" th:href="@{../assets/css/style.css}">
+    <link rel="shortcut icon" th:href="@{../assets/images/favicon.ico}"/>
+
+    <!-- js -->
+    <script th:src="@{/js/jquery-3.7.1.js}"></script>
+    <script th:src="@{../js/table/Fmodify.js}"></script>
+
+</head>
+<body>
+
+<div class="container-scroller">
+    <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
+
+    <div class="container-fluid page-body-wrapper">
+        <th:block th:replace="~{HSF/_sidebar :: sidebar}"></th:block>
+
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h4 class="page-title"> 자유게시판 - 글 수정 </h4>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">게시판</li>
+                            <li class="breadcrumb-item"><a href="freelist">자유 게시판</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">글 수정</li>
+                        </ol>
+                    </nav>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <form class="forms-sample" action="modifyAction" method="post" enctype="multipart/form-data"
+                                      name="freewrite" id="writeForm">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    <input type="hidden" th:name="boardNum" th:value="${bdata.boardNum}">
+                                    <input type="hidden" id="getDepartment" th:value="${bdata.boardDepartment}">
+
+                                    <input type="hidden" id="checkupfile" th:name="check" th:value="false">
+                                    <div class="form-group row" style="display: none">
+                                        <label class="col-sm-1 col-form-label">Name</label>
+                                        <div class="col-sm-5">
+                                            <input type="text" class="form-control" name="userNum"
+                                                   th:value="${#authentication.principal.userNum}"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-1 col-form-label">Title</label>
+                                        <div class="col-sm-5">
+                                            <input type="text" class="form-control" name="boardTitle"
+                                                   id="board_subject" placeholder="제목을 입력해주세요." th:value="${bdata.boardTitle}"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group form-group-inline">
+                                        <label class="col-sm-1 col-form-label margin" for="exampleFormControlSelect2">Department</label>
+                                        <select class="form-control department-choice" id="exampleFormControlSelect2" name="boardDepartment">
+                                            <option>ALL</option>
+                                            <option>인사부</option>
+                                            <option>관리부</option>
+                                            <option>영업부</option>
+                                            <option>총무부</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-1 col-form-label">Upload</label>
+                                        <div class="col-sm-6 make-flex" style="display:flex">
+                                            <textarea type="text" class="W-control2 form-control H-control upfileview" id="uploaded-files"
+                                                      placeholder="파일을 업로드하세요." readonly></textarea>
+
+                                            <button type="button" id="upload-btn"
+                                                    class="btn btn-inverse-info btn-icon W-control">
+                                                <i class="mdi mdi-upload btn-icon-prepend"></i></button>
+                                            <input type="file" id="upfile" name="uploadfile[]" style="display:none"
+                                                   multiple>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="board_content">Content</label>
+                                        <textarea class="form-control" name="boardContent" id="board_content" rows="20"
+                                                  placeholder="내용을 입력해주세요.">[[${bdata.boardContent}]]</textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-gradient-primary me-2">수정</button>
+                                    <button class="btn btn-light">취소</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script th:src="@{../assets/vendors/js/vendor.bundle.base.js}"></script>
+<script th:src="@{../assets/js/off-canvas.js}"></script>
+<script th:src="@{../assets/js/hoverable-collapse.js}"></script>
+<script th:src="@{../assets/js/misc.js}"></script>
+<script th:src="@{../assets/js/file-upload.js}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var upfiles = /*[[${upfiles}]]*/ [];
+    console.log("upfiles = ", upfiles);
+
+    var fileNames = upfiles.map(function(file) {
+        return file.upfilesOriginalFileName;
+    }).join('\n\n ');
+
+    $('#uploaded-files').val(fileNames);
+    /*]]>*/
+</script>
+</body>
+</html>

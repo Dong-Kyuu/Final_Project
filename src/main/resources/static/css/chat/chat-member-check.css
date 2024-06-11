@@ -1,6 +1,6 @@
     /* variables */
     :root {
-        --main-color: #67a3e4;
+        --main-color: #8ec9d2;
         --connection-status: #4FE02B;
         --time-status: #DAFFED;
         --text-primary-color: #4D4C4C;
@@ -9,7 +9,7 @@
     .main-container {
         background-color: white;
         max-width: 400px;
-        height: 300px;
+        height: 235px;
         /* margin: 20px auto; */
         /* border: 1px solid lightgrey; */
         /* -webkit-box-shadow: 0px 0px 11px -6px rgb(0 0 0 / 50%); */
@@ -70,7 +70,7 @@
             &:after {
                 position: absolute;
                 content: "";
-                border: 2px solid #67a3e4;
+                border: 2px solid #60a5fa;
                 height: 40px;
                 width: 40px;
                 border-radius: 50%;
@@ -116,7 +116,7 @@
         }
 
         &::-webkit-scrollbar-thumb {
-            background: #67a3e4;
+            background: #60a5fa;
             /* 스크롤바 색상 */
             border-radius: 2px;
             /* 스크롤바 둥근 테두리 */

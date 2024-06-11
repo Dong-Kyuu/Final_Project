@@ -47,19 +47,16 @@ public class InqCommentServiceImpl implements InqCommentService {
 
     @Override
     public JsonArray getCommentJsonList(int commentBoardNum, int state) {
-        JsonArray array = new JsonArray();
+        final int ASC = 2;
 
-        String sort = "asc"; // 등록순
-        if (state == 2) {         // 최신순
-            sort = "desc";
-        }
+        JsonArray array = new JsonArray();
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("commBoardNum", commentBoardNum);
-        map.put("sort", sort);
+        map.put("sort", "asc");
 
         List<InqueryComment> list = dao.getCommentList(map);
-        if (state == 2) // 최신순
+        if (state == ASC) // 최신순
             Collections.sort(list, Collections.reverseOrder());
         else // 등록순
             Collections.sort(list);

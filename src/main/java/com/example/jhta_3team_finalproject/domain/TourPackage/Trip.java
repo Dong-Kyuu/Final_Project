@@ -1,4 +1,5 @@
 package com.example.jhta_3team_finalproject.domain.TourPackage;
+
 public class Trip {
     String tripNo;
     String tripName;
@@ -11,6 +12,9 @@ public class Trip {
     String fileId;
     String tripMainIMG;
     String tripCategory;
+    String optionIds;
+
+
 
     public String getTripNo() {
         return tripNo;
@@ -78,5 +82,6 @@ public class Trip {
     public void setTripCategory(String tripCategory) {
         this.tripCategory = tripCategory;
     }
-
+    public String getOptionIds() {return optionIds;}
+    public void setOptionIds(String optionIds) {this.optionIds = optionIds;}
 }

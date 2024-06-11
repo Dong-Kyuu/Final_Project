@@ -29,7 +29,7 @@ RTE_DefaultConfig.maxWidthForMobile = 992; // When the screen (browser window) g
 RTE_DefaultConfig.urlType = "default";  //default(do nothing),absolute(all change to http(s)://...),relative(all change to /...)
 
 RTE_DefaultConfig.enableDragDrop = true; // Enables or disables drag-and-drop support for the editor.
-RTE_DefaultConfig.enableObjectResizing = true; //Specifies whether or not to allow the users resize an object winthin the RichTextEditor.
+RTE_DefaultConfig.enableObjectResizing = true; //Specifies whether or not to allow the user resize an object winthin the RichTextEditor.
 RTE_DefaultConfig.toggleBorder = true; //Specifies the ToggleBorder state. ToggleBorder is a handy function which allows you to see the borders without setting things to border = 1 or something like that in code.
 RTE_DefaultConfig.readOnly = false; //Gets or sets a value which indicates whether the RichTextEditor should be an active HTML editor, or a read-only document viewer.
 

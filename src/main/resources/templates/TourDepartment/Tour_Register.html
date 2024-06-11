@@ -41,75 +41,72 @@
                             <div class="card-body">
                                 <h4 class="card-title">Main Trip</h4>
                                 <p class="card-description"> Trip Info </p>
-                                <form class="forms-sample">
+                                <form th:action="addMainTrip" method="post" enctype="multipart/form-data"
+                                      name="addMainTrip" class="forms-sample">
                                     <div class="form-group">
-                                        <label for="exampleInputUsername1">Trip Name</label>
-                                        <input type="text" class="form-control" id="exampleInputUsername1"
-                                               placeholder="Trip Name">
+                                        <label for="TripName">Trip Name</label>
+                                        <input type="text" class="form-control" id="TripName"
+                                               placeholder="Enter Trip Name">
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Trip Number</label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1"
-                                               placeholder="Trip Number">
+                                        <label for="TripNumber">Trip Number</label>
+                                        <input type="text" class="form-control" id="TripNumber"
+                                               placeholder="이건 자동생성으로 만들어야할듯">
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="exampleInputPassword1">Trip Price</label>
+                                        <label for="TripPrice">Trip Price</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text bg-gradient-primary text-white">$</span>
+                                                <span class="input-group-text bg-gradient-primary text-white">₩</span>
                                             </div>
-                                            <input type="text" class="form-control"
+                                            <input type="text" class="form-control" id="TripPrice"
                                                    aria-label="Amount (to the nearest dollar)">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">.00</span>
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputConfirmPassword1">Stock Number</label>
-                                        <input type="text" class="form-control" id="exampleInputConfirmPassword1"
-                                               placeholder="Stock Number">
+                                        <label for="StockNumber">Stock Number</label>
+                                        <input type="text" class="form-control" id="StockNumber"
+                                               placeholder="00명">
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputConfirmPassword1">Register Date(등록일)</label>
-                                        <input type="text" class="form-control" id="exampleInputConfirmPassword1"
-                                               placeholder="Stock Number">
+                                        <label for="RegDate">Register Date(등록일)</label>
+                                        <input type="text" class="form-control" id="RegDate"
+                                               placeholder="yyyy-mm-dd">
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputConfirmPassword1">Expire Date(등록 만료일)</label>
-                                        <input type="text" class="form-control" id="exampleInputConfirmPassword1"
-                                               placeholder="Stock Number">
+                                        <label for="ExprDate">Expire Date(등록 만료일)</label>
+                                        <input type="text" class="form-control" id="ExprDate"
+                                               placeholder="yyyy-mm-dd">
                                     </div>
 
-                                    <div class="form-group row">
-                                        <label for="exampleInputConfirmPassword1">Category</label>
+                                    <div class="form-group">
+                                        <label for="category">Category</label>
                                         <div class="col-sm-9">
-                                            <select class="form-control">
-                                                <option>Category1</option>
-                                                <option>Category2</option>
-                                                <option>Category3</option>
-                                                <option>Category4</option>
+                                            <select class="form-control" id="category" >
+                                                <option>WEU</option>
+                                                <option>CEU</option>
+                                                <option>EEU</option>
+                                                <option>SEU</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputConfirmPassword1">OptionIds(상품옵션번호)</label>
+                                        <label for="optionid"></label>
                                         <div class="btn-group-vertical" role="group" aria-label="Basic example">
                                             <div class="btn-group">
                                                 <button type="button"
                                                         class="btn btn-outline-secondary dropdown-toggle"
-                                                        data-bs-toggle="dropdown">Dropdown
+                                                        data-bs-toggle="dropdown">OptionIds(상품옵션번호)
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item">Go back</a>
-                                                    <a class="dropdown-item">Delete</a>
-                                                    <a class="dropdown-item">Swap</a>
+                                                    <a class='dropdown-item' th:each="list,status : ${optionlistAll}"
+                                                       th:classappend="'-' + ${status.count}" th:text="${list.optionName}"
+                                                       onclick="addOptionId(this)"></a>
                                                 </div>
                                             </div>
                                         </div>
-                                        <input type="text" class="form-control" id="exampleInputConfirmPassword1"
-                                               placeholder="Stock Number">
+                                        <input type="text" class="form-control" id="optionid" placeholder="눌러서 추가하시오">
                                     </div>
 
                                     <p class="card-description"> Trip Image Upload</p>
@@ -174,12 +171,135 @@
                                     </div>
 
                                     <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
-                                    <button class="btn btn-light">Cancel</button>
+                                    <button type="reset" class="btn btn-light">Cancel</button>
                                 </form>
                             </div>
                         </div>
                     </div>
 
+                    <div class="col-md-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Option Trip</h4>
+                                <p class="card-description"> Trip Info </p>
+                                <form th:action="addOptionTrip" method="post" enctype="multipart/form-data"
+                                      name="addOptionTrip" class="forms-sample">
+                                    <div class="form-group">
+                                        <label for="OptionName">Option Name</label>
+                                        <input type="text" class="form-control" id="OptionName"
+                                               placeholder="Enter Option Name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="OptionNumber">Option Number</label>
+                                        <input type="text" class="form-control" id="OptionNumber"
+                                               placeholder="이건 자동생성으로 만들어야할듯">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="OptionPrice">Option Price</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text bg-gradient-primary text-white">₩</span>
+                                            </div>
+                                            <input type="text" class="form-control" id="OptionPrice"
+                                                   aria-label="Amount (to the nearest dollar)">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="StockNumber2">Stock Number</label>
+                                        <input type="text" class="form-control" id="StockNumber2"
+                                               placeholder="00명">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="OptionRegDate">Register Date(등록일)</label>
+                                        <input type="text" class="form-control" id="OptionRegDate"
+                                               placeholder="yyyy-mm-dd">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="OptionExprDate">Expire Date(등록 만료일)</label>
+                                        <input type="text" class="form-control" id="OptionExprDate"
+                                               placeholder="yyyy-mm-dd">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="city">City</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" id="city">
+                                                <option>WEU</option>
+                                                <option>CEU</option>
+                                                <option>EEU</option>
+                                                <option>SEU</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <p class="card-description"> Trip Image Upload</p>
+                                    <div class="form-group">
+                                        <label>Main Image</label>
+                                        <input type="file" name="img[]" class="file-upload-default">
+                                        <div class="input-group col-xs-12">
+                                            <input type="text" class="form-control file-upload-info" disabled
+                                                   placeholder="Upload Image">
+                                            <span class="input-group-append">
+                            <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
+                          </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Intorduce Image</label>
+                                        <input type="file" name="img[]" class="file-upload-default">
+                                        <div class="input-group col-xs-12">
+                                            <input type="text" class="form-control file-upload-info" disabled
+                                                   placeholder="Upload Image">
+                                            <span class="input-group-append">
+                            <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
+                          </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Route Image</label>
+                                        <input type="file" name="img[]" class="file-upload-default">
+                                        <div class="input-group col-xs-12">
+                                            <input type="text" class="form-control file-upload-info" disabled
+                                                   placeholder="Upload Image">
+                                            <span class="input-group-append">
+                            <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
+                          </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Schedule Image</label>
+                                        <input type="file" name="img[]" class="file-upload-default">
+                                        <div class="input-group col-xs-12">
+                                            <input type="text" class="form-control file-upload-info" disabled
+                                                   placeholder="Upload Image">
+                                            <span class="input-group-append">
+                            <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
+                          </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Detail Image</label>
+                                        <input type="file" name="img[]" class="file-upload-default">
+                                        <div class="input-group col-xs-12">
+                                            <input type="text" class="form-control file-upload-info" disabled
+                                                   placeholder="Upload Image">
+                                            <span class="input-group-append">
+                            <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
+                          </span>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                                    <button type="reset" class="btn btn-light">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -212,5 +332,18 @@
 <!-- Custom js for this page -->
 <script th:src="@{../../assets/js/file-upload.js}"></script>
 <!-- End custom js for this page -->
+
+<script th:inline="javascript">
+    function addOptionId(element) {
+        var input = document.getElementById('optionid');
+        var currentValue = input.value;
+        var optionId = element.innerText;
+        if (currentValue !== '') {
+            currentValue += ',';
+        }
+        currentValue += optionId;
+        input.value = currentValue;
+    }
+</script>
 </body>
 </html>

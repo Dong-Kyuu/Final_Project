@@ -3,6 +3,7 @@ package com.example.jhta_3team_finalproject.mybatis.mapper.chat;
 
 import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
+import com.example.jhta_3team_finalproject.domain.chat.ChatParticipate;
 import com.example.jhta_3team_finalproject.domain.chat.ChatRoom;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,7 +14,13 @@ public interface ChatMapper {
 
     public int createMessage(ChatMessage chatMessage);
 
+    public ChatMessage lastMessage();
+
     public int createChatRoom(ChatRoom chatRoom);
+
+    public ChatRoom lastChatRoom();
+
+    public int addChatParticipate(ChatParticipate chatParticipate);
 
     public List<ChatRoom> searchRoom(ChatRoom chatRoom);
 
@@ -23,7 +30,11 @@ public interface ChatMapper {
 
     public List<ChatMessage> redisSearchMessages(ChatMessage chatMessage);
 
-    int updateMsgImageUrl(ChatMessage chatMessage);
+    public int updateMsgImageUrl(ChatMessage chatMessage);
+
+    public ChatMessage searchOldMessage(ChatMessage chatMessage);
+
+    public ChatMessage searchNewMessage(ChatMessage chatMessage);
 
     public List<User> chatUserList(String chatUserId);
 
@@ -31,5 +42,5 @@ public interface ChatMapper {
 
     public int chatUserProfileMsgUpdate(String profileStatusMsg, String chatUserId);
 
-    int chatUserProfileMsgUpdate(User user);
+    public int chatUserProfileMsgUpdate(User user);
 }
