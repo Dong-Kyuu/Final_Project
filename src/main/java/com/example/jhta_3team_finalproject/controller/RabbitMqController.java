@@ -1,4 +1,4 @@
-//package com.example.jhta_3team_finalproject.controller;
+package com.example.jhta_3team_finalproject.controller;//package com.example.jhta_3team_finalproject.controller;
 //
 //import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 //import com.example.jhta_3team_finalproject.service.chat.RabbitMqService;

@@ -385,7 +385,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button type="button" id="trip_update"class="btn btn-gradient-danger btn-open-modal">수정</button>
+                                                <button type="button" id="trip_update" class="btn btn-gradient-danger btn-open-modal">수정</button>
                                             </div>
                                         </div>
                                     </div>
@@ -401,7 +401,7 @@
                                         <div class="product__item">
                                             <a th:href="'TLManagement?num=' + ${goods.tripNo}"> <!-- 이동 경로 -->
                                                 <div class="product__item__pic set-bg">
-                                                    <img th:src="${goods.tripMainIMG}" alt="Main Image">
+                                                    <img th:src="@{${goods.tripMainImg}}" alt="Main Image">
                                                 </div>
                                             </a>
                                         </div>

@@ -1,4 +1,21 @@
-DELETE FROM tripfile;
+DROP TABLE IF EXISTS tripfile;
+
+create table tripfile
+(
+    file_id      VARCHAR(255) primary key,
+    main_img     varchar(255) null,
+    intro_img    varchar(255) null,
+    route_img    varchar(255) null,
+    schedule_img varchar(255) null,
+    detail_img   varchar(255) null
+)
+
+ALTER TABLE tripfile
+    MODIFY main_img VARCHAR(500) NULL,
+    MODIFY intro_img VARCHAR(500) NULL,
+    MODIFY route_img VARCHAR(500) NULL,
+    MODIFY schedule_img VARCHAR(500) NULL,
+    MODIFY detail_img VARCHAR(500) NULL;
 
 SELECT * FROM tripfile;
 

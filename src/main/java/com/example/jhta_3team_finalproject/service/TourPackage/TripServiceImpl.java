@@ -1,11 +1,14 @@
 package com.example.jhta_3team_finalproject.service.TourPackage;
 import com.example.jhta_3team_finalproject.domain.TourPackage.*;
 import com.example.jhta_3team_finalproject.mybatis.mapper.TourPackage.TripMapper;
+import com.example.jhta_3team_finalproject.service.S3.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -76,7 +79,7 @@ public class TripServiceImpl implements TripService{
     }
 
     @Override
-    public void saveTrip(Trip trip,MultipartFile[] images) {
+    public void saveTrip(Trip trip,MultipartFile[] images) throws IOException {
 
         // S3에 파일 업로드
         String fileId = UUID.randomUUID().toString();
@@ -86,21 +89,31 @@ public class TripServiceImpl implements TripService{
         String scheduleIMG = s3Service.uploadFile(images[3]);
         String detailIMG = s3Service.uploadFile(images[4]);
 
+        System.out.println("fileId = "+fileId);
+        System.out.println("mainIMG = "+mainIMG);
+
+        LocalDate currentDate = LocalDate.now();
+
         // Trip 객체 저장
-        tripMapper.insertTrip(trip.getTripNo(), trip.getTripName(), trip.getTripPrice(),
-                trip.getTripMaxStock(), trip.getRegDate(), trip.getExpireDate(),
-                mainIMG, trip.getTripCategory(), trip.getOptionIds(), fileId);
         tripMapper.insertTripFile(fileId, mainIMG, introIMG, routeIMG, scheduleIMG, detailIMG);
 
+        tripMapper.insertTrip(trip.getTripName(), trip.getTripPrice(),0,
+                trip.getTripMaxStock(), trip.getTripDate(),String.valueOf(currentDate), trip.getExpireDate(),
+                mainIMG, trip.getTripCategory(), trip.getOptionIds(), fileId);
+
         // 재고를 Redis에 저장
-        redisTemplate.opsForValue().set(STOCK_PREFIX + trip.getTripNo(), trip.getTripStock());
+        int tripNo = trip.getTripNo();
+        Integer tripStock = trip.getTripStock(); // int를 Integer로 오토박싱
+        redisTemplate.opsForValue().set(STOCK_PREFIX + tripNo, tripStock);
     }
 
+    //@Override
     public int getTripStock(String tripNo) {
         Integer tripStock = redisTemplate.opsForValue().get(STOCK_PREFIX + tripNo);
         return tripStock != null ? tripStock : 0;
     }
 
+    //@Override
     public void updateTripStock(String tripNo, int tripStock) {
         redisTemplate.opsForValue().set(STOCK_PREFIX + tripNo, tripStock);
     }
