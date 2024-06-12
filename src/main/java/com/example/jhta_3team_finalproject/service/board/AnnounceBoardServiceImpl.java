@@ -1,11 +1,15 @@
 package com.example.jhta_3team_finalproject.service.board;
 
+import com.example.jhta_3team_finalproject.controller.AnnounceBoardController;
 import com.example.jhta_3team_finalproject.domain.Board.AnnounceBoard;
 import com.example.jhta_3team_finalproject.domain.Board.Board;
 import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
+import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.mybatis.mapper.Table.AnnounceBoardMapper;
 import com.example.jhta_3team_finalproject.mybatis.mapper.Table.UpfilesMapper;
 import com.example.jhta_3team_finalproject.mybatis.mapper.Table.ViewCheckMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,8 @@ import java.util.Map;
 
 @Service
 public class AnnounceBoardServiceImpl implements AnnounceBoardService{
+
+    private static final Logger logger = LoggerFactory.getLogger(AnnounceBoardController.class);
 
     private AnnounceBoardMapper AnnounceBoardMapper;
     private UpfilesMapper UpfilesMapper;
@@ -129,5 +135,17 @@ public class AnnounceBoardServiceImpl implements AnnounceBoardService{
     @Override
     public void autoCheck(int userNum, int boardNum) {
         ViewCheckMapper.autoCheck(userNum, boardNum);
+    }
+
+    @Override
+    public List<User> getUserData(int annboardNum) {
+        List<User> users = AnnounceBoardMapper.getUserData(annboardNum);
+        logger.info("users : " + users);
+        return users;
+    }
+
+    @Override
+    public List<String> getDepartment() {
+        return AnnounceBoardMapper.getDepartment();
     }
 }

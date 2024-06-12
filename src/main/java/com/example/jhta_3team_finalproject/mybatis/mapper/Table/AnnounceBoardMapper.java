@@ -1,6 +1,7 @@
 package com.example.jhta_3team_finalproject.mybatis.mapper.Table;
 
 import com.example.jhta_3team_finalproject.domain.Board.AnnounceBoard;
+import com.example.jhta_3team_finalproject.domain.User.User;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,4 +20,8 @@ public interface AnnounceBoardMapper {
     AnnounceBoard getDetail(int num);
 
     int boardDelete(AnnounceBoard announceBoard);
+
+    List<User> getUserData(int annboardNum);
+
+    List<String> getDepartment();
 }
