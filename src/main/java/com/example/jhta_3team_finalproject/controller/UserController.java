@@ -20,12 +20,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDate;
+import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.*;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,8 +41,17 @@ public class UserController {
     private UserService userservice;
     private PasswordEncoder passwordEncoder;
     private SendMail sendMail;
+
     private static final int UPDATE_SUCCESS = 1;
     private static final int JOIN_SUCCESS = 1;
+
+
+    // private S3CommomService s3CommomService;
+    //, S3CommomService s3CommomService
+    //this.s3CommomService = s3CommomService;
+
+    //   TODO : s3 사용시 변경
+
 
     @Autowired
     public UserController(UserService userservicece,
@@ -50,7 +59,10 @@ public class UserController {
         this.userservice = userservicece;
         this.passwordEncoder = passwordEncoder;
         this.sendMail = sendMail;
+
     }
+
+
 //    @ModelAttribute
 //    public void addAttribute( @AuthenticationPrincipal  User user , Model model){
 ////        User userDetails = (User) principal.getPrincipal();
@@ -145,72 +157,43 @@ public class UserController {
         return mv;
     }
 
-    @PostMapping(value = "/updateProcess")
-    public String updateProcess(User user, Model model,
-                                RedirectAttributes rattr,
-                                HttpServletRequest request,
-                                @RequestParam("profilePictureFile") MultipartFile uploadfile) throws IOException {
-        log.info("수정 전 User 정보: " + user);
-        if (!uploadfile.isEmpty()) {
-            String fileName = uploadfile.getOriginalFilename();
-            String fileDBName = fileDBName(fileName, saveFolder);
-            log.info("fileDBName = " + fileDBName);
 
-            File destinationFile = new File(saveFolder + fileDBName);
-            uploadfile.transferTo(destinationFile);
-            log.info("File saved to: " + destinationFile.getAbsolutePath());
+//   TODO : s3 사용시 변경
 
-            user.setUserProfilePicture(fileDBName);
-        }
+//    @PostMapping(value = "/updateProcess")
+//    public String updateProcess(User user, Model model,
+//                                RedirectAttributes rattr,
+//                                HttpServletRequest request,
+//                                @RequestParam("profilePictureFile") MultipartFile uploadfile) throws IOException {
+//
+//
+//        log.info("수정 전 User 정보: " + user);
+//        if (!uploadfile.isEmpty()) {
+//            String fileUrl = s3CommomService.uploadFile(uploadfile);
+//            log.info("Uploaded file URL: " + fileUrl);
+//            user.setUserProfilePicture(fileUrl);
+//        }
+//
+//        log.info("업데이트 전에 User 정보: " + user);
+//        int result = userservice.update(user);
+//
+//        UsernamePasswordAuthenticationToken authentication =
+//                new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        log.info("Updating user: " + user);
+//        log.info("Update result: " + result);
+//
+//        if (result == UPDATE_SUCCESS) {
+//            rattr.addFlashAttribute("result", "updateSuccess");
+//            return "redirect:/user/info";
+//        } else {
+//            model.addAttribute("url", request.getRequestURI());
+//            model.addAttribute("message", "정보 수정실패");
+//            return "error";
+//        }
+//    }
 
-        log.info("업데이트 전에 User 정보: " + user);
-        int result = userservice.update(user);
-
-        UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        log.info("Updating user: " + user);
-        log.info("Update result: " + result);
-
-        if (result == UPDATE_SUCCESS) {
-            rattr.addFlashAttribute("result", "updateSuccess");
-            return "redirect:/user/info";
-        } else {
-            model.addAttribute("url", request.getRequestURI());
-            model.addAttribute("message", "정보 수정실패");
-            return "error";
-        }
-    }
-
-    private String fileDBName(String fileName, String saveFolder) {
-        Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH) + 1;
-        int date = c.get(Calendar.DATE);
-
-        String homedir = saveFolder + "/" + year + "-" + month + "-" + date;
-        log.info(homedir);
-        File path1 = new File(homedir);
-        if (!path1.exists()) {
-            path1.mkdirs();
-        }
-
-        Random r = new Random();
-        int random = r.nextInt(100000000);
-
-        int index = fileName.lastIndexOf(".");
-        String fileExtension = fileName.substring(index + 1);
-        log.info("fileExtension = " + fileExtension);
-
-        String refileName = "bbs" + year + month + date + random + "." + fileExtension;
-        log.info("refileName = " + refileName);
-
-        String fileDBName = "/" + year + "-" + month + "-" + date + "/" + refileName;
-        log.info("fileDBName = " + fileDBName);
-
-        return fileDBName;
-    }
 
     // 출퇴근 관리 페이지로 이동
     @GetMapping(value = "/commute")
@@ -219,15 +202,33 @@ public class UserController {
         User userDetails = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         int userNum = userDetails.getUserNum();
 
-         List<Attendence> attendanceList = userservice.getMonthlyAttendances(userNum);
-        Attendence todayAttendance = userservice.getTodayAttendance(userNum);
 
+//        LocalDate now =LocalDate.now();
+//        LocalDateTime startDate = now.with(TemporalAdjusters.firstDayOfMonth()).atStartOfDay();
+//        LocalDateTime endDate = now.with(TemporalAdjusters.lastDayOfMonth()).atTime(LocalTime.MAX);
+//
+//        List<Attendence> attendanceList = userservice.getMonthlyAttendances(userNum,startDate,endDate);
         mv.setViewName("member/attendance");
 
         mv.addObject("userNum", userNum);
         mv.addObject("username", userDetails.getUsername());
+//        mv.addObject("attendanceList", attendanceList);
         return mv;
 
+    }
+
+    //사용자의 한달 출퇴근 기록을 반환
+    @GetMapping(value = "/monthlyAttendance")
+    @ResponseBody
+    public List<Attendence> getMonthlyAttendances(Principal principal) {
+        User userDetails = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        int userNum = userDetails.getUserNum();
+
+        LocalDate now = LocalDate.now();
+        LocalDateTime startDate = now.with(TemporalAdjusters.firstDayOfMonth()).atStartOfDay();
+        LocalDateTime endDate = now.with(TemporalAdjusters.lastDayOfMonth()).atTime(LocalTime.MAX);
+
+        return userservice.getMonthlyAttendances(userNum, startDate, endDate);
     }
 
     // 사원 출퇴근 시간 기록
@@ -248,7 +249,7 @@ public class UserController {
     // 오늘의 출퇴근 기록 조회
     @GetMapping("/todayAttendance")
     @ResponseBody
-    public Map<String, Object> getTodayAttendance(@AuthenticationPrincipal User userDetails) {
+    public Map<String, Object>getTodayAttendance(@AuthenticationPrincipal User userDetails) {
         int userNum = userDetails.getUserNum();
 
         Attendence attendance = userservice.getTodayAttendance(userNum);
@@ -256,21 +257,20 @@ public class UserController {
         Map<String, Object> response = new HashMap<>();
 
         if (attendance == null) {
-            response.put("status","0");  // 출,퇴근이 데이터 베이스에 들어가지 않은 경우 -0
+            response.put("status", "0");  // 출,퇴근이 데이터 베이스에 들어가지 않은 경우 -0
         } else {
             if (attendance.getCheckInTime() != null && attendance.getCheckOutTime() != null) {
-                response.put("status","2"); //출,퇴근이 데이터베이스에 들어간 경우 2
-                response.put("checkInTime",attendance.getCheckInTime());
-                response.put("checkOutTime",attendance.getCheckOutTime());
+                response.put("status", "2"); //출,퇴근이 데이터베이스에 들어간 경우 2
+                response.put("checkInTime", attendance.getCheckInTime());
+                response.put("checkOutTime", attendance.getCheckOutTime());
 
             } else if (attendance.getCheckOutTime() == null) {
-                response.put("status","1"); //출근만 디비에 들어간 경우 1번
-                response.put("checkInTime",attendance.getCheckInTime());
+                response.put("status", "1"); //출근만 디비에 들어간 경우 1번
+                response.put("checkInTime", attendance.getCheckInTime());
             }
 
         }
-             return response;
-
+        return response;
 
 
     }
