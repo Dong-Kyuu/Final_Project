@@ -101,7 +101,7 @@
         flex-direction: row;
         margin: 0px 20px 0px 20px;
         max-width: 100%;
-        overflow-x: scroll;
+        overflow-x: auto;
         height: 85px;
         scroll-behavior: smooth;
 

@@ -102,7 +102,6 @@ public class ChatService {
             chatParticipate = dao.searchLastRoomUser(chatRoom);
         }
 
-
         return chatParticipate;
     }
 
@@ -121,12 +120,10 @@ public class ChatService {
              * 2024-06-12, 참가 테이블의 인원이 0명인 경우, 해당되는 채팅방을 삭제합니다.
              *              채팅방 삭제 시, 채팅방에 해당하는 메시지들을 cascade delete 합니다.
              */
-            if(dao.isChatRoomParticipate(chatParticipate) > 0){
+            if(dao.isChatRoomParticipate(chatParticipate) == 0) {
                 dao.deleteChatRoom(chatParticipate);
             }
         }
-
-
     }
 
     public List<ChatMessage> searchMessages(ChatMessage chatMessage) throws Exception {
@@ -143,10 +140,6 @@ public class ChatService {
 
     public List<User> chatUserList(String chatUserId) {
         return dao.chatUserList(chatUserId);
-    }
-
-    public ChatMessage getLastMessageContent(ChatMessage chatMessage) throws Exception {
-        return dao.getLastMessageContent(chatMessage);
     }
 
     public int getUnreadMessage(ChatParticipate chatParticipate) throws Exception {

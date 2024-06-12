@@ -51,7 +51,7 @@
                     <div class="header-wrapp">
                         <div class="app-detail">
                             <div class="chat-profile-picture">
-                                <img th:src="@{/image/chat/default.png}" alt="">
+
                             </div>
                             <div class="chat-profile-name"></div>
                             <div class="status chat-profile-dept"></div>
@@ -220,10 +220,12 @@
                                     <!-- <div class="back-arrow-nav" href='javascript:Display();'>
                                         <i class="material-icons">navigate_before</i>
                                     </div> -->
-                                    <h1 class="nav-profile-h1"> 홍길동 </h1>
-                                    <span class="user-avatar small hasStory">
-                                    <img th:src="@{/image/chat/default.png}">
-                                </span>
+                                    <h1 class="nav-profile-h1">  </h1>
+                                    <span class="user-avatar">
+                                    <span class="nav-profile-image">
+
+                                    </span>
+                                    </span>
                                 </div>
                             </div>
                             <div class="scroll-wrapper">
@@ -239,38 +241,16 @@
                                            x-on:keydown.window.prevent.slash="$refs.searchField.focus()"
                                            class="border border-blue-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-blue-400 focus:border-blue-400 focus:bg-blue-50 focus:bg-opacity-25"/>
                                 </div>
-                                <div class="activity-container">
-                                    <!--                                <div class="icon-container">-->
-                                    <!--                                        <span class="add-icon add-action">-->
-                                    <!--                                            <svg xmlns="http://www.w3.org/2000/svg"-->
-                                    <!--                                                 style="width: 24px; height: 24px; margin-left: 15px;"-->
-                                    <!--                                                 viewBox="0 0 17 17" fill="none">-->
-                                    <!--                                                <path-->
-                                    <!--                                                        d="M16.1499 9.35002H9.35002V16.1501C9.35002 16.6192 8.96917 17 8.49992 17C8.03083 17 7.64998 16.6192 7.64998 16.1501V9.35002H0.849945C0.380849 9.35002 0 8.96917 0 8.50008C0 8.03083 0.380849 7.64998 0.849945 7.64998H7.64998V0.850101C7.64998 0.380849 8.03083 2.98192e-07 8.49992 2.98192e-07C8.96917 2.98192e-07 9.35002 0.380849 9.35002 0.850101V7.64998H16.1499C16.6192 7.64998 17 8.03083 17 8.50008C17 8.96917 16.6192 9.35002 16.1499 9.35002Z"-->
-                                    <!--                                                        fill="white"/>-->
-                                    <!--                                            </svg>-->
-                                    <!--                                        </span>-->
-                                    <!--                                </div>-->
-                                    <!--                                <div class="icon-container">-->
-                                    <!--                                        <span class="add-icon remove-icon remove-action">-->
-                                    <!--                                            <svg xmlns="http://www.w3.org/2000/svg"-->
-                                    <!--                                                 style="width: 24px; height: 24px; margin-left: 14px;"-->
-                                    <!--                                                 viewBox="0 0 448 512">&lt;!&ndash;!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.&ndash;&gt;-->
-                                    <!--                                                <path-->
-                                    <!--                                                        d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"-->
-                                    <!--                                                        fill="white"/>-->
-                                    <!--                                            </svg>-->
-                                    <!--                                        </span>-->
-                                    <!--                                </div>-->
+                                <div id="user-scroller-container" class="activity-container">
                                     <div class=avatar-container>
-                                        <span class="user-avatar offline small"> <img
-                                                th:src="@{/image/chat/default.png}">
+                                        <span class="user-avatar offline small">
+                                            <img th:src="@{/image/chat/default.png}">
                                         </span>
                                         <p>홍길동</p>
                                     </div>
                                     <div class=avatar-container>
-                                        <span class="user-avatar offline small"> <img
-                                                th:src="@{/image/chat/default.png}">
+                                        <span class="user-avatar offline small">
+                                            <img th:src="@{/image/chat/default.png}">
                                         </span>
                                         <p>홍동길</p>
                                     </div>
@@ -604,8 +584,8 @@
                     //console.log(chatRoomNum);
                     messageRoomNum.val(chatRoomNum); // 해당 방의 번호를 기억해놓습니다.
                     loadingStart();
-                    multiChatRoom(chatRoomNum, chatUserId, type);
-
+                    getChatRoomInfo(chatRoomNum); // 채팅방 정보 가져오기 (채팅방 이름, 인원 수, 유저리스트)
+                    multiChatRoom(chatRoomNum, chatUserId, type); // 웹소켓 연결 + 채팅 기록 가져오기
                     setTimeout(function () {
                         loadingEnd();
                         messageScrollFix();
@@ -615,6 +595,27 @@
                 $('.view-main').addClass("deactive");
                 $('.view-message').addClass("active");
                 $(".chat-menu-container-mgr").css("display", "none");
+            }
+
+            /**
+             * 2024-06-12, 채팅방 정보 가져오기 (채팅방 이름, 인원 수, 유저리스트)
+             */
+            function getChatRoomInfo(chatRoomNum) {
+                $.ajax({
+                    type: "post",
+                    url: "/chat/getChatRoomInfo",
+                    data: {
+                        "chatRoomNum": chatRoomNum
+                    },
+                    dataType: "json",
+                    beforeSend: function (xhr) {
+                        //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (res) {
+                        console.log(res);
+                    }
+                }) // ajax end
             }
 
             /**
@@ -778,21 +779,35 @@
                 }
             }
 
+            var isRun = false;
             $(".back-arrow").click(function () {
+                /**
+                 * isRun을 통해 나가기 버튼 중복 동작 방지
+                 */
+                if(isRun == true) {
+                    return false;
+                }
+
+                //console.log('back-arrow');
+                isRun = true;
+
                 if(ws != null) {
                     ws.close();
                 }
+
                 getChatUserList();
-                getChatUserProfile();
                 getUserChatRoomList();
+                getChatUserProfile();
+
                 setTimeout(function () {
-                    $('.view-main').removeClass("deactive");
-                    $('.view-message').removeClass("active");
+                    $(".view-main").removeClass("deactive");
+                    $(".view-message").removeClass("active");
                     $("#chat-menu").css("display", "none");
                     $(".chat-menu-container-mgr").css("display", "block");
-                    $("#chat-message-list").css('transform', 'translateY(0)');
+                    $("#chat-message-list").css("transform", "translateY(0)");
                     $(".messages-list > ul > li").off('click', showMessages);
                     $(".messages-list > ul > li").bind('click', showMessages);
+                    isRun = false;
                 }, 100);
             });
 
@@ -926,18 +941,20 @@
                 }, 250);
             }
 
-            /** 2024-05-16, 프로필 클릭 시 설정화면으로 이동 */
-            $(".app-detail").click(function () {
-                $el = $("#master-nav ul li:eq(2)");
-                $("#master-nav ul li").removeClass('active');
-                $el.addClass('active');
-                navItemPos($el.index());
-                leftPos = $el.position().left;
-                newWidth = $el.parent().width();
-                $active_line.stop().animate({
-                    left: leftPos
-                });
-            });
+            /**
+             * 2024-05-16, 프로필 클릭 시 설정화면으로 이동
+             */
+            // $(".app-detail").click(function () {
+            //     $el = $("#master-nav ul li:eq(2)");
+            //     $("#master-nav ul li").removeClass('active');
+            //     $el.addClass('active');
+            //     navItemPos($el.index());
+            //     leftPos = $el.position().left;
+            //     newWidth = $el.parent().width();
+            //     $active_line.stop().animate({
+            //         left: leftPos
+            //     });
+            // });
 
             /** 2024-05-17, 채팅방 유저 검색 */
             $("#searchChatUser").on("keyup", function () {
@@ -948,6 +965,15 @@
                     // toggle(false)는 선택한 요소에 style="display: none;" 속성이 추가되어 보이지 않도록 합니다.
                     $(this).toggle($(this).find('p').text().toLowerCase().indexOf(value) > -1)
                 });
+            });
+
+            /**
+             * 2024-06-12, 채팅방 우측 스크롤 구현
+             */
+            const scrollContainer = document.getElementById('user-scroller-container');
+            scrollContainer.addEventListener('wheel', (event) => {
+                event.preventDefault();
+                scrollContainer.scrollLeft += event.deltaY;
             });
 
             /**
@@ -1159,6 +1185,10 @@
                         var $chatProfileEmail = $('input[name="chat_profile_email"]');
                         var $chatProfilePhone = $('input[name="chat_profile_phone"]');
 
+                        var $chatNavProfileName = $('.nav-profile-h1');
+                        var $chatNavProfilePicture = $('.nav-profile-image');
+
+
                         $chatProfilePicture.empty();
                         $chatProfilePicture.html(img);
                         $chatProfileName.html(rdata.username);
@@ -1168,6 +1198,9 @@
                         $chatProfileStatusMsg.html(rdata.userChatStatusMsg);
                         $chatProfileEmail.val(rdata.userEmail);
                         $chatProfilePhone.val(rdata.userPhoneNumber);
+
+                        $chatNavProfileName.html(rdata.username);
+                        $chatNavProfilePicture.html(img);
                     }
                 }) // ajax end
             }

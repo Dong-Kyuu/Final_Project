@@ -68,15 +68,6 @@ public class ChatController {
         return chatRoomList;
     }
 
-    @RequestMapping("getLastMessageContent")
-    public @ResponseBody ChatMessage getLastMessageContent(@RequestParam HashMap<String, String> params) throws Exception {
-        String lastMessageNum = params.get("lastMessageNum");
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setMessageNum(Long.valueOf(lastMessageNum));
-        chatMessage = chatService.getLastMessageContent(chatMessage);
-        return chatMessage;
-    }
-
     @RequestMapping("getUnreadMessage")
     public @ResponseBody int getUnreadMessage(@RequestParam HashMap<String, String> params) throws Exception {
         String sessionId = params.get("sessionId");

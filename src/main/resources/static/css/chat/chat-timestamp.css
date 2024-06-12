@@ -2,8 +2,8 @@
     width: 100%;
     text-align: center;
     /*border-bottom: 1px solid #dbd9d9;*/
-    line-height: 0.1em;
-    margin: 10px 0 20px;
+    /*line-height: 0.1em;*/
+    margin: 10px 0 10px;
 }
 
 .chat-timestamp-dash .chat-timestamp-content {
