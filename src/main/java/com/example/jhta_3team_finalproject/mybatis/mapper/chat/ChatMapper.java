@@ -49,4 +49,10 @@ public interface ChatMapper {
     public int chatUserProfileMsgUpdate(String profileStatusMsg, String chatUserId);
 
     public int chatUserProfileMsgUpdate(User user);
+
+    public void participateExitChatRoom(ChatParticipate chatParticipate);
+
+    int isChatRoomParticipate(ChatParticipate chatParticipate);
+
+    void deleteChatRoom(ChatParticipate chatParticipate);
 }

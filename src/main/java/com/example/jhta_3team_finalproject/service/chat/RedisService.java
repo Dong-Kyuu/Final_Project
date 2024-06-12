@@ -39,7 +39,12 @@ public class RedisService {
             String dateStr = simpleDateFormat.format(date.getTime());
             String key = num + ":" + dateStr;
             List<ChatMessage> oneDayList = getChatMessageList(num, key, dateStr);
-            oneWeekTotalList.addAll(oneDayList);
+            oneDayList.forEach(chatMsg -> {
+                if(chatMsg.getMessageNum() == 0 && !chatMsg.getTimeStamp().isEmpty()) {
+                    chatMsg.setType(ChatMessage.MessageType.TIMESTAMP);
+                }
+                oneWeekTotalList.add(chatMsg);
+            });
         }
         return oneWeekTotalList;
     }

@@ -5,9 +5,6 @@
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.chat.ChatMapper">
     <!-- 채팅 추가 -->
     <insert id="createMessage" parameterType="chatMessage">
-        <!--        <selectKey resultType="int" order="BEFORE" keyProperty="sender_num">-->
-        <!--            SELECT num FROM users WHERE id = #{senderId}-->
-        <!--        </selectKey>-->
         INSERT INTO chat_message(message_num, chat_room_num, sender_id, message_content, read_count, file_url, file_origin_name, send_time)
         VALUES (NULL, #{chatRoomNum}, #{senderId}, #{messageContent}, #{readCount}, #{fileUrl}, #{fileOriginName}, NOW())
     </insert>
@@ -28,24 +25,19 @@
     </select>
 
     <!-- 채팅방의 채팅 기록 1일씩 가져오기 -->
+    <!--    2024-06-05, ROLLUP을 통한 타임 스탬프 구현-->
     <select id="redisSearchMessages" resultType="chatMessage">
-        SELECT *
+        SELECT *, DATE(send_time) as time_stamp
         FROM chat_message
-        WHERE chat_room_num = #{chatRoomNum}
+        WHERE  chat_room_num = #{chatRoomNum}
         AND DATE_FORMAT(send_time, '%Y-%m-%d') = #{dateStr}
-        ORDER BY message_num ASC
+        GROUP BY message_num WITH ROLLUP
+        ORDER BY time_stamp, message_num ASC
     </select>
-<!--    2024-06-05, ROLLUP을 통한 타임 스탬프 구현-->
-<!--    SELECT *, DATE(send_time) as time_stamp-->
-<!--    FROM chat_message-->
-<!--    WHERE DATE_FORMAT(send_time, '%Y-%m-%d') = '2024-06-05'-->
-<!--    GROUP BY message_num WITH ROLLUP-->
-<!--    ORDER BY chat_time_stamp, message_num-->
-
 
     <!-- 2024-06-04, 채팅 메시지에서 파일을 업로드할 경우, 해당 내용의 URL을 S3 버킷의 URL로 업데이트-->
     <update id="updateMsgImageUrl">
-        UPDATE chat_message SET file_url = #{s3url} where file_url = #{fileUrl}
+        UPDATE chat_message SET file_url = #{s3url} WHERE file_url = #{fileUrl}
     </update>
 
     <!-- 2024-06-07, URL이 업데이트된 경우 redis에서도 업데이트를 해야 하므로 이전 데이터를 검색하여 데이터를 임시 저장합니다. -->
@@ -62,11 +54,8 @@
         WHERE message_num = #{messageNum}
     </select>
 
-    <!-- 채팅방 만들기 -->
+    <!-- 2024-06-10, 채팅방 만들기 -->
     <insert id="createChatRoom" parameterType="chatRoom">
-        <!--        <selectKey resultType="int" order="BEFORE" keyProperty="chat_room_num">-->
-        <!--            SELECT IFNULL(MAX(chat_room_num),0)+1 FROM com_chat_room-->
-        <!--        </selectKey>-->
         INSERT INTO chat_room(chat_room_num, room_name, chat_session_id, room_create_date)
         VALUES (NULL, #{roomName}, #{chatSessionId}, NOW())
     </insert>
@@ -84,14 +73,98 @@
         VALUES (#{chatRoomNum}, #{chatUserId}, NOW(), NOW())
     </insert>
 
-    <!-- 채팅 사원 전체 리스트 가져오기 -->
-    <select id="chatUserList" resultType="user">
-        SELECT user_id, user_name, user_department, user_profile_picture, user_chat_status_msg, user_email FROM user WHERE user_id NOT IN (#{chatUserId});
+    <!-- 2024-06-12, 참가 중인 채팅방에서 나가기 -->
+    <delete id="participateExitChatRoom">
+        DELETE FROM chat_participate
+        WHERE chat_room_num = #{chatRoomNum}
+        AND chat_user_id = #{chatUserId}
+    </delete>
+
+    <!-- 2024-06-12, 해당 방에 참가 인원이 있는지 확인 -->
+    <select id="isChatRoomParticipate">
+        SELECT COUNT(*)
+        FROM chat_participate
+        WHERE chat_room_num = #{chatRoomNum}
     </select>
 
-    <!-- 채팅 자신의 유저 리스트 가져오기 -->
+    <!-- 2024-06-12, 해당 방에 참가 인원이 없는 경우 해당 방을 삭제 -->
+    <delete id="deleteChatRoom">
+        DELETE FROM chat_room
+        WHERE chat_room_num = #{chatRoomNum}
+    </delete>
+
+    <!-- 2024-06-12, 채팅 사원 전체 리스트 가져오기 -->
+    <select id="chatUserList" resultType="user">
+        SELECT user_id, user_name, user_profile_picture, user_chat_status_msg, user_email, ud.department_name
+        FROM user u
+        JOIN user_departments ud
+        ON u.department_id = ud.department_id
+        WHERE user_id NOT IN (#{chatUserId});
+    </select>
+
+    <!-- 2024-06-12, 채팅 자신의 유저 리스트 가져오기 -->
     <select id="chatUserProfile" resultType="user">
-        SELECT user_id, user_name, user_department, user_profile_picture, user_chat_status_msg, user_email, user_phone_number FROM user WHERE user_id IN (#{chatUserId});
+        SELECT user_id, user_name, user_profile_picture, user_chat_status_msg, user_email, user_phone_number, ud.department_name
+        FROM user u
+        JOIN user_departments ud
+        ON u.department_id = ud.department_id
+        WHERE user_id IN (#{chatUserId});
+    </select>
+
+    <!-- 2024-06-10, 방목록 가져오기 -> 마지막 메시지와 방 정보 -->
+    <select id="searchRoomUser" parameterType="chatRoom" resultType="chatParticipate">
+        SELECT *, GREATEST(IFNULL(cm.send_time, cr.room_create_date), cr.room_create_date) AS last_send_time
+        FROM chat_participate cp
+                 LEFT JOIN(
+            SELECT *
+            FROM chat_message
+            WHERE message_num IN (SELECT MAX(message_num)
+                                  FROM chat_message
+                                  GROUP BY chat_room_num)
+        ) cm
+                          ON cp.chat_room_num = cm.chat_room_num
+                 JOIN(
+            SELECT *
+            FROM chat_room
+        ) cr
+                     ON cp.chat_room_num = cr.chat_room_num
+        WHERE chat_user_id = #{chatSessionId}
+        ORDER BY last_send_time DESC
+    </select>
+
+    <!-- 2024-06-10, 방 생성 시 해당 방 정보 가져오기 -->
+    <select id="searchLastRoomUser" parameterType="chatRoom" resultType="chatParticipate">
+        SELECT *, GREATEST(IFNULL(cm.send_time, cr.room_create_date), cr.room_create_date) AS last_send_time
+        FROM chat_participate cp
+                 LEFT JOIN(
+            SELECT *
+            FROM chat_message
+            WHERE message_num IN (SELECT MAX(message_num)
+                                  FROM chat_message
+                                  GROUP BY chat_room_num)
+        ) cm
+                          ON cp.chat_room_num = cm.chat_room_num
+                 JOIN(
+            SELECT *
+            FROM chat_room
+        ) cr
+                     ON cp.chat_room_num = cr.chat_room_num
+        WHERE chat_user_id = #{chatSessionId}
+          AND cp.chat_room_num = (SELECT MAX(chat_room_num) FROM chat_room)
+        ORDER BY last_send_time DESC
+    </select>
+
+    <!-- 2024-06-10, 안 읽은 메시지 수 구해오기 -->
+    <select id="getUnreadMessage" parameterType="chatParticipate">
+        SELECT COUNT(*)
+        FROM chat_message
+        WHERE send_time BETWEEN (
+            SELECT chat_visit_time
+            FROM chat_participate
+            WHERE chat_room_num = #{chatRoomNum}
+              AND chat_user_id = #{chatUserId}
+        ) AND NOW()
+          AND chat_room_num = #{chatRoomNum}
     </select>
 
     <!-- 채팅 프로필 상태 메시지 변경 -->
@@ -108,61 +181,5 @@
         SELECT *
         FROM chat_room
         ORDER BY chat_room_num DESC
-    </select>
-
-    <!-- 2024-06-10, 방목록 가져오기 -> 마지막 메시지와 방 정보 -->
-    <select id="searchRoomUser" parameterType="chatRoom" resultType="chatParticipate">
-        select *
-        from chat_participate cp
-        left join(
-                  select *
-                  from chat_message
-                  where message_num in (select max(message_num)
-                                        from chat_message
-                                        group by chat_room_num)
-                 ) cm
-        on cp.chat_room_num = cm.chat_room_num
-        join(
-             select *
-             from chat_room
-            ) cr
-        on cp.chat_room_num = cr.chat_room_num
-        where chat_user_id = #{chatSessionId}
-        order by send_time desc, room_create_date desc
-    </select>
-
-    <!-- 2024-06-10, 방목록 가져오기 -> 마지막 메시지와 방 정보 -->
-    <select id="searchLastRoomUser" parameterType="chatRoom" resultType="chatParticipate">
-        select *
-        from chat_participate cp
-        left join(
-                  select *
-                  from chat_message
-                  where message_num in (select max(message_num)
-                                        from chat_message
-                                        group by chat_room_num)
-                 ) cm
-        on cp.chat_room_num = cm.chat_room_num
-        join(
-             select *
-             from chat_room
-            ) cr
-        on cp.chat_room_num = cr.chat_room_num
-        where chat_user_id = #{chatSessionId}
-        and cp.chat_room_num = (select max(chat_room_num) from chat_room)
-        order by send_time desc
-    </select>
-
-    <!-- 2024-06-10, 안 읽은 메시지 수 구해오기 -->
-    <select id="getUnreadMessage" parameterType="chatParticipate">
-        SELECT COUNT(*)
-        FROM chat_message
-        WHERE send_time BETWEEN (
-                                 SELECT chat_visit_time
-                                 FROM chat_participate
-                                 WHERE chat_room_num = #{chatRoomNum}
-                                 AND chat_user_id = #{chatUserId}
-                                ) AND NOW()
-        AND chat_room_num = #{chatRoomNum}
     </select>
 </mapper>
