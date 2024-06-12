@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Purple Admin</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" th:href="@{../../assets/vendors/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{../../assets/vendors/css/vendor.bundle.base.css}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" th:href="@{../../assets/css/style.css}">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" th:href="@{../../assets/images/favicon.ico}"/>
+
+    <style>
+        #TripInfo .col-md-6 img{
+            /* 이미지를 화면에 꽉 채우도록 설정 */
+            background-size: cover;
+            /* 이미지가 잘릴 수 없도록 설정 */
+            background-position: center;
+            /* 배경 이미지가 적용된 div의 크기를 지정 */
+            width: 100%;
+            object-fit: scale-down;
+            display: block;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="container-scroller">
+    <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
+    <div class="container-fluid page-body-wrapper">
+        <th:block th:replace="~{HSF/_sidebar :: sidebar}"></th:block>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h3 class="page-title"> Tour Management </h3>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Basic tables</li>
+                        </ol>
+                    </nav>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Main Trip Info / Trip Manager</h4>
+                                <div class="row" id="TripInfo">
+                                    <div class="col-md-6"><img th:src="${trip.tripMainIMG}" alt="Main Image"></div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h6 th:text="'여행 이름 : '+${trip.tripName}"></h6>
+                                                <h6 th:text="'여행 출발 : '+${trip.tripDate}"></h6>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                담당TL 등록
+                                                <!--아직 TL이 등록되어있지 않을때-->
+                                                <div class="btn-group-vertical" role="group" aria-label="Basic example">
+                                                    <div class="btn-group">
+                                                        <button type="button"
+                                                                class="btn btn-outline-secondary dropdown-toggle"
+                                                                data-bs-toggle="dropdown">Dropdown
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item">Go back</a>
+                                                            <a class="dropdown-item">Delete</a>
+                                                            <a class="dropdown-item">Swap</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--등록시 TL이름이 뜨게 하기 if문 이용하면 될듯-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--병훈이형 캘린더(여행부서 사람들의 일정 공유 캘린더) -->
+                    <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">병훈's Calendar Work</h4>
+                                <p class="card-description"> Add class <code>.table-hover</code>
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!---->
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Booking List</h4>
+                                <p class="card-description"> Add class <code>.table-striped</code>
+                                </p>
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th> 예약번호</th>
+                                        <th> 예약자</th>
+                                        <th> 예약 상품 + 날짜</th>
+                                        <th> 신청 시간</th>
+                                        <th> 처리 현황</th>
+                                        <th> 관리</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                    <!--
+                                    <tr th:each="user : ${user}">
+                                        <td th:text="${user.purchaseNo}"></td>
+                                        <td th:text="${user.userName}"></td>
+                                        <td th:text="${user.TripName}"></td>
+                                        <td th:text="${user.paymentDate}"></td>
+                                        <td th:text="${user.status}"></td>
+                                        <button type="button" class="btn btn-gradient-success">수정</button>
+                                        <button type="button" class="btn btn-gradient-danger">삭제</button>
+                                    </tr>
+                                    -->
+
+                                    <tr>
+                                        <td>
+                                            M433123456
+                                        </td>
+                                        <td> Herman Beck</td>
+                                        <td>
+                                            서유럽 11일 2024년06월07일
+                                        </td>
+                                        <td> 2024년 05월 13일 08:00:17</td>
+                                        <td> 예약 대기</td>
+                                        <td> <div class="button-UserProfile">
+                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
+                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
+                                        </div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            M343312345
+                                        </td>
+                                        <td> Hank Thomas</td>
+                                        <td>
+                                            서유럽 11일 2024년06월07일
+                                        </td>
+                                        <td> 2024년 05월 13일 06:01:34</td>
+                                        <td> 예약 대기</td>
+                                        <td> <div class="button-UserProfile">
+                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
+                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
+                                        </div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            M234312345
+                                        </td>
+                                        <td> Frank DeJong</td>
+                                        <td>
+                                            동유럽 11일 2024년06월07일
+                                        </td>
+                                        <td> 2024년 05월 13일 01:02:54</td>
+                                        <td> 예약 대기</td>
+                                        <td> <div class="button-UserProfile">
+                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
+                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
+                                        </div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            M121232345
+                                        </td>
+                                        <td> Didier Drogba</td>
+                                        <td>
+                                            서유럽 11일 2024년06월07일
+                                        </td>
+                                        <td> 2024년 05월 12일 19:08:44</td>
+                                        <td> 예약 대기</td>
+                                        <td> <div class="button-UserProfile">
+                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
+                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
+                                        </div></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            M343398765
+                                        </td>
+                                        <td> Frank Sinatra</td>
+                                        <td>
+                                            서유럽 11일 2024년06월07일
+                                        </td>
+                                        <td> 2024년 05월 12일 12:01:34</td>
+                                        <td> 예약 승인</td>
+                                        <td> <div class="button-UserProfile">
+                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
+                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
+                                        </div></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">서류 관리</h4>
+                                <p class="card-description"> Add class <code>.table-hover</code>
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">조배정</h4>
+                                <p class="card-description"> Add class <code>.table-hover</code>
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            <footer class="footer">
+                <div class="container-fluid d-flex justify-content-between">
+                    <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © bootstrapdash.com 2021</span>
+                    <span class="float-none float-sm-end mt-1 mt-sm-0 text-end"> Free <a
+                            href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin template</a> from Bootstrapdash.com</span>
+                </div>
+            </footer>
+            <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script th:src="@{../../assets/vendors/js/vendor.bundle.base.js}"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script th:src="@{../../assets/js/off-canvas.js}"></script>
+<script th:src="@{../../assets/js/hoverable-collapse.js}"></script>
+<script th:src="@{../../assets/js/misc.js}"></script>
+<!-- endinject -->
+<!-- Custom js for this page -->
+<!-- End custom js for this page -->
+</body>
+</html>
