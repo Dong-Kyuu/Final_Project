@@ -18,7 +18,7 @@ public class ChatParticipate {
     /**
      * 2024-06-10, 확장 - 마지막 메시지, 마지막 메시지의 시간, 방이름, 방생성 시간
      */
-    private Date sendTime;
+    private Date lastSendTime;
     private String messageContent;
     private String roomName;
     private Date roomCreateDate;
