@@ -66,11 +66,11 @@ public class RedisCacheConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Integer> tripStockRedisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Integer> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, Trip> tripStockRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Trip> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(Trip.class));
         return redisTemplate;
     }
 }

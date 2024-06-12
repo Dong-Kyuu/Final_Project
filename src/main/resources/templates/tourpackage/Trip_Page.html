@@ -201,7 +201,7 @@
                                         <div class="product__item">
                                             <a th:href="'tripDetail?num=' + ${goods.tripNo}"> <!-- 이동 경로 -->
                                                 <div class="product__item__pic set-bg">
-                                                    <img th:src="${goods.tripMainIMG}" alt="Main Image">
+                                                    <img th:src="@{${goods.tripMainImg}}" alt="Main Image">
                                                 </div>
                                             </a>
                                             <div class="product__item__text">

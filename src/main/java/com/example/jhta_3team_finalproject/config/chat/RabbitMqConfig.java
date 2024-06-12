@@ -1,4 +1,4 @@
-//package com.example.jhta_3team_finalproject.config.chat;
+package com.example.jhta_3team_finalproject.config.chat;//package com.example.jhta_3team_finalproject.config.chat;
 //
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.amqp.core.Binding;
