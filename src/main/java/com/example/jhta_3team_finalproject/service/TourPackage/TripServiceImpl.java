@@ -17,12 +17,12 @@ public class TripServiceImpl implements TripService{
 
     private final S3Service s3Service;
     private final TripMapper tripMapper;
-    private final RedisTemplate<String, Integer> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private static final String STOCK_PREFIX = "trip:stock:";
 
     @Autowired
-    public TripServiceImpl(S3Service s3Service, TripMapper tripMapper, RedisTemplate<String, Integer> redisTemplate) {
+    public TripServiceImpl(S3Service s3Service, TripMapper tripMapper, RedisTemplate<String, Object> redisTemplate) {
         this.s3Service = s3Service;
         this.tripMapper = tripMapper;
         this.redisTemplate = redisTemplate;
@@ -106,7 +106,7 @@ public class TripServiceImpl implements TripService{
         Integer tripStock = trip.getTripStock(); // int를 Integer로 오토박싱
         redisTemplate.opsForValue().set(STOCK_PREFIX + tripNo, tripStock);
     }
-
+/*
     //@Override
     public int getTripStock(String tripNo) {
         Integer tripStock = redisTemplate.opsForValue().get(STOCK_PREFIX + tripNo);
@@ -117,5 +117,5 @@ public class TripServiceImpl implements TripService{
     public void updateTripStock(String tripNo, int tripStock) {
         redisTemplate.opsForValue().set(STOCK_PREFIX + tripNo, tripStock);
     }
-
+*/
 }
