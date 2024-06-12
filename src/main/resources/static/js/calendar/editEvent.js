@@ -106,15 +106,15 @@ var editEvent = function (event, element, view) {
 $('#deleteEvent').on('click', function () {
     
     $('#deleteEvent').unbind();
+    console.log( "delete="+$(this).data('id'));
     $("#calendar").fullCalendar('removeEvents', $(this).data('id'));
     eventModal.modal('hide');
-
     //삭제시
     $.ajax({
         type: "get",
-        url: "",
+        url: "/cal/delete",
         data: {
-            //...
+            cal_id: $(this).data('id')
         },
         success: function (response) {
             alert('삭제되었습니다.');

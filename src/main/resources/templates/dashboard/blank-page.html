@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../../assets/images/favicon.ico"/>
+
+    <link rel="stylesheet" th:href="@{/css/dashboard/minicalendar.css}"/>
 </head>
 <body>
 <div class="container-scroller">
@@ -30,23 +32,102 @@
         <div class="main-panel">
             <div class="content-wrapper">
 
+                <div class="row">
 
-            </div>
-            <!-- content-wrapper ends -->
-            <!-- partial:../../partials/_footer.html -->
-            <footer class="footer">
-                <div class="container-fluid d-flex justify-content-between">
-                    <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © bootstrapdash.com 2021</span>
-                    <span class="float-none float-sm-end mt-1 mt-sm-0 text-end"> Free <a
-                            href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin template</a> from Bootstrapdash.com</span>
+                <div class="col-md-4 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <form>
+                                <h4 class="card-title">오늘 일정</h4>
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>등록자</th>
+                                        <th>구분</th>
+                                        <th>기간</th>
+                                        <th>제목</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>홍길동</td>
+                                        <td>관리부</td>
+                                        <td>1일</td>
+                                        <td>프로젝트</td>
+                                    </tr>
+                                    <tr>
+                                        <td>관리자</td>
+                                        <td>영업부</td>
+                                        <td>3일</td>
+                                        <td>하하</td>
+                                    </tr>
+
+
+                                    </tbody>
+                                </table>
+                                </nav>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-            </footer>
+
+                    <div class="col-md-8 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <form class="forms-sample">
+                                    <iframe style="width: 800px; height: 600px;" th:src="@{/cal/mycalendar}"></iframe>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">기타</h4>
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th> User</th>
+                                    <th> First name</th>
+                                    <th> Progress</th>
+                                    <th> Amount</th>
+                                    <th> Deadline</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="py-1">
+                                        <img th:src="@{/assets/images/faces-clipart/pic-1.png}" alt="image"/>
+                                    </td>
+                                    <td> Herman Beck</td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar bg-success" role="progressbar"
+                                                 style="width: 25%" aria-valuenow="25" aria-valuemin="0"
+                                                 aria-valuemax="100"></div>
+                                        </div>
+                                    </td>
+                                    <td> $ 77.99</td>
+                                    <td> May 15, 2015</td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+            <!-- content-wrapper ends -->
             <!-- partial -->
         </div>
+            </div>
         <!-- main-panel ends -->
     </div>
     <!-- page-body-wrapper ends -->
 </div>
+
+
+
+
 <!-- container-scroller -->
 <script th:src="@{/assets/vendors/js/vendor.bundle.base.js}"></script>
 <!-- endinject -->
@@ -56,6 +137,7 @@
 <script th:src="@{/assets/js/off-canvas.js}"></script>
 <script th:src="@{/assets/js/hoverable-collapse.js}"></script>
 <script th:src="@{/assets/js/misc.js}"></script>
+<script th:src="@{/js/calendar/main_dashboard.js}"></script>
 <!-- endinject -->
 <!-- Custom js for this page -->
 <!-- End custom js for this page -->
