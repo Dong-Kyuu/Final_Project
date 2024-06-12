@@ -1,466 +1,163 @@
 $(function () {
-    /* ChartJS
-     * -------
-     * Data and config for chartjs
-     */
-    'use strict';
-    var data = {
-        labels: ["2013", "2014", "2014", "2015", "2016", "2017"],
-        datasets: [{
-            label: '# of Votes',
-            data: [10, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1,
-            fill: false
-        }]
-    };
-    var dataDark = {
-        labels: ["2013", "2014", "2014", "2015", "2016", "2017"],
-        datasets: [{
-            label: '# of Votes',
-            data: [10, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1,
-            fill: false
-        }]
-    };
-    var multiLineData = {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        datasets: [{
-            label: 'Dataset 1',
-            data: [12, 19, 3, 5, 2, 3],
-            borderColor: [
-                '#587ce4'
-            ],
-            borderWidth: 2,
-            fill: false
+    let token = $("meta[name='_csrf']").attr("content");
+    let header = $("meta[name='_csrf_header']").attr("content");
+
+    $.ajax({
+        url: '../annboard/getUsersdata',
+        type: 'post',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader(header, token);
         },
-            {
-                label: 'Dataset 2',
-                data: [5, 23, 7, 12, 42, 23],
-                borderColor: [
-                    '#ede190'
-                ],
-                borderWidth: 2,
-                fill: false
-            },
-            {
-                label: 'Dataset 3',
-                data: [15, 10, 21, 32, 12, 33],
-                borderColor: [
-                    '#f44252'
-                ],
-                borderWidth: 2,
-                fill: false
-            }
-        ]
-    };
-    var options = {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
+        data: {
+            loginNum: $('#loginNum').val(),
+            annboardNum: $('#boardnum').val()
+        },
+        success: function(response) {
+            // 서버로부터 받은 데이터를 처리합니다.
+            var doughnutPieData = {
+                datasets: [{
+                    data: [
+                        response.checkedHR && response.checkedHR[1] ? response.checkedHR[1].length : 0,
+                        response.humanResource ? response.humanResource.length - (response.checkedHR && response.checkedHR[1] ? response.checkedHR[1].length : 0) : 0,
+                        response.checkedMG && response.checkedMG[1] ? response.checkedMG[1].length : 0,
+                        response.management ? response.management.length - (response.checkedMG && response.checkedMG[1] ? response.checkedMG[1].length : 0) : 0,
+                        response.checkedRT && response.checkedRT[1] ? response.checkedRT[1].length : 0,
+                        response.relations ? response.relations.length - (response.checkedRT && response.checkedRT[1] ? response.checkedRT[1].length : 0) : 0,
+                        response.checkedSP && response.checkedSP[1] ? response.checkedSP[1].length : 0,
+                        response.supportDepartment ? response.supportDepartment.length - (response.checkedSP && response.checkedSP[1] ? response.checkedSP[1].length : 0) : 0,
+                        response.checkedSL && response.checkedSL[1] ? response.checkedSL[1].length : 0,
+                        response.sales ? response.sales.length - (response.checkedSL && response.checkedSL[1] ? response.checkedSL[1].length : 0) : 0,
+                    ],
+                    backgroundColor: [
+                        'rgba(255,0,0,0.5)',
+                        'rgba(236,236,236,0.5)',
+                        'rgba(255,129,0,0.5)',
+                        'rgba(236,236,236,0.5)',
+                        'rgba(240,255,0,0.5)',
+                        'rgba(236,236,236,0.5)',
+                        'rgba(41,255,46,0.5)',
+                        'rgba(236,236,236,0.5)',
+                        'rgba(31,77,255,0.5)',
+                        'rgba(236,236,236,0.5)',
+                    ],
+                    borderColor: [
+                        'rgb(255,0,0)',
+                        'rgb(255,144,144)',
+                        'rgb(255,129,0)',
+                        'rgb(255,181,126)',
+                        'rgb(240,255,0)',
+                        'rgb(228,232,146)',
+                        'rgb(41,255,46)',
+                        'rgb(192,255,187)',
+                        'rgb(31,77,255)',
+                        'rgb(93,162,255)'
+                    ],
+                }],
+                labels: [
+                    '인사부(확인)',
+                    '인사부(미확인)',
+                    '관리부(확인)',
+                    '관리부(미확인)',
+                    '홍보부(확인)',
+                    '홍보부(미확인)',
+                    '지원부(확인)',
+                    '지원부(미확인)',
+                    '영업부(확인)',
+                    '영업부(미확인)',
+                ]
+            };
+
+            var doughnutPieOptions = {
+                responsive: true,
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
                 }
-            }]
-        },
-        legend: {
-            display: false
-        },
-        elements: {
-            point: {
-                radius: 0
-            }
-        }
+            };
 
-    };
-    var optionsDark = {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                },
-                gridLines: {
-                    color: '#322f2f',
-                    zeroLineColor: '#322f2f'
-                }
-            }],
-            xAxes: [{
-                ticks: {
-                    beginAtZero: true
-                },
-                gridLines: {
-                    color: '#322f2f',
-                }
-            }],
-        },
-        legend: {
-            display: false
-        },
-        elements: {
-            point: {
-                radius: 0
-            }
-        }
+            if ($("#doughnutChart").length) {
+                var doughnutChartCanvas = $("#doughnutChart").get(0).getContext("2d");
+                var doughnutChart = new Chart(doughnutChartCanvas, {
+                    type: 'doughnut',
+                    data: doughnutPieData,
+                    options: doughnutPieOptions
+                });
 
-    };
-    var doughnutPieData = {
-        datasets: [{
-            data: [30, 40, 30],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.5)',
-                'rgba(54, 162, 235, 0.5)',
-                'rgba(255, 206, 86, 0.5)',
-                'rgba(75, 192, 192, 0.5)',
-                'rgba(153, 102, 255, 0.5)',
-                'rgba(255, 159, 64, 0.5)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-        }],
+                $("#doughnutChart").click(function(evt) {
+                    var activePoints = doughnutChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, false);
+                    console.log("Active Points: ", activePoints); // 추가된 로그
 
-        // These labels appear in the legend and in the tooltips when hovering different arcs
-        labels: [
-            'Pink',
-            'Blue',
-            'Yellow',
-        ]
-    };
-    var doughnutPieOptions = {
-        responsive: true,
-        animation: {
-            animateScale: true,
-            animateRotate: true
-        }
-    };
-    var areaData = {
-        labels: ["2013", "2014", "2015", "2016", "2017"],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1,
-            fill: true, // 3: no fill
-        }]
-    };
+                    if (activePoints.length > 0) {
+                        var chartElement = activePoints[0];
+                        console.log("Chart Element: ", chartElement); // 추가된 로그
 
-    var areaDataDark = {
-        labels: ["2013", "2014", "2015", "2016", "2017"],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1,
-            fill: true, // 3: no fill
-        }]
-    };
+                        var datasetIndex = chartElement._datasetIndex; // _datasetIndex를 사용
+                        var index = chartElement._index; // _index를 사용
 
-    var areaOptions = {
-        plugins: {
-            filler: {
-                propagate: true
-            }
-        }
-    }
+                        console.log("Dataset Index: ", datasetIndex); // 추가된 로그
+                        console.log("Index: ", index); // 추가된 로그
+                        console.log("doughnutChart.data: ", doughnutChart.data); // 추가된 로그
 
-    var areaOptionsDark = {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                },
-                gridLines: {
-                    color: '#322f2f',
-                    zeroLineColor: '#322f2f'
-                }
-            }],
-            xAxes: [{
-                ticks: {
-                    beginAtZero: true
-                },
-                gridLines: {
-                    color: '#322f2f',
-                }
-            }],
-        },
-        plugins: {
-            filler: {
-                propagate: true
-            }
-        }
-    }
+                        // 데이터 접근 전에 데이터가 정의되어 있는지 확인
+                        if (doughnutChart.data.labels && doughnutChart.data.datasets[datasetIndex]) {
+                            var label = doughnutChart.data.labels[index];
+                            var value = doughnutChart.data.datasets[datasetIndex].data[index];
 
-    var multiAreaData = {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        datasets: [{
-            label: 'Facebook',
-            data: [8, 11, 13, 15, 12, 13, 16, 15, 13, 19, 11, 14],
-            borderColor: ['rgba(255, 99, 132, 0.5)'],
-            backgroundColor: ['rgba(255, 99, 132, 0.5)'],
-            borderWidth: 1,
-            fill: true
-        },
-            {
-                label: 'Twitter',
-                data: [7, 17, 12, 16, 14, 18, 16, 12, 15, 11, 13, 9],
-                borderColor: ['rgba(54, 162, 235, 0.5)'],
-                backgroundColor: ['rgba(54, 162, 235, 0.5)'],
-                borderWidth: 1,
-                fill: true
-            },
-            {
-                label: 'Linkedin',
-                data: [6, 14, 16, 20, 12, 18, 15, 12, 17, 19, 15, 11],
-                borderColor: ['rgba(255, 206, 86, 0.5)'],
-                backgroundColor: ['rgba(255, 206, 86, 0.5)'],
-                borderWidth: 1,
-                fill: true
-            }
-        ]
-    };
+                            console.log(response.department[1])
+                            label = response.department[Math.floor(index / 2)]
+                            $('#chartInfoLabel').text(label + " 목록");
 
-    var multiAreaOptions = {
-        plugins: {
-            filler: {
-                propagate: true
-            }
-        },
-        elements: {
-            point: {
-                radius: 0
-            }
-        },
-        scales: {
-            xAxes: [{
-                gridLines: {
-                    display: false
-                }
-            }],
-            yAxes: [{
-                gridLines: {
-                    display: false
-                }
-            }]
-        }
-    }
+                            var maxIndex = doughnutChart.data.labels.length - 1;
+                            var users
 
-    var scatterChartData = {
-        datasets: [{
-            label: 'First Dataset',
-            data: [{
-                x: -10,
-                y: 0
-            },
-                {
-                    x: 0,
-                    y: 3
-                },
-                {
-                    x: -25,
-                    y: 5
-                },
-                {
-                    x: 40,
-                    y: 5
-                }
-            ],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)'
-            ],
-            borderWidth: 1
-        },
-            {
-                label: 'Second Dataset',
-                data: [{
-                    x: 10,
-                    y: 5
-                },
-                    {
-                        x: 20,
-                        y: -30
-                    },
-                    {
-                        x: -25,
-                        y: 15
-                    },
-                    {
-                        x: -10,
-                        y: 5
+                            if(index==0) {
+                                users = response.checkedHR[1]
+                            } else if(index==1) {
+                                users = response.checkedHR[0]
+                            } else if(index==2) {
+                                users = response.checkedMG[1]
+                            } else if(index==3) {
+                                users = response.checkedMG[0]
+                            } else if(index==4) {
+                                users = response.checkedRT[1]
+                            } else if(index==5) {
+                                users = response.checkedRT[0]
+                            } else if(index==6) {
+                                users = response.checkedSP[1]
+                            } else if(index==7) {
+                                users = response.checkedSP[0]
+                            } else if(index==8) {
+                                users = response.checkedSL[1]
+                            } else if(index==9) {
+                                users = response.checkedSL[0]
+                            }
+                            $('#User').empty();
+                            if (users && users.length > 0) {
+                                users.forEach(function(user) {
+                                    var listItem = '<li style="margin-left:20px; margin-top:20px">'+user.username+'<span style="color:#fe7c96; font-size:12px; font-weight: bold; margin-left:30px">'+ user.positionName +'</span></li>'
+                                    $('#User').append(listItem);
+                                });
+                            } else {
+                                $('#User').append('<li> 해당하는 사원이 없습니다. </li>')
+                            }
+
+
+                            // 모달 창 표시
+                            $('#chartInfoModal').modal('show');
+                        } else {
+                            console.error("Data is undefined");
+                        }
                     }
-                ],
-                backgroundColor: [
-                    'rgba(54, 162, 235, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                ],
-                borderWidth: 1
+                });
             }
-        ]
-    }
-
-    var scatterChartDataDark = {
-        datasets: [{
-            label: 'First Dataset',
-            data: [{
-                x: -10,
-                y: 0
-            },
-                {
-                    x: 0,
-                    y: 3
-                },
-                {
-                    x: -25,
-                    y: 5
-                },
-                {
-                    x: 40,
-                    y: 5
-                }
-            ],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)'
-            ],
-            borderWidth: 1
         },
-            {
-                label: 'Second Dataset',
-                data: [{
-                    x: 10,
-                    y: 5
-                },
-                    {
-                        x: 20,
-                        y: -30
-                    },
-                    {
-                        x: -25,
-                        y: 15
-                    },
-                    {
-                        x: -10,
-                        y: 5
-                    }
-                ],
-                backgroundColor: [
-                    'rgba(54, 162, 235, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                ],
-                borderWidth: 1
-            }
-        ]
-    }
-
-    var scatterChartOptions = {
-        scales: {
-            xAxes: [{
-                type: 'linear',
-                position: 'bottom'
-            }]
+        error: function(xhr, status, error) {
+            // 요청이 실패했을 때의 처리를 정의합니다.
+            console.error(error);
         }
-    }
+    });
 
-    var scatterChartOptionsDark = {
-        scales: {
-            xAxes: [{
-                type: 'linear',
-                position: 'bottom',
-                gridLines: {
-                    color: '#322f2f',
-                    zeroLineColor: '#322f2f'
-                }
-            }],
-            yAxes: [{
-                gridLines: {
-                    color: '#322f2f',
-                    zeroLineColor: '#322f2f'
-                }
-            }]
-        }
-    }
 
-    if ($("#doughnutChart").length) {
-        var doughnutChartCanvas = $("#doughnutChart").get(0).getContext("2d");
-        var doughnutChart = new Chart(doughnutChartCanvas, {
-            type: 'doughnut',
-            data: doughnutPieData,
-            options: doughnutPieOptions
-        });
-    }
 
 
 });
