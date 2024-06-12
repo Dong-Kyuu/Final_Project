@@ -59,5 +59,21 @@ public class CalendarController {
         return cs.update(calendar);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/resize", method = RequestMethod.GET)
+    public int resize(Calendar calendar, @AuthenticationPrincipal User user) {
+
+        calendar.setUsername(user.getUsername());
+
+        return cs.resize(calendar);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public int delete(int cal_id) {
+
+
+        return cs.delete(cal_id);
+    }
 
 }

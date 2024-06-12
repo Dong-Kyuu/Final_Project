@@ -26,17 +26,20 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#dashboard-pages" aria-expanded="false" aria-controls="dashboard-pages">
+            <a class="nav-link"  th:href="@{/dashboard}">
                 <span class="menu-title">대시보드</span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-home menu-icon"></i>
+                <i class="mdi mdi-database menu-icon"></i>
             </a>
-            <div class="collapse" id="dashboard-pages">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/cal/show}">캘린더</a></li>
-                </ul>
-            </div>
         </li>
+
+        <li class="nav-item">
+            <a class="nav-link"  th:href="@{/cal/show}">
+                <span class="menu-title">캘린더</span>
+                <i class="mdi mdi-calendar menu-icon"></i>
+            </a>
+        </li>
+
+
 
         <li class="nav-item">
             <a class="nav-link"  th:href="@{/user/commute}">
@@ -58,6 +61,7 @@
                 </ul>
             </div>
         </li>
+
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#chat-pages" aria-expanded="false" aria-controls="chat-pages">
                 <span class="menu-title">채팅</span>
@@ -70,6 +74,7 @@
                 </ul>
             </div>
         </li>
+
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#trip-pages" aria-expanded="false" aria-controls="trip-pages">
                 <span class="menu-title">여행부서</span>
@@ -82,6 +87,7 @@
                 </ul>
             </div>
         </li>
+
         <li class="nav-item" th:if="${#authorization.expression('hasRole(''ROLE_MASTER'')')}">
             <a class="nav-link" data-bs-toggle="collapse" href="#admin-pages" aria-expanded="false" aria-controls="admin-pages">
                 <span class="menu-title">관리</span>

@@ -34,4 +34,14 @@ public class CalendarServiceImpl implements CalendarService{
     public int update(Calendar calendar) {
         return dao.update(calendar);
     }
+
+    @Override
+    public int resize(Calendar calendar) {
+        return dao.resize(calendar);
+    }
+
+    @Override
+    public int delete(int cal_id) {
+        return dao.delete(cal_id);
+    }
 }

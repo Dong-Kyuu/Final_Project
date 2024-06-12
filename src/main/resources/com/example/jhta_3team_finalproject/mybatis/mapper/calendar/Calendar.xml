@@ -20,5 +20,16 @@
         where cal_id = #{id}
     </update>
 
+    <update id="resize">
+            update calendar
+            set cal_start= #{start}, cal_end=#{end}
+            where cal_id = #{id}
+    </update>
+
+    <delete id="delete">
+        delete
+        from calendar
+        where cal_id = #{id}
+    </delete>
 
 </mapper>
