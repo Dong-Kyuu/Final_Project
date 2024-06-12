@@ -1,8 +1,9 @@
 package com.example.jhta_3team_finalproject.controller;
 
 import com.example.jhta_3team_finalproject.domain.Board.AnnounceBoard;
-import com.example.jhta_3team_finalproject.domain.Board.Board;
 import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
+import com.example.jhta_3team_finalproject.domain.User.User;
+import com.example.jhta_3team_finalproject.service.S3CommomService;
 import com.example.jhta_3team_finalproject.service.board.AnnounceBoardService;
 import com.example.jhta_3team_finalproject.util.PagingUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,9 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/annboard")
@@ -32,10 +30,12 @@ public class AnnounceBoardController {
     @Value("${my.savefolder.board}")
     private String saveFolder;
     private AnnounceBoardService AnnounceBoardService;
+    private S3CommomService s3CommomService;
 
     @Autowired
-    public AnnounceBoardController(AnnounceBoardService AnnounceBoardService) {
+    public AnnounceBoardController(AnnounceBoardService AnnounceBoardService, S3CommomService s3CommomService) {
         this.AnnounceBoardService = AnnounceBoardService;
+        this.s3CommomService = s3CommomService;
     }
 
     // 리스트 가져오기
@@ -92,22 +92,17 @@ public class AnnounceBoardController {
         int boardNum = AnnounceBoard.getAnnboardNum(); // 저장된 BOARD_NUM 가져오기
 
         List<BoardUpfiles> files = new ArrayList<>();
+
         for (MultipartFile uploadfile : uploadfiles) {
             if (!uploadfile.isEmpty()) {
-                String fileName = uploadfile.getOriginalFilename(); // 원래 파일명
 
-                String fileDBName = fileDBName(fileName, saveFolder);
-                logger.info("fileDBName = " + fileDBName);
-
-                uploadfile.transferTo(new File(saveFolder + fileDBName));
-                logger.info("transferTo path = " + saveFolder + fileDBName);
+                String fileUrl = s3CommomService.uploadFile(uploadfile);
+                logger.info("Uploaded file URL: " + fileUrl);
 
                 BoardUpfiles file = new BoardUpfiles();
-                file.setUpfilesOriginalFileName(fileName);
-                file.setUpfilesFileName(fileDBName);
+                file.setUpfilesOriginalFileName(uploadfile.getOriginalFilename());
+                file.setUpfilesFileName(fileUrl); // S3 URL로 설정
                 files.add(file);
-
-
             }
         }
 
@@ -118,49 +113,6 @@ public class AnnounceBoardController {
 
     }
 
-    // 서버에 파일 생성/파일 이름 생성 로직
-    private String fileDBName(String fileName, String saveFolder) {
-        // 새로운 폴더 이름 : 오늘 년+월+일
-        Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);            //오늘 년도
-        int month = c.get(Calendar.MONTH) + 1;    //오늘 월
-        int date = c.get(Calendar.DATE);            //오늘 일
-
-        String homedir = saveFolder + "/" + year + "-" + month + "-" + date;
-        logger.info(homedir);
-        File path1 = new File(homedir);
-        if (!(path1.exists())) {
-            path1.mkdirs(); // 새로운 폴더 생성
-        }
-
-        // 난수 획득
-        Random r = new Random();
-        int random = r.nextInt(100000000);
-
-        // 확장자 구하기 시작
-        int index = fileName.lastIndexOf(".");
-        // 문자열에서 특정 문자열의 위치 값(index) 반환
-        // indexOf가 처음 발견되는 문자열에 대한 Index를 반환하는 반면,
-        // lastIndexOf는 마지막으로 발견되는 문자열의 Index를 반환
-        // (파일명에 점이 여러개 있을 경우 맨 마지막에 발견되는 문자열의 위치를 리턴한다.
-        logger.info("index = " + index);
-
-        String fileExtension = fileName.substring(index + 1);
-        logger.info("fileExtension = " + fileExtension);
-        // 확장자 구하기 끝
-
-        // 새로운 파일명
-        String refileName = "bbs" + year + month + date + random + "." + fileExtension;
-        logger.info("refileName = " + refileName);
-
-        // MySQL 디비에 저장될 파일 명
-        // String fileDBName = "/" + year + "-" month + "-" + date + "/" + refileName;
-        String fileDBName = File.separator + year + "-" + month + "-" + date
-                + File.separator + refileName;
-        logger.info("fileDBName = " + fileDBName);
-
-        return fileDBName;
-    }
 
     @GetMapping("/detail")
     public ModelAndView Detail(
@@ -296,6 +248,101 @@ public class AnnounceBoardController {
         logger.info(result);
         response.put("status", "success");
         response.put("result", result);
+
+        return response;
+    }
+
+    @PostMapping("/getUsersdata")
+    @ResponseBody
+    public Map<String, Object> getUsersData(@RequestParam("loginNum") int loginNum,
+                                           @RequestParam("annboardNum") int annboardNum) {
+
+        logger.info("userdata run");
+        Map<String, Object> response = new HashMap<>();
+
+        // 회원의 모든 정보
+        List<User> user;                            // 모든 회원의 정보
+        Map<Integer, List<User>> departGroupUser;   // 부서별 회원 정보
+        int totalUser;              // 전체 회원 수
+        int totalDepartment;        // 부서의 수
+
+        List<User> humanResource;                   // 인사부서 사원 정보
+        Map<Integer, List<User>> checkedHR;         // 확인한 인사부서 사원 정보
+        int totalHR;                                // 인사부서 인원 수
+        int totalCheckHR;                           // 확인한 인사부서 사원 수
+
+        List<User> management;                      // 관리
+        Map<Integer, List<User>> checkedMG;         // 확인한 관리부서 사원 정보
+        int totalMG;                                // 관리부서 인원 수
+        int totalCheckMG;                           // 확인한 관리부서 사원 수
+
+        List<User> relations;                       // 홍보
+        Map<Integer, List<User>> checkedRT;         // 확인한 홍보부서 사원 정보
+        int totalRT;                                // 홍보부서 인원 수
+        int totalCheckRT;                           // 확인한 홍보부서 사원 수
+
+        List<User> support;                         // 지원
+        Map<Integer, List<User>> checkedSP;         // 확인한 지원부서 사원 정보
+        int totalSP;                                // 지원부서 인원 수
+        int totalCheckSP;                           // 확인한 지원부서 사원 수
+
+        List<User> sales;           // 영업
+        Map<Integer, List<User>> checkedSL;         // 확인한 지원부서 사원 정보
+        int totalSL;                                // 지원부서 인원 수
+        int totalCheckSL;                           // 확인한 지원부서 사원 수
+
+        List<User> executive;                       // 임원
+        Map<Integer, List<User>> checkedEX;         // 확인한 지원부서 사원 정보
+        int totalEX;                                // 지원부서 인원 수
+        int totalCheckEX;                           // 확인한 지원부서 사원 수
+
+        List<String> department = AnnounceBoardService.getDepartment();
+        user = AnnounceBoardService.getUserData(annboardNum);
+        totalUser = user.size();
+
+        departGroupUser = user.stream().collect(Collectors.groupingBy(User::getDepartmentId));
+        totalDepartment = department.size();
+
+        humanResource = departGroupUser.getOrDefault(1, user);
+        checkedHR = humanResource.stream().collect(Collectors.groupingBy(User::getViewCheck));
+
+        management = departGroupUser.getOrDefault(2, user);
+        checkedMG = management.stream().collect(Collectors.groupingBy(User::getViewCheck));
+
+        relations = departGroupUser.getOrDefault(3, user);
+        checkedRT = relations.stream().collect(Collectors.groupingBy(User::getViewCheck));
+
+        support = departGroupUser.getOrDefault(4, user);
+        checkedSP = support.stream().collect(Collectors.groupingBy(User::getViewCheck));
+
+        sales = departGroupUser.getOrDefault(5, user);
+        checkedSL = sales.stream().collect(Collectors.groupingBy(User::getViewCheck));
+
+        executive = departGroupUser.getOrDefault(6, user);
+        checkedEX = executive.stream().collect(Collectors.groupingBy(User::getViewCheck));
+
+
+        response.put("status", "success");
+        response.put("user", user);
+        response.put("department", department);
+        response.put("departGroupUser", departGroupUser);
+        response.put("totalUser", totalUser);
+        response.put("totalDepartment", totalDepartment);
+        response.put("humanResource", humanResource);
+        response.put("management", management);
+        response.put("relations", relations);
+        response.put("supportDepartment", support);
+        response.put("sales", sales);
+        response.put("executive", executive);
+        response.put("checkedHR", checkedHR);
+        response.put("checkedMG", checkedMG);
+        response.put("checkedRT", checkedRT);
+        response.put("checkedSP", checkedSP);
+        response.put("checkedSL", checkedSL);
+        response.put("checkedEX", checkedEX);
+
+
+
 
         return response;
     }

@@ -71,4 +71,39 @@
         DELETE FROM announce_board
         WHERE annboard_num = #{annboardNum}
 	</delete>
+
+    <select id="getUserData" resultType="User">
+        SELECT
+            u.user_name,
+            u.user_profile_picture,
+            u.department_id,
+            u.position_id,
+            d.department_name AS departmentName,
+            p.position_name AS positionName,
+            CASE
+                WHEN v.announce_board_num IS NOT NULL THEN v.checked
+                ELSE 0
+                END AS viewCheck
+        FROM
+            user u
+                JOIN
+                    user_departments d ON u.department_id = d.department_id
+                JOIN
+                    user_positions p ON u.position_id = p.position_id
+                LEFT JOIN
+                    view_check v ON u.user_num = v.user_num AND v.announce_board_num = #{annboardNum}
+        WHERE
+            u.department_id != 0
+        AND u.position_id != 0
+        ORDER BY
+            u.position_id
+    </select>
+
+    <select id="getDepartment">
+        SELECT department_name
+        FROM user_departments
+        WHERE department_id != 0
+    </select>
+
+
 </mapper>

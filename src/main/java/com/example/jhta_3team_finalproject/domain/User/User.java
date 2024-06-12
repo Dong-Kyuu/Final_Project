@@ -40,6 +40,9 @@ public class User implements UserDetails {
     private String userChatStatusMsg;
     private String userAuth = "ROLE_MEMBER";
 
+    // 동규
+    private int viewCheck;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

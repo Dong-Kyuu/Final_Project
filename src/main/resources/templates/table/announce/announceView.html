@@ -131,10 +131,10 @@
                                             <br><br><br>
 
                                         <div class="check-state">
-                                            <div class="col-lg-8 grid-margin stretch-card">
+                                            <div class="col-lg-6 grid-margin stretch-card">
                                                 <div class="card">
-                                                    <div class="card-body">
-                                                        <h4 class="card-title">Doughnut chart</h4>
+                                                    <div class="card-body chart-board">
+                                                        <h4 class="card-title chart-title">공지 확인 현황</h4>
                                                         <canvas id="doughnutChart" style="height:250px"></canvas>
                                                     </div>
                                                 </div>
@@ -176,6 +176,27 @@
             </form>
             <hr style="margin: 0px 0px">
             <div class="btn btn-inverse-light btn-fw menu-M">수정</div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="chartInfoModal" tabindex="-1" aria-labelledby="chartInfoModalLabel" aria-hidden="true">
+            <div class="modal-dialog" style="max-height:200px; margin-top: 25%; /* 원하는 위치로 조정 */">
+                <div class="modal-content">
+                    <div class="modal-header" >
+                        <h5 class="modal-title" id="chartInfoLabel"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul id="User">
+
+                        </ul>
+                        <p id="chartInfoValue"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
