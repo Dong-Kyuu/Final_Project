@@ -1,4 +1,4 @@
-package com.example.jhta_3team_finalproject.config.chat;
+package com.example.jhta_3team_finalproject.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
