@@ -307,6 +307,15 @@ public class SocketHandler extends TextWebSocketHandler {
             obj.put("msg", content);
             obj.put("readCount", readCount);
             obj.put("sendTime", sendTime.getTime()); // milliseconds 밀리초로 구해진 값으로 JS와 호환
+
+            /**
+             * 2024-06-12, 타임스탬프인 경우 put 한다.
+             */
+            if(chatMessageList.get(i).getType() != null &&
+               chatMessageList.get(i).getType().equals(ChatMessage.MessageType.TIMESTAMP)) {
+               obj.put("timeStamp", chatMessageList.get(i).getTimeStamp());
+            }
+
             /**
              * 2024-06-04, URL 이 있는 경우 URL 주소를 put 한다.
              */
