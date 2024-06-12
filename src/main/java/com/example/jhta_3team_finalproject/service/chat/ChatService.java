@@ -75,31 +75,58 @@ public class ChatService {
     }
 
     public ChatParticipate createChatRoom(ChatRoom chatRoom, String chatInviteUserList) throws Exception {
-        int result = dao.createChatRoom(chatRoom);
-        chatRoom = dao.lastChatRoom();
-
-        /**
-         * 2024-06-10, 자신의 정보도 채팅방 참여 테이블에 등록
-         */
         ChatParticipate chatParticipate = new ChatParticipate();
-        chatParticipate.setChatRoomNum(chatRoom.getChatRoomNum());
-        chatParticipate.setChatUserId(chatRoom.getChatSessionId());
-        dao.addChatParticipate(chatParticipate);
 
-        /**
-         * 2024-06-10, 채팅방을 생성하기 전 초대된 유저들을 관리할 수 있는 채팅 참여 테이블에 등록
-         */
-        String[] chatInviteUserArray = chatInviteUserList.split(",");
-        for(String inviteUserId : chatInviteUserArray) {
-            chatParticipate = new ChatParticipate();
+        int result = dao.createChatRoom(chatRoom);
+
+        if(result > 0) {
+            chatRoom = dao.lastChatRoom();
+
+            /**
+             * 2024-06-10, 자신의 정보도 채팅방 참여 테이블에 등록
+             */
             chatParticipate.setChatRoomNum(chatRoom.getChatRoomNum());
-            chatParticipate.setChatUserId(inviteUserId);
+            chatParticipate.setChatUserId(chatRoom.getChatSessionId());
             dao.addChatParticipate(chatParticipate);
+
+            /**
+             * 2024-06-10, 채팅방을 생성하기 전 초대된 유저들을 관리할 수 있는 채팅 참여 테이블에 등록
+             */
+            String[] chatInviteUserArray = chatInviteUserList.split(",");
+            for(String inviteUserId : chatInviteUserArray) {
+                chatParticipate.setChatRoomNum(chatRoom.getChatRoomNum());
+                chatParticipate.setChatUserId(inviteUserId);
+                dao.addChatParticipate(chatParticipate);
+            }
+
+            chatParticipate = dao.searchLastRoomUser(chatRoom);
         }
 
-        chatParticipate = dao.searchLastRoomUser(chatRoom);
 
         return chatParticipate;
+    }
+
+    public void exitChatRoom(String sessionId, String chatExitRoomList) {
+        /**
+         * 2024-06-12, 채팅방 나가기를 구현합니다. 참가중인 채팅방에서 자신의 아이디를 뺍니다.
+         */
+        ChatParticipate chatParticipate = new ChatParticipate();
+        String[] chatExitRoomArray = chatExitRoomList.split(",");
+
+        for(String exitRoomNum : chatExitRoomArray) {
+            chatParticipate.setChatRoomNum(Long.parseLong(exitRoomNum));
+            chatParticipate.setChatUserId(sessionId);
+            dao.participateExitChatRoom(chatParticipate);
+            /**
+             * 2024-06-12, 참가 테이블의 인원이 0명인 경우, 해당되는 채팅방을 삭제합니다.
+             *              채팅방 삭제 시, 채팅방에 해당하는 메시지들을 cascade delete 합니다.
+             */
+            if(dao.isChatRoomParticipate(chatParticipate) > 0){
+                dao.deleteChatRoom(chatParticipate);
+            }
+        }
+
+
     }
 
     public List<ChatMessage> searchMessages(ChatMessage chatMessage) throws Exception {
@@ -136,4 +163,5 @@ public class ChatService {
         user.setUserId(chatUserId);
         return dao.chatUserProfileMsgUpdate(user);
     }
+
 }

@@ -1,7 +1,7 @@
 .chat-timestamp-dash {
     width: 100%;
     text-align: center;
-    border-bottom: 1px solid #dbd9d9;
+    /*border-bottom: 1px solid #dbd9d9;*/
     line-height: 0.1em;
     margin: 10px 0 20px;
 }

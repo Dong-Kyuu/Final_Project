@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -149,6 +150,22 @@ public class ChatController {
         mv.addObject("chatUserId", chatUserId);
         mv.addObject("chatRoomList", chatRoomList);
         return mv;
+    }
+
+    @RequestMapping("exitRoomProcess")
+    public @ResponseBody List<ChatParticipate> exitRoomProcess(@RequestParam HashMap<Object, Object> params) throws Exception {
+        String sessionId = (String) params.get("sessionId");
+        String chatExitRoomList = (String) params.get("chatExitRoomList");
+        ChatRoom chatRoom = new ChatRoom();
+        List<ChatParticipate> chatParticipate = new ArrayList<>();
+
+        if (sessionId != null && !sessionId.trim().equals("")) {
+            chatRoom.setChatSessionId(sessionId);
+            chatService.exitChatRoom(sessionId, chatExitRoomList);
+            chatParticipate = chatService.searchRoomUser(chatRoom);
+            return chatParticipate;
+        }
+        return chatParticipate;
     }
 
     @RequestMapping(value = "chatUserInviteView")

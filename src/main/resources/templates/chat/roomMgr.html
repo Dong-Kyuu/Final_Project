@@ -210,7 +210,7 @@
          * 2024-05-30, 채팅방 버튼 클릭 시
          */
         $(".chat-room-create").click(function () {
-            console.log($("#selectedUserList").text());
+            //console.log($("#selectedUserList").text());
 
             var msg = {
                 roomName: $('input[name=roomName]').val(),
@@ -224,8 +224,6 @@
 
             $(".mgr-room-screen").fadeOut(300);
         });
-
-
 
         /**
          * 2024-06-10, 초대 유저 검색
@@ -249,63 +247,7 @@
         }
 
         var sourceData = [[${chatUserList}]];
-        console.log(sourceData);
-        /*[/]*/
-
-        /*[# th:if="${type == 'room-exit'}"]*/
-        /**
-         * 2024-05-30, 채팅방 버튼 클릭 시
-         */
-        $(".chat-room-exit").click(function () {
-            console.log($("#selectedRoomList").text());
-            $(".mgr-room-screen").fadeOut(300);
-        });
-
-        /**
-         * 2024-06-10, 채팅방 목록 검색
-         */
-        function loadMembers() {
-            return {
-                selectedMembers: [],
-                search: "",
-                myForData: sourceData,
-                get filteredMembers() {
-                    if (this.search === "") {
-                        return this.myForData;
-                    }
-                    return this.myForData.filter((item) => {
-                        return item.roomName
-                            .toLowerCase()
-                            .includes(this.search.toLowerCase());
-                    });
-                },
-            };
-        }
-
-        var sourceData = [[${chatRoomList}]];
-        console.log(sourceData);
-        /*[/]*/
-
-        function commonAjax(url, parameter, type, calbak, contentType) {
-            $.ajax({
-                url: url,
-                data: parameter,
-                type: type,
-                beforeSend: function (xhr) {
-                    //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
-                    xhr.setRequestHeader(header, token);
-                },
-                contentType: contentType != null ? contentType
-                    : 'application/x-www-form-urlencoded; charset=UTF-8',
-                success: function (res) {
-                    calbak(res);
-                },
-                error: function (err) {
-                    console.log('error');
-                    calbak(err);
-                }
-            });
-        }
+        //console.log(sourceData);
 
         function createChattingRoom(d) {
             if (d != null) {
@@ -325,7 +267,7 @@
                 var sessionId = d.chatUserId;
                 var entryTime = d.chatEntryTime;
                 var visitTime = d.chatVisitTime;
-                var lastSendTime = d.sendTime;
+                var lastSendTime = d.lastSendTime;
                 var lastMessageContent = d.messageContent;
                 var roomName = d.roomName;
                 var roomCreateDate = d.roomCreateDate;
@@ -338,7 +280,7 @@
                 output += "        " + img;
                 output += "    </div>";
                 output += "    <div class='mes-detail'>";
-                output += "        <div class='mes-col1' style='padding-top: 20px;'>";
+                output += "        <div class='mes-col1'>";
                 output += "            <div class='sender-name'>";
                 output += "                " + roomName;
                 output += "            </div>";
@@ -372,6 +314,168 @@
                 $(".touch-chatroom").bind('click');
             }
         }
+        /*[/]*/
+
+        /*[# th:if="${type == 'room-exit'}"]*/
+        /**
+         * 2024-05-30, 채팅방 버튼 클릭 시
+         */
+        $(".chat-room-exit").click(function () {
+            console.log($("#selectedRoomList").text());
+
+            var msg = {
+                sessionId: $('input[name=sessionId]').val(),
+                chatExitRoomList: $("#selectedRoomList").text()
+            };
+
+            commonAjax('/chat/exitRoomProcess', msg, 'post', function (result) {
+                exitChattingRoom(result);
+            });
+
+            $(".mgr-room-screen").fadeOut(300);
+        });
+
+        /**
+         * 2024-06-10, 채팅방 목록 검색
+         */
+        function loadMembers() {
+            return {
+                selectedMembers: [],
+                search: "",
+                myForData: sourceData,
+                get filteredMembers() {
+                    if (this.search === "") {
+                        return this.myForData;
+                    }
+                    return this.myForData.filter((item) => {
+                        return item.roomName
+                            .toLowerCase()
+                            .includes(this.search.toLowerCase());
+                    });
+                },
+            };
+        }
+
+        var sourceData = [[${chatRoomList}]];
+        //console.log(sourceData);
+
+        /**
+         * 2024-05-29, getUserChatRoomList - 채팅방 리스트 가져오기
+         */
+        function exitChattingRoom() {
+            $.ajax({
+                type: "post",
+                url: "/chat/userChatRoomList",
+                data: {
+                    "chatUserId": $('input[name=sessionId]').val()
+                },
+                dataType: "json",
+                beforeSend: function (xhr) {
+                    //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function (res) {
+                    //console.log(res);
+                    let output = '';
+                    res.forEach(function (d, idx) {
+                        let img = ''; // 이미지 처리 시
+                        if (this.profilePicture === 'default.png') {
+                            img = "<img src='/image/chat/default.png' />";
+                        } else {
+                            // 업로드된 프로필을 보여주도록 한다. (채팅방 화면은 임시 처리)
+                            img = "<img src='/image/chat/default.png' />";
+                        }
+
+                        var roomNumber = d.chatRoomNum;
+                        var sessionId = d.chatUserId;
+                        var entryTime = d.chatEntryTime;
+                        var visitTime = d.chatVisitTime;
+                        var lastSendTime = d.lastSendTime;
+                        var lastMessageContent = d.messageContent;
+                        var roomName = d.roomName;
+                        var roomCreateDate = d.roomCreateDate;
+                        var unreadMessageCount = getUnreadMessage(roomNumber, sessionId);
+
+                        output += "<li>";
+                        output += "<input type='hidden' name='chat_room_num' value='" + roomNumber + "' />";
+                        output += "    <input type='hidden' name='chat_room_type' value='multi'/>";
+                        output += "    <div class='sender-image'>";
+                        output += "        " + img;
+                        output += "    </div>";
+                        output += "    <div class='mes-detail'>";
+                        output += "        <div class='mes-col1'>";
+                        output += "            <div class='sender-name'>";
+                        output += "                " + roomName;
+                        output += "            </div>";
+                        output += "            <div class='mes-preview'>";
+                        if (lastMessageContent != null) {
+                            output += lastMessageContent.substr(0, 20);
+                        }
+                        output += "            </div>";
+                        output += "        </div>";
+                        output += "        <div class='mes-col2'>";
+                        output += "            <div>";
+                        if(lastSendTime != null) {
+                            if(diffNowTime(lastSendTime)) {
+                                lastSendTime = getTime(lastSendTime);
+                                output += "                <div class='send-time'>" + lastSendTime + "</div>";
+                                output += "                <div class='mes-seen-status'>";
+                                output += "                <span class='new'>new</span>";
+                                output += "                </div>";
+                            } else {
+                                lastSendTime = getDate(lastSendTime);
+                                output += "                <div class='send-time'>" + lastSendTime + "</div>";
+                            }
+                        }
+                        output += "            </div>";
+                        if (unreadMessageCount > 0) {
+                            output += "            <span class='mes-count'>"
+                            output += unreadMessageCount;
+                            output += "            </span>";
+                        }
+                        output += "        </div>";
+                        output += "    </div>";
+                        output += "</li>";
+
+                    }); // each end
+                    $(".touch-chatroom").empty().html(output);
+                }
+            }) // ajax end
+        }
+        /*[/]*/
+
+        function commonAjax(url, parameter, type, calbak, contentType) {
+            $.ajax({
+                url: url,
+                data: parameter,
+                type: type,
+                beforeSend: function (xhr) {
+                    //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
+                    xhr.setRequestHeader(header, token);
+                },
+                contentType: contentType != null ? contentType
+                    : 'application/x-www-form-urlencoded; charset=UTF-8',
+                success: function (res) {
+                    calbak(res);
+                },
+                error: function (err) {
+                    console.log('error');
+                    calbak(err);
+                }
+            });
+        }
+
+        function diffNowTime(time) {
+            var lastMessageDayStr = `${new Date(time).getFullYear()}-${new Date(time).getMonth() + 1}-${new Date(time).getDate()}`;
+            const todayStr = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`;
+            //console.log(lastMessageDayStr);
+            //console.log(todayStr);
+            if(lastMessageDayStr === todayStr) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 
         function getDate(time) {
             var date = new Date(time);
@@ -389,6 +493,29 @@
             minutes = minutes < 10 ? '0' + minutes : minutes;
             var strTime = hours + ':' + minutes + ' ' + ampm;
             return strTime;
+        }
+
+        function getUnreadMessage(roomNumber, sessionId) {
+            var resultCount;
+            $.ajax({
+                type: "post",
+                url: "/chat/getUnreadMessage",
+                data: {
+                    "sessionId": sessionId,
+                    "roomNumber":roomNumber
+                },
+                dataType: "json",
+                async: false,
+                beforeSend: function (xhr) {
+                    //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function (res) {
+                    //console.log(res);
+                    resultCount = res;
+                }
+            }) // ajax end
+            return resultCount;
         }
     </script>
     </body>
