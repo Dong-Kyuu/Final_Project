@@ -645,7 +645,7 @@
                         if (msg != null && msg.type !== '') {
                             //파일 업로드가 아닌 경우 메시지를 뿌려준다.
                             var d = JSON.parse(msg);
-                            //console.log(d);
+                            console.log(d);
                             //console.log(d.type);
 
                             if (d.fileUrl != null) {
@@ -656,7 +656,16 @@
                             if (d.type === "getId") {
                                 var si = d.sessionId != null ? d.sessionId : ""; // sessionId 가 널과 다르면 ""로 하라
                                 if (si !== '') { // 가져오기
-                                    if (d.userName === $("#chat_user_id").val()) {
+                                    if(d.timeStamp != null) {
+                                        output = "";
+                                        output +="<h5 class='chat-timestamp-dash'>";
+                                        output +="    <span class='chat-timestamp-content'>";
+                                        output +="        &nbsp;&nbsp;"+ getDayStr(d.timeStamp) +"&nbsp;&nbsp;";
+                                        output +="    </span>";
+                                        output +="</h5>";
+
+                                        $("#chat-message-list").append(output);
+                                    } else if (d.userName === $("#chat_user_id").val()) {
                                         output = "";
                                         output += "<li class='sent'>";
                                         output += "    <div>";
@@ -785,7 +794,7 @@
                     $(".messages-list > ul > li").off('click', showMessages);
                     $(".messages-list > ul > li").bind('click', showMessages);
                 }, 100);
-            })
+            });
 
             setInterval(function() {
                 $(".messages-list > ul > li").off('click', showMessages);
@@ -797,7 +806,7 @@
                 if (e.which == 13 && $('.view-message').hasClass("active")) {
                     sendMassage();
                 }
-            })
+            });
 
             function sendMassage() {
                 var message = $('input[name=message-text]').val();
@@ -815,6 +824,53 @@
                     ws.send(JSON.stringify(option));
                     $(".message-text").val("");
                 }
+            }
+
+            /**
+             * 2024-06-12, 날짜를 저장하는 변수 사용 예정
+             * 사용 용도
+             * 1. 가장 오래된 날짜를 기록하여 그 다음 날짜를 가져온다.
+             * 2. 가장 최신 메시지의 날짜와 현재 날짜를 비교하여 다를 경우 타임스탬프를 메시지로 전송하여 저장
+             * 2-1. Redis 이슈로 인해 날짜가 다른 경우 데이터를 입력 후 해딩 키 값을 리셋해준다.
+             */
+            let minTimeStamp;
+            let maxTimeStamp;
+
+            function getDayStr(yyyyMMdd){
+                const arr = yyyyMMdd.split('-');
+                dayStr = "";
+                dayStr += arr[0] + "년 ";
+                dayStr += arr[1] + "월 ";
+                dayStr += arr[2] + "일 ";
+
+                const dayOfWeek = new Date(yyyyMMdd).getDay();
+
+                //0:일, 1:월, 2:화, 3:수, 4:목, 5:금, 6:토
+                switch(dayOfWeek) {
+                    case 0:
+                        dayStr += "일요일";
+                        break;
+                    case 1:
+                        dayStr += "월요일";
+                        break;
+                    case 2:
+                        dayStr += "화요일";
+                        break;
+                    case 3:
+                        dayStr += "수요일";
+                        break;
+                    case 4:
+                        dayStr += "목요일";
+                        break;
+                    case 5:
+                        dayStr += "금요일";
+                        break;
+                    case 6:
+                        dayStr += "토요일";
+                        break;
+                }
+
+                return dayStr;
             }
 
             function diffNowTime(time) {
