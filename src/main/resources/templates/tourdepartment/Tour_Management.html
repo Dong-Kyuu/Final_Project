@@ -36,63 +36,63 @@
 </head>
 <body>
 <div class="container-scroller">
-  <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
+    <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
     <div class="container-fluid page-body-wrapper">
-         <th:block th:replace="~{HSF/_sidebar :: sidebar}"></th:block>
-             <div class="main-panel">
-                 <div class="content-wrapper">
-                     <div class="page-header">
-                         <h3 class="page-title"> Tour Management </h3>
-                         <nav aria-label="breadcrumb">
-                             <ol class="breadcrumb">
-                                 <li class="breadcrumb-item"><a href="#">Tables</a></li>
-                                 <li class="breadcrumb-item active" aria-current="page">Basic tables</li>
-                             </ol>
-                         </nav>
-                     </div>
+        <th:block th:replace="~{HSF/_sidebar :: sidebar}"></th:block>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h3 class="page-title"> Tour Management </h3>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Basic tables</li>
+                        </ol>
+                    </nav>
+                </div>
 
-                     <div class="row">
-                         <div class="col-lg-6 grid-margin stretch-card">
-                             <div class="card">
-                                 <div class="card-body">
-                                     <h4 class="card-title">Main Trip Info / Trip Manager</h4>
-                                     <div class="row" id="TripInfo">
-                                         <div class="col-md-6"><img th:src="${trip.tripMainIMG}" alt="Main Image"></div>
-                                         <div class="col-md-6">
-                                             <div class="row">
-                                                 <div class="col-md-12">
-                                                     <h6 th:text="'여행 이름 : '+${trip.tripName}"></h6>
-                                                     <h6 th:text="'여행 출발 : '+${trip.tripDate}"></h6>
-                                                 </div>
+                <div class="row">
+                    <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Main Trip Info / Trip Manager</h4>
+                                <div class="row" id="TripInfo">
+                                    <div class="col-md-6"><img th:src="${trip.tripMainIMG}" alt="Main Image"></div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h6 th:text="'여행 이름 : '+${trip.tripName}"></h6>
+                                                <h6 th:text="'여행 출발 : '+${trip.tripDate}"></h6>
+                                            </div>
 
-                                             </div>
-                                             <div class="row">
-                                                 <div class="col-md-12">
-                                                     담당TL 등록
-                                                     <!--아직 TL이 등록되어있지 않을때-->
-                                                     <div class="btn-group-vertical" role="group" aria-label="Basic example">
-                                                         <div class="btn-group">
-                                                             <button type="button"
-                                                                     class="btn btn-outline-secondary dropdown-toggle"
-                                                                     data-bs-toggle="dropdown">Dropdown
-                                                             </button>
-                                                             <div class="dropdown-menu">
-                                                                 <a class="dropdown-item">Go back</a>
-                                                                 <a class="dropdown-item">Delete</a>
-                                                                 <a class="dropdown-item">Swap</a>
-                                                             </div>
-                                                         </div>
-                                                     </div>
-                                                     <!--등록시 TL이름이 뜨게 하기 if문 이용하면 될듯-->
-                                                 </div>
-                                             </div>
-                                         </div>
-                                     </div>
-                                 </div>
-                             </div>
-                         </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                담당TL 등록
+                                                <!--아직 TL이 등록되어있지 않을때-->
+                                                <div class="btn-group-vertical" role="group" aria-label="Basic example">
+                                                    <div class="btn-group">
+                                                        <button type="button"
+                                                                class="btn btn-outline-secondary dropdown-toggle"
+                                                                data-bs-toggle="dropdown">Dropdown
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item">Go back</a>
+                                                            <a class="dropdown-item">Delete</a>
+                                                            <a class="dropdown-item">Swap</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--등록시 TL이름이 뜨게 하기 if문 이용하면 될듯-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                         <!--병훈이형 캘린더(여행부서 사람들의 일정 공유 캘린더) -->
+                    <!--병훈이형 캘린더(여행부서 사람들의 일정 공유 캘린더) -->
                     <div class="col-lg-6 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">

@@ -10,10 +10,10 @@ CREATE TABLE trip_option (
                              option_max_stock INT(8),
                              option_date      DATE,
                              city_no          VARCHAR(10),
-                             file_id          VARCHAR(10),
+                             file_id          VARCHAR(255) null,
                              option_main_img  VARCHAR(150),
-                             FOREIGN KEY (city_no) REFERENCES city(city_no),
-                             FOREIGN KEY (file_id) REFERENCES trip_file(file_id)
+                                 FOREIGN KEY (city_no) REFERENCES city(city_no),
+                             FOREIGN KEY (file_id) REFERENCES tripfile(file_id)
 );
 
 -- Insert sample data into the TripOption table

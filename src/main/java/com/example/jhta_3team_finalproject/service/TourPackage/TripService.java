@@ -1,9 +1,11 @@
 package com.example.jhta_3team_finalproject.service.TourPackage;
 
+
 import com.example.jhta_3team_finalproject.domain.TourPackage.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -29,5 +31,5 @@ public interface TripService {
 
     List<Trip> getAllTrip();
 
-    void saveTrip(Trip trip,MultipartFile[] images);
+    void saveTrip(Trip trip,MultipartFile[] images) throws IOException;
 }

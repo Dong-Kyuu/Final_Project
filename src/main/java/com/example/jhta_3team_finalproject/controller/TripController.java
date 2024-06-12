@@ -306,7 +306,7 @@ public class TripController {
             }
         }
 
-        TripFile tripFile = tripService.getTripFileByNo(trip.getFileNo());
+        TripFile tripFile = tripService.getTripFileByNo(trip.getFileId());
 
         Cart cart = cartService.getDetail(String.valueOf(customerNo));
         int check = cartService.isId(String.valueOf(customerNo));
@@ -681,44 +681,47 @@ public class TripController {
         return "tourdepartment/Tour_Register";
     }
 
-    @PostMapping("/addMainTrip")
-    public String addMainTrip(@RequestParam("TripName") String tripName,
-                              @RequestParam("TripNumber") String tripNumber,
-                              @RequestParam("TripPrice") int tripPrice,
-                              @RequestParam("TripMaxStock") int tripMaxStock,
-                              @RequestParam("RegDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate regDate,
-                              @RequestParam("ExprDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate expireDate,
-                              @RequestParam("category") String category,
-                              @RequestParam("optionIds") String optionIds,
-                              @RequestParam("img") MultipartFile[] images,
-                              Model model) {
 
+    @PostMapping("/addMainTrip")
+    public String addMainTrip(@RequestParam(name ="TripName", required = false) String tripName,
+                              @RequestParam(name ="TripPrice", required = false) Integer tripPrice,
+                              @RequestParam(name ="TripMaxStock", required = false) Integer tripMaxStock,
+                              @RequestParam(name ="tripDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate tripDate,
+                              @RequestParam(name ="ExprDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate expireDate,
+                              @RequestParam(name ="TripCategory", required = false) String category,
+                              @RequestParam(name ="optionIds", required = false) String optionIds,
+                              @RequestParam(name ="img[]", required = false) MultipartFile[] images,
+                              Model model) throws IOException {
+        System.out.println("====== Received Parameters ======");
         System.out.println("======addMainTrip tripName=" + tripName);
-        System.out.println("======addMainTrip tripNumber=" + tripNumber);
         System.out.println("======addMainTrip tripPrice=" + tripPrice);
         System.out.println("======addMainTrip tripMaxStock=" + tripMaxStock);
         System.out.println("======addMainTrip expireDate=" + expireDate);
         System.out.println("======addMainTrip category=" + category);
         System.out.println("======addMainTrip optionIds=" + optionIds);
 
-        try {
+        if (images != null && images.length > 0) {
+            for (int i = 0; i < images.length; i++) {
+                MultipartFile image = images[i];
+                System.out.println("======addMainTrip image[" + i + "] name=" + image.getOriginalFilename());
+            }
+        } else {
+            System.out.println("======addMainTrip No images uploaded");
+        }
+
             // Trip 객체 생성 및 저장
             Trip trip = new Trip();
             trip.setTripName(tripName);
-            trip.setTripNo(tripNumber);
-            trip.setTripPrice(tripPrice);
-            trip.setTripMaxStock(tripMaxStock);
-            trip.setRegDate(regDate.toString());
+            trip.setTripPrice(tripPrice != null ? tripPrice : 0); // Use default value if null
+            trip.setTripMaxStock(tripMaxStock != null ? tripMaxStock : 0); // Use default value if null
+            trip.setTripDate(tripDate.toString());
             trip.setExpireDate(expireDate.toString());
             trip.setTripCategory(category);
             trip.setOptionIds(optionIds);
 
             tripService.saveTrip(trip, images);
 
-            model.addAttribute("message", "Trip registered successfully!");
-        } catch (Exception e) {
-            model.addAttribute("error", "Error registering trip: " + e.getMessage());
-        }
+            System.out.println("success save");
 
         return "redirect:/tripRegister";
     }

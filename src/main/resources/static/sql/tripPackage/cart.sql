@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS cart;
 
 CREATE TABLE cart (
-                      cart_no          VARCHAR(10) NOT NULL PRIMARY KEY,
-                      trip_no          VARCHAR(10),
+                      cart_no          INT NOT NULL PRIMARY KEY,
+                      trip_no          Int,
                       option_ids       VARCHAR(300),
                       cart_total       INT(10),
                       cart_option_total INT(10),
@@ -13,7 +13,7 @@ CREATE TABLE cart (
 SELECT * FROM cart;
 
 -- Delete all records from the cart table
-DELETE FROM cart;
+DELETE FROM cart ;
 
 -- Insert records into the cart table
 INSERT INTO cart (cart_no, trip_no, option_ids, cart_total) VALUES ('0', NULL, NULL, NULL);
