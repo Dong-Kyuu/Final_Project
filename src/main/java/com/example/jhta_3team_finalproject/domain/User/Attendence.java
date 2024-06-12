@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -17,7 +18,7 @@ public class Attendence  {
     private int userNum;
     private LocalDateTime checkInTime;
     private LocalDateTime checkOutTime;
-    private LocalDate  workDate;
+    private Time workTime;
 
     private int totalHours;
 

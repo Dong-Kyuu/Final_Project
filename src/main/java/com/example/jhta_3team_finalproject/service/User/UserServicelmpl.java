@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.jhta_3team_finalproject.domain.User.AttendanceReqeust;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +54,7 @@ public class UserServicelmpl implements UserService {
 
     @Override
     public User departmentPositionInfo(int department_id, int position_id) {
-        return userMapper.departmentPositionInfo(department_id,position_id);
+        return userMapper.departmentPositionInfo(department_id, position_id);
     }
 
     @Override
@@ -85,17 +87,18 @@ public class UserServicelmpl implements UserService {
         User remember = userMapper.getUserId(id);
         return (remember == null) ? -1 : 1; // -1은 아이디가 존재하지 않는 경우, 1은 아이디가 존재하는 경우
     }
+
     @Override
     public void checkIn(int userNum) {
-        LocalDateTime dateTime =LocalDateTime.now();
-        attendenceMapper.CheckIn(userNum,dateTime);
+        LocalDateTime dateTime = LocalDateTime.now();
+        attendenceMapper.CheckIn(userNum, dateTime);
 
     }
 
     @Override
-    public void checkOut(int userNum){
-        LocalDateTime dateTime=LocalDateTime.now();
-        attendenceMapper.checkOut(userNum,dateTime);
+    public void checkOut(int userNum) {
+        LocalDateTime dateTime = LocalDateTime.now();
+        attendenceMapper.checkOut(userNum, dateTime);
     }
 
     @Override
@@ -109,17 +112,19 @@ public class UserServicelmpl implements UserService {
         } else if ("checkOut".equalsIgnoreCase(action)) {
             attendenceMapper.checkOut(userNum, dateTime);
         }
-        return  attendenceMapper.getTodayAttendance(userNum);
+        return attendenceMapper.getTodayAttendance(userNum);
     }
 
     @Override
-    public List<Attendence> getMonthlyAttendances(int userNum){
-        return attendenceMapper.getMonthlyAttendances(userNum);
+    public List<Attendence> getMonthlyAttendances(int userNum, LocalDateTime startDate, LocalDateTime endDate) {
+        return attendenceMapper.getMonthlyAttendances(userNum, startDate, endDate);
     }
 
+
     @Override
-    public Attendence getTodayAttendance(int userNum){
-         return  attendenceMapper.getTodayAttendance(userNum);
+    public Attendence getTodayAttendance(int userNum) {
+
+        return attendenceMapper.getTodayAttendance(userNum);
     }
 
 
