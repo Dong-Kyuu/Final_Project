@@ -11,4 +11,8 @@ public interface CalendarService {
     int insert(Calendar calendar);
 
     int update(Calendar calendar);
+
+    int resize(Calendar calendar);
+
+    int delete(int cal_id);
 }
