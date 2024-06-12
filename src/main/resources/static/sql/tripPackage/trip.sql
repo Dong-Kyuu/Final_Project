@@ -1,3 +1,28 @@
+DROP TABLE IF EXISTS trip;
+
+
+create table trip
+(
+    trip_no        INT AUTO_INCREMENT primary key,
+    trip_name      varchar(30)  not null,
+    trip_price     int          null,
+    trip_stock     int          null,
+    trip_max_stock int          null,
+    reg_date       date         null,
+    expire_date    date         null,
+    trip_date      date         null,
+    file_id        VARCHAR(255) null,
+    trip_main_img  varchar(150) null,
+    trip_category  varchar(15)  null,
+    option_ids     varchar(300) null,
+    constraint trip_ibfk_1
+        foreign key (file_id) references tripfile (file_id)
+);
+
+create index file_id
+    on trip (file_id);
+
+
 -- Insert sample data into the Trip table
 INSERT INTO trip(trip_no, trip_name, trip_price, trip_stock, trip_max_stock, reg_date, expire_date, trip_date, file_id, trip_main_img, trip_category, option_ids)
 VALUES

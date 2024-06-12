@@ -65,11 +65,10 @@
                                 <h4 class="card-title">Main Trip</h4>
                                 <p class="card-description"> Trip Info </p>
                                 <form th:action="@{/addMainTrip}" method="post" enctype="multipart/form-data"
-                                      name="addMainTrip" class="forms-sample" th:object="${trip}">
+                                      name="addMainTrip" class="forms-sample">
                                     <div class="form-group">
                                         <label for="TripName">Trip Name</label>
-                                        <input type="text" class="form-control" id="TripName" name="TripName" th:field="*{tripName}" placeholder="Enter Trip Name" required/>
-                                        <span class="help-block" th:if="${#fields.hasErrors('tripName')}" th:errors="*{tripName}"></span>
+                                        <input type="text" class="form-control" id="TripName" name="TripName" placeholder="Enter Trip Name" required/>
                                     </div>
 
                                     <div class="form-group">
@@ -78,30 +77,29 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text bg-gradient-primary text-white">₩</span>
                                             </div>
-                                            <input type="number" class="form-control" id="TripPrice" name="TripPrice" th:field="*{tripPrice}" required/>
+                                            <input type="number" class="form-control" id="TripPrice" name="TripPrice"  required/>
                                         </div>
-                                        <span class="help-block" th:if="${#fields.hasErrors('tripPrice')}" th:errors="*{tripPrice}"></span>
                                     </div>
 
                                     <div class="form-group">
                                         <label for="TripMaxStock">Max Stock</label>
-                                        <input type="text" class="form-control" id="TripMaxStock" name="TripMaxStock"
-                                               placeholder="00명">
+                                        <input type="number" class="form-control" id="TripMaxStock" name="TripMaxStock" placeholder="00명" required/>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="RegDate">Register Date(등록일)</label>
-                                        <input type="date" class="form-control" id="RegDate" name="RegDate">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="ExprDate">Expire Date(등록 만료일)</label>
-                                        <input type="date" class="form-control" id="ExprDate" name="ExprDate">
+                                        <label for="tripDate">Trip Date(여행 일자)</label>
+                                        <input type="date" class="form-control" id="tripDate" name="tripDate" required/>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="category">Category</label>
+                                        <label for="ExprDate">Expire Date(신청 만료일)</label>
+                                        <input type="date" class="form-control" id="ExprDate" name="ExprDate" required/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="TripCategory">Category</label>
                                         <div class="col-sm-9">
-                                            <select class="form-control" id="category" name="category">
+                                            <select class="form-control" id="TripCategory" name="TripCategory" >
                                                 <option>WEU</option>
                                                 <option>CEU</option>
                                                 <option>EEU</option>
@@ -109,25 +107,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <!--
-                                    <div class="form-group">
-                                        <label for="optionid"></label>
-                                        <div class="btn-group-vertical" role="group" aria-label="Basic example">
-                                            <div class="btn-group">
-                                                <button type="button"
-                                                        class="btn btn-outline-secondary dropdown-toggle"
-                                                        data-bs-toggle="dropdown">OptionIds(상품옵션번호)
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <a class='dropdown-item' th:each="list,status : ${optionlistAll}"
-                                                       th:classappend="'-' + ${status.count}" th:text="${list.optionName}"
-                                                       th:data-option-id="${list.optionId}" onclick="addOptionId(this)"></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <input type="text" class="form-control" id="optionid" placeholder="눌러서 추가하시오">
-                                    </div>
--->
+
                                     <div class="form-group">
                                         <label for="optionIdField">OptionIds(상품옵션번호)</label>
                                         <div class="btn-group-vertical" role="group" aria-label="Basic example">
@@ -404,7 +384,7 @@
         // Add optionId to the hidden input field
         var currentOptionIds = optionIdField.value;
         if (currentOptionIds !== '') {
-            currentOptionIds += '-';
+            currentOptionIds += ',';
         }
         currentOptionIds += optionId;
         optionIdField.value = currentOptionIds;
@@ -418,12 +398,12 @@
         optionDiv.remove();
 
         // Update the hidden input field
-        var currentOptionIds = optionIdField.value.split('-');
+        var currentOptionIds = optionIdField.value.split(',');
         var index = currentOptionIds.indexOf(optionId);
         if (index > -1) {
             currentOptionIds.splice(index, 1);
         }
-        optionIdField.value = currentOptionIds.join('-');
+        optionIdField.value = currentOptionIds.join(',');
     }
 </script>
 </body>

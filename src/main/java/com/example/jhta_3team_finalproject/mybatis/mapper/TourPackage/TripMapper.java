@@ -28,7 +28,7 @@ public interface TripMapper {
 
     List<Trip> getAllTrip();
 
-    void insertTrip(String tripNumber, String tripName, int tripPrice, int stockNumber, String regDate, String expireDate, String mainIMG, String category, String optionIds, String fileId);
+    void insertTrip(String tripName, int tripPrice, int tripStock,int tripMaxStock, String tripDate,String regDate, String expireDate, String tripMainIMG, String tripCategory, String optionIds, String fileId);
 
     void insertTripFile(String fileId, String mainIMG, String introIMG, String routeIMG, String scheduleIMG, String detailIMG);
 }

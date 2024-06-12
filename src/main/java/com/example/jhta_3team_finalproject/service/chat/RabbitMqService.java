@@ -1,4 +1,4 @@
-//package com.example.jhta_3team_finalproject.service.chat;
+package com.example.jhta_3team_finalproject.service.chat;//package com.example.jhta_3team_finalproject.service.chat;
 //
 //import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 //import lombok.RequiredArgsConstructor;
