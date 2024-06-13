@@ -60,5 +60,5 @@ public interface ChatMapper {
 
     public List<User> getChatRoomCanInviteUserList(ChatRoom chatRoom);
 
-    int isp2pChatRoom(String chatCounterpartId, String chatUserId, String type);
+    public int isp2pChatRoom(String chatCounterpartId, String chatUserId, String type);
 }

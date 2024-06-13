@@ -160,6 +160,7 @@ public class ChatController {
             chatParticipate = chatService.createChatRoom(chatRoom, chatInviteUserList);
             return chatParticipate;
         }
+
         return chatParticipate;
     }
 

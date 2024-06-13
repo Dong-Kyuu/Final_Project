@@ -197,9 +197,15 @@ public class ChatService {
         return chatParticipate.getChatRoomNum();
     }
 
-    public void isp2pChatRoom(String chatCounterpartId, String chatUserId, String type) {
-        if (dao.isp2pChatRoom(chatCounterpartId, chatUserId, type) > 0) {
-
+    public int isp2pChatRoom(String chatCounterpartId, String chatUserId, String type) {
+        int result =dao.isp2pChatRoom(chatCounterpartId, chatUserId, type);
+        if (result > 0) { // 1대1 채팅방이 존재 (해당 채팅방 번호를 return)
+            return result;
+        } else { // 1대1 채팅방이 존재하지 않음 (방을 생성하고 해당 채팅방의 번호를 return)
+            /**
+             * 2024-06-13, 1 대 1 채팅방 생성
+             */
+            return result;
         }
     }
 }
