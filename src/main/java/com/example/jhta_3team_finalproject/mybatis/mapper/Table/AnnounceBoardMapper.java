@@ -24,4 +24,16 @@ public interface AnnounceBoardMapper {
     List<User> getUserData(int annboardNum);
 
     List<String> getDepartment();
+
+    String targetDepartment(int annboardNum);
+
+    int getMaxCheck(String targetDepartment);
+
+    int checkedUserByDepartment(String targetDepartment, int annboardNum);
+
+    int downImportance(int annboardNum);
+
+    int doTopFix(int annboardNum);
+
+    int topFixClear(int annboardNum);
 }
