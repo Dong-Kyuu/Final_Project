@@ -10,6 +10,8 @@
     <link rel="stylesheet" th:href="@{/css/user/userinfo.css}">
     <link rel="stylesheet" th:href="@{/assets/css/style.css}">
     <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
 
     <style>
         .profile-img {
@@ -105,7 +107,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">내 프로필</h4>
                                 <div class="form-group">
-                                    <img th:src="@{|/upload/user${#authentication.principal.userProfilePicture}|}" class="profile-img">
+                                    <img th:src="${#authentication.principal.userProfilePicture}" class="profile-img">
                                 </div>
                                 <div class="form-group">
                                     <label class="profile-label">이름</label>
@@ -128,6 +130,7 @@
                                 <h4 class="card-title">내 정보</h4>
                                 <form class="forms-sample" th:action="@{/user/updateProcess}" method="post" enctype="multipart/form-data">
                                     <input type="hidden" name="userNum" th:value="${#authentication.principal.userNum}">
+                                    <input type="hidden" name="userNum" th:value="${#authentication.principal.username}">
                                     <div class="form-group">
                                         <label for="exampleInputName1">이름</label>
                                         <input type="text" class="form-control no-outline" id="exampleInputName1" name="userName" th:value="${#authentication.principal.username}">

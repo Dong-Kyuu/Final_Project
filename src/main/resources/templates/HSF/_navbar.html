@@ -35,9 +35,7 @@
                 <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown"
                    aria-expanded="false">
                     <div class="nav-profile-img">
-                        <th:block th:with="profilePicture=${#authentication.principal.getUserProfilePicture()}">
-                            <img th:src="@{|/upload/user${profilePicture}|}" alt="profile">
-                        </th:block>
+                        <img th:src="${#authentication.principal.userProfilePicture}" class="profile-img">
                         <span class="availability-status online"></span>
                     </div>
                     <div class="nav-profile-text">

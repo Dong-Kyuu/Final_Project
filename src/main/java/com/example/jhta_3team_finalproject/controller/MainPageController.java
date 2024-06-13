@@ -8,12 +8,15 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class MainPageController {
+    private final  UserService userservice;
+
     @Autowired
-    private UserService userservice;
+    public MainPageController(UserService userService) {
+        this.userservice = userService;
+    }
 
     @GetMapping("/")
     public String home() {

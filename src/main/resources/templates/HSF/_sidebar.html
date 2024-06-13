@@ -10,9 +10,7 @@
         <li class="nav-item nav-profile">
             <a href="#" class="nav-link">
                 <div class="nav-profile-image">
-                    <th:block th:with="profilePicture=${#authentication.principal.getUserProfilePicture()}">
-                        <img th:src="@{|/upload/user${profilePicture}|}" alt="profile">
-                    </th:block>
+                    <img th:src="${#authentication.principal.userProfilePicture}" class="profile-img">
                     <span class="login-status online"></span>
                     <!--change to offline or busy as needed-->
                 </div>
@@ -96,9 +94,9 @@
             </a>
             <div class="collapse" id="admin-pages">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link" href="#">근태 관리</a></li>
+                    <li class="nav-item"><a class="nav-link" >근태 관리</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">직원 정보 관리</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">신규 등록 사원</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/user/register_allow}">신규 등록 사원</a></li>
                 </ul>
             </div>
         </li>
