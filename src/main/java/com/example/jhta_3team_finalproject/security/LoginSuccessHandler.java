@@ -2,6 +2,7 @@ package com.example.jhta_3team_finalproject.security;
 
 import java.io.IOException;
 
+import com.example.jhta_3team_finalproject.domain.User.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -18,9 +19,18 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
-        log.info("로그인 성공:LoginSucessHandler");
-        String url = "/dashboard";
-        response.sendRedirect(url);
-        log.info(url);
+
+        User user = (User) authentication.getPrincipal();
+
+        if("ROLE_NEWBIE".equals(user.getUserAuth())){
+            response.sendRedirect("/user/newbie");
+            log.info(user.getUserAuth());
+        }else {
+            log.info("로그인 성공:LoginSucessHandler");
+            String url = "/dashboard";
+            response.sendRedirect(url);
+            log.info(url);
+        }
+
     }
 }

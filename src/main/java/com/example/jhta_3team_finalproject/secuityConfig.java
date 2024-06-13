@@ -38,17 +38,16 @@ public class secuityConfig {
                          CustomUserDetailsService customUserDetailsService,
                          CustomAccessDeniedHandler customAccessDeniedHandler) {
 
-        this.loginSuccessHandler=loginSuccessHandler;
-        this.loginFailHandler=loginFailHandler;
-        this.dataSource=dataSource;
-        this.customUserDetailsService=customUserDetailsService;
-        this.customAccessDeniedHandler=customAccessDeniedHandler;
+        this.loginSuccessHandler = loginSuccessHandler;
+        this.loginFailHandler = loginFailHandler;
+        this.dataSource = dataSource;
+        this.customUserDetailsService = customUserDetailsService;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, RoleHierarchy roleHierarchy) throws Exception {
 
-        //http.csrf().disable();
 
         http.headers().frameOptions().disable();
 
@@ -71,13 +70,22 @@ public class secuityConfig {
                 .tokenRepository(tokenRepository())); // 데이터 베이스에 토큰을 저장합니다
 
         http.authorizeHttpRequests(au -> au
-                .requestMatchers("/user/list", "/user/delete")
-                .hasAuthority("ROLE_MASTER")
-                .requestMatchers("/user/update", "/user/updateProcess", "/user/info", "/user/attendance", "/user/commute")
-                .hasAnyAuthority("ROLE_MASTER", "ROLE_MEMBER")
-                .requestMatchers("/board/**", "/comment/**")
-                .hasAnyAuthority("ROLE_MASTER", "ROLE_MEMBER")
-                .requestMatchers("/**").permitAll()
+                        .requestMatchers("/user/list", "/user/delete")
+                        .hasAuthority("ROLE_MASTER")
+
+                        .requestMatchers("/user/update", "/user/updateProcess", "/user/info", "/user/attendance", "/user/commute")
+                        .hasAnyAuthority("ROLE_MASTER", "ROLE_MEMBER")
+
+                        .requestMatchers("/board/**", "/comment/**")
+                        .hasAnyAuthority("ROLE_MASTER", "ROLE_MEMBER")
+
+                        .requestMatchers("/newbie/**").hasAuthority("ROLE_NEWBIE")  // 신입사원 전용 페이지
+
+                        // 신입사원은 다른 모든 페이지 접근 불가
+//                        .requestMatchers("/**").hasAnyAuthority("ROLE_MASTER")
+
+
+                        .requestMatchers("/**").permitAll()
         );
 
         http.exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler));

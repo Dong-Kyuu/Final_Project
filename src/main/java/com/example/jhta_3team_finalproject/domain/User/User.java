@@ -19,26 +19,23 @@ import java.util.Collection;
 public class User implements UserDetails {
     private int userNum;
     private String userId;
-
-
     private String userPassword;
     private String userEmail;
     private String employeeNumber;
     private String userName;
     private String userPhoneNumber;
     private String userAge;
-    private int departmentId= 0; // 기본값 설정
+    private int departmentId = 0; // 기본값 설정
     private String departmentName;
-    private String userGender; // 기본값 설정
-    private int positionId;
+    private String userGender;
+    private int positionId = 0;// 기본값 설정
     private String positionName;
     private int userIsApproved;
     private String userCreatedAt;
     private String userUpdatedAt;
     private String userProfilePicture;
-    private String userOriginalProfile; // 파일 저장
     private String userChatStatusMsg;
-    private String userAuth = "ROLE_MEMBER";
+    private String userAuth = "ROLE_NEWBIE";
 
 
     @Override
@@ -56,21 +53,16 @@ public class User implements UserDetails {
         return userName;
     }
 
-//    public String getUsername() {
-//        return this.getUserId();
-//    }
 
-
-
-    public int getDepartmentId() {return departmentId;}
-
+    public int getDepartmentId() {
+        return departmentId;
+    }
 
 
     @Override
     public String getPassword() {
         return this.getUserPassword();
     }
-
 
 
     @Override

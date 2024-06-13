@@ -33,15 +33,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("username은 로그인 시 입력한 값: " + username);
         User user = dao.getUserId(username);
-        log.info("info=" + user.toString());
-
-
+//        log.info("info=" + user.toString());
         if (user == null) {
             log.info("username " + username + " not found");
 
             throw new UsernameNotFoundException("username " + username + " not found");
 
         }
+
         //GrantedAuthority : 인증 개체에 부여된 권한을 나타내기 위한 인터페이스로 이를 구현한 구현체는
         //      			생성자에 권한을 문자열로 넣어주면 됩니다
         //SimpleGrantedAuthority : GrantedAuthority의 구현체입니다.
