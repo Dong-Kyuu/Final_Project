@@ -133,7 +133,8 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="profile-label">부서</label>
-                                        <p class="profile-text text-black" th:text=" ${#authentication.principal.departmentName}"></p>
+                                        <p class="profile-text text-black"
+                                           th:text=" ${#authentication.principal.departmentName}"></p>
                                     </div>
                                     <div class="form-group">
                                         <button type="button" class="btn btn-gradient-dark checkIn">출근</button>
@@ -151,7 +152,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title" th:text="${#authentication.principal.username} + '님'"></h4>
-                                    <p class="card-description"> 출퇴근 내역</p>
+                                    <p class="card-description"> 한달 출퇴근 내역</p>
                                     <table class="table" id="attendance_table">
                                         <thead>
                                         <tr>
@@ -162,17 +163,6 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-<!--                                        <tr th:each="attendance : ${attendanceList}">-->
-<!--                                            <td th:text="${attendance.date}"></td>-->
-<!--                                            <td th:text="${attendance.checkInTime}"></td>-->
-<!--                                            <td th:text="${attendance.checkOutTime != null ? attendance.checkOutTime : 'N/A'}"></td>-->
-<!--                                            <td th:text="${#dates.period(attendance.checkInTime, attendance.checkOutTime)-->
-<!--                                            != null ? #dates.period(attendance.checkInTime, attendance.checkOutTime).toHours() + ' hours' : 'N/A'}"></td>-->
-<!--                                        </tr>-->
-<!--                                        <tr th:if="${attendanceList.size() == 0}">-->
-<!--                                            <td colspan="4">데이터가 없습니다</td>-->
-<!--                                        </tr>-->
-
                                         </tbody>
                                     </table>
                                 </div>
@@ -223,6 +213,25 @@
 
         $('#attendance_table').DataTable({
             responsive: true,
+            ajax: {
+                url: '/user/monthlyAttendance',
+                dataSrc: ''
+            },
+            columns: [
+                { data: 'checkInTime', render: function (data, type, row) {
+                        return data.substring(0, 10);
+                    }
+                },
+                { data: 'checkInTime', render: function (data, type, row) {
+                        return data.substring(11, 19);
+                    }
+                },
+                { data: 'checkOutTime', render: function (data, type, row) {
+                        return data ? data.substring(11, 19) : '';
+                    }
+                },
+                { data: 'workTime' }
+            ],
             language: {
                 "decimal": "",
                 "emptyTable": "데이터가 없습니다",
@@ -242,7 +251,9 @@
                 }
             },
             lengthMenu: [10, 25, 35, 50, {label: '전체', value: -1}]
-        });
+
+
+    });
 
         // 날짜 표시
         var today = new Date();
@@ -299,15 +310,6 @@
                 alert('출퇴근 기록에 실패했습니다.');
             }
         });
-
-
-        function calculateTotalHours(checkInTime, checkOutTime) {
-            if (!checkInTime || !checkOutTime) return null;
-            const start = new Date(checkInTime);
-            const end = new Date(checkOutTime);
-            const diff = (end - start) / (1000 * 60 * 60);
-            return diff.toFixed(2) + " hours";
-        }
 
 
     })

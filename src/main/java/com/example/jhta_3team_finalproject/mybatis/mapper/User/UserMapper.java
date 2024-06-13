@@ -7,6 +7,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface UserMapper {
@@ -28,6 +31,7 @@ public interface UserMapper {
     public int getListCount();
 
     public User getEmployee(int userNum);
+
 
 
 }

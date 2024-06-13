@@ -5,6 +5,7 @@ import com.example.jhta_3team_finalproject.domain.User.Attendence;
 import com.example.jhta_3team_finalproject.domain.User.User;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public interface UserService {
@@ -38,7 +39,7 @@ public interface UserService {
     Attendence recordAttendance(int userNum, String action);
 
     //한 사람의 출퇴근 한달 정보를 가져오는 메서드
-    List<Attendence> getMonthlyAttendances(int userNum);
+    List<Attendence> getMonthlyAttendances(int userNum, LocalDateTime startDate, LocalDateTime endDate);
 }
 
 

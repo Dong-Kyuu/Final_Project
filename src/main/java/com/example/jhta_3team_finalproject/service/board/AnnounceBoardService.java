@@ -3,6 +3,7 @@ package com.example.jhta_3team_finalproject.service.board;
 import com.example.jhta_3team_finalproject.domain.Board.AnnounceBoard;
 import com.example.jhta_3team_finalproject.domain.Board.Board;
 import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
+import com.example.jhta_3team_finalproject.domain.User.User;
 
 import java.util.List;
 
@@ -35,4 +36,8 @@ public interface AnnounceBoardService {
     int checkedcheck(int loginNum, int annboardNum);
 
     void autoCheck(int userNum, int boardNum);
+
+    List<User> getUserData(int annboardNum);
+
+    List<String> getDepartment();
 }
