@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.Notification.NotificationMapper">
+    <select id="getList">
+        SELECT notification_message
+        FROM notification
+        WHERE notification_to_user_num = #{userNum}
+        ORDER BY notification_regdate desc
+    </select>
+</mapper>

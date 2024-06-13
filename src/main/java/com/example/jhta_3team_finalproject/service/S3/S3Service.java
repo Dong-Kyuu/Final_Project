@@ -3,6 +3,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,10 @@ public class S3Service {
         amazonS3Client.putObject(new PutObjectRequest(S3Bucket, fileName, file.getInputStream(), metadata).withCannedAcl(CannedAccessControlList.PublicRead)); // aws s3 저장과정
        // amazonS3Client.putObject(S3Bucket, fileName, file.getInputStream(), metadata);
         return amazonS3Client.getUrl(S3Bucket, fileName).toString(); // 업로드된 파일의 URL 반환
+    }
+
+    public S3Object downloadFile(String fileName) {
+        return amazonS3Client.getObject(S3Bucket, fileName);
     }
 
     private String generateFileName(MultipartFile file) {

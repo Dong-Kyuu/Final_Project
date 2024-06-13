@@ -28,6 +28,7 @@ public class AnnounceBoard {
     private String writerPosition;
 
 
+
     public void setUserName(String boardWriter) {
         this.boardWriter = boardWriter;
     }
