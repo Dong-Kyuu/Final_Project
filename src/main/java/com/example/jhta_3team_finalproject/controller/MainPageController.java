@@ -31,7 +31,7 @@ public class MainPageController {
                 new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "dashboard/blank-page";
+        return "dashboard/dashboard-page";
     }
 
 }
