@@ -105,5 +105,54 @@
         WHERE department_id != 0
     </select>
 
+    <select id="targetDepartment">
+        SELECT annboard_department
+        FROM announce_board
+        WHERE annboard_num = #{annboardNum}
+    </select>
 
+    <select id="getMaxCheck">
+        SELECT  count(u.user_num)
+        FROM user u
+            LEFT JOIN user_departments d
+                      ON u.department_id = d.department_id
+        <if test="targetDepartment != 'ALL'">
+            WHERE d.department_name = #{targetDepartment}
+        </if>
+
+    </select>
+
+    <select id="checkedUserByDepartment">
+        SELECT COUNT(DISTINCT u.user_num) AS user_count
+        FROM user u
+                 INNER JOIN user_departments d ON u.department_id = d.department_id
+                 INNER JOIN view_check v ON u.user_num = v.user_num
+        <if test="targetDepartment != 'ALL'">
+            WHERE d.department_name = #{targetDepartment}
+            AND v.checked = 1
+        </if>
+        <if test="targetDepartment == 'ALL'">
+            WHERE v.checked = 1
+        </if>
+        AND v.announce_board_num = #{annboardNum}
+    </select>
+
+    <update id="downImportance">
+        UPDATE announce_board
+        SET annboard_importance = 1,
+            annboard_fix = 0
+        WHERE annboard_num = #{annboardNum}
+    </update>
+
+    <update id="doTopFix">
+        UPDATE announce_board
+        SET annboard_fix = 1
+        WHERE annboard_num = #{annboardNum}
+    </update>
+
+    <update id="topFixClear">
+        UPDATE announce_board
+        SET annboard_fix = 0
+        WHERE annboard_num = #{annboardNum}
+    </update>
 </mapper>

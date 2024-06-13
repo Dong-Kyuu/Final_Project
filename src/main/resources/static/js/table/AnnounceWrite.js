@@ -2,6 +2,7 @@ $(function () {
     $('#importance').val(1);
 
     $('#upload-btn').on('click', function () {
+
         $('#upfile').click();
     });
 
