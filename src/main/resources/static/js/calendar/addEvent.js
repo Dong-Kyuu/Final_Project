@@ -59,6 +59,8 @@ var newEvent = function (start, end, eventType) {
             return false;
         }
 
+
+
         var realEndDay;
 
         if (editAllDay.is(':checked')) {

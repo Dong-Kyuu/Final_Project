@@ -1,12 +1,6 @@
-.panel panel-default {
-    display: none;
-}
-
-element.style  .panel {
-    display: none;
+#calendarDate{
+    margin-bottom: 50px;
 }
 
 
-.fc-toolbar fc-header-toolbar{
-    display: none;
-}
+

@@ -10,9 +10,7 @@
         <li class="nav-item nav-profile">
             <a href="#" class="nav-link">
                 <div class="nav-profile-image">
-                    <th:block th:with="profilePicture=${#authentication.principal.getUserProfilePicture()}">
-                        <img th:src="@{|/upload/user${profilePicture}|}" alt="profile">
-                    </th:block>
+                    <img th:src="${#authentication.principal.userProfilePicture}" alt="profile">
                     <span class="login-status online"></span>
                     <!--change to offline or busy as needed-->
                 </div>

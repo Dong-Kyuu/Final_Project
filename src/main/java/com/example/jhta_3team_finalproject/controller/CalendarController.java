@@ -3,7 +3,6 @@ package com.example.jhta_3team_finalproject.controller;
 import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.domain.calendar.Calendar;
 import com.example.jhta_3team_finalproject.service.calendar.CalendarService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -26,7 +25,7 @@ public class CalendarController {
 
     @RequestMapping(value = "/show", method = RequestMethod.GET)
     public String logout() {
-        return "calendar/blank-page";
+        return "calendar/calendar-page";
     }
 
     @ResponseBody
