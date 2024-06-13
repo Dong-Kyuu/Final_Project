@@ -44,13 +44,21 @@ public interface ChatMapper {
 
     public User chatUserProfile(String chatUserId);
 
-    public int chatUserProfileMsgUpdate(String profileStatusMsg, String chatUserId);
-
     public int chatUserProfileMsgUpdate(User user);
 
     public void participateExitChatRoom(ChatParticipate chatParticipate);
 
-    int isChatRoomParticipate(ChatParticipate chatParticipate);
+    public int isChatRoomParticipate(ChatParticipate chatParticipate);
 
-    void deleteChatRoom(ChatParticipate chatParticipate);
+    public void deleteChatRoom(ChatParticipate chatParticipate);
+
+    public ChatRoom getChatRoomInfo(ChatParticipate chatParticipate);
+
+    public int getChatRoomUserCount(ChatParticipate chatParticipate);
+
+    public List<ChatParticipate> getChatRoomUserList(ChatParticipate chatParticipate);
+
+    public List<User> getChatRoomCanInviteUserList(ChatRoom chatRoom);
+
+    int isp2pChatRoom(String chatCounterpartId, String chatUserId, String type);
 }

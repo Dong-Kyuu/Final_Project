@@ -157,4 +157,49 @@ public class ChatService {
         return dao.chatUserProfileMsgUpdate(user);
     }
 
+    public ChatRoom getChatRoomInfo(ChatParticipate chatParticipate) {
+        return dao.getChatRoomInfo(chatParticipate);
+    }
+
+    public int getChatRoomUserCount(ChatParticipate chatParticipate) {
+        return dao.getChatRoomUserCount(chatParticipate);
+    }
+
+    public List<ChatParticipate> getChatRoomUserList(ChatParticipate chatParticipate) {
+        return dao.getChatRoomUserList(chatParticipate);
+    }
+
+    public List<User> getChatRoomCanInviteUserList(ChatRoom chatRoom) {
+        return dao.getChatRoomCanInviteUserList(chatRoom);
+    }
+
+    public long addChatParticipate(ChatParticipate chatParticipate, String chatInviteUserList) {
+        /**
+         * 2024-06-13, 초대한 유저들을 참가 테이블에 추가
+         */
+        String[] chatInviteUserArray = chatInviteUserList.split(",");
+        for(String inviteUserId : chatInviteUserArray) {
+            chatParticipate.setChatUserId(inviteUserId);
+            dao.addChatParticipate(chatParticipate);
+        }
+        return chatParticipate.getChatRoomNum();
+    }
+
+    public long participateExitChatRoom(ChatParticipate chatParticipate, String chatExitUserList) {
+        String[] chatExitUserArray = chatExitUserList.split(",");
+
+        for(String exitUser : chatExitUserArray) {
+            chatParticipate.setChatRoomNum(chatParticipate.getChatRoomNum());
+            chatParticipate.setChatUserId(exitUser);
+            dao.participateExitChatRoom(chatParticipate);
+        }
+
+        return chatParticipate.getChatRoomNum();
+    }
+
+    public void isp2pChatRoom(String chatCounterpartId, String chatUserId, String type) {
+        if (dao.isp2pChatRoom(chatCounterpartId, chatUserId, type) > 0) {
+
+        }
+    }
 }

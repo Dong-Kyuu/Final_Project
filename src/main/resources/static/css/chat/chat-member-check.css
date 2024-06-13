@@ -79,7 +79,30 @@
                 transform: translate(-50%, -50%);
             }
         }
+    }
 
+    .main-user-avatar {
+        position: relative;
+
+        &:before {
+            content: "";
+            position: absolute;
+            right: 1px;
+            top: 3px;
+            z-index: 200;
+            background-color: var(--connection-status);
+            border-radius: 50%;
+            height: 14px;
+            width: 14px;
+            border: 3px solid white;
+        }
+
+        &.offline {
+            &:before {
+                background-color: transparent;
+                border: none;
+            }
+        }
     }
 
     .top-container {

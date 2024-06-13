@@ -115,19 +115,19 @@
     <select id="searchRoomUser" parameterType="chatRoom" resultType="chatParticipate">
         SELECT *, GREATEST(IFNULL(cm.send_time, cr.room_create_date), cr.room_create_date) AS last_send_time
         FROM chat_participate cp
-                 LEFT JOIN(
-            SELECT *
-            FROM chat_message
-            WHERE message_num IN (SELECT MAX(message_num)
-                                  FROM chat_message
-                                  GROUP BY chat_room_num)
-        ) cm
-                          ON cp.chat_room_num = cm.chat_room_num
-                 JOIN(
+        LEFT JOIN(
+                  SELECT *
+                  FROM chat_message
+                  WHERE message_num IN (SELECT MAX(message_num)
+                                        FROM chat_message
+                                        GROUP BY chat_room_num)
+                 ) cm
+        ON cp.chat_room_num = cm.chat_room_num
+        JOIN(
             SELECT *
             FROM chat_room
         ) cr
-                     ON cp.chat_room_num = cr.chat_room_num
+        ON cp.chat_room_num = cr.chat_room_num
         WHERE chat_user_id = #{chatSessionId}
         ORDER BY last_send_time DESC
     </select>
@@ -136,21 +136,21 @@
     <select id="searchLastRoomUser" parameterType="chatRoom" resultType="chatParticipate">
         SELECT *, GREATEST(IFNULL(cm.send_time, cr.room_create_date), cr.room_create_date) AS last_send_time
         FROM chat_participate cp
-                 LEFT JOIN(
+        LEFT JOIN(
             SELECT *
             FROM chat_message
             WHERE message_num IN (SELECT MAX(message_num)
                                   FROM chat_message
                                   GROUP BY chat_room_num)
         ) cm
-                          ON cp.chat_room_num = cm.chat_room_num
-                 JOIN(
+        ON cp.chat_room_num = cm.chat_room_num
+        JOIN(
             SELECT *
             FROM chat_room
         ) cr
                      ON cp.chat_room_num = cr.chat_room_num
         WHERE chat_user_id = #{chatSessionId}
-          AND cp.chat_room_num = (SELECT MAX(chat_room_num) FROM chat_room)
+        AND cp.chat_room_num = (SELECT MAX(chat_room_num) FROM chat_room)
         ORDER BY last_send_time DESC
     </select>
 
@@ -181,5 +181,38 @@
         SELECT *
         FROM chat_room
         ORDER BY chat_room_num DESC
+    </select>
+
+    <!-- 2024-06-13, 채팅방 클릭 시 해당 채팅방 정보 가져오기 -->
+    <select id="getChatRoomInfo">
+        SELECT room_name
+        FROM chat_room
+        WHERE chat_room_num = #{chatRoomNum}
+    </select>
+
+    <!-- 2024-06-13, 채팅방 클릭 시 해당 채팅방 유저 인원 수 가져오기 -->
+    <select id="getChatRoomUserCount">
+        SELECT COUNT(*)
+        FROM chat_participate
+        WHERE chat_room_num = #{chatRoomNum}
+    </select>
+
+    <!-- 2024-06-13, 채팅방 클릭 시 해당 채팅방 유저 리스트 가져오기 -->
+    <select id="getChatRoomUserList" parameterType="chatParticipate">
+        SELECT user_id, user_name, user_profile_picture, user_email
+        FROM chat_participate cp
+        JOIN user u
+        ON u.user_id = cp.chat_user_id
+        WHERE chat_room_num = #{chatRoomNum}
+        AND chat_user_id != #{chatUserId}
+    </select>
+
+    <!-- 2024-06-13, 채팅방에 없는 유저 리스트 가져오기 (초대할 수 있는 유저 리스트) -->
+    <select id="getChatRoomCanInviteUserList" parameterType="user">
+        SELECT user_id, user_name, user_profile_picture, user_email
+        FROM user
+        WHERE user_id NOT IN (SELECT chat_user_id
+                              FROM chat_participate
+                              WHERE chat_room_num = #{chatRoomNum});
     </select>
 </mapper>

@@ -22,4 +22,12 @@ public class ChatParticipate {
     private String messageContent;
     private String roomName;
     private Date roomCreateDate;
+
+    /**
+     * 2024-06-13, 확장 - 유저 이름, 유저 프로필 사진
+     */
+    private String userId;
+    private String username;
+    private String userProfilePicture;
+    private String userEmail;
 }
