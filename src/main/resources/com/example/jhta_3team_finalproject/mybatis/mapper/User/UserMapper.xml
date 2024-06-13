@@ -4,15 +4,19 @@
 
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.User.UserMapper">
 
-    <select id="getUserId">
+    <select id="getUserId" resultType="User">
         SELECT *
         FROM user
         WHERE user_id = #{userId}
     </select>
 
     <select id="departmentPositionInfo" resultType="User">
-        select (select user_departments.department_name from user_departments where department_id=#{department_id}) as departmentName,
-               (select user_positions.position_name  from user_positions where position_id=#{position_id}) as positionName
+        select (select user_departments.department_name
+                from user_departments
+                where department_id = #{department_id}) as departmentName,
+               (select user_positions.position_name
+                from user_positions
+                where position_id = #{position_id})     as positionName
         from dual
     </select>
 
@@ -24,13 +28,11 @@
         WHERE u.user_num = #{userNum}
     </select>
 
-
     <insert id="join">
         insert into user
         (user_num, user_id, user_password, user_name, user_email, user_phone_number, user_gender)
-        values (#{userNum}, #{userId}, #{userPassword}, #{userName}, #{userEmail}, #{userPhoneNumber},#{userGender})
+        values (#{userNum}, #{userId}, #{userPassword}, #{userName}, #{userEmail}, #{userPhoneNumber}, #{userGender})
     </insert>
-
 
     <update id="userupdate">
         UPDATE user
@@ -45,7 +47,8 @@
     <!-- 사용자 정보 추가 -->
     <insert id="insert">
         insert into user
-        (user_num, user_id, user_password, user_email, user_name, user_phone_number,user_gender, user_profile_picture, user_created_at, user_updated_at, user_auth)
+        (user_num, user_id, user_password, user_email, user_name, user_phone_number, user_gender, user_profile_picture,
+         user_created_at, user_updated_at, user_auth)
         values (#{userNum}, #{userId}, #{userPassword}, #{userEmail}, #{userName}, #{userPhoneNumber}, #{userGender},
                 #{userProfilePicture}, NOW(), NOW(), #{userAuth})
     </insert>
@@ -54,6 +57,64 @@
         select count(*) from user
     </select>
 
+    <!-- 사용자 승인 -->
+    <update id="approveUser">
+        UPDATE user
+        SET user_is_approved = 1
+        WHERE user_num = #{userNum}
+    </update>
 
+    <!-- 사용자 승인 및 부서, 직책 설정 -->
+    <update id="approveUserWithDepartmentAndPosition" parameterType="User">
+        UPDATE user
+        SET user_is_approved = 1,
+            department_id = #{departmentId},
+            position_id = #{positionId},
+            user_auth = CASE
+                            WHEN #{positionId} = 0 THEN 'ROLE_NEWBIE'    -- 신입사원
+                            WHEN #{positionId} = 1 THEN 'ROLE_MEMBER'    -- 사원
+                            WHEN #{positionId} = 2 THEN 'ROLE_TEAM'      -- 팀장
+                            WHEN #{positionId} = 3 THEN 'ROLE_HEAD'      -- 부장
+                            WHEN #{positionId} = 4 THEN 'ROLE_SUB_MASTER'-- 이사
+                            WHEN #{positionId} = 5 THEN 'ROLE_MASTER'    -- 대표
+                            ELSE 'ROLE_NEWBIE' -- 기본값
+                END,
+            user_department = #{userDepartment}
+        WHERE user_num = #{userNum}
+    </update>
 
+    <!-- 사용자 거절 -->
+    <update id="rejectUser">
+        UPDATE user
+        SET user_is_approved = 0
+        WHERE user_num = #{userNum}
+    </update>
+
+    <!--모든 요청(신규사원 관리)-->
+    <select id="findAllRequests" resultType="User">
+        SELECT *
+        FROM user
+    </select>
+
+    <!-- 승인된 요청들 -->
+    <select id="getApprovedRequests" resultType="User">
+        SELECT *
+        FROM user
+        WHERE user_is_approved = 1
+    </select>
+
+    <!-- 거절된 요청들 -->
+    <select id="getRejectedRequests" resultType="User">
+        SELECT *
+        FROM user
+        WHERE user_is_approved = 0
+    </select>
+
+    <!-- 사용자 부서 이름 가져오기 -->
+    <select id="getDepartmentNameByUserId" resultType="String">
+        SELECT d.department_name
+        FROM user u
+                 JOIN user_departments d ON u.department_id = d.department_id
+        WHERE u.user_id = #{userId}
+    </select>
 </mapper>
