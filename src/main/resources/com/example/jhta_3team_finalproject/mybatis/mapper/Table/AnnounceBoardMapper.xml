@@ -155,4 +155,11 @@
         SET annboard_fix = 0
         WHERE annboard_num = #{annboardNum}
     </update>
+
+    <select id="searchFixAuth">
+        SELECT user_num
+        FROM user
+        WHERE user_auth LIKE '%MASTER%'
+           OR (user_auth = 'ROLE_HEAD' AND department_id = 2)
+    </select>
 </mapper>

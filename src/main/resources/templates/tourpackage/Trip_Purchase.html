@@ -151,7 +151,9 @@
                                             </ul>
 
                                             <div id="orderDetails"
-                                                 th:data-trip-price="${trip.tripPrice}"
+                                                 th:data-trip-number="${trip.tripNo}"
+                                                 th:data-customer-number="${customer.customerNo}"
+                                                 th:data-total-price="${cart.cartTotal}"
                                                  th:data-customer-email="${customer.customerEmail}"
                                                  th:data-customer-name="${customer.customerNameKor}"
                                                 th:data-customer-phone="${customer.customerPhone}"
@@ -226,30 +228,36 @@
         IMP.init('imp51036440'); // Replace with your actual Iamport customer identification key
 
         var orderDetails = document.getElementById('orderDetails');
-        var tripPrice = orderDetails.getAttribute('data-trip-price');
+        var totalPrice = orderDetails.getAttribute('data-total-price');
         var customerEmail = orderDetails.getAttribute('data-customer-email');
         var customerName = orderDetails.getAttribute('data-customer-name');
         var customerPhone = orderDetails.getAttribute('data-customer-phone');
         var tripName = orderDetails.getAttribute('data-trip-name');
+        var customerNo = orderDetails.getAttribute('data-customer-number');
+        var tripNo = orderDetails.getAttribute('data-trip-number');
 
         var csrfTokenValue = $("meta[name='_csrf']").attr("content");
         var csrfHeaderName = $("meta[name='_csrf_header']").attr("content");
 
-        console.log("Trip Price:", tripPrice);
+        console.log("total Price:", totalPrice);
         console.log("Customer Email:", customerEmail);
         console.log("Customer Name:", customerName);
         console.log("csrfHeaderName:",csrfHeaderName);
         console.log("csrfTokenValue",csrfTokenValue);
+        console.log("customerNo",customerNo);
+        console.log("tripNo",tripNo);
 
         IMP.request_pay({
             pg: 'kakaopay.TC0ONETIME', // 카카오페이 사용
             pay_method: 'card',
             merchant_uid: 'merchant_' + new Date().getTime(),
             name: '주문명: '+tripName,
-            amount: 1,
+            amount: totalPrice,
             buyer_email: customerEmail,
             buyer_name: customerName,
-            buyer_tel: customerPhone
+            buyer_tel: customerPhone,
+            buyer_no: customerNo,
+            trip_no: tripNo
         }, function (rsp) {
             console.log("결제 금액:", rsp.paid_amount);
             if (rsp.success) {
@@ -266,17 +274,20 @@
                         imp_uid: rsp.imp_uid,
                         merchant_uid: rsp.merchant_uid,
                         paid_amount: rsp.paid_amount,
-                        apply_num : rsp.apply_num
+                        apply_num : rsp.apply_num,
+                        buyer_no: customerNo,
+                        trip_no: tripNo
                         // 기타 필요한 데이터가 있으면 추가 전달
                     })
                 }).done(function (data,xhr, status, error) {
                     //서버에서 REST API로 결제정보확인 및 서비스루틴이 정상적인 경우
                     if (data.success) {
                         var msg = '결제가 완료되었습니다.';
-                        msg += '\n고유ID : ' + rsp.imp_uid;
-                        msg += '\n상점 거래ID : ' + rsp.merchant_uid;
+                        msg+='\n상품명 : '+ tripName;
+                      //  msg += '\n고유ID : ' + rsp.imp_uid;
+                     //   msg += '\n상점 거래ID : ' + rsp.merchant_uid;
                         msg += '\n결제 금액 : ' + rsp.paid_amount;
-                        msg += '\n카드 승인번호 : ' + rsp.apply_num;
+                        //msg += '\n카드 승인번호 : ' + rsp.apply_num;
                         alert(msg);
                         window.location.href = "PurchaseSuccess";
                     } else {

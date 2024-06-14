@@ -1,4 +1,14 @@
 .notification-modal {
-    left:-300% !important;
+    left:-400% !important;
     width: 400px;
+    max-height : 700px;
+    overflow: auto; /* 자동으로 스크롤 추가 */
+}
+
+.readNotify {
+    background: rgba(243, 243, 243, 0.63);
+}
+
+.unreadNotify {
+    border-left:5px orangered solid;
 }

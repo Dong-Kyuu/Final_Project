@@ -27,4 +27,14 @@ public class OptionServiceImpl implements OptionService {
         return optionMapper.getAllOptions();
     }
 
+    @Override
+    public List<City> getAllCities() {
+        return optionMapper.getAllCities();
+    }
+
+    @Override
+    public City getCityByNo(String city_no) {
+        return optionMapper.getCityByNo(city_no);
+    }
+
 }

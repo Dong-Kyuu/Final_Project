@@ -31,5 +31,9 @@ public interface TripMapper {
     void insertTrip(String tripName, int tripPrice, int tripStock,int tripMaxStock, String tripDate,String regDate, String expireDate, String tripMainIMG, String tripCategory, String optionIds, String fileId);
 
     void insertTripFile(String fileId, String mainIMG, String introIMG, String routeIMG, String scheduleIMG, String detailIMG);
+
+    void updateTripStatus(int tripNo, String status);
+
+    List<Trip> getTripByStatus(String Status);
 }
 
