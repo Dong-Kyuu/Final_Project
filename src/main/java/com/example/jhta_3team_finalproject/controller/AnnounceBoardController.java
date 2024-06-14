@@ -6,6 +6,7 @@ import com.example.jhta_3team_finalproject.domain.Board.AnnounceBoard;
 import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
 import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.domain.User.UserAuth;
+import com.example.jhta_3team_finalproject.service.Notification.SseService;
 import com.example.jhta_3team_finalproject.service.S3.S3Service;
 import com.example.jhta_3team_finalproject.service.board.AnnounceBoardService;
 import com.example.jhta_3team_finalproject.service.User.UserAuthService;
@@ -46,12 +47,15 @@ public class AnnounceBoardController {
     private AnnounceBoardService AnnounceBoardService;
     private S3Service S3Service;
     private UserAuthService UserAuthService;
+    private SseService sseService;
 
     @Autowired
-    public AnnounceBoardController(AnnounceBoardService AnnounceBoardService, S3Service S3Service, UserAuthService UserAuthService) {
+    public AnnounceBoardController(AnnounceBoardService AnnounceBoardService, S3Service S3Service,
+                                   UserAuthService UserAuthService, SseService sseService) {
         this.AnnounceBoardService = AnnounceBoardService;
         this.S3Service = S3Service;
         this.UserAuthService = UserAuthService;
+        this.sseService = sseService;
     }
 
     // 리스트 가져오기
@@ -375,25 +379,39 @@ public class AnnounceBoardController {
     public Map<String, Object> topFix(@RequestParam("loginNum") int loginNum,
                                            @RequestParam("annboardNum") int annboardNum,@AuthenticationPrincipal User user
                                         ) {
-        
+
         Map<String, Object> response = new HashMap<>();
+        AnnounceBoard AnnounceBoard = AnnounceBoardService.getDetail(annboardNum);
         String result = "권한이 없습니다.";
         int update = 0;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         UserAuth userInfo = UserAuthService.getUserInfo(authentication);
-
-        boolean hasRole = userInfo.getAuthorities().stream()
-                .anyMatch(role -> role.equals("ROLE_SUB_MASTER"));
-
         User loginuser = (User)authentication.getPrincipal();
 
-
+        // 1. 권한 확인
+        boolean hasRole = userInfo.getAuthorities().stream()
+                .anyMatch(role -> role.equals("ROLE_SUB_MASTER"));
+        // SUBMASTER 이상이거나 관리부 부장
         if(hasRole || (loginuser.getDepartmentId()== 2 && loginuser.getUserAuth().equals("ROLE_HEAD"))) {
             update = AnnounceBoardService.doTopFix(annboardNum);
             if(update==1)
                 result = "상단고정 되었습니다.";
+        }else {
+            // 아니면 권한이 있는 사용자에게 상단 고정을 요청한다.
+
+            // 권한을 가진 사용자 찾기 ( SUB_MASTER, 관리부 HEAD)
+            int[] FixAuthUser = AnnounceBoardService.searchFixAuth();
+            logger.info(FixAuthUser + "에게 알림 전송준비중");
+            for (int recipient : FixAuthUser) {
+                                            // 받는 사람 넘버(필수) , 보내는 사람 넘버, 보내는사람 이름(안넣으면 이상하게보임), 링크, 메세지(필수)
+                sseService.sendNotification(recipient, loginNum, loginuser.getUsername(),
+                                        "http://localhost:9000/annboard/detail?num="+annboardNum,
+                                        "공지게시판 No." +annboardNum+"글의 상단고정을 요청했습니다.");
+                logger.info("알림전송");
+                result="상단 고정을 요청합니다.";
+            }
         }
+
 
         response.put("status", "success");
         response.put("update", update);
@@ -405,22 +423,21 @@ public class AnnounceBoardController {
     @PostMapping("/topfixclear")
     @ResponseBody
     public Map<String, Object> topFixclear(@RequestParam("loginNum") int loginNum,
-                                      @RequestParam("annboardNum") int annboardNum,@AuthenticationPrincipal User user
-    ) {
+                                      @RequestParam("annboardNum") int annboardNum) {
 
         Map<String, Object> response = new HashMap<>();
+        AnnounceBoard AnnounceBoard = AnnounceBoardService.getDetail(annboardNum);
         String result = "권한이 없습니다.";
         int update = 0;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         UserAuth userInfo = UserAuthService.getUserInfo(authentication);
-
-        boolean hasRole = userInfo.getAuthorities().stream()
-                .anyMatch(role -> role.equals("ROLE_SUB_MASTER"));
-
         User loginuser = (User)authentication.getPrincipal();
 
-
+        // 1. 권한 확인
+        boolean hasRole = userInfo.getAuthorities().stream()
+                .anyMatch(role -> role.equals("ROLE_SUB_MASTER"));
+        logger.info("!");
+        // SUBMASTER 이상이거나 관리부 부장
         if(hasRole || (loginuser.getDepartmentId()== 2 && loginuser.getUserAuth().equals("ROLE_HEAD"))) {
             update = AnnounceBoardService.TopFixclear(annboardNum);
             if(update==1)

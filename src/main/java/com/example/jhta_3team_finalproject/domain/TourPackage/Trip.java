@@ -28,5 +28,7 @@ public class Trip {
     private String tripMainImg;
     private String tripCategory;
     private String optionIds;
+    private String status;
+
 
 }

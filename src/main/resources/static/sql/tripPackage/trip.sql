@@ -12,16 +12,21 @@ create table trip
     expire_date    date         null,
     trip_date      date         null,
     file_id        VARCHAR(255) null,
-    trip_main_img  varchar(150) null,
+    trip_main_img  varchar(255) null,
     trip_category  varchar(15)  null,
     option_ids     varchar(300) null,
     constraint trip_ibfk_1
         foreign key (file_id) references tripfile (file_id)
 );
 
+
+
 create index file_id
     on trip (file_id);
 
+-- status 컬럼 추가
+ALTER TABLE trip
+    ADD COLUMN status VARCHAR(20) DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED'));
 
 -- Insert sample data into the Trip table
 INSERT INTO trip(trip_no, trip_name, trip_price, trip_stock, trip_max_stock, reg_date, expire_date, trip_date, file_id, trip_main_img, trip_category, option_ids)
