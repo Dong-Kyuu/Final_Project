@@ -15,7 +15,6 @@
 
         <!-- js -->
         <script th:src="@{/js/jquery-3.7.1.js}"></script>
-        <script th:src="@{../js/table/Chart/API/chart.js}"></script>
         <script th:src="@{../js/table/AnnounceList.js}"></script>
 
     </head>
@@ -64,15 +63,13 @@
                                                         <th>Writer</th>
                                                         <th>Date</th>
                                                         <th>Check</th>
-                                                        <td></td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <th:block th:each	= "b, iterStat:${boardlist}">
                                                         <tr th:data-department="${b.annboardDepartment}"
                                                             th:data-importance="${b.annboardImportance}"
-                                                            th:data-annboardNum="${b.annboardNum}"
-                                                            id = "tr-start">
+                                                            th:data-annboardNum="${b.annboardNum}">
                                                             <td><span th:text = "${rownum -(iterStat.index)}"></span></td>
                                                             <td>
                                                                 <th:block th:value="${b.annboardImportance}" id="importancelev"></th:block>
@@ -86,14 +83,6 @@
                                                             <td><div th:text = "${b.boardWriter}"></div></td>
                                                             <td><div th:text = "${#dates.format(b.annboardDate, 'yy-MM-dd HH:mm')}"></div></td>
                                                             <td><div><i class="mdi mdi-checkbox-blank-outline" id="check-icon"></i></div></td>
-                                                            <td>
-                                                                <th:block th:if = "${b.annboardFix} == 1">
-                                                                     <div><i class="mdi mdi-pin pin-icon" id="fix-icon"></i></div>
-                                                                </th:block>
-                                                                <th:block th:if = "${b.annboardFix} == 0">
-                                                                    <div><i class="mdi mdi-checkbox-blank-circle-outline" id="not-fix-icon"></i></div>
-                                                                </th:block>
-                                                            </td>
                                                         </tr>
                                                     </th:block>
                                                 </tbody>

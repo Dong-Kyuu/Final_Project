@@ -40,19 +40,33 @@ public interface ChatMapper {
 
     public List<User> chatUserList(String chatUserId);
 
-    public ChatMessage getLastMessageContent(ChatMessage chatMessage);
-
     public int getUnreadMessage(ChatParticipate chatParticipate);
 
     public User chatUserProfile(String chatUserId);
-
-    public int chatUserProfileMsgUpdate(String profileStatusMsg, String chatUserId);
 
     public int chatUserProfileMsgUpdate(User user);
 
     public void participateExitChatRoom(ChatParticipate chatParticipate);
 
-    int isChatRoomParticipate(ChatParticipate chatParticipate);
+    public int isChatRoomParticipate(ChatParticipate chatParticipate);
 
-    void deleteChatRoom(ChatParticipate chatParticipate);
+    public void deleteChatRoom(ChatParticipate chatParticipate);
+
+    public ChatRoom getChatRoomInfo(ChatParticipate chatParticipate);
+
+    public int getChatRoomUserCount(ChatParticipate chatParticipate);
+
+    public List<ChatParticipate> getChatRoomUserList(ChatParticipate chatParticipate);
+
+    public List<User> getChatRoomCanInviteUserList(ChatRoom chatRoom);
+
+    public int isp2pChatRoom(String chatCounterpartId, String chatUserId, String type);
+
+    public int createp2pChatRoom(ChatRoom chatRoom);
+
+    public void addp2pChatParticipate(ChatParticipate chatParticipate);
+
+    public int lastChatRoomNum();
+
+    public List<User> chatRoomParticipateList(ChatRoom chatRoom);
 }

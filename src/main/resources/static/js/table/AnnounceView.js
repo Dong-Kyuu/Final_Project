@@ -2,20 +2,14 @@ $(function () {
     let token = $("meta[name='_csrf']").attr("content");
     let header = $("meta[name='_csrf_header']").attr("content");
 
-    window.fetchDataAndRenderChart(header, token);
-
     // 부서 색 표시
     console.log($('#department').val())
     if($('#department').val() == '관리부') {
-        $('.department').css('color','#ff8900');
+        $('.department').css('color','blue');
     } else if(($('#department').val() == '인사부')) {
-        $('.department').css('color','#ff6161');
+        $('.department').css('color','#00ff33');
     } else if(($('#department').val() == '영업부')) {
-        $('.department').css('color','#4f6aaf');
-    } else if(($('#department').val() == '홍보부')) {
-        $('.department').css('color','#caca4c');
-    } else if(($('#department').val() == '지원부')) {
-        $('.department').css('color','#93cab3');
+        $('.department').css('color','red');
     }
     // 메뉴 열기
     $(".table-menu").click(function (event) {
@@ -89,14 +83,12 @@ $(function () {
                     // 서버로부터 받은 데이터를 처리합니다.
                     console.log(response);
                     // 필요한 경우, 응답 데이터를 사용하여 화면을 업데이트합니다.
-                    window.fetchDataAndRenderChart(header, token);
                 },
                 error: function(xhr, status, error) {
                     // 요청이 실패했을 때의 처리를 정의합니다.
                     console.error(error);
                 }
             });
-
         } else {
             // 아이콘이 없으면 추가
             $(this).append(' <i class="mdi mdi-check"></i>');
@@ -114,14 +106,12 @@ $(function () {
                     // 서버로부터 받은 데이터를 처리합니다.
                     console.log(response);
                     // 필요한 경우, 응답 데이터를 사용하여 화면을 업데이트합니다.
-                    window.fetchDataAndRenderChart(header, token);
                 },
                 error: function(xhr, status, error) {
                     // 요청이 실패했을 때의 처리를 정의합니다.
                     console.error(error);
                 }
             });
-
         }
     });
 
