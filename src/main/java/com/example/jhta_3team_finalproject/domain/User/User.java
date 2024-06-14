@@ -43,6 +43,7 @@ public class User implements UserDetails {
 
 
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<SimpleGrantedAuthority> roles = new ArrayList<SimpleGrantedAuthority>();

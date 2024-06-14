@@ -38,7 +38,7 @@
                 <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-bs-toggle="dropdown"
                    aria-expanded="false">
                     <div class="nav-profile-img">
-                            <img th:src="${#authentication.principal.userProfilePicture}" class="profile-img">
+                        <img th:src="${#authentication.principal.userProfilePicture}" class="profile-img">
                         <span class="availability-status online"></span>
                     </div>
                     <div class="nav-profile-text">
@@ -113,7 +113,7 @@
                 <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
                    data-bs-toggle="dropdown">
                     <i class="mdi mdi-bell-outline"></i>
-                    <span class="count-symbol bg-danger  reddot"></span>
+                    <span class="count-symbol bg-danger reddot" style="display:none"></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list notification-modal"
                      aria-labelledby="notificationDropdown">

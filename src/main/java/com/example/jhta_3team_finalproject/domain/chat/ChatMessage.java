@@ -36,4 +36,11 @@ public class ChatMessage {
     private String fileUrl; // 파일이 저장된 업로드 S3 버킷 위치 (DB 저장)
     private String fileOriginName; // 파일의 원본 이름
     private String s3url; // 업데이트할 S3 URL (업데이트용)
+
+    /**
+     * 2024-06-14, 확장 - 유저 이름, 유저 프로필 사진
+     */
+    private String userId;
+    private String username;
+    private String userProfilePicture;
 }

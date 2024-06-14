@@ -51,7 +51,11 @@
                     <div class="header-wrapp">
                         <div class="app-detail">
                             <div class="chat-profile-picture">
-                                <img th:src="@{/image/chat/default.png}" alt="">
+                                <span class="main-user-avatar">
+                                    <span class="chat-profile-image">
+
+                                    </span>
+                                </span>
                             </div>
                             <div class="chat-profile-name"></div>
                             <div class="status chat-profile-dept"></div>
@@ -184,17 +188,17 @@
                 <!-- @send message view -->
                 <div class="view-message">
                     <div class="chat-room-user-mgr">
-                        <th:block th:replace="~{chat/chatUserMgr :: chatUserMgrFragment}"/>
+<!--                        <th:block th:replace="~{chat/chatUserMgr :: chatUserMgrFragment}"/>-->
                     </div>
                     <div class="status-bar">
                         <div class="back-arrow">
                             <i class="material-icons">navigate_before</i>
                         </div>
                         <div class="mb-3 chat-room-info">
-                            <div class="chat-room-name">관광영업부</div>
+                            <div class="chat-room-name"></div>
                             <div class="chat-room-part-num">
                                 <i class="material-icons chat-room-part-icon">person</i>
-                                <span>2</span>
+                                <span class="chat-room-part-count"></span>
                             </div>
                         </div>
                         <div class="chatroom-menu">
@@ -220,10 +224,12 @@
                                     <!-- <div class="back-arrow-nav" href='javascript:Display();'>
                                         <i class="material-icons">navigate_before</i>
                                     </div> -->
-                                    <h1 class="nav-profile-h1"> 홍길동 </h1>
-                                    <span class="user-avatar small hasStory">
-                                    <img th:src="@{/image/chat/default.png}">
-                                </span>
+                                    <h1 class="nav-profile-h1">  </h1>
+                                    <span class="user-avatar">
+                                        <span class="nav-profile-image">
+
+                                        </span>
+                                    </span>
                                 </div>
                             </div>
                             <div class="scroll-wrapper">
@@ -239,58 +245,12 @@
                                            x-on:keydown.window.prevent.slash="$refs.searchField.focus()"
                                            class="border border-blue-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-blue-400 focus:border-blue-400 focus:bg-blue-50 focus:bg-opacity-25"/>
                                 </div>
-                                <div class="activity-container">
-                                    <!--                                <div class="icon-container">-->
-                                    <!--                                        <span class="add-icon add-action">-->
-                                    <!--                                            <svg xmlns="http://www.w3.org/2000/svg"-->
-                                    <!--                                                 style="width: 24px; height: 24px; margin-left: 15px;"-->
-                                    <!--                                                 viewBox="0 0 17 17" fill="none">-->
-                                    <!--                                                <path-->
-                                    <!--                                                        d="M16.1499 9.35002H9.35002V16.1501C9.35002 16.6192 8.96917 17 8.49992 17C8.03083 17 7.64998 16.6192 7.64998 16.1501V9.35002H0.849945C0.380849 9.35002 0 8.96917 0 8.50008C0 8.03083 0.380849 7.64998 0.849945 7.64998H7.64998V0.850101C7.64998 0.380849 8.03083 2.98192e-07 8.49992 2.98192e-07C8.96917 2.98192e-07 9.35002 0.380849 9.35002 0.850101V7.64998H16.1499C16.6192 7.64998 17 8.03083 17 8.50008C17 8.96917 16.6192 9.35002 16.1499 9.35002Z"-->
-                                    <!--                                                        fill="white"/>-->
-                                    <!--                                            </svg>-->
-                                    <!--                                        </span>-->
-                                    <!--                                </div>-->
-                                    <!--                                <div class="icon-container">-->
-                                    <!--                                        <span class="add-icon remove-icon remove-action">-->
-                                    <!--                                            <svg xmlns="http://www.w3.org/2000/svg"-->
-                                    <!--                                                 style="width: 24px; height: 24px; margin-left: 14px;"-->
-                                    <!--                                                 viewBox="0 0 448 512">&lt;!&ndash;!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.&ndash;&gt;-->
-                                    <!--                                                <path-->
-                                    <!--                                                        d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"-->
-                                    <!--                                                        fill="white"/>-->
-                                    <!--                                            </svg>-->
-                                    <!--                                        </span>-->
-                                    <!--                                </div>-->
+                                <div id="user-scroller-container" class="activity-container">
                                     <div class=avatar-container>
-                                        <span class="user-avatar offline small"> <img
-                                                th:src="@{/image/chat/default.png}">
+                                        <span class="user-avatar offline small">
+                                            <img th:src="@{/image/chat/default.png}">
                                         </span>
                                         <p>홍길동</p>
-                                    </div>
-                                    <div class=avatar-container>
-                                        <span class="user-avatar offline small"> <img
-                                                th:src="@{/image/chat/default.png}">
-                                        </span>
-                                        <p>홍동길</p>
-                                    </div>
-                                    <div class=avatar-container>
-                                        <span class="user-avatar offline small"> <img
-                                                th:src="@{/image/chat/default.png}">
-                                        </span>
-                                        <p>홍동길</p>
-                                    </div>
-                                    <div class=avatar-container>
-                                        <span class="user-avatar offline small"> <img
-                                                th:src="@{/image/chat/default.png}">
-                                        </span>
-                                        <p>동길홍</p>
-                                    </div>
-                                    <div class=avatar-container>
-                                        <span class="user-avatar offline small"> <img
-                                                th:src="@{/image/chat/default.png}">
-                                        </span>
-                                        <p>동길동</p>
                                     </div>
                                 </div>
                             </div>
@@ -372,9 +332,10 @@
                                 <i class="material-icons">insert_emoticon</i>
                                 <span>이모티콘</span>
                             </li>
-                            <li class="more-button-list-item">
+                            <li id="sendFileBtn" class="more-button-list-item">
                                 <i class="material-icons">file_upload</i>
                                 <span>파일전송</span>
+                                <input type="file" id="fileUpload" name="fileUpload" style="display: none;" />
                             </li>
                         </ul>
                     </div>
@@ -467,6 +428,19 @@
 
     <script>
         $(document).ready(function () {
+            /**
+             * 2024-06-14, 채팅방 리스트 새로고침
+             */
+            let eventSource = new EventSource("/chat/sse"); //http://localhost:9001/chat/sse
+            let sseStatus = true;
+            eventSource.addEventListener('chatListRoomRefresh',  function(event) {
+                if(event.data != '') {
+                    if(sseStatus) {
+                        getUserChatRoomList();
+                        console.log(event.data);
+                    }
+                }
+            });
 
             let token = $("meta[name='_csrf']").attr("content");
             let header = $("meta[name='_csrf_header']").attr("content");
@@ -530,6 +504,46 @@
                 });
             });
 
+            $(document).on('wheel', '.touch-y', function(e) {
+                //e.preventDefault();
+                var $ele = $(this);
+                var delta = e.originalEvent.deltaY;
+                var currentY = parseFloat($ele.css('transform').split(',')[5]) || 0;
+                var viewportY = (-1 * $ele.height()) + viewport($ele).height();
+                var distY = currentY - delta;
+                $ele.css('transform', 'translateY(' + distY + 'px)');
+                if (distY > 0 || distY < viewportY) {
+                    if (viewport($ele).find('.viewportShadow').length == 0)
+                        viewport($ele).append('<span class="viewportShadow"></span>');
+                }
+                if (distY > 0) {
+                    viewport($ele).find('.viewportShadow').css({
+                        'top': '-5px',
+                        'box-shadow': '0px 0px 140px ' + distY / 5 + 'px rgba(80,152,230,0.8)'
+                    });
+                } else if (distY < viewportY) {
+                    viewport($ele).find('.viewportShadow').css({
+                        'bottom': '-5px',
+                        'box-shadow': '0px 0px 140px ' + ((-1 * distY) + viewportY) / 5 + 'px rgba(80,152,230,0.8)'
+                    });
+                }
+                if (distY > 0) {
+                    $ele.css('transform', 'translateY(0)').addClass("reset");
+                    viewport($ele).find('.viewportShadow').css('box-shadow', '0 0 0 rgba(80,152,230,.5)');
+                } else if (distY < viewportY) {
+                    if ($ele.height() > viewport($ele).height()) {
+                        $ele.css('transform', 'translateY(' + viewportY + 'px)').addClass("reset");
+                    } else {
+                        $ele.css('transform', 'translateY(0)').addClass("reset");
+                    }
+                    viewport($ele).find('.viewportShadow').css('box-shadow', '0 0 0 rgba(80,152,230,.5)');
+                }
+                setTimeout(function () {
+                    $ele.removeClass("reset");
+                    viewport($ele).find('.viewportShadow').remove();
+                }, 200);
+            });
+
             // Get viewport
             function viewport(ele) {
                 return ele.closest('[data-viewport="true"]');
@@ -590,38 +604,132 @@
             /** 2024-05-30, 채팅방 리스트와 사원 리스트 동작 분리 */
             let messageRoomNum = $('input[name="message_room_num"]');
             function showMessages() {
-                console.log('show message');
+                sseStatus = false;
+
+                //console.log('show message');
                 //console.log(this);
                 var type = $(this).find('input[name=chat_room_type]').val();
-                console.log(type);
+                //console.log(type);
+                var chatRoomNum = '';
+                var chatUserId = '';
                 if (type === 'p2p') { // 1대1 채팅방으로 접속 시
                     var chatCounterpartId = $(this).find('input[name=chat_counterpart_id]').val();
                     //console.log(chatCounterpartId);
+                    chatUserId = $("#chat_user_id").val();
+                    isp2pChatRoom(chatCounterpartId, chatUserId, type);
+                    chatRoomNum =  messageRoomNum.val();
                 } else { // 채팅방 목록에서 접속 시
-                    var chatRoomNum = $(this).find('input[name=chat_room_num]').val();
-                    var chatUserId = $("#chat_user_id").val();
-
+                    chatRoomNum = $(this).find('input[name=chat_room_num]').val();
                     //console.log(chatRoomNum);
+                    chatUserId = $("#chat_user_id").val();
                     messageRoomNum.val(chatRoomNum); // 해당 방의 번호를 기억해놓습니다.
-                    loadingStart();
-                    multiChatRoom(chatRoomNum, chatUserId, type);
-
-                    setTimeout(function () {
-                        loadingEnd();
-                        messageScrollFix();
-                    }, 500);
                 }
+
+                loadingStart();
+                getChatRoomInfo(chatRoomNum); // 채팅방 정보 가져오기 (채팅방 이름, 인원 수, 유저리스트)
+                openChatRoom(chatRoomNum, chatUserId, type); // 웹소켓 연결 + 채팅 기록 가져오기
+                setTimeout(function () {
+                    loadingEnd();
+                    messageScrollFix();
+                }, 500);
 
                 $('.view-main').addClass("deactive");
                 $('.view-message').addClass("active");
                 $(".chat-menu-container-mgr").css("display", "none");
+                $(".app-detail").css("display", "none");
             }
 
             /**
-             * 2024-06-08, 일반 채팅방 입장
+             * 2024-06-12, 채팅방 정보 가져오기 (채팅방 이름, 인원 수, 유저리스트)
+             */
+            function getChatRoomInfo(chatRoomNum) {
+                $.ajax({
+                    type: "post",
+                    url: "/chat/getChatRoomInfo",
+                    data: {
+                        "chatRoomNum": chatRoomNum,
+                        "chatUserId": $("#chat_user_id").val()
+                    },
+                    dataType: "json",
+                    beforeSend: function (xhr) {
+                        //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (res) {
+
+                        var $chatRoomName = $('.chat-room-name');
+                        var $chatRoomPartCount = $('.chat-room-part-count');
+
+                        $chatRoomName.html(res.roomName);
+                        $chatRoomPartCount.html(res.userCount);
+
+                        $(".activity-container").empty();
+                        $(res.chatRoomPartList).each(function(index, item) {
+                            //console.log(index);
+                            let img = ''; // 이미지 처리 시
+                            if (item.userProfilePicture != null) {
+                                img = "<img style='width: 40px; height: 40px; border-radius: 50%;' src='" + item.userProfilePicture +  "' />";
+                            } else {
+                                // 업로드된 프로필을 보여주도록 한다.
+                                img = "<img style='width: 40px; height: 40px; border-radius: 50%;' src='/image/chat/default.png' />";
+                            }
+                            output = "";
+                            output += "<div class='avatar-container'>";
+                            output += "    <span class='user-avatar offline small'>";
+                            output += "        " + img;
+                            output += "    </span>";
+                            output += "    <p>";
+                            let userName = item.username;
+                            if(userName.length >= 3) {
+                                output += userName.substr(0, 3);
+                            } else {
+                                output += userName;
+                            }
+                            output +="     </p>";
+                            output += "</div>";
+
+                            $(".activity-container").append(output);
+                        });
+
+                    }
+                }) // ajax end
+            }
+
+            /**
+             * 2024-06-13, 사원 리스트에서 채팅을 클릭 시 1대1 채팅방이 있는지 확인한다.
+             *             1 대 1 채팅방이 있는지 판별할 때는 상대방의 ID, 자신의 ID, 채팅방의 TYPE 으로 처리한다.
+             *             1 대 1 채팅방이 없는 경우 정보를 토대로 1 대 1 채팅방을 생성해준다.
+             */
+            function isp2pChatRoom(chatCounterpartId, chatUserId, type) {
+                $.ajax({
+                    type: "post",
+                    url: "/chat/isp2pChatRoom",
+                    data: {
+                        "chatCounterpartId": chatCounterpartId,
+                        "chatUserId": chatUserId,
+                        "type": type
+                    },
+                    dataType: "json",
+                    async: false,
+                    beforeSend: function (xhr) {
+                        //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (chatRoomNum) {
+                        console.log(chatRoomNum + '입니다.');
+                        messageRoomNum.val(chatRoomNum);
+                    }
+                }) // ajax end
+            }
+
+            /**
+             * 2024-06-08, 채팅방 입장
              */
             let ws;
-            function multiChatRoom(chatRoomNum, chatUserId, type) {
+            function openChatRoom(chatRoomNum, chatUserId, type) {
+                //console.log(chatRoomNum);
+                //console.log(chatUserId);
+                //console.log(type);
                 //console.log("wsOpen");
                 wsOpen();
 
@@ -646,7 +754,19 @@
                             //파일 업로드가 아닌 경우 메시지를 뿌려준다.
                             var d = JSON.parse(msg);
                             console.log(d);
-                            //console.log(d.type);
+                            console.log(d.type);
+
+                            if(d.userProfileImage != null) {
+                                var profileImage = "";
+                                profileImage += "        <span class='user-avatar offline small'>";
+                                profileImage += "            <img src=" + d.userProfileImage +" />";
+                                profileImage += "        </span>"
+                            } else {
+                                var profileImage = "";
+                                profileImage += "        <span class='user-avatar offline small'>";
+                                profileImage += "            <img src='/image/chat/default.png' />";
+                                profileImage += "        </span>"
+                            }
 
                             if (d.fileUrl != null) {
                                 //console.log(d.fileUrl);
@@ -665,7 +785,7 @@
                                         output +="</h5>";
 
                                         $("#chat-message-list").append(output);
-                                    } else if (d.userName === $("#chat_user_id").val()) {
+                                    } else if (d.sessionId === $("#chat_user_id").val()) {
                                         output = "";
                                         output += "<li class='sent'>";
                                         output += "    <div>";
@@ -686,9 +806,7 @@
                                         output = "";
                                         output += "<li class='recive'>";
                                         output += "    <div class='avatar-container'>";
-                                        output += "        <span class='user-avatar offline small'>";
-                                        output += "            <img src='/image/chat/default.png' />";
-                                        output += "        </span>"
+                                        output += profileImage;
                                         output += "    </div>"
                                         output += "    <p class='chat-nickname'>" + d.userName + "</p>";
                                         output += "    <div class='chat-content'>";
@@ -706,7 +824,7 @@
                                     }
                                 }
                             } else if (d.type === "message") { // 나의 메시지
-                                if (d.userName === $("#chat_user_id").val()) {
+                                if (d.sessionId === $("#chat_user_id").val()) {
                                     output = "";
                                     output += "<li class='sent goto'>";
                                     output += "    <div>";
@@ -731,9 +849,7 @@
                                     output = "";
                                     output += "<li class='recive goto'>";
                                     output += "    <div class='avatar-container'>";
-                                    output += "        <span class='user-avatar offline small'>";
-                                    output += "            <img src='/image/chat/default.png' />";
-                                    output += "        </span>"
+                                    output += profileImage;
                                     output += "    </div>"
                                     output += "    <p class='chat-nickname'>" + d.userName + "</p>";
                                     output += "    <div class='chat-content'>";
@@ -755,20 +871,52 @@
                                 }
                             } else if (d.type === "imgurl") {
                                 //파일 업로드한 경우 업로드한 파일을 채팅방에 뿌려준다.
-                                var url = d.imageurl;
-                                if (d.userName === $("#chat_user_id").val()) {
-                                    $("#chating").append(
-                                        "<div class='block'><p class='balloon_semo'></p><p class='me balloon_02'>"
-                                        + "<img class='msgImg' src='" + url + "'>" + "</p></div>");
-                                    $("#chating").scrollTop($("#chating")[0].scrollHeight);
+                                var srcUrl = d.imageurl;
+                                url = "<img class='msgImg' style='width: 120px;' src='" + srcUrl + "'>";
+                                if (d.sessionId === $("#chat_user_id").val()) {
+                                    output = "";
+                                    output += "<li class='sent goto'>";
+                                    output += "    <div>";
+                                    output += "         <span class='my-chat'>";
+                                    output += d.msg;
+                                    if (srcUrl != null) {
+                                        output += url;
+                                    }
+                                    output += "         </span>";
+                                    output += "         <span>";
+                                    output += "             <strong class='my-chat-readcount'> " + d.readCount + "&nbsp;</strong> " + getTime(d.sendTime);
+                                    output += "         </span>";
+                                    output += "    </div>";
+                                    output += "</li>";
+
+                                    $("#chat-message-list").append(output);
+                                    setTimeout(function () {
+                                        $(document).find(".goto").removeClass("goto");
+                                        messageScrollFixChat();
+                                    }, 50);
                                 } else {
-                                    $("#chating")
-                                        .append(
-                                            "<div class='block'><p class='float circle1' style='background-repeat:no-repeat;background-position: center; background-size: 35px;'>"
-                                            + d.userName.substring(0, 1)
-                                            + "</p><p class='balloon_03_semo float'><p class='others balloon_03 float'>"
-                                            + "<img class='msgImg' src='" + url + "'>" + "</p></div>");
-                                    $("#chating").scrollTop($("#chating")[0].scrollHeight);
+                                    output = "";
+                                    output += "<li class='recive goto'>";
+                                    output += "    <div class='avatar-container'>";
+                                    output += profileImage;
+                                    output += "    </div>"
+                                    output += "    <p class='chat-nickname'>" + d.userName + "</p>";
+                                    output += "    <div class='chat-content'>";
+                                    output += d.msg;
+                                    if (srcUrl != null) {
+                                        output += url;
+                                    }
+                                    output += "        <span>";
+                                    output += "            <strong class='chat-readcount'>" + d.readCount + "&nbsp;</strong>" + getTime(d.sendTime);
+                                    output += "        </span>";
+                                    output += "    </div>";
+                                    output += "</li>";
+
+                                    $("#chat-message-list").append(output);
+                                    setTimeout(function () {
+                                        $(document).find(".goto").removeClass("goto");
+                                        messageScrollFixChat();
+                                    }, 50);
                                 }
                             } else {
                                 console.warn("unknown type!")
@@ -778,21 +926,39 @@
                 }
             }
 
+            var isRun = false;
             $(".back-arrow").click(function () {
+                loadingStart();
+                /**
+                 * 2024-06-12, isRun을 통해 나가기 버튼 중복 동작 방지
+                 */
+                if(isRun == true) {
+                    return false;
+                }
+
+                //console.log('back-arrow');
+                isRun = true;
+                sseStatus = true;
+
                 if(ws != null) {
                     ws.close();
                 }
+
                 getChatUserList();
-                getChatUserProfile();
                 getUserChatRoomList();
+                getChatUserProfile();
+
                 setTimeout(function () {
-                    $('.view-main').removeClass("deactive");
-                    $('.view-message').removeClass("active");
+                    $(".view-main").removeClass("deactive");
+                    $(".view-message").removeClass("active");
                     $("#chat-menu").css("display", "none");
                     $(".chat-menu-container-mgr").css("display", "block");
-                    $("#chat-message-list").css('transform', 'translateY(0)');
+                    $(".app-detail").css("display", "block");
+                    $("#chat-message-list").css("transform", "translateY(0)");
                     $(".messages-list > ul > li").off('click', showMessages);
                     $(".messages-list > ul > li").bind('click', showMessages);
+                    loadingEnd();
+                    isRun = false;
                 }, 100);
             });
 
@@ -824,6 +990,41 @@
                     ws.send(JSON.stringify(option));
                     $(".message-text").val("");
                 }
+            }
+
+            $("#sendFileBtn").click(function () {
+                let myInput = document.getElementById("fileUpload");
+                myInput.click();
+            });
+
+            $("#fileUpload").change(function(e){
+                fileSend();
+            });
+
+            function fileSend() {
+
+                var file = document.querySelector("#fileUpload").files[0];
+                var fileReader = new FileReader();
+
+                fileReader.onload = function () {
+                    var param = {
+                        type: "fileUpload",
+                        file: file,
+                        fileName: file.name,
+                        roomNumber: messageRoomNum.val(),
+                        userName: $("#chat_user_id").val(),
+                        msg: ''
+                    }
+
+                    ws.send(JSON.stringify(param)); //파일 보내기전 메시지를 보내서 파일을 보냄을 명시한다.
+
+                    arrayBuffer = this.result;
+                    ws.send(arrayBuffer); //파일 소켓 전송
+                };
+                fileReader.readAsArrayBuffer(file);
+
+                document.querySelector('.list-container').classList.toggle('active');
+                document.querySelector('.button-container').classList.toggle('active');
             }
 
             /**
@@ -922,22 +1123,24 @@
                 if (mes_hieght > viewportHeight)
                     $(".messages-area > ul").css("transform", "translateY(" + ((viewportHeight - mes_hieght) - 10) + "px)");
 
-                console.log('fix!');
+                //console.log('fix!');
                 }, 250);
             }
 
-            /** 2024-05-16, 프로필 클릭 시 설정화면으로 이동 */
-            $(".app-detail").click(function () {
-                $el = $("#master-nav ul li:eq(2)");
-                $("#master-nav ul li").removeClass('active');
-                $el.addClass('active');
-                navItemPos($el.index());
-                leftPos = $el.position().left;
-                newWidth = $el.parent().width();
-                $active_line.stop().animate({
-                    left: leftPos
-                });
-            });
+            /**
+             * 2024-05-16, 프로필 클릭 시 설정화면으로 이동
+             */
+            // $(".app-detail").click(function () {
+            //     $el = $("#master-nav ul li:eq(2)");
+            //     $("#master-nav ul li").removeClass('active');
+            //     $el.addClass('active');
+            //     navItemPos($el.index());
+            //     leftPos = $el.position().left;
+            //     newWidth = $el.parent().width();
+            //     $active_line.stop().animate({
+            //         left: leftPos
+            //     });
+            // });
 
             /** 2024-05-17, 채팅방 유저 검색 */
             $("#searchChatUser").on("keyup", function () {
@@ -948,6 +1151,15 @@
                     // toggle(false)는 선택한 요소에 style="display: none;" 속성이 추가되어 보이지 않도록 합니다.
                     $(this).toggle($(this).find('p').text().toLowerCase().indexOf(value) > -1)
                 });
+            });
+
+            /**
+             * 2024-06-12, 채팅방 우측 스크롤 구현
+             */
+            const scrollContainer = document.getElementById('user-scroller-container');
+            scrollContainer.addEventListener('wheel', (event) => {
+                event.preventDefault();
+                scrollContainer.scrollLeft += event.deltaY;
             });
 
             /**
@@ -964,21 +1176,24 @@
                 const data = {
                     'type': 'chat-invite',
                     'name': '채팅방 초대',
-                    'userButton': '초대'
+                    'userButton': '초대',
+                    "chatUserId": $("#chat_user_id").val(),
+                    "chatRoomNum": $("input[name='message_room_num']").val()
                 };
                 chatRoomMgrAjax('/chat/chatUserInviteView', data, function (html) {
                     chatRoomUserDisplay(html);
                 });
             });
 
-            /** 2024-05-28, 채팅방 유저 관리 화면, - 클릭 시 -> 유저 추방, 방 제목 변경 폼 보여줌 */
+            /** 2024-05-28, 채팅방 유저 관리 화면, - 클릭 시 -> 유저 추방 */
             $(".mgr-chat-room-users").click(function () {
                 chatContentHidden();
                 const data = {
                     'type': 'chat-mgr',
                     'name': '채팅방 관리',
-                    'roomButton': '변경',
-                    'userButton': '추방'
+                    'userButton': '추방',
+                    "chatUserId": $("#chat_user_id").val(),
+                    "chatRoomNum": $("input[name='message_room_num']").val()
                 };
                 chatRoomMgrAjax('/chat/chatUserMgrView', data, function (html) {
                     chatRoomUserDisplay(html);
@@ -1106,6 +1321,13 @@
                 $(".chat-search-input").toggleClass("active").focus;
                 $(this).toggleClass("animate");
                 $(".chat-search-input").val("");
+                if ($('.chat-room-name').css('display') == 'none') {
+                    $('.chat-room-name').fadeIn(300);
+                    $('.chat-room-part-num').fadeIn(300);
+                } else {
+                    $('.chat-room-name').fadeOut(300);
+                    $('.chat-room-part-num').fadeOut(300);
+                }
             });
 
             /** 2024-05-28, 로딩 화면 구현 */
@@ -1142,15 +1364,14 @@
                     },
                     success: function (rdata) {
                         //console.log(rdata);
-                        let img = ''; // 이미지 처리 시
-                        if (rdata.profile_picture === 'default.png') {
-                            img = "<img src='/image/chat/default.png' />";
+                        if (rdata.userProfilePicture != null) {
+                            img = "<img style='width: 50px; height: 50px;' src='" + rdata.userProfilePicture +  "' />";
                         } else {
                             // 업로드된 프로필을 보여주도록 한다.
-                            img = "<img src='/image/chat/default.png' />";
+                            img = "<img style='width: 50px; height: 50px;' src='/image/chat/default.png' />";
                         }
 
-                        var $chatProfilePicture = $('.chat-profile-picture');
+                        var $chatProfilePicture = $('.chat-profile-image');
                         var $chatProfileName = $('.chat-profile-name');
                         var $chatProfileDept = $('.chat-profile-dept');
                         var $chatProfileId = $('input[name="chat_profile_id"]');
@@ -1158,6 +1379,10 @@
                         var $chatProfileStatusMsg = $('#chat-profile-status-msg');
                         var $chatProfileEmail = $('input[name="chat_profile_email"]');
                         var $chatProfilePhone = $('input[name="chat_profile_phone"]');
+
+                        var $chatNavProfileName = $('.nav-profile-h1');
+                        var $chatNavProfilePicture = $('.nav-profile-image');
+
 
                         $chatProfilePicture.empty();
                         $chatProfilePicture.html(img);
@@ -1168,6 +1393,16 @@
                         $chatProfileStatusMsg.html(rdata.userChatStatusMsg);
                         $chatProfileEmail.val(rdata.userEmail);
                         $chatProfilePhone.val(rdata.userPhoneNumber);
+
+                        if (rdata.userProfilePicture != null) {
+                            img = "<img style='width: 40px; height: 40px; border-radius: 50%;' src='" + rdata.userProfilePicture +  "' />";
+                        } else {
+                            // 업로드된 프로필을 보여주도록 한다.
+                            img = "<img style='width: 40px; height: 40px; border-radius: 50%;' src='/image/chat/default.png' />";
+                        }
+
+                        $chatNavProfileName.html(rdata.username);
+                        $chatNavProfilePicture.html(img);
                     }
                 }) // ajax end
             }
@@ -1194,11 +1429,11 @@
                         let output = '';
                         $(rdata).each(function () {
                             let img = ''; // 이미지 처리 시
-                            if (this.profile_picture === 'default.png') {
-                                img = "<img src='/image/chat/default.png' />";
+                            if (this.userProfilePicture != null) {
+                                img = "<img style='width: 50px; height: 50px;' src='" + this.userProfilePicture +  "' />";
                             } else {
                                 // 업로드된 프로필을 보여주도록 한다.
-                                img = "<img src='/image/chat/default.png' />";
+                                img = "<img style='width: 50px; height: 50px;' src='/image/chat/default.png' />";
                             }
 
                             output += "<li>";
@@ -1336,6 +1571,9 @@
                     success: function (res) {
                         //console.log(res);
                         resultCount = res;
+                    },
+                    error: function (res) {
+                        console.log('안 읽은 메시지가 없습니다.');
                     }
                 }) // ajax end
                 return resultCount;
@@ -1367,6 +1605,7 @@
                 }) // ajax end
 
             });
+
         });
     </script>
     </body>

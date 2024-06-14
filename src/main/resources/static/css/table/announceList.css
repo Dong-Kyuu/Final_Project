@@ -1,13 +1,13 @@
 .dept-green-lev3 {
-    border-left: 4px solid #aeffc1;
-    border-bottom: 4px solid #aeffc1 !important;
-    background: rgba(174, 255, 193, 0.48) !important;
+    border-left: 4px solid #93cab3;
+    border-bottom: 4px solid #93cab3 !important;
+    background: rgba(147, 202, 179, 0.47) !important;
 }
 
 .dept-blue-lev3 {
-    border-left: 4px solid #4f6aaf;
-    border-bottom: 4px solid #4f6aaf !important;
-    background: rgba(79, 106, 175, 0.48) !important;
+    border-left: 4px solid #4f4faf;
+    border-bottom: 4px solid #4f4faf !important;
+    background: rgba(79, 79, 175, 0.43) !important;
 }
 
 .dept-black-lev3 {
@@ -17,31 +17,25 @@
 }
 
 .dept-red-lev3 {
-    border-left: 4px solid #ff6161;
-    border-bottom: 4px solid #ff6161 !important;
-    background: rgba(237, 92, 92, 0.35) !important;
+    border-left: 4px solid #ff7b7b;
+    border-bottom: 4px solid #ff7b7b !important;
+    background: rgba(255, 123, 123, 0.47) !important;
 }
 
 .dept-yellow-lev3 {
-    border-left: 4px solid #ffee00;
-    border-bottom: 4px solid #ffee00 !important;
-    background: rgba(255, 238, 0, 0.38) !important;
-}
-
-.dept-orange-lev3 {
-    border-left: 4px solid #ff8900;
-    border-bottom: 4px solid #ff8900 !important;
-    background: rgba(255, 137, 0, 0.45) !important;
+    border-left: 4px solid #fd9bdb;
+    border-bottom: 4px solid #fd9bdb !important;
+    background: rgba(253, 155, 219, 0.52) !important;
 }
 
 .dept-green-lev2 {
-    border-left: 4px solid #aeffc1;
-    border-bottom: 4px solid #aeffc1 !important;
+    border-left: 4px solid #93cab3;
+    border-bottom: 4px solid #93cab3 !important;
 }
 
 .dept-blue-lev2 {
-    border-left: 4px solid #4f6aaf;
-    border-bottom: 4px solid #4f6aaf !important;
+    border-left: 4px solid #4f4faf;
+    border-bottom: 4px solid #4f4faf !important;
 }
 
 .dept-black-lev2 {
@@ -50,22 +44,16 @@
 }
 
 .dept-red-lev2 {
-    border-left: 4px solid #ff6161;
-    border-bottom: 4px solid #ff6161 !important;
+    border-left: 4px solid #ff7b7b;
+    border-bottom: 4px solid #ff7b7b !important;
 }
 
 .dept-yellow-lev2 {
-    border-left: 4px solid #ffee00;
-    border-bottom: 4px solid #ffee00 !important;
+    border-left: 4px solid #fd9bdb;
+    border-bottom: 4px solid #fd9bdb !important;
 }
 
-.dept-orange-lev2 {
-    border-left: 4px solid #ff8900;
-    border-bottom: 4px solid #ff8900 !important;
-}
-
-.pin-icon {
-    display: inline-block;
-
-    transform: rotate(45deg); /* 아이콘을 45도 회전 */
+.dept-green-lev2 {
+    border-left: 4px solid #93cab3;
+    border-bottom: 4px solid #93cab3 !important;
 }

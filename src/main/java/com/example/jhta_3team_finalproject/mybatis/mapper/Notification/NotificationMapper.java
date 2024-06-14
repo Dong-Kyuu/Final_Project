@@ -9,4 +9,6 @@ public interface NotificationMapper {
     List<Notification> getList(int userNum);
 
     void insert(Notification alarm);
+
+    int readAction(int notifiNum);
 }

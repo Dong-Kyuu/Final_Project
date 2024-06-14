@@ -1,18 +1,22 @@
 package com.example.jhta_3team_finalproject.controller;
 
 import com.example.jhta_3team_finalproject.config.trip.IamportConfig;
+import com.example.jhta_3team_finalproject.domain.TourPackage.Purchase;
+import com.example.jhta_3team_finalproject.service.TourPackage.CartService;
+import com.example.jhta_3team_finalproject.service.TourPackage.CustomerService;
+import com.example.jhta_3team_finalproject.service.TourPackage.PurchaseService;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,11 +25,19 @@ import java.util.Map;
 public class PaymentController {
 
     @Autowired
+    private PurchaseService purchaseService;
+
+    @Autowired
+    private CartService cartService;
+
+    @Autowired
     private IamportConfig iamportConfig;
 
     @PostMapping("/complete")
-    public ResponseEntity<Map<String, Object>> completePayment(@RequestBody Map<String, String> paymentData) {
+    public ResponseEntity<Map<String, Object>> completePayment(HttpServletResponse cookieresponse,@RequestBody Map<String, String> paymentData) {
         System.out.println("결제로직 시작");
+        System.out.println("buyer_no: " + paymentData.get("buyer_no"));
+        System.out.println("trip_no: " + paymentData.get("trip_no"));
 
         Map<String, Object> response = new HashMap<>();
         try {
@@ -43,6 +55,21 @@ public class PaymentController {
                 String Orderpayment = paymentData.get("paid_amount");
 
                 if (Actualpayment.equals(Orderpayment)) {
+
+                    // Purchase 객체 생성 및 저장
+                    Purchase purchase = new Purchase();
+                    purchase.setImpUid(impUid);
+                    purchase.setMerchantUid(paymentData.get("merchant_uid"));
+                    purchase.setBuyerNo(Integer.valueOf(paymentData.get("buyer_no")));
+                    purchase.setAmount(new BigDecimal(Orderpayment));
+                    purchase.setTripNo(Integer.valueOf(paymentData.get("trip_no")));
+
+                    purchaseService.savePurchase(purchase);
+
+                    //해당 고객의 cart db/ cart cookie비우기
+                    cartService.deleteCart(paymentData.get("buyer_no"));
+                    deleteCookie(cookieresponse, "cart");
+
                     // 서비스 로직 수행, 예: 주문 상태 업데이트
                     response.put("success", true);
                     response.put("message", "결제가 완료되었습니다.");
@@ -56,9 +83,18 @@ public class PaymentController {
             }
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            e.printStackTrace();
             response.put("success", false);
             response.put("message", "결제 처리 중 오류가 발생했습니다.(controller)");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
+
+    // 쿠키 삭제 메서드
+    public void deleteCookie(HttpServletResponse response, String cookieName) {
+        Cookie cookie = new Cookie(cookieName, "");
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
     }
 }

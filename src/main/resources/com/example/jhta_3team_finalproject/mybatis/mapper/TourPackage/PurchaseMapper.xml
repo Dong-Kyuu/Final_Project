@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.TourPackage.PurchaseMapper">
+
+    <select id="getAllPurchaseInfo" resultType="Purchase">
+        SELECT p.*, c.customer_name_kor, t.trip_name, t.trip_date
+        FROM purchase p
+                 LEFT JOIN customer c ON p.buyer_no = c.customer_no
+                 LEFT JOIN trip t ON p.trip_no = t.trip_no
+    </select>
+
+    <select id="getAllPurchaseInfoByTripNo" resultType="Purchase" parameterType="java.lang.Integer">
+        SELECT p.*, c.customer_name_kor, t.trip_name, t.trip_date
+        FROM purchase p
+                 LEFT JOIN customer c ON p.buyer_no = c.customer_no
+                 LEFT JOIN trip t ON p.trip_no = t.trip_no
+        WHERE p.trip_no = #{trip_no}
+    </select>
+
+    <insert id="insertPurchase" parameterType="Purchase">
+        INSERT INTO purchase (imp_uid, merchant_uid, buyer_no, amount, created_at, trip_no)
+        VALUES (#{impUid}, #{merchantUid}, #{buyerNo}, #{amount}, #{createdAt},#{tripNo})
+    </insert>
+
+
+
+</mapper>
