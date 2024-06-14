@@ -57,7 +57,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">Main Trip Info / Trip Manager</h4>
                                 <div class="row" id="TripInfo">
-                                    <div class="col-md-6"><img th:src="${trip.tripMainIMG}" alt="Main Image"></div>
+                                    <div class="col-md-6"><img th:src="@{${trip.tripMainImg}}" alt="Main Image"></div>
                                     <div class="col-md-6">
                                         <div class="row">
                                             <div class="col-md-12">
@@ -124,92 +124,12 @@
 
                                     <tbody>
 
-                                    <!--
-                                    <tr th:each="user : ${user}">
-                                        <td th:text="${user.purchaseNo}"></td>
-                                        <td th:text="${user.userName}"></td>
-                                        <td th:text="${user.TripName}"></td>
-                                        <td th:text="${user.paymentDate}"></td>
-                                        <td th:text="${user.status}"></td>
-                                        <button type="button" class="btn btn-gradient-success">수정</button>
-                                        <button type="button" class="btn btn-gradient-danger">삭제</button>
-                                    </tr>
-                                    -->
-
-                                    <tr>
-                                        <td>
-                                            M433123456
-                                        </td>
-                                        <td> Herman Beck</td>
-                                        <td>
-                                            서유럽 11일 2024년06월07일
-                                        </td>
-                                        <td> 2024년 05월 13일 08:00:17</td>
-                                        <td> 예약 대기</td>
-                                        <td> <div class="button-UserProfile">
-                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
-                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
-                                        </div></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>
-                                            M343312345
-                                        </td>
-                                        <td> Hank Thomas</td>
-                                        <td>
-                                            서유럽 11일 2024년06월07일
-                                        </td>
-                                        <td> 2024년 05월 13일 06:01:34</td>
-                                        <td> 예약 대기</td>
-                                        <td> <div class="button-UserProfile">
-                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
-                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
-                                        </div></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>
-                                            M234312345
-                                        </td>
-                                        <td> Frank DeJong</td>
-                                        <td>
-                                            동유럽 11일 2024년06월07일
-                                        </td>
-                                        <td> 2024년 05월 13일 01:02:54</td>
-                                        <td> 예약 대기</td>
-                                        <td> <div class="button-UserProfile">
-                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
-                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
-                                        </div></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>
-                                            M121232345
-                                        </td>
-                                        <td> Didier Drogba</td>
-                                        <td>
-                                            서유럽 11일 2024년06월07일
-                                        </td>
-                                        <td> 2024년 05월 12일 19:08:44</td>
-                                        <td> 예약 대기</td>
-                                        <td> <div class="button-UserProfile">
-                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
-                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
-                                        </div></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>
-                                            M343398765
-                                        </td>
-                                        <td> Frank Sinatra</td>
-                                        <td>
-                                            서유럽 11일 2024년06월07일
-                                        </td>
-                                        <td> 2024년 05월 12일 12:01:34</td>
-                                        <td> 예약 승인</td>
+                                    <tr th:each="purchase : ${purchaseList}">
+                                        <td th:text="${purchase.id}"></td>
+                                        <td th:text="${purchase.customerNameKor}"></td>
+                                        <td th:text="${purchase.tripName}+'/'+${purchase.tripDate}"></td>
+                                        <td th:text="${purchase.createdAt}"></td>
+                                        <td th:text="${purchase.status == 'PENDING' ? '예약 대기' : purchase.status}"></td>
                                         <td> <div class="button-UserProfile">
                                             <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
                                             <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>

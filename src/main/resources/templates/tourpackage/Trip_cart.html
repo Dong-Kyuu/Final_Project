@@ -93,7 +93,7 @@
                                 <tbody>
                                 <!-- 메인 상품 -->
                                 <tr th:if="${not #lists.isEmpty(trip)}">
-                                    <td><img th:src="${trip.tripMainIMG}" class="IMG__item"></td>
+                                    <td><img th:src="@{${trip.tripMainImg}}" class="IMG__item" alt="Main Image"></td>
                                     <td class="product__cart__item">
                                         <div class="product__cart__item__text">
                                             <h5 th:text="${trip.tripName}"></h5>
@@ -122,7 +122,7 @@
                                 </tr>
                                 <!-- 옵션 상품 -->
                                 <tr th:each="option : ${options}">
-                                    <td><img th:src="${option.optionMainIMG}" class="IMG__item" alt=""></td>
+                                    <td><img th:src="@{${option.optionMainIMG}}" class="IMG__item" alt=""></td>
                                     <td class="product__cart__item">
                                         <div class="product__cart__item__text">
                                             <h6 th:text="${option.optionName}"></h6>

@@ -17,6 +17,29 @@
     <link rel="stylesheet" th:href="@{../../assets/css/style.css}">
     <!-- End layout styles -->
     <link rel="shortcut icon" th:href="@{../../assets/images/favicon.ico}"/>
+<style>
+    .option-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .option-item button {
+        background: none;
+        border: none;
+        color: #007bff;
+        cursor: pointer;
+        font-size: 0.875rem;
+        text-decoration: none;
+    }
+
+    .option-item button:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+</style>
 
 </head>
 <body>
@@ -27,7 +50,7 @@
         <div class="main-panel">
             <div class="content-wrapper">
                 <div class="page-header">
-                    <h3 class="page-title"> Trip Register </h3>
+                    <h3 class="page-title"> Option Register </h3>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#">Forms</a></li>
@@ -39,83 +62,53 @@
                     <div class="col-md-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Main Trip</h4>
+                                <h4 class="card-title">Option Trip</h4>
                                 <p class="card-description"> Trip Info </p>
-                                <form th:action="addMainTrip" method="post" enctype="multipart/form-data"
-                                      name="addMainTrip" class="forms-sample">
+                                <form th:action="@{/addOptionTrip}" method="post" enctype="multipart/form-data"
+                                      name="addOptionTrip" class="forms-sample">
                                     <div class="form-group">
-                                        <label for="TripName">Trip Name</label>
-                                        <input type="text" class="form-control" id="TripName"
-                                               th:placeholder="${trip.tripName}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="TripNumber">Trip Number</label>
-                                        <input type="text" class="form-control" id="TripNumber"
-                                               placeholder="이건 자동생성으로 만들어야할듯">
+                                        <label for="OptionName">Option Name</label>
+                                        <input type="text" class="form-control" id="OptionName" name="OptionName" placeholder="Enter Trip Name" required/>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="TripPrice">Trip Price</label>
+                                        <label for="OptionPrice">Option Price</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text bg-gradient-primary text-white">₩</span>
                                             </div>
-                                            <input type="text" class="form-control" id="TripPrice"
-                                                   aria-label="Amount (to the nearest dollar)"
-                                                   th:placeholder="${trip.tripPrice}">
+                                            <input type="number" class="form-control" id="OptionPrice" name="OptionPrice"  required/>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="StockNumber">Stock Number</label>
-                                        <input type="text" class="form-control" id="StockNumber"
-                                               placeholder="00명" th:placeholder="${trip.tripMaxStock}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="RegDate">Register Date(등록일)</label>
-                                        <input type="text" class="form-control" id="RegDate"
-                                               th:placeholder="${trip.regDate}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="ExprDate">Expire Date(등록 만료일)</label>
-                                        <input type="text" class="form-control" id="ExprDate"
-                                               th:placeholder="${trip.expireDate}">
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="category">Category</label>
+                                        <label for="OptionMaxStock">Max Stock</label>
+                                        <input type="number" class="form-control" id="OptionMaxStock" name="OptionMaxStock" placeholder="00명" required/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="OptionDate">Option Date(여행 일자)</label>
+                                        <input type="date" class="form-control" id="OptionDate" name="OptionDate" required/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="city">City</label>
                                         <div class="col-sm-9">
-                                            <select class="form-control" id="category">
-                                                <option>WEU</option>
-                                                <option>CEU</option>
-                                                <option>EEU</option>
-                                                <option>SEU</option>
+                                            <select class="form-control" id="city" name="city" >
+                                                <option th:each="city : ${cities}" th:value="${city.cityNo}" th:text="${city.cityName}"></option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="optionid"></label>
-                                        <div class="btn-group-vertical" role="group" aria-label="Basic example">
-                                            <div class="btn-group">
-                                                <button type="button"
-                                                        class="btn btn-outline-secondary dropdown-toggle"
-                                                        data-bs-toggle="dropdown">OptionIds(상품옵션번호)
-                                                </button>
-                                                <div class="dropdown-menu">
-                                                    <a class='dropdown-item' th:each="list,status : ${optionlistAll}"
-                                                       th:classappend="'-' + ${status.count}" th:text="${list.optionId}"
-                                                       onclick="addOptionId(this)"></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <input type="text" class="form-control" id="optionid" th:placeholder="${trip.optionIds}">
-                                    </div>
+
+
 
                                     <p class="card-description"> Trip Image Upload</p>
                                     <div class="form-group">
                                         <label>Main Image</label>
                                         <input type="file" name="img[]" class="file-upload-default">
                                         <div class="input-group col-xs-12">
-                                            <input type="text" class="form-control file-upload-info" >
+                                            <input type="text" class="form-control file-upload-info" disabled
+                                                   placeholder="Upload Image">
                                             <span class="input-group-append">
                             <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
                           </span>
@@ -126,7 +119,8 @@
                                         <label>Intorduce Image</label>
                                         <input type="file" name="img[]" class="file-upload-default">
                                         <div class="input-group col-xs-12">
-                                            <input type="text" class="form-control file-upload-info">
+                                            <input type="text" class="form-control file-upload-info" disabled
+                                                   placeholder="Upload Image">
                                             <span class="input-group-append">
                             <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
                           </span>
@@ -137,7 +131,8 @@
                                         <label>Route Image</label>
                                         <input type="file" name="img[]" class="file-upload-default">
                                         <div class="input-group col-xs-12">
-                                            <input type="text" class="form-control file-upload-info" >
+                                            <input type="text" class="form-control file-upload-info" disabled
+                                                   placeholder="Upload Image">
                                             <span class="input-group-append">
                             <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
                           </span>
@@ -148,7 +143,8 @@
                                         <label>Schedule Image</label>
                                         <input type="file" name="img[]" class="file-upload-default">
                                         <div class="input-group col-xs-12">
-                                            <input type="text" class="form-control file-upload-info" >
+                                            <input type="text" class="form-control file-upload-info" disabled
+                                                   placeholder="Upload Image">
                                             <span class="input-group-append">
                             <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
                           </span>
@@ -159,7 +155,8 @@
                                         <label>Detail Image</label>
                                         <input type="file" name="img[]" class="file-upload-default">
                                         <div class="input-group col-xs-12">
-                                            <input type="text" class="form-control file-upload-info" >
+                                            <input type="text" class="form-control file-upload-info" disabled
+                                                   placeholder="Upload Image">
                                             <span class="input-group-append">
                             <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
                           </span>
@@ -172,7 +169,6 @@
                             </div>
                         </div>
                     </div>
-
 
                 </div>
             </div>
@@ -206,17 +202,52 @@
 <script th:src="@{../../assets/js/file-upload.js}"></script>
 <!-- End custom js for this page -->
 
+
+<!-- 메시지가 존재할 경우에만 alert를 띄움 -->
+<script  th:if="${message}" th:inline="javascript">
+    alert([[${message}]]);
+</script>
+
 <script th:inline="javascript">
+
     function addOptionId(element) {
-        var input = document.getElementById('optionid');
-        var currentValue = input.value;
-        var optionId = element.innerText;
-        if (currentValue !== '') {
-            currentValue += '-';
+        var optionNameList = document.getElementById('optionNameList');
+        var optionIdField = document.getElementById('optionIdField');
+
+        var optionName = element.innerText;
+        var optionId = element.getAttribute('data-option-id');
+
+        // Add optionName to the list with a remove button
+        var optionDiv = document.createElement('div');
+        optionDiv.className = 'option-item';
+        optionDiv.innerHTML = optionName + ' <button type="button" class="btn btn-link btn-sm" onclick="removeOptionId(this, \'' + optionId + '\')">Remove</button>';
+        optionNameList.appendChild(optionDiv);
+
+        // Add optionId to the hidden input field
+        var currentOptionIds = optionIdField.value;
+        if (currentOptionIds !== '') {
+            currentOptionIds += ',';
         }
-        currentValue += optionId;
-        input.value = currentValue;
+        currentOptionIds += optionId;
+        optionIdField.value = currentOptionIds;
     }
+
+    function removeOptionId(button, optionId) {
+        var optionDiv = button.parentElement;
+        var optionIdField = document.getElementById('optionIdField');
+
+        // Remove the optionName element
+        optionDiv.remove();
+
+        // Update the hidden input field
+        var currentOptionIds = optionIdField.value.split(',');
+        var index = currentOptionIds.indexOf(optionId);
+        if (index > -1) {
+            currentOptionIds.splice(index, 1);
+        }
+        optionIdField.value = currentOptionIds.join(',');
+    }
+
 </script>
 </body>
 </html>

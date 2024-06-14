@@ -182,4 +182,9 @@ public class AnnounceBoardServiceImpl implements AnnounceBoardService{
     public int TopFixclear(int annboardNum) {
         return AnnounceBoardMapper.topFixClear(annboardNum);
     }
+
+    @Override
+    public int[] searchFixAuth() {
+        return AnnounceBoardMapper.searchFixAuth();
+    }
 }

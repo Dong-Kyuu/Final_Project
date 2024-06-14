@@ -32,4 +32,11 @@ public interface TripService {
     List<Trip> getAllTrip();
 
     void saveTrip(Trip trip,MultipartFile[] images) throws IOException;
+
+
+    List<Trip> getApprovedTrip();
+
+    List<Trip> getPendingTrip();
+
+    void updateTripStatus(int tripNo, String status);
 }

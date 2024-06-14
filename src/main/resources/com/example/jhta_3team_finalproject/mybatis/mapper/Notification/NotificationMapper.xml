@@ -5,9 +5,28 @@
 
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.Notification.NotificationMapper">
     <select id="getList">
-        SELECT notification_message
+        SELECT *
         FROM notification
         WHERE notification_to_user_num = #{userNum}
-        ORDER BY notification_regdate desc
+        ORDER BY notification_isread desc,
+                 notification_regdate desc
     </select>
+
+    <insert id="insert" parameterType="com.example.jhta_3team_finalproject.domain.Notification.Notification">
+        <selectKey resultType="int" order="BEFORE" keyProperty="notificationNum">
+            SELECT IFNULL(MAX(notification_num), 0) + 1 FROM notification
+        </selectKey>
+        INSERT INTO notification
+        (notification_num, notification_to_user_num, notification_from_user_num,
+         notification_from_user_name, notification_url, notification_message)
+        VALUES
+        (#{notificationNum}, #{notificationToUserNum}, #{notificationFromUserNum},
+         #{notificationFromUserName}, #{notificationUrl}, #{notificationMessage})
+    </insert>
+
+    <update id="readAction">
+    UPDATE notification
+    SET notification_isread = 1
+    WHERE notification_num = #{notifiNum}
+</update>
 </mapper>

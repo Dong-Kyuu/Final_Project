@@ -36,4 +36,6 @@ public interface AnnounceBoardMapper {
     int doTopFix(int annboardNum);
 
     int topFixClear(int annboardNum);
+
+    int[] searchFixAuth();
 }
