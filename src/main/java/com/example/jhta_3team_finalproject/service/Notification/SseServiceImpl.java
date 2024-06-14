@@ -46,6 +46,8 @@ public class SseServiceImpl implements SseService{
         List<Notification> list = notificationMapper.getList(userNum);
 
 
+
+
         //503에러를 방지하기 위한 더미 이벤트 전송
         try {
             //알림은 emitter.send() 메서드를 사용하여 전송됩니다.
@@ -67,17 +69,19 @@ public class SseServiceImpl implements SseService{
     }
 
     //특정 사용자에게 알림을 보내는 메서드입니다.
-    public void sendNotification(int userNum, String message) {
+    public void sendNotification(int toUserNum, int fromUserNum, String fromUserName, String url, String message) {
         //userId를 사용하여 this.emitters 맵에서 해당 사용자에 대한 SseEmitter를 가져옵니다.
-        SseEmitter emitter = this.emitters.get(userNum);
+        SseEmitter emitter = this.emitters.get(toUserNum);
 
-        Notification alarm = new Notification(userNum, message);
+        Notification alarm = new Notification(toUserNum, fromUserNum, fromUserName, url, message);
         notificationMapper.insert(alarm);
 
-        List<Notification> list =  notificationMapper.getList(userNum);
+        List<Notification> list =  notificationMapper.getList(toUserNum);
         //가져온 emitter가 null이 아닌 경우, 즉 해당 사용자에게 SseEmitter가 존재하는 경우에만 알림을 전송합니다.
         if (emitter != null) {
             try {
+                // 알림 전송하면 기존의 보여져있는 알림 삭제
+                emitter.send(SseEmitter.event().name("notifyBefore").data("html수정"));
                 //알림은 emitter.send() 메서드를 사용하여 전송됩니다.
                 //SseEmitter.event().name("notification").data(message)를 사용하여 이름이 "notification"이고
                 //데이터가 message인 이벤트를 생성하고 전송합니다.
@@ -99,5 +103,10 @@ public class SseServiceImpl implements SseService{
     @Override
     public int update(String name) {
         return 0;
+    }
+
+    @Override
+    public int notificationRead(int notifiNum) {
+        return notificationMapper.readAction(notifiNum);
     }
 }
