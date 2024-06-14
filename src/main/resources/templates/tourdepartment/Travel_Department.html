@@ -155,8 +155,10 @@
 
     </style>
 
+
 </head>
 <body>
+
 <div class="container-scroller">
     <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
     <div class="container-fluid page-body-wrapper">
@@ -177,39 +179,36 @@
                     <div class="col-lg-6 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Confirm</h4>
-                                <p class="card-description"> Add class <code>.table</code>
-                                </p>
-                                <ul class="list-group">
-                                    <!-- 여행 일정 변경 요청 리스트 아이템 -->
-                                    <li class="list-group-item">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <h5 class="mb-1">상품 등록 승인 #1</h5>
-                                                <p class="mb-1">내용: 서유럽 클래식 15일 / 2024.05.16 / 340만원</p>
+                                <h4 class="card-title">승인 및 거부</h4>
+                                <p class="card-description"> <code>.table</code> 클래스 추가하기</p>
+
+                                <!-- 스크롤 가능한 리스트를 감싸는 컨테이너 div -->
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    <ul class="list-group">
+                                        <!-- 여행 일정 변경 요청 리스트 아이템 -->
+                                        <li class="list-group-item" th:each="trip, status : ${pendingTrip}">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <h5 class="mb-1" th:text="'상품 등록 승인 #' + ${status.count}"></h5>
+                                                    <p class="mb-1" th:text="'내용: ' + ${trip.tripName} + ' / ' + ${trip.tripDate} + ' / ' + ${trip.tripPrice}+'won'"></p>
+                                                    <p class="mb-1" th:text="'상태: '+${trip.status == 'PENDING' ? '결제 대기' : trip.status}"></p>
+                                                </div>
+                                                <div class="col-sm-6 text-right">
+                                                    <!-- 승인 또는 거부 버튼 -->
+                                                    <form th:action="@{/approveTrip}" method="post" style="display: inline;">
+                                                        <input type="hidden" name="tripNo" th:value="${trip.tripNo}" />
+                                                        <button type="submit" class="btn btn-success mr-2">승인</button>
+                                                    </form>
+                                                    <form th:action="@{/rejectTrip}" method="post" style="display: inline;">
+                                                        <input type="hidden" name="tripNo" th:value="${trip.tripNo}" />
+                                                        <button type="submit" class="btn btn-danger">거부</button>
+                                                    </form>
+                                                </div>
                                             </div>
-                                            <div class="col-sm-6 text-right">
-                                                <!-- 승인 또는 거부 버튼 -->
-                                                <button type="button" class="btn btn-success mr-2">승인</button>
-                                                <button type="button" class="btn btn-danger">거부</button>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <h5 class="mb-1">상품 변경 승인 #2</h5>
-                                                <p class="mb-1">변경 사항 설명: 가격변경 380만원</p>
-                                            </div>
-                                            <div class="col-sm-6 text-right">
-                                                <!-- 승인 또는 거부 버튼 -->
-                                                <button type="button" class="btn btn-success mr-2">승인</button>
-                                                <button type="button" class="btn btn-danger">거부</button>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <!-- 기타 요청들 추가 -->
-                                </ul>
+                                        </li>
+                                        <!-- 기타 요청들 추가 -->
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -246,92 +245,12 @@
 
                                     <tbody>
 
-                                    <!--
-                                    <tr th:each="user : ${user}">
-                                        <td th:text="${user.purchaseNo}"></td>
-                                        <td th:text="${user.userName}"></td>
-                                        <td th:text="${user.TripName}"></td>
-                                        <td th:text="${user.paymentDate}"></td>
-                                        <td th:text="${user.status}"></td>
-                                        <button type="button" class="btn btn-gradient-success">수정</button>
-                                        <button type="button" class="btn btn-gradient-danger">삭제</button>
-                                    </tr>
-                                    -->
-
-                                    <tr>
-                                        <td>
-                                            M433123456
-                                        </td>
-                                        <td> Herman Beck</td>
-                                        <td>
-                                            서유럽 11일 2024년06월07일
-                                        </td>
-                                        <td> 2024년 05월 13일 08:00:17</td>
-                                        <td> 예약 대기</td>
-                                        <td> <div class="button-UserProfile">
-                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
-                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
-                                        </div></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>
-                                            M343312345
-                                        </td>
-                                        <td> Hank Thomas</td>
-                                        <td>
-                                            서유럽 11일 2024년06월07일
-                                        </td>
-                                        <td> 2024년 05월 13일 06:01:34</td>
-                                        <td> 예약 대기</td>
-                                        <td> <div class="button-UserProfile">
-                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
-                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
-                                        </div></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>
-                                            M234312345
-                                        </td>
-                                        <td> Frank DeJong</td>
-                                        <td>
-                                            동유럽 11일 2024년06월07일
-                                        </td>
-                                        <td> 2024년 05월 13일 01:02:54</td>
-                                        <td> 예약 대기</td>
-                                        <td> <div class="button-UserProfile">
-                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
-                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
-                                        </div></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>
-                                            M121232345
-                                        </td>
-                                        <td> Didier Drogba</td>
-                                        <td>
-                                            서유럽 11일 2024년06월07일
-                                        </td>
-                                        <td> 2024년 05월 12일 19:08:44</td>
-                                        <td> 예약 대기</td>
-                                        <td> <div class="button-UserProfile">
-                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
-                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
-                                        </div></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>
-                                            M343398765
-                                        </td>
-                                        <td> Frank Sinatra</td>
-                                        <td>
-                                            서유럽 11일 2024년06월07일
-                                        </td>
-                                        <td> 2024년 05월 12일 12:01:34</td>
-                                        <td> 예약 승인</td>
+                                    <tr th:each="purchase : ${purchaseList}">
+                                        <td th:text="${purchase.id}"></td>
+                                        <td th:text="${purchase.customerNameKor}"></td>
+                                        <td th:text="${purchase.tripName}+'/'+${purchase.tripDate}"></td>
+                                        <td th:text="${purchase.createdAt}"></td>
+                                        <td th:text="${purchase.status == 'PENDING' ? '예약 대기' : purchase.status}"></td>
                                         <td> <div class="button-UserProfile">
                                             <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
                                             <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
@@ -394,7 +313,7 @@
                                 <!-- 실제 적용할 상품 리스트 -->
 
                                 <div class="row" id="productList">
-                                    <div th:each="goods : ${triplist}" class="col-lg-4 col-md-6 col-sm-6">
+                                    <div th:each="goods : ${approvedTrip}" class="col-lg-4 col-md-6 col-sm-6">
                                         <div class="product__item__text">
                                             <h6 th:text="${goods.tripName}"></h6>
                                         </div>
@@ -463,6 +382,12 @@
 <!-- endinject -->
 <!-- Custom js for this page -->
 <!-- End custom js for this page -->
+
+<!-- 메시지가 존재할 경우에만 alert를 띄움 -->
+<script  th:if="${message}" th:inline="javascript">
+    alert([[${message}]]);
+</script>
+
 <script>
     /*
     const modal = document.querySelector('.modal');
@@ -489,5 +414,9 @@
     // Attach the openModal function to the trip_register button
     document.getElementById('trip_update').addEventListener('click', openModal);
 </script>
+
+
+
+
 </body>
 </html>

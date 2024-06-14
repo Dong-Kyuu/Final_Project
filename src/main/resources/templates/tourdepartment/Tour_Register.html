@@ -59,7 +59,7 @@
                     </nav>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 grid-margin stretch-card">
+                    <div class="col-md-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Main Trip</h4>
@@ -197,130 +197,6 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Option Trip</h4>
-                                <p class="card-description"> Trip Info </p>
-                                <form th:action="addOptionTrip" method="post" enctype="multipart/form-data"
-                                      name="addOptionTrip" class="forms-sample">
-                                    <div class="form-group">
-                                        <label for="OptionName">Option Name</label>
-                                        <input type="text" class="form-control" id="OptionName"
-                                               placeholder="Enter Option Name">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="OptionNumber">Option Number</label>
-                                        <input type="text" class="form-control" id="OptionNumber"
-                                               placeholder="이건 자동생성으로 만들어야할듯">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="OptionPrice">Option Price</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text bg-gradient-primary text-white">₩</span>
-                                            </div>
-                                            <input type="text" class="form-control" id="OptionPrice"
-                                                   aria-label="Amount (to the nearest dollar)">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="StockNumber2">Stock Number</label>
-                                        <input type="text" class="form-control" id="StockNumber2"
-                                               placeholder="00명">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="OptionRegDate">Register Date(등록일)</label>
-                                        <input type="text" class="form-control" id="OptionRegDate"
-                                               placeholder="yyyy-mm-dd">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="OptionExprDate">Expire Date(등록 만료일)</label>
-                                        <input type="text" class="form-control" id="OptionExprDate"
-                                               placeholder="yyyy-mm-dd">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="city">City</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-control" id="city">
-                                                <option>WEU</option>
-                                                <option>CEU</option>
-                                                <option>EEU</option>
-                                                <option>SEU</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <p class="card-description"> Trip Image Upload</p>
-                                    <div class="form-group">
-                                        <label>Main Image</label>
-                                        <input type="file" name="img[]" class="file-upload-default">
-                                        <div class="input-group col-xs-12">
-                                            <input type="text" class="form-control file-upload-info" disabled
-                                                   placeholder="Upload Image">
-                                            <span class="input-group-append">
-                            <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
-                          </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Intorduce Image</label>
-                                        <input type="file" name="img[]" class="file-upload-default">
-                                        <div class="input-group col-xs-12">
-                                            <input type="text" class="form-control file-upload-info" disabled
-                                                   placeholder="Upload Image">
-                                            <span class="input-group-append">
-                            <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
-                          </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Route Image</label>
-                                        <input type="file" name="img[]" class="file-upload-default">
-                                        <div class="input-group col-xs-12">
-                                            <input type="text" class="form-control file-upload-info" disabled
-                                                   placeholder="Upload Image">
-                                            <span class="input-group-append">
-                            <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
-                          </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Schedule Image</label>
-                                        <input type="file" name="img[]" class="file-upload-default">
-                                        <div class="input-group col-xs-12">
-                                            <input type="text" class="form-control file-upload-info" disabled
-                                                   placeholder="Upload Image">
-                                            <span class="input-group-append">
-                            <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
-                          </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Detail Image</label>
-                                        <input type="file" name="img[]" class="file-upload-default">
-                                        <div class="input-group col-xs-12">
-                                            <input type="text" class="form-control file-upload-info" disabled
-                                                   placeholder="Upload Image">
-                                            <span class="input-group-append">
-                            <button class="file-upload-browse btn btn-gradient-primary" type="button">Upload</button>
-                          </span>
-                                        </div>
-                                    </div>
-
-                                    <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
-                                    <button type="reset" class="btn btn-light">Cancel</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
             <!-- content-wrapper ends -->
@@ -353,21 +229,14 @@
 <script th:src="@{../../assets/js/file-upload.js}"></script>
 <!-- End custom js for this page -->
 
-<!--
-<script th:inline="javascript">
-    function addOptionId(element) {
-        var input = document.getElementById('optionid');
-        var currentValue = input.value;
-        var optionId = element.getAttribute('data-option-id');
-        if (currentValue !== '') {
-            currentValue += '-';
-        }
-        currentValue += optionId;
-        input.value = currentValue;
-    }
+
+<!-- 메시지가 존재할 경우에만 alert를 띄움 -->
+<script  th:if="${message}" th:inline="javascript">
+    alert([[${message}]]);
 </script>
--->
+
 <script th:inline="javascript">
+
     function addOptionId(element) {
         var optionNameList = document.getElementById('optionNameList');
         var optionIdField = document.getElementById('optionIdField');
@@ -405,6 +274,7 @@
         }
         optionIdField.value = currentOptionIds.join(',');
     }
+
 </script>
 </body>
 </html>
