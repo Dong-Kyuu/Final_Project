@@ -1,68 +1,69 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko"  xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>로그인</title>
-    <link rel="stylesheet" th:href="@{/assets/vendors/mdi/css/materialdesignicons.min.css}">
-    <link rel="stylesheet" th:href="@{/assets/vendors/css/vendor.bundle.base.css}">
-    <link rel="shortcut icon" th:href="@{../assets/images/favicon.ico}"/>
-    <script th:src="@{/js/jquery-3.7.1.js}"></script>
-    <!-- inject:css -->
-    <!-- endinject -->
-    <!-- Layout styles -->
-    <link rel="stylesheet" th:href="@{../css/user/login.css}">
-    <!-- End layout styles -->
-    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>로그인</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" th:href="@{/assets/vendors/mdi/css/materialdesignicons.min.css}">
+  <link rel="stylesheet" th:href="@{/assets/vendors/css/vendor.bundle.base.css}">
+  <link rel="shortcut icon" th:href="@{../assets/images/favicon.ico}"/>
+  <script th:src="@{/js/jquery-3.7.1.js}"></script>
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <!-- endinject -->
+  <!-- Layout styles -->
+  <link rel="stylesheet" th:href="@{../css/user/login.css}">
+  <!-- End layout styles -->
+  <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}" />
 </head>
 <body>
 <div class="container-scroller">
-    <div class="container-fluid page-body-wrapper full-page-wrapper">
-        <div class="content-wrapper d-flex align-items-center auth">
-            <div class="row flex-grow">
-                <div class="col-lg-4 mx-auto">
-                    <div class="auth-form-light text-left p-5">
-                        <div class="brand-logo">
-                            <img class="logo-center" th:src="@{/assets/images/LOGO_2.png}" alt="logo"/>
-                        </div>
-                        <h4>로그인</h4>
-
-                        <form class="pt-3" th:action="@{/user/loginProcess}" method="post">
-
-                            <div class="form-group">
-                                <input type="text" class="form-control form-control-lg" id="exampleInputUsername"
-                                       placeholder="아이디" name="userId">
-                            </div>
-                            <div class="form-group">
-                                <input type="password" class="form-control form-control-lg" id="exampleInputPassword"
-                                       placeholder="비밀번호" name="userPassword">
-                            </div>
-                            <div class="mb-2">
-                                <button type="submit" class="btn btn-gradient-primary btn-lg btn-block">로그인</button>
-                            </div>
-
-                            <div class="my-2 d-flex justify-content-between align-items-center">
-                                <div class="form-check">
-                                    <label class="form-check-label text-muted">
-                                        <input type="checkbox" class="form-check-input" name="remember-me"> 아이디 기억하기</label>
-                                </div>
-                                <a th:href="@{/user/findPassword}" class="auth-link text-black">비밀번호 찾기</a>
-                            </div>
-
-                            <div class="text-center mt-4 font-weight-light"> 계정이 없으신가요?
-                                <a th:href="@{/user/join}" class="text-primary">회원가입 하기</a>
-                            </div>
-
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                        </form>
-                    </div>
-                </div>
+  <div class="container-fluid page-body-wrapper full-page-wrapper">
+    <div class="content-wrapper d-flex align-items-center auth">
+      <div class="row flex-grow">
+        <div class="col-lg-4 mx-auto">
+          <div class="auth-form-light text-left p-5">
+            <div class="brand-logo">
+              <img class="logo-center" th:src="@{/assets/images/LOGO_2.png}" alt="logo"/>
             </div>
+            <h4>로그인</h4>
+
+            <form class="pt-3" th:action="@{/user/loginProcess}" method="post">
+
+              <div class="form-group">
+                <input type="text" class="form-control form-control-lg" id="exampleInputUsername" placeholder="아이디" name="userId">
+              </div>
+              <div class="form-group">
+                <input type="password" class="form-control form-control-lg" id="exampleInputPassword" placeholder="비밀번호" name="userPassword">
+              </div>
+              <div class="mb-2">
+                  <button type="submit" class="btn btn-gradient-primary btn-lg btn-block">로그인 </button>
+              </div>
+
+              <div class="my-2 d-flex justify-content-between align-items-center">
+                <div class="form-check">
+                  <label class="form-check-label text-muted">
+                    <input type="checkbox" class="form-check-input" name="remember-me"> 아이디 기억하기</label>
+                </div>
+                <a th:href="@{/user/findPassword}" class="auth-link text-black">비밀번호 찾기</a>
+              </div>
+
+              <div class="text-center mt-4 font-weight-light"> 계정이 없으신가요? <a th:href="@{/user/join}" class="text-primary">회원가입 하기</a>
+              </div>
+
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            </form>
+          </div>
         </div>
-        <!-- content-wrapper ends -->
+      </div>
     </div>
-    <!-- page-body-wrapper ends -->
+    <!-- content-wrapper ends -->
+  </div>
+  <!-- page-body-wrapper ends -->
 </div>
 <!-- container-scroller -->
 <!-- plugins:js -->
@@ -73,16 +74,15 @@
 <script th:src="@{../assets/js/file-upload.js}"></script>
 
 <script th:inline="javascript">
-    let result = [[${result}]];
-    let fail = [[${fail}]];
+  let result=[[${result}]];
+  let loginfail=[[${loginfail}]];
 
-    if (result == 'joinSucess') {
-        alert("회원가입을 축하합니다")
-    }
-
-    if (fail != null) {
-        alert("아이디나 비밀번호 오류입니다 ");
-    }
+  /*회원가입 성공 메시지 또는 로그인 실패 메시지를 처리합니다*/
+  if (result=='joinSucess') {
+    alert("회원가입을 축하합니다")
+  }else if("${loginfail}"=='loginFailMsg'){
+    alert("아이디나 비밀번호 오류입니다 ");
+  }
 
 </script>
 <!-- endinject -->

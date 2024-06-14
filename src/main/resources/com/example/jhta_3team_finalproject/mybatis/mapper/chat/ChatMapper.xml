@@ -11,8 +11,10 @@
 
     <!-- 2024-06-08, 채팅 메시지 추가 후 마지막 메시지의 정보를 다시 가져와야 함. -->
     <select id="lastMessage" parameterType="chatMessage">
-        select *
-        FROM chat_message
+        select cm.*, u.user_id as user_id, u.user_name as user_name, u.user_profile_picture as user_profile_picture
+        FROM chat_message cm
+        JOIN user u
+        ON cm.sender_id = u.user_id
         WHERE message_num = (SELECT MAX(message_num) FROM chat_message)
     </select>
 
@@ -27,8 +29,10 @@
     <!-- 채팅방의 채팅 기록 1일씩 가져오기 -->
     <!--    2024-06-05, ROLLUP을 통한 타임 스탬프 구현-->
     <select id="redisSearchMessages" resultType="chatMessage">
-        SELECT *, DATE(send_time) as time_stamp
-        FROM chat_message
+        SELECT cm.*, u.user_id as user_id, u.user_name as user_name, u.user_profile_picture as user_profile_picture, DATE(send_time) as time_stamp
+        FROM chat_message cm
+        JOIN user u
+        ON cm.sender_id = u.user_id
         WHERE  chat_room_num = #{chatRoomNum}
         AND DATE_FORMAT(send_time, '%Y-%m-%d') = #{dateStr}
         GROUP BY message_num WITH ROLLUP
@@ -73,6 +77,36 @@
         VALUES (#{chatRoomNum}, #{chatUserId}, NOW(), NOW(), 'multi')
     </insert>
 
+    <!-- 2024-06-13, 사원 리스트 클릭 시 해당 사원과의 1대1 방이 있는지 체크하기 -->
+    <select id="isp2pChatRoom">
+        SELECT IFNULL(MAX(cp.chat_room_num), -1) AS chat_room_num
+        FROM(SELECT chat_room_num
+             FROM chat_participate
+             WHERE chat_user_id = #{chatCounterpartId} AND chat_room_type = 'p2p'
+             INTERSECT
+             SELECT chat_room_num
+             FROM chat_participate
+             WHERE chat_user_id = #{chatUserId} AND chat_room_type = 'p2p') cp
+    </select>
+
+    <!-- 2024-06-14, 1대1 채팅방 만들기 (P2P) -->
+    <insert id="createp2pChatRoom" parameterType="chatRoom">
+        INSERT INTO chat_room(chat_room_num, room_name, chat_session_id, room_create_date)
+        VALUES (NULL, #{roomName}, #{chatSessionId}, NOW())
+    </insert>
+
+    <!-- 2024-06-14, 1대1 채팅방 만들기에서 마지막으로 생성된 채팅방 번호를 가져와서 참여 관계를 나타내는 테이블에서 사용 -->
+    <select id="lastChatRoomNum" parameterType="chatRoom">
+        SELECT MAX(chat_room_num)
+        FROM chat_room
+    </select>
+
+    <!-- 2024-06-14, 채팅방 생성 시 해당 채팅방에 참여 관계를 나타내는 테이블에 정보를 입력 -->
+    <insert id="addp2pChatParticipate" parameterType="chatParticipate">
+        INSERT INTO chat_participate(chat_room_num, chat_user_id, chat_entry_time, chat_visit_time, chat_room_type)
+        VALUES (#{chatRoomNum}, #{chatUserId}, NOW(), NOW(), 'p2p')
+    </insert>
+
     <!-- 2024-06-12, 참가 중인 채팅방에서 나가기 -->
     <delete id="participateExitChatRoom">
         DELETE FROM chat_participate
@@ -85,6 +119,14 @@
         SELECT COUNT(*)
         FROM chat_participate
         WHERE chat_room_num = #{chatRoomNum}
+    </select>
+
+    <!-- 2024-06-14, 채팅방의 참가 인원 리스트를 가져옵니다. -->
+    <select id="chatRoomParticipateList" parameterType="user">
+        SELECT chat_user_id as user_id
+        FROM chat_participate
+        WHERE chat_room_num = #{chatRoomNum}
+        AND chat_user_id not in (#{chatSessionId})
     </select>
 
     <!-- 2024-06-12, 해당 방에 참가 인원이 없는 경우 해당 방을 삭제 -->
@@ -214,16 +256,5 @@
         WHERE user_id NOT IN (SELECT chat_user_id
                               FROM chat_participate
                               WHERE chat_room_num = #{chatRoomNum});
-    </select>
-
-    <!-- 2024-06-13, 사원 리스트 클릭 시 해당 사원과의 1대1 방이 있는지 체크하기 -->
-    <select id="isp2pChatRoom">
-        SELECT chat_room_num
-        FROM chat_participate
-        WHERE chat_user_id = #{chatUserId} AND chat_room_type = 'p2p'
-        INTERSECT
-        SELECT chat_room_num
-        FROM chat_participate
-        WHERE chat_user_id = #{chatCounterpartId} AND chat_room_type = 'p2p'
     </select>
 </mapper>

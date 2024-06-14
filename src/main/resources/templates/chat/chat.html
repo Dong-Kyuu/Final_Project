@@ -332,9 +332,10 @@
                                 <i class="material-icons">insert_emoticon</i>
                                 <span>이모티콘</span>
                             </li>
-                            <li class="more-button-list-item">
+                            <li id="sendFileBtn" class="more-button-list-item">
                                 <i class="material-icons">file_upload</i>
                                 <span>파일전송</span>
+                                <input type="file" id="fileUpload" name="fileUpload" style="display: none;" />
                             </li>
                         </ul>
                     </div>
@@ -427,6 +428,19 @@
 
     <script>
         $(document).ready(function () {
+            /**
+             * 2024-06-14, 채팅방 리스트 새로고침
+             */
+            let eventSource = new EventSource("/chat/sse"); //http://localhost:9001/chat/sse
+            let sseStatus = true;
+            eventSource.addEventListener('chatListRoomRefresh',  function(event) {
+                if(event.data != '') {
+                    if(sseStatus) {
+                        getUserChatRoomList();
+                        console.log(event.data);
+                    }
+                }
+            });
 
             let token = $("meta[name='_csrf']").attr("content");
             let header = $("meta[name='_csrf_header']").attr("content");
@@ -590,28 +604,34 @@
             /** 2024-05-30, 채팅방 리스트와 사원 리스트 동작 분리 */
             let messageRoomNum = $('input[name="message_room_num"]');
             function showMessages() {
+                sseStatus = false;
+
                 //console.log('show message');
                 //console.log(this);
                 var type = $(this).find('input[name=chat_room_type]').val();
-                console.log(type);
+                //console.log(type);
+                var chatRoomNum = '';
+                var chatUserId = '';
                 if (type === 'p2p') { // 1대1 채팅방으로 접속 시
                     var chatCounterpartId = $(this).find('input[name=chat_counterpart_id]').val();
-                    var chatUserId = $("#chat_user_id").val();
                     //console.log(chatCounterpartId);
+                    chatUserId = $("#chat_user_id").val();
                     isp2pChatRoom(chatCounterpartId, chatUserId, type);
+                    chatRoomNum =  messageRoomNum.val();
                 } else { // 채팅방 목록에서 접속 시
-                    var chatRoomNum = $(this).find('input[name=chat_room_num]').val();
-                    var chatUserId = $("#chat_user_id").val();
+                    chatRoomNum = $(this).find('input[name=chat_room_num]').val();
                     //console.log(chatRoomNum);
+                    chatUserId = $("#chat_user_id").val();
                     messageRoomNum.val(chatRoomNum); // 해당 방의 번호를 기억해놓습니다.
-                    loadingStart();
-                    getChatRoomInfo(chatRoomNum); // 채팅방 정보 가져오기 (채팅방 이름, 인원 수, 유저리스트)
-                    openChatRoom(chatRoomNum, chatUserId, type); // 웹소켓 연결 + 채팅 기록 가져오기
-                    setTimeout(function () {
-                        loadingEnd();
-                        messageScrollFix();
-                    }, 250);
                 }
+
+                loadingStart();
+                getChatRoomInfo(chatRoomNum); // 채팅방 정보 가져오기 (채팅방 이름, 인원 수, 유저리스트)
+                openChatRoom(chatRoomNum, chatUserId, type); // 웹소켓 연결 + 채팅 기록 가져오기
+                setTimeout(function () {
+                    loadingEnd();
+                    messageScrollFix();
+                }, 500);
 
                 $('.view-main').addClass("deactive");
                 $('.view-message').addClass("active");
@@ -690,22 +710,26 @@
                         "type": type
                     },
                     dataType: "json",
+                    async: false,
                     beforeSend: function (xhr) {
                         //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
                         xhr.setRequestHeader(header, token);
                     },
-                    success: function (res) {
-                        console.log(res);
+                    success: function (chatRoomNum) {
+                        console.log(chatRoomNum + '입니다.');
+                        messageRoomNum.val(chatRoomNum);
                     }
                 }) // ajax end
             }
-
 
             /**
              * 2024-06-08, 채팅방 입장
              */
             let ws;
             function openChatRoom(chatRoomNum, chatUserId, type) {
+                //console.log(chatRoomNum);
+                //console.log(chatUserId);
+                //console.log(type);
                 //console.log("wsOpen");
                 wsOpen();
 
@@ -730,7 +754,19 @@
                             //파일 업로드가 아닌 경우 메시지를 뿌려준다.
                             var d = JSON.parse(msg);
                             console.log(d);
-                            //console.log(d.type);
+                            console.log(d.type);
+
+                            if(d.userProfileImage != null) {
+                                var profileImage = "";
+                                profileImage += "        <span class='user-avatar offline small'>";
+                                profileImage += "            <img src=" + d.userProfileImage +" />";
+                                profileImage += "        </span>"
+                            } else {
+                                var profileImage = "";
+                                profileImage += "        <span class='user-avatar offline small'>";
+                                profileImage += "            <img src='/image/chat/default.png' />";
+                                profileImage += "        </span>"
+                            }
 
                             if (d.fileUrl != null) {
                                 //console.log(d.fileUrl);
@@ -749,7 +785,7 @@
                                         output +="</h5>";
 
                                         $("#chat-message-list").append(output);
-                                    } else if (d.userName === $("#chat_user_id").val()) {
+                                    } else if (d.sessionId === $("#chat_user_id").val()) {
                                         output = "";
                                         output += "<li class='sent'>";
                                         output += "    <div>";
@@ -770,9 +806,7 @@
                                         output = "";
                                         output += "<li class='recive'>";
                                         output += "    <div class='avatar-container'>";
-                                        output += "        <span class='user-avatar offline small'>";
-                                        output += "            <img src='/image/chat/default.png' />";
-                                        output += "        </span>"
+                                        output += profileImage;
                                         output += "    </div>"
                                         output += "    <p class='chat-nickname'>" + d.userName + "</p>";
                                         output += "    <div class='chat-content'>";
@@ -790,7 +824,7 @@
                                     }
                                 }
                             } else if (d.type === "message") { // 나의 메시지
-                                if (d.userName === $("#chat_user_id").val()) {
+                                if (d.sessionId === $("#chat_user_id").val()) {
                                     output = "";
                                     output += "<li class='sent goto'>";
                                     output += "    <div>";
@@ -815,9 +849,7 @@
                                     output = "";
                                     output += "<li class='recive goto'>";
                                     output += "    <div class='avatar-container'>";
-                                    output += "        <span class='user-avatar offline small'>";
-                                    output += "            <img src='/image/chat/default.png' />";
-                                    output += "        </span>"
+                                    output += profileImage;
                                     output += "    </div>"
                                     output += "    <p class='chat-nickname'>" + d.userName + "</p>";
                                     output += "    <div class='chat-content'>";
@@ -839,20 +871,52 @@
                                 }
                             } else if (d.type === "imgurl") {
                                 //파일 업로드한 경우 업로드한 파일을 채팅방에 뿌려준다.
-                                var url = d.imageurl;
-                                if (d.userName === $("#chat_user_id").val()) {
-                                    $("#chating").append(
-                                        "<div class='block'><p class='balloon_semo'></p><p class='me balloon_02'>"
-                                        + "<img class='msgImg' src='" + url + "'>" + "</p></div>");
-                                    $("#chating").scrollTop($("#chating")[0].scrollHeight);
+                                var srcUrl = d.imageurl;
+                                url = "<img class='msgImg' style='width: 120px;' src='" + srcUrl + "'>";
+                                if (d.sessionId === $("#chat_user_id").val()) {
+                                    output = "";
+                                    output += "<li class='sent goto'>";
+                                    output += "    <div>";
+                                    output += "         <span class='my-chat'>";
+                                    output += d.msg;
+                                    if (srcUrl != null) {
+                                        output += url;
+                                    }
+                                    output += "         </span>";
+                                    output += "         <span>";
+                                    output += "             <strong class='my-chat-readcount'> " + d.readCount + "&nbsp;</strong> " + getTime(d.sendTime);
+                                    output += "         </span>";
+                                    output += "    </div>";
+                                    output += "</li>";
+
+                                    $("#chat-message-list").append(output);
+                                    setTimeout(function () {
+                                        $(document).find(".goto").removeClass("goto");
+                                        messageScrollFixChat();
+                                    }, 50);
                                 } else {
-                                    $("#chating")
-                                        .append(
-                                            "<div class='block'><p class='float circle1' style='background-repeat:no-repeat;background-position: center; background-size: 35px;'>"
-                                            + d.userName.substring(0, 1)
-                                            + "</p><p class='balloon_03_semo float'><p class='others balloon_03 float'>"
-                                            + "<img class='msgImg' src='" + url + "'>" + "</p></div>");
-                                    $("#chating").scrollTop($("#chating")[0].scrollHeight);
+                                    output = "";
+                                    output += "<li class='recive goto'>";
+                                    output += "    <div class='avatar-container'>";
+                                    output += profileImage;
+                                    output += "    </div>"
+                                    output += "    <p class='chat-nickname'>" + d.userName + "</p>";
+                                    output += "    <div class='chat-content'>";
+                                    output += d.msg;
+                                    if (srcUrl != null) {
+                                        output += url;
+                                    }
+                                    output += "        <span>";
+                                    output += "            <strong class='chat-readcount'>" + d.readCount + "&nbsp;</strong>" + getTime(d.sendTime);
+                                    output += "        </span>";
+                                    output += "    </div>";
+                                    output += "</li>";
+
+                                    $("#chat-message-list").append(output);
+                                    setTimeout(function () {
+                                        $(document).find(".goto").removeClass("goto");
+                                        messageScrollFixChat();
+                                    }, 50);
                                 }
                             } else {
                                 console.warn("unknown type!")
@@ -874,6 +938,7 @@
 
                 //console.log('back-arrow');
                 isRun = true;
+                sseStatus = true;
 
                 if(ws != null) {
                     ws.close();
@@ -925,6 +990,41 @@
                     ws.send(JSON.stringify(option));
                     $(".message-text").val("");
                 }
+            }
+
+            $("#sendFileBtn").click(function () {
+                let myInput = document.getElementById("fileUpload");
+                myInput.click();
+            });
+
+            $("#fileUpload").change(function(e){
+                fileSend();
+            });
+
+            function fileSend() {
+
+                var file = document.querySelector("#fileUpload").files[0];
+                var fileReader = new FileReader();
+
+                fileReader.onload = function () {
+                    var param = {
+                        type: "fileUpload",
+                        file: file,
+                        fileName: file.name,
+                        roomNumber: messageRoomNum.val(),
+                        userName: $("#chat_user_id").val(),
+                        msg: ''
+                    }
+
+                    ws.send(JSON.stringify(param)); //파일 보내기전 메시지를 보내서 파일을 보냄을 명시한다.
+
+                    arrayBuffer = this.result;
+                    ws.send(arrayBuffer); //파일 소켓 전송
+                };
+                fileReader.readAsArrayBuffer(file);
+
+                document.querySelector('.list-container').classList.toggle('active');
+                document.querySelector('.button-container').classList.toggle('active');
             }
 
             /**
@@ -1471,6 +1571,9 @@
                     success: function (res) {
                         //console.log(res);
                         resultCount = res;
+                    },
+                    error: function (res) {
+                        console.log('안 읽은 메시지가 없습니다.');
                     }
                 }) // ajax end
                 return resultCount;
@@ -1502,6 +1605,7 @@
                 }) // ajax end
 
             });
+
         });
     </script>
     </body>

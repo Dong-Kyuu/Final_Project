@@ -5,9 +5,12 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.example.jhta_3team_finalproject.domain.User.User;
+import com.example.jhta_3team_finalproject.domain.chat.ChatRoom;
 import com.example.jhta_3team_finalproject.domain.chat.FileItemMultipartFile;
 import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 import com.example.jhta_3team_finalproject.service.chat.ChatService;
+import com.example.jhta_3team_finalproject.service.chat.ChatSseService;
 import com.example.jhta_3team_finalproject.service.chat.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.FileItem;
@@ -33,13 +36,13 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Component
 public class SocketHandler extends TextWebSocketHandler {
 
     @Autowired
-
     ChatService chatService;
 
     @Autowired
@@ -51,13 +54,16 @@ public class SocketHandler extends TextWebSocketHandler {
     @Autowired // aws img test
     AmazonS3Client amazonS3Client;
 
+    @Autowired
+    ChatSseService chatSseService;
+
     List<HashMap<String, Object>> rls = new ArrayList<>(); // 웹소켓 세션을 담아둘 리스트 ---roomListSessions
     String FILE_UPLOAD_PATH = "";
     private String S3Bucket = "mybucketchatupload"; // Bucket 이름 aws img test
     static int fileUploadIdx = 0;
     static String fileUploadSession = "";
     List<ChatMessage> chatMessageList;
-    String userId;
+    String sessionId;
     String s3url;
 
     @Override
@@ -68,20 +74,19 @@ public class SocketHandler extends TextWebSocketHandler {
         // 메시지 발송
         String msg = message.getPayload(); // JSON형태의 String메시지를 받는다.
         JSONObject obj = jsonToObjectParser(msg); // JSON데이터를 JSONObject로 파싱한다.
-
-        String rN = (String) obj.get("roomNumber"); // 방의 번호
+        String roomNum = (String) obj.get("roomNumber"); // 방의 번호
         String content = (String) obj.get("msg"); // 메시지
         String userName = (String) obj.get("userName"); // 유저의 아이디
         String fileName = (String) obj.get("fileName"); // 파일의 원본 이름
 
-        log.info("{}", rN);
+        log.info("{}", roomNum);
         log.info(content);
         log.info(userName);
         log.info(fileName);
 
         // 상태를 저장하기 위해 vo에 값을 넣어주고 insert
         ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setChatRoomNum(Long.valueOf(rN));
+        chatMessage.setChatRoomNum(Long.valueOf(roomNum));
         chatMessage.setSenderId(userName);
         chatMessage.setMessageContent(content);
         chatMessage.setReadCount(1);
@@ -95,16 +100,40 @@ public class SocketHandler extends TextWebSocketHandler {
         }
         chatMessage.setFileOriginName(fileName);
 
+
         chatMessage = chatService.createMessage(chatMessage);
 
+        obj.put("sessionId", chatMessage.getSenderId());
         obj.put("readCount", chatMessage.getReadCount());
         obj.put("sendTime", chatMessage.getSendTime().getTime());
+        obj.put("userName", chatMessage.getUsername());
+        obj.put("userProfileImage", chatMessage.getUserProfilePicture());
+
+        if(chatMessage != null) {
+            ChatRoom chatRoom = new ChatRoom();
+            chatRoom.setChatRoomNum(Long.valueOf(roomNum));
+            chatRoom.setChatSessionId(userName);
+            List<User> users = chatService.chatRoomParticipateList(chatRoom);
+
+            /**
+             * 2024-06-14, SSE 비동기 처리로 채팅방 목록 업데이트
+             */
+            users.forEach(user ->
+                CompletableFuture.runAsync(() ->
+                chatSseService.chatRoomListRefresh(user, "chatRoomListRefresh"))
+                .exceptionally(throwable -> {
+                    // 개발자 담당자한테 web hook 및 전달할 있게 처리하기.
+                    log.error("Exception occurred: " + throwable.getMessage());
+                    return null;
+                })
+            );
+        }
 
         HashMap<String, Object> temp = new HashMap<String, Object>();
         if (rls.size() > 0) {
             for (int i = 0; i < rls.size(); i++) {
                 String roomNumber = (String) rls.get(i).get("roomNumber"); // 세션리스트의 저장된 방번호를 가져와서
-                if (roomNumber.equals(rN)) { // 같은값의 방이 존재한다면
+                if (roomNumber.equals(roomNum)) { // 같은값의 방이 존재한다면
                     temp = rls.get(i); // 해당 방번호의 세션리스트의 존재하는 모든 object값을 가져온다.
                     break;
                 }
@@ -178,6 +207,7 @@ public class SocketHandler extends TextWebSocketHandler {
         }
 
         String imageurl = "";
+        ChatMessage chatMessage = new ChatMessage();
         try {
             FileItem fileItem = new DiskFileItem("mainFile", Files.probeContentType(file.toPath()), false, file.getName(), (int) file.length(), file.getParentFile()); // (12) File을 MultiPartFile로 변환하는 과정 우선 file을 DiskFileItem에 넣어준다
 
@@ -207,11 +237,10 @@ public class SocketHandler extends TextWebSocketHandler {
              */
             imageurl = amazonS3Client.getUrl(S3Bucket, originalName).toString(); // aws s3 저장된 이미지 불러오기
             log.info("imageurl : {}", imageurl);
-            ChatMessage chatMessage = new ChatMessage();
             chatMessage.setFileUrl(s3url);
             chatMessage.setS3url(imageurl);
 
-            chatService.updateMsgImageUrl(chatMessage);
+            chatMessage = chatService.updateMsgImageUrl(chatMessage);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -230,8 +259,13 @@ public class SocketHandler extends TextWebSocketHandler {
             try {
                 JSONObject obj = new JSONObject();
                 obj.put("type", "imgurl");
-                obj.put("userId", userId);
+                obj.put("sessionId", chatMessage.getSenderId());
                 obj.put("imageurl", imageurl);
+                obj.put("msg", chatMessage.getMessageContent());
+                obj.put("sendTime", chatMessage.getSendTime().getTime());
+                obj.put("readCount", chatMessage.getReadCount());
+                obj.put("userName", chatMessage.getUsername());
+                obj.put("userProfileImage", chatMessage.getUserProfilePicture());
                 webSocketSession.sendMessage(new TextMessage(obj.toJSONString())); //초기화된 버퍼를 발송한다.
             } catch (IOException e) {
                 e.printStackTrace();
@@ -249,11 +283,11 @@ public class SocketHandler extends TextWebSocketHandler {
         String url = session.getUri().toString();
         String buffer = url.split("/chatting/")[1];
         String roomNumber = buffer.split("&")[0];
-        userId = buffer.split("&")[1];
+        sessionId = buffer.split("&")[1];
         String type = buffer.split("&")[2];
 
         log.info("{} : 방번호 ", roomNumber);
-        log.info("{} : 유저아이디", userId);
+        log.info("{} : 유저아이디", sessionId);
 
         // 방번호를 기준으로 다 받아온다.
         ChatMessage chatMessage = new ChatMessage();
@@ -290,10 +324,12 @@ public class SocketHandler extends TextWebSocketHandler {
         // 포문으로 연속 메시지를 보낸다. list 크기 만큼 돌린다.
         for (int i = 0; i < chatMessageList.size(); i++) {
             String content = chatMessageList.get(i).getMessageContent();
-            String senderId = chatMessageList.get(i).getSenderId(); // 2024-06-08, 현재는 아이디 -> 나중에 이름으로 가져올 예정
+            String senderId = chatMessageList.get(i).getUserId(); // 2024-06-08, 현재는 아이디 -> 나중에 이름으로 가져올 예정
             String fileUrl = chatMessageList.get(i).getFileUrl();
             int readCount = chatMessageList.get(i).getReadCount();
             Date sendTime = chatMessageList.get(i).getSendTime();
+            String userName = chatMessageList.get(i).getUsername();
+            String userProfileImage = chatMessageList.get(i).getUserProfilePicture();
 
             log.info("{} 번째", i);
             // 세션등록이 끝나면 발급받은 세션 ID 값의 메시지를 발송한다.
@@ -302,11 +338,13 @@ public class SocketHandler extends TextWebSocketHandler {
             log.info("{}", session);
             obj.put("type", "getId");
             //obj.put(session.getId(),session); // 활성화하면 새로고침 시 소켓이 종료되면서 같은 세션 값을 가지고 있던 obj들이 제거되었었음.
-            obj.put("sessionId", userId); // 유저 아이디임. // 위를 활성화하면 세션과 관련된 obj들이 제거되면서 이 컬럼과 js 조건문이 만나는 조건에서 의도치 않은 결과가 나왔었음.
-            obj.put("userName", senderId);
+            obj.put("sessionId", senderId); // 유저 아이디임. // 위를 활성화하면 세션과 관련된 obj들이 제거되면서 이 컬럼과 js 조건문이 만나는 조건에서 의도치 않은 결과가 나왔었음.
             obj.put("msg", content);
             obj.put("readCount", readCount);
+            obj.put("fileUrl", fileUrl);
             obj.put("sendTime", sendTime.getTime()); // milliseconds 밀리초로 구해진 값으로 JS와 호환
+            obj.put("userName", userName);
+            obj.put("userProfileImage", userProfileImage);
 
             /**
              * 2024-06-12, 타임스탬프인 경우 put 한다.
@@ -316,12 +354,6 @@ public class SocketHandler extends TextWebSocketHandler {
                obj.put("timeStamp", chatMessageList.get(i).getTimeStamp());
             }
 
-            /**
-             * 2024-06-04, URL 이 있는 경우 URL 주소를 put 한다.
-             */
-            if(fileUrl != null && !fileUrl.equals("")) {
-                obj.put("fileUrl", fileUrl);
-            }
             session.sendMessage(new TextMessage(obj.toJSONString()));
         }
     }

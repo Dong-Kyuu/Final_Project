@@ -7,17 +7,15 @@ $(function () {
         var department= $(this).data('department');
         var listcolor = ""
         if(department == '관리부') {
-            listcolor = 'orange';
+            listcolor = 'blue';
         } else if (department == 'ALL') {
             listcolor = 'black';
         } else if (department == '인사부') {
-            listcolor = 'red';
-        } else if (department == '영업부') {
-            listcolor = 'blue';
-        } else if (department == '지원부') {
-            listcolor = 'green';
-        } else if (department == '홍보부') {
             listcolor = 'yellow';
+        } else if (department == '영업부') {
+            listcolor = 'red';
+        } else if (department == '총무부') {
+            listcolor = 'green';
         }
         console.log('타겟 부서 : ' + department)
 

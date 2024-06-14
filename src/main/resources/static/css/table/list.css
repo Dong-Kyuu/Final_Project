@@ -26,7 +26,7 @@ th:first-of-type {
 }
 
 .dept-blue {
-    border-left: 4px solid #4f6aaf;
+    border-left: 4px solid #4f4faf;
 }
 
 .dept-black {
@@ -34,23 +34,19 @@ th:first-of-type {
 }
 
 .dept-red {
-    border-left: 4px solid #ff6161;
+    border-left: 4px solid #ff7b7b;
 }
 
 .dept-yellow {
-    border-left: 4px solid #ffee00;
+    border-left: 4px solid #fd9bdb;
 }
 
 .dept-green {
-    border-left: 4px solid #aeffc1;
-}
-
-.dept-orange {
-    border-left: 4px solid #ff8900;
+    border-left: 4px solid #93cab3;
 }
 
 .yellow {
-    color: #caca4c;
+    color: #fd9bdb
 }
 
 .black {
@@ -58,19 +54,15 @@ th:first-of-type {
 }
 
 .blue {
-    color : #4f6aaf;
+    color : #4f4faf;
 }
 
 .red {
-    color: #ff6161;
+    color: #ff7b7b;
 }
 
 .green {
     color: #93cab3;
-}
-
-.orange {
-    color: #ff8900;
 }
 
 .search-space {

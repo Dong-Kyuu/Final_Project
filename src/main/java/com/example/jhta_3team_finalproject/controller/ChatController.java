@@ -58,7 +58,6 @@ public class ChatController {
         return chatService.chatUserList(chatUserId);
     }
 
-
     @RequestMapping("userChatRoomList")
     public @ResponseBody List<ChatParticipate> userChatRoomList(@RequestParam HashMap<String, String> params) throws Exception {
         log.info("아이디별 채팅방 구하기");
@@ -123,9 +122,7 @@ public class ChatController {
                                            @RequestParam(value = "chatUserId") String chatUserId,
                                            @RequestParam(value = "type") String type){
 
-        chatService.isp2pChatRoom(chatCounterpartId, chatUserId, type);
-
-        return 1;
+        return chatService.isp2pChatRoom(chatCounterpartId, chatUserId, type);
     }
 
     @RequestMapping(value = "chatRoomCreateView")
@@ -227,6 +224,7 @@ public class ChatController {
 
     @RequestMapping("inviteChatUser")
     public @ResponseBody long inviteChatUser(@RequestParam HashMap<Object, Object> params) throws Exception {
+        final int NO_USER = -1;
         String chatRoomNum = (String) params.get("chatRoomNum");
         String chatInviteUserList = (String) params.get("chatInviteUserList");
 
@@ -239,7 +237,7 @@ public class ChatController {
         if (chatRoomNum != null && !chatRoomNum.trim().equals("")) {
             return chatService.addChatParticipate(chatParticipate, chatInviteUserList);
         }
-        return 0;
+        return NO_USER;
     }
 
     @RequestMapping(value = "chatUserMgrView")
@@ -270,6 +268,7 @@ public class ChatController {
 
     @RequestMapping("exitChatUser")
     public @ResponseBody long exitChatUser(@RequestParam HashMap<Object, Object> params) throws Exception {
+        final int NO_USER = -1;
         String chatRoomNum = (String) params.get("chatRoomNum");
         String chatExitUserList = (String) params.get("chatExitUserList");
 
@@ -282,7 +281,7 @@ public class ChatController {
         if (chatRoomNum != null && !chatRoomNum.trim().equals("")) {
             return chatService.participateExitChatRoom(chatParticipate, chatExitUserList);
         }
-        return 0;
+        return NO_USER;
     }
 
 }

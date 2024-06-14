@@ -24,7 +24,7 @@ public class ChatParticipate {
     private Date roomCreateDate;
 
     /**
-     * 2024-06-13, 확장 - 유저 이름, 유저 프로필 사진
+     * 2024-06-13, 확장 - 유저 이름, 유저 프로필 사진, 유저 이메일
      */
     private String userId;
     private String username;

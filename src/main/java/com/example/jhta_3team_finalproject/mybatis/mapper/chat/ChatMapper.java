@@ -61,4 +61,12 @@ public interface ChatMapper {
     public List<User> getChatRoomCanInviteUserList(ChatRoom chatRoom);
 
     public int isp2pChatRoom(String chatCounterpartId, String chatUserId, String type);
+
+    public int createp2pChatRoom(ChatRoom chatRoom);
+
+    public void addp2pChatParticipate(ChatParticipate chatParticipate);
+
+    public int lastChatRoomNum();
+
+    public List<User> chatRoomParticipateList(ChatRoom chatRoom);
 }
