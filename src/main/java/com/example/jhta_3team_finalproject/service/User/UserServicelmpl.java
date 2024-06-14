@@ -173,12 +173,12 @@ public class UserServicelmpl implements UserService {
 
     @Override
     public List<User> getApprovedRequests() {
-        return userMapper.findApprovedRequests();
+        return userMapper.getApprovedRequests();
     }
 
     @Override
     public List<User> getRejectedRequests() {
-        return userMapper.findRejectedRequests();
+        return userMapper.getRejectedRequests();
     }
 
     @Override

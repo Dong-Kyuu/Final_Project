@@ -37,9 +37,9 @@ public interface UserMapper {
 
     List<User> findAllRequests(); //모든 요청
 
-    List<User> findApprovedRequests(); //승인된 요청리스트
+    List<User> getApprovedRequests(); //승인된 요청리스트
 
-    List<User> findRejectedRequests();//거절된 요청 리스트
+    List<User> getRejectedRequests();//거절된 요청 리스트
 
     List<User> getRegisterRequests();
 
