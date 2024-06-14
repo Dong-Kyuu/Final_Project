@@ -10,7 +10,8 @@
         <li class="nav-item nav-profile">
             <a href="#" class="nav-link">
                 <div class="nav-profile-image">
-                    <img th:src="${#authentication.principal.userProfilePicture}" alt="profile">
+                    <img th:src="${#authentication.principal.userProfilePicture}" class="profile-img">
+
                     <span class="login-status online"></span>
                     <!--change to offline or busy as needed-->
                 </div>
@@ -96,7 +97,7 @@
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item"><a class="nav-link" href="#">근태 관리</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">직원 정보 관리</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">신규 등록 사원</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/user/register_allow}">신규 등록 사원</a></li>
                 </ul>
             </div>
         </li>
