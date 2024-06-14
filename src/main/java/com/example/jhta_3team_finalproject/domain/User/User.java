@@ -41,6 +41,7 @@ public class User implements UserDetails {
     private int viewCheck;
 
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<SimpleGrantedAuthority> roles = new ArrayList<SimpleGrantedAuthority>();
