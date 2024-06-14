@@ -24,7 +24,7 @@ public class SseController {
 
     @GetMapping("/sse")
     public SseEmitter streamSse(Principal principal) {
-
+        // sse
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User loginuser = (User)authentication.getPrincipal();
         logger.info("sse");
