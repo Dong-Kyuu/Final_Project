@@ -11,4 +11,19 @@
     <select id="getAllOptions" resultType="TripOption">
         SELECT * FROM trip_option
     </select>
+
+    <!-- 모든 도시를 가져오는 쿼리 -->
+    <select id="getAllCities" resultType="City">
+        SELECT *
+        FROM city
+        ORDER BY country_no ASC
+    </select>
+
+    <!-- 선택한 도시의 상세 정보를 가져오는 쿼리 -->
+    <select id="getCityByNo" parameterType="String" resultType="City">
+        SELECT city_no, city_name, country_no
+        FROM city
+        WHERE city_no = #{city_no}
+    </select>
+
 </mapper>

@@ -6,11 +6,11 @@
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.TourPackage.TripMapper">
 
     <select id="getListCount" resultType="int">
-        SELECT count(*) FROM trip
+        SELECT count(*) FROM trip WHERE status = 'APPROVED'
     </select>
 
     <select id="getCategoryListCount" resultType="int">
-        SELECT count(*) FROM trip WHERE trip_category = #{category}
+        SELECT count(*) FROM trip WHERE trip_category = #{category} AND status = 'APPROVED'
     </select>
 
     <select id="getDetail" resultType="Trip" parameterType="int">
@@ -49,6 +49,7 @@
         trip_main_img,
         trip_category
         FROM trip
+        WHERE status = 'APPROVED'
         ) AS tripAlias
         WHERE rnum BETWEEN #{startRow} AND #{endRow}
     </select>
@@ -66,13 +67,13 @@
         ) AS rnum,
         trip_name, trip_no, trip_price, trip_stock, trip_max_stock,
         reg_date, expire_date, trip_date, file_id, trip_main_img, trip_category
-        FROM trip WHERE trip_category = #{category}
+        FROM trip WHERE trip_category = #{category} AND status = 'APPROVED'
         ) AS derived_table_alias
          where rnum BETWEEN #{startRow} AND #{endRow}
     </select>
 
     <select id="getKeywordListCount" resultType="int">
-        SELECT count(*) FROM trip WHERE trip_name LIKE CONCAT('%', #{keyword}, '%')
+        SELECT count(*) FROM trip WHERE trip_name LIKE CONCAT('%', #{keyword}, '%') AND status = 'APPROVED'
     </select>
 
     <select id="getTripListByKeyword" resultType="Trip">
@@ -99,12 +100,12 @@
         trip_main_img,
         trip_category
         FROM trip
-        WHERE trip_name LIKE CONCAT('%', #{keyword}, '%')
+        WHERE trip_name LIKE CONCAT('%', #{keyword}, '%') AND status = 'APPROVED'
         ) AS tripAlias WHERE rnum BETWEEN #{startRow} AND #{endRow}
     </select>
 
     <select id="getAllTrip" resultType="Trip">
-        SELECT * FROM trip
+        SELECT * FROM trip where status = 'APPROVED'
     </select>
 
     <insert id="insertTrip" parameterType="Trip">
@@ -116,5 +117,20 @@
         INSERT INTO tripfile (file_id, main_img, intro_img, route_img, schedule_img, detail_img)
         VALUES (#{fileId}, #{mainIMG}, #{introIMG}, #{routeIMG}, #{scheduleIMG}, #{detailIMG})
     </insert>
+
+    <!-- status 업데이트 -->
+    <update id="updateTripStatus">
+        UPDATE trip
+        SET status = #{status}
+        WHERE trip_no = #{tripNo}
+    </update>
+
+    <!-- status가 주어진 문자열과 일치하는 Trip 조회 -->
+    <select id="getTripByStatus" resultType="Trip">
+        SELECT *
+        FROM trip
+        WHERE status = #{status}
+    </select>
+
 </mapper>
 

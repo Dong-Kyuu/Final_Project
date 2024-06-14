@@ -2,8 +2,11 @@ package com.example.jhta_3team_finalproject.controller;
 
 import com.example.jhta_3team_finalproject.domain.TourPackage.tripMailVO;
 import com.example.jhta_3team_finalproject.domain.TourPackage.tripSendMail;
+import com.example.jhta_3team_finalproject.domain.User.User;
+import com.example.jhta_3team_finalproject.service.Notification.SseService;
 import com.example.jhta_3team_finalproject.service.TourPackage.*;
 import com.example.jhta_3team_finalproject.domain.TourPackage.*;
+import com.example.jhta_3team_finalproject.service.User.UserService;
 import com.example.jhta_3team_finalproject.util.PagingUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -17,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,29 +40,35 @@ import java.util.*;
 public class TripController {
     private static final Logger logger = LoggerFactory.getLogger(TripController.class);
 
-    private CustomerService customerService;
-    private PasswordEncoder passwordEncoder;
+    private final CustomerService customerService;
+    private final PasswordEncoder passwordEncoder;
 
     private static final int UPDATE_SUCCESS = 1;
     private static final int JOIN_SUCCESS = 1;
-    private tripSendMail tripSendMail;
+    private final tripSendMail tripSendMail;
 
 
-    private TripService tripService;
-    private OptionService optionService;
-    private CartService cartService;
+    private final TripService tripService;
+    private final OptionService optionService;
+    private final CartService cartService;
+    private final PurchaseService purchaseService;
+    private final SseService sseService;
+    private final UserService userService;
 
     private static final int ANONYMOUS_CUSTOMER_NO = 0;
 
 
     @Autowired
-    public TripController(CustomerService customerService, TripService tripService, CartService cartService, OptionService optionService, PasswordEncoder passwordEncoder, tripSendMail tripSendMail) {
+    public TripController(CustomerService customerService, TripService tripService, CartService cartService, OptionService optionService, PasswordEncoder passwordEncoder, tripSendMail tripSendMail, PurchaseService purchaseService, SseService sseService, UserService userService) {
         this.customerService = customerService;
         this.tripService = tripService;
         this.cartService = cartService;
         this.optionService = optionService;
         this.passwordEncoder = passwordEncoder;
         this.tripSendMail = tripSendMail;
+        this.purchaseService = purchaseService;
+        this.sseService = sseService;
+        this.userService = userService;
     }
 
     //로그인
@@ -185,15 +196,7 @@ public class TripController {
         String cookieValue = getCookieValue(request);// 쿠키 내용을 갖고오는 메서드
 
         DeleteCartCookie(cookieValue,customerNo,response);
-/*
-        if(cookieValue!=null) {
-            String cartNoValue = getValueBetweenEquals(cookieValue, "cartNo");
-            if(!cartNoValue.equals(String.valueOf(customerNo))) {//쿠키의 cartNo와 mem_id비교
-                deleteCookie(response, "cart");
-                System.out.println("<카트 쿠키 삭제>");
-            }
-        }
-*/
+
         if(customerNo==ANONYMOUS_CUSTOMER_NO) {
             deleteCookie(response, "cart");
             System.out.println("삭제");
@@ -207,31 +210,10 @@ public class TripController {
 
         int listcount = this.getListcount(category,keyword);
         List<Trip> triplist = this.getTriplist(category,keyword,startRow,endRow,sort);
-/*
-        if (category != null && !category.isEmpty() && !Objects.equals(category, "null")) {
-            listcount = tripService.getCategoryListCount(category);
-            triplist = tripService.getCategoryTripList(startRow, endRow,category, sort);
-        } else if (keyword != null && !keyword.isEmpty() && !Objects.equals(keyword, "null")) {
-            listcount = tripService.getKeywordListCount(keyword);
-            triplist = tripService.getTripListByKeyword(startRow, endRow,keyword,  sort);
-        } else {
-            listcount = tripService.getListCount();
-            triplist = tripService.getTripList(startRow, endRow, sort);
-        }
-*/
 
+        //페이징 처리
         PagingUtil.Paging pageService = new PagingUtil.Paging(page,limit,listcount);
-        /*
-        int maxpage = (listcount + limit - 1) / limit;
-        int startpage = ((page - 1) / 10) * 10 + 1;
-        int endpage = startpage + 10 - 1;
-        if (endpage > maxpage) {
-            endpage = maxpage;
-        }
 
-        int pagefirst = (page - 1) * limit + 1;//startrow
-        int pagelast = Math.min(pagefirst + limit - 1, listcount);//endrow
-*/
         model.addAttribute("page", page);
         model.addAttribute("maxpage", pageService.getMaxpage());
         model.addAttribute("startpage", pageService.getStartpage());
@@ -678,6 +660,14 @@ public class TripController {
         model.addAttribute("optionlistAll", optionlistAll);
         Trip trip = new Trip();
         model.addAttribute("trip", trip);
+
+        // 이전에 RedirectAttributes로 추가한 Flash attribute를 가져옴
+        String message = (String) model.asMap().get("message");
+        if (message != null) {
+            // 가져온 메시지를 다시 모델에 추가하여 Thymeleaf에서 사용할 수 있도록 함
+            model.addAttribute("message", message);
+        }
+
         return "tourdepartment/Tour_Register";
     }
 
@@ -691,7 +681,8 @@ public class TripController {
                               @RequestParam(name ="TripCategory", required = false) String category,
                               @RequestParam(name ="optionIds", required = false) String optionIds,
                               @RequestParam(name ="img[]", required = false) MultipartFile[] images,
-                              Model model) throws IOException {
+                              @AuthenticationPrincipal User userDetails,
+                              Model model, RedirectAttributes redirectAttributes) throws IOException {
         System.out.println("====== Received Parameters ======");
         System.out.println("======addMainTrip tripName=" + tripName);
         System.out.println("======addMainTrip tripPrice=" + tripPrice);
@@ -712,18 +703,47 @@ public class TripController {
             // Trip 객체 생성 및 저장
             Trip trip = new Trip();
             trip.setTripName(tripName);
-            trip.setTripPrice(tripPrice != null ? tripPrice : 0); // Use default value if null
-            trip.setTripMaxStock(tripMaxStock != null ? tripMaxStock : 0); // Use default value if null
+            trip.setTripPrice(tripPrice != null ? tripPrice : 0);
+            trip.setTripMaxStock(tripMaxStock != null ? tripMaxStock : 0);
             trip.setTripDate(tripDate.toString());
             trip.setExpireDate(expireDate.toString());
             trip.setTripCategory(category);
             trip.setOptionIds(optionIds);
 
-            tripService.saveTrip(trip, images);
+            //SSE위한 userNum 가져오기
+        int userNum = userDetails.getUserNum();
 
-            System.out.println("success save");
+        try {
+            tripService.saveTrip(trip, images);
+            redirectAttributes.addFlashAttribute("message", "저장되었습니다");
+
+            // SSE 알림 보내기 (여기서는 모든 사용자에게 알림을 보냄)
+            String message = "새로운 상품 : <"+trip.getTripName()+"/"+trip.getTripDate()+">이 등록되었습니다: " ;
+           // sseService.sendNotification(userNum, message);
+
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("message", "저장에 실패했습니다");
+            e.printStackTrace();
+        }
 
         return "redirect:/tripRegister";
+    }
+
+    @GetMapping("/optionRegister")
+    public String optionRegister(Model model) {
+        List<City> cities = optionService.getAllCities();
+        model.addAttribute("cities", cities);
+
+        // 이전에 RedirectAttributes로 추가한 Flash attribute를 가져옴
+        String message = (String) model.asMap().get("message");
+        if (message != null) {
+            // 가져온 메시지를 다시 모델에 추가하여 Thymeleaf에서 사용할 수 있도록 함
+            model.addAttribute("message", message);
+        }
+
+
+
+        return "tourdepartment/Tour_Option_Register";
     }
 
     @GetMapping("/tripUpdate")
@@ -750,46 +770,13 @@ public class TripController {
             HttpServletRequest request,HttpServletResponse response,
             Model model) {
 
-        // -----------------------------------------
-        // tripPage내용과 동일
-        HttpSession session = request.getSession(); // 세션이 없으면 새로 생성하지 않음
-        String memberId = (String) session.getAttribute("member_id");// 세션에서 "member_id" 값을 가져옴
-        String cookieValue = getCookieValue(request);// 쿠키 내용을 갖고오는 메서드
-        if(cookieValue!=null) {
-            String cartNoValue = getValueBetweenEquals(cookieValue, "cartNo");
-            if(!cartNoValue.equals(memberId)) {//쿠키의 cartNo와 mem_id비교
-                deleteCookie(response, "cart");
-                System.out.println("<카트 쿠키 삭제>");
-            }
-        }
-
-        if(cartService.isId("0")==1) {
-            System.out.println("삭제");
-            cartService.deleteCart("0");//비로그인회원에게 제공되는 cartNo="0"
-        }
-        // -----------------------------------------
-
         int startRow = (page - 1) * limit + 1;
         int endRow = startRow + limit - 1;
 
         int listcount = this.getListcount(category,keyword);
         List<Trip> triplist = this.getTriplist(category,keyword,startRow,endRow,sort);
 
-
-        //
         PagingUtil.Paging pageService = new PagingUtil.Paging(page,limit,listcount);
-
-     /*
-int maxpage = (listcount + limit - 1) / limit;
-int startpage = ((page - 1) / 10) * 10 + 1;
-int endpage = startpage + 10 - 1;
-if (endpage > maxpage) {
-    endpage = maxpage;
-}
-
-int pagefirst = (page - 1) * limit + 1;//startrow
-int pagelast = Math.min(pagefirst + limit - 1, listcount);//endrow
-*/
 
         model.addAttribute("page", page);
         model.addAttribute("maxpage",pageService.getMaxpage());
@@ -810,8 +797,46 @@ int pagelast = Math.min(pagefirst + limit - 1, listcount);//endrow
         model.addAttribute("triplistAll",triplistAll);
         model.addAttribute("optionlistAll",optionlistAll);
 
+        //trip status가 APPROVED인 tripList
+        List<Trip> approvedtripList = tripService.getApprovedTrip();
+        model.addAttribute("approvedTrip",approvedtripList);
+
+        //trip status가 PENDING인 tripList
+        List<Trip> pendingtripList = tripService.getPendingTrip();
+        model.addAttribute("pendingTrip",pendingtripList);
+
+        // 이전에 RedirectAttributes로 추가한 Flash attribute를 가져옴
+        String message = (String) model.asMap().get("message");
+        if (message != null) {
+            // 가져온 메시지를 다시 모델에 추가하여 Thymeleaf에서 사용할 수 있도록 함
+            model.addAttribute("message", message);
+        }
+
+        //purchase 정보 불러오기
+        List<Purchase> purchaseList= purchaseService.getAllPurchaseInfo();
+        model.addAttribute("purchaseList",purchaseList);
+
         return "tourdepartment/Travel_Department";
     }
+
+    @PostMapping("/approveTrip")
+    public String approveTrip(@RequestParam("tripNo") int tripNo, RedirectAttributes redirectAttributes) {
+        tripService.updateTripStatus(tripNo, "APPROVED");
+
+        redirectAttributes.addFlashAttribute("message", "여행 일정을 승인하였습니다.");
+
+        return "redirect:/tripDepartment";
+    }
+
+    @PostMapping("/rejectTrip")
+    public String rejectTrip(@RequestParam("tripNo") int tripNo, RedirectAttributes redirectAttributes) {
+        tripService.updateTripStatus(tripNo, "REJECTED");
+
+        redirectAttributes.addFlashAttribute("message", "여행 일정을 거부하였습니다.");
+
+        return "redirect:/tripDepartment";
+    }
+
 
     @GetMapping("/TLManagement")
     public String TLManagement(@RequestParam(name = "num", required = false) Integer num,
@@ -819,8 +844,12 @@ int pagelast = Math.min(pagefirst + limit - 1, listcount);//endrow
             Model model) {
 
         Trip trip = tripService.getDetail(num);
-
         model.addAttribute("trip", trip);
+
+        //purchase 정보 불러오기 조건: tripNo
+        List<Purchase> purchaseList= purchaseService.getAllPurchaseInfoByTripNo(num);
+        model.addAttribute("purchaseList",purchaseList);
+
         return "tourdepartment/Tour_Management";
     }
 
