@@ -148,4 +148,38 @@ public class AnnounceBoardServiceImpl implements AnnounceBoardService{
     public List<String> getDepartment() {
         return AnnounceBoardMapper.getDepartment();
     }
+
+    @Override
+    public String targetDepartment(int annboardNum) {
+        String department = AnnounceBoardMapper.targetDepartment(annboardNum);
+//        if(department.equals("ALL")) {
+//            department = "임원";
+//        }
+        return department;
+    }
+
+    @Override
+    public int getMaxCheck(String targetDepartment) {
+        return AnnounceBoardMapper.getMaxCheck(targetDepartment);
+    }
+
+    @Override
+    public int checkedUserByDepartment(String targetDepartment, int annboardNum) {
+        return AnnounceBoardMapper.checkedUserByDepartment(targetDepartment, annboardNum);
+    }
+
+    @Override
+    public int downImportance(int annboardNum) {
+        return AnnounceBoardMapper.downImportance(annboardNum);
+    }
+
+    @Override
+    public int doTopFix(int annboardNum) {
+        return AnnounceBoardMapper.doTopFix(annboardNum);
+    }
+
+    @Override
+    public int TopFixclear(int annboardNum) {
+        return AnnounceBoardMapper.topFixClear(annboardNum);
+    }
 }

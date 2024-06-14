@@ -1,23 +1,35 @@
 package com.example.jhta_3team_finalproject.controller;
 
+import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.S3Object;
 import com.example.jhta_3team_finalproject.domain.Board.AnnounceBoard;
 import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
 import com.example.jhta_3team_finalproject.domain.User.User;
-import com.example.jhta_3team_finalproject.service.S3CommomService;
+import com.example.jhta_3team_finalproject.domain.User.UserAuth;
+import com.example.jhta_3team_finalproject.service.S3.S3Service;
 import com.example.jhta_3team_finalproject.service.board.AnnounceBoardService;
+import com.example.jhta_3team_finalproject.service.User.UserAuthService;
 import com.example.jhta_3team_finalproject.util.PagingUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,16 +38,20 @@ import java.util.stream.Collectors;
 public class AnnounceBoardController {
 
     private static final Logger logger = LoggerFactory.getLogger(AnnounceBoardController.class);
-
+    
+    
+    
     @Value("${my.savefolder.board}")
     private String saveFolder;
     private AnnounceBoardService AnnounceBoardService;
-    private S3CommomService s3CommomService;
+    private S3Service S3Service;
+    private UserAuthService UserAuthService;
 
     @Autowired
-    public AnnounceBoardController(AnnounceBoardService AnnounceBoardService, S3CommomService s3CommomService) {
+    public AnnounceBoardController(AnnounceBoardService AnnounceBoardService, S3Service S3Service, UserAuthService UserAuthService) {
         this.AnnounceBoardService = AnnounceBoardService;
-        this.s3CommomService = s3CommomService;
+        this.S3Service = S3Service;
+        this.UserAuthService = UserAuthService;
     }
 
     // 리스트 가져오기
@@ -86,7 +102,9 @@ public class AnnounceBoardController {
                       @RequestParam("uploadfile[]") MultipartFile[] uploadfiles)
             throws Exception {
 
-        AnnounceBoard.getAnnboardImportance();
+        if (AnnounceBoard.getAnnboardFix() == 1 && AnnounceBoard.getAnnboardImportance() == 1 ) {
+            AnnounceBoard.setAnnboardImportance(2);
+        }
         // Board 객체를 먼저 저장하고, BOARD_NUM을 받아옵니다.
         AnnounceBoardService.insertBoard(AnnounceBoard); // Board 객체 저장
         int boardNum = AnnounceBoard.getAnnboardNum(); // 저장된 BOARD_NUM 가져오기
@@ -96,7 +114,7 @@ public class AnnounceBoardController {
         for (MultipartFile uploadfile : uploadfiles) {
             if (!uploadfile.isEmpty()) {
 
-                String fileUrl = s3CommomService.uploadFile(uploadfile);
+                String fileUrl = S3Service.uploadFile(uploadfile);
                 logger.info("Uploaded file URL: " + fileUrl);
 
                 BoardUpfiles file = new BoardUpfiles();
@@ -221,7 +239,27 @@ public class AnnounceBoardController {
 
         Map<String, Object> response = new HashMap<>();
         String result = "확인";
+        String targetDepartment = "";
+        int maxCheck;
+        int checkedUserByDepartment;
+
         int addcheck=AnnounceBoardService.addCheck(loginNum, annboardNum);
+        targetDepartment = AnnounceBoardService.targetDepartment(annboardNum);
+        logger.info(targetDepartment + "관련 글입니다.");
+        maxCheck = AnnounceBoardService.getMaxCheck(targetDepartment);
+        logger.info(targetDepartment+" 사원의 수는 " + maxCheck );
+        checkedUserByDepartment = AnnounceBoardService.checkedUserByDepartment(targetDepartment, annboardNum);
+        logger.info("확인한 " +targetDepartment+" 사원의 수는 " + checkedUserByDepartment );
+
+        if(maxCheck == checkedUserByDepartment) {
+            int boardImportance = AnnounceBoardService.downImportance(annboardNum);
+            if(boardImportance == 1) {
+                logger.info("중요도 lev이 낮아졌습니다. 상단 고정이 해제됩니다.");
+
+            }
+        } else {
+            logger.info("아직 공지를 확인하지 못한 사원이 존재합니다.");
+        }
 
         if(addcheck != 1) {
             result = "체킹 실패";
@@ -268,33 +306,21 @@ public class AnnounceBoardController {
 
         List<User> humanResource;                   // 인사부서 사원 정보
         Map<Integer, List<User>> checkedHR;         // 확인한 인사부서 사원 정보
-        int totalHR;                                // 인사부서 인원 수
-        int totalCheckHR;                           // 확인한 인사부서 사원 수
 
         List<User> management;                      // 관리
         Map<Integer, List<User>> checkedMG;         // 확인한 관리부서 사원 정보
-        int totalMG;                                // 관리부서 인원 수
-        int totalCheckMG;                           // 확인한 관리부서 사원 수
 
         List<User> relations;                       // 홍보
         Map<Integer, List<User>> checkedRT;         // 확인한 홍보부서 사원 정보
-        int totalRT;                                // 홍보부서 인원 수
-        int totalCheckRT;                           // 확인한 홍보부서 사원 수
 
         List<User> support;                         // 지원
         Map<Integer, List<User>> checkedSP;         // 확인한 지원부서 사원 정보
-        int totalSP;                                // 지원부서 인원 수
-        int totalCheckSP;                           // 확인한 지원부서 사원 수
 
         List<User> sales;           // 영업
         Map<Integer, List<User>> checkedSL;         // 확인한 지원부서 사원 정보
-        int totalSL;                                // 지원부서 인원 수
-        int totalCheckSL;                           // 확인한 지원부서 사원 수
 
         List<User> executive;                       // 임원
         Map<Integer, List<User>> checkedEX;         // 확인한 지원부서 사원 정보
-        int totalEX;                                // 지원부서 인원 수
-        int totalCheckEX;                           // 확인한 지원부서 사원 수
 
         List<String> department = AnnounceBoardService.getDepartment();
         user = AnnounceBoardService.getUserData(annboardNum);
@@ -341,9 +367,100 @@ public class AnnounceBoardController {
         response.put("checkedSL", checkedSL);
         response.put("checkedEX", checkedEX);
 
+        return response;
+    }
+
+    @PostMapping("/topfix")
+    @ResponseBody
+    public Map<String, Object> topFix(@RequestParam("loginNum") int loginNum,
+                                           @RequestParam("annboardNum") int annboardNum,@AuthenticationPrincipal User user
+                                        ) {
+        
+        Map<String, Object> response = new HashMap<>();
+        String result = "권한이 없습니다.";
+        int update = 0;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserAuth userInfo = UserAuthService.getUserInfo(authentication);
+
+        boolean hasRole = userInfo.getAuthorities().stream()
+                .anyMatch(role -> role.equals("ROLE_SUB_MASTER"));
+
+        User loginuser = (User)authentication.getPrincipal();
 
 
+        if(hasRole || (loginuser.getDepartmentId()== 2 && loginuser.getUserAuth().equals("ROLE_HEAD"))) {
+            update = AnnounceBoardService.doTopFix(annboardNum);
+            if(update==1)
+                result = "상단고정 되었습니다.";
+        }
+
+        response.put("status", "success");
+        response.put("update", update);
+        response.put("result", result);
 
         return response;
+    }
+
+    @PostMapping("/topfixclear")
+    @ResponseBody
+    public Map<String, Object> topFixclear(@RequestParam("loginNum") int loginNum,
+                                      @RequestParam("annboardNum") int annboardNum,@AuthenticationPrincipal User user
+    ) {
+
+        Map<String, Object> response = new HashMap<>();
+        String result = "권한이 없습니다.";
+        int update = 0;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserAuth userInfo = UserAuthService.getUserInfo(authentication);
+
+        boolean hasRole = userInfo.getAuthorities().stream()
+                .anyMatch(role -> role.equals("ROLE_SUB_MASTER"));
+
+        User loginuser = (User)authentication.getPrincipal();
+
+
+        if(hasRole || (loginuser.getDepartmentId()== 2 && loginuser.getUserAuth().equals("ROLE_HEAD"))) {
+            update = AnnounceBoardService.TopFixclear(annboardNum);
+            if(update==1)
+                result = "상단고정 해제되었습니다.";
+        }
+
+        response.put("status", "success");
+        response.put("update", update);
+        response.put("result", result);
+
+        return response;
+    }
+
+    @ResponseBody
+    @PostMapping("/down")
+    public void BoardFileDown(String filename,
+                              HttpServletRequest request,
+                              String original,
+                              HttpServletResponse response) throws IOException {
+
+        String s3Key = filename.replace("https://mbtiawsbucket.s3.ap-northeast-2.amazonaws.com/", "");
+        logger.info("S3 Key: {}", s3Key);
+
+        try {
+            S3Object s3Object = S3Service.downloadFile(s3Key);
+            InputStream inputStream = s3Object.getObjectContent();
+
+            String sEncoding = new String(original.getBytes("utf-8"), "ISO-8859-1");
+
+            response.setHeader("Content-Disposition", "attachment;filename=" + sEncoding);
+            response.setContentLength((int) s3Object.getObjectMetadata().getContentLength());
+
+            FileCopyUtils.copy(inputStream, response.getOutputStream());
+
+            inputStream.close();
+            response.getOutputStream().close();
+            logger.info("File successfully written to response output stream.");
+        } catch (AmazonS3Exception e) {
+            logger.error("Error occurred while downloading file from S3", e);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "The specified key does not exist.");
+        }
     }
 }
