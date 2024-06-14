@@ -1,0 +1,64 @@
+package com.example.jhta_3team_finalproject.controller.User;
+
+import com.example.jhta_3team_finalproject.domain.User.Attendence;
+import com.example.jhta_3team_finalproject.mybatis.mapper.User.AttendenceMapper;
+import com.example.jhta_3team_finalproject.service.User.AttendanceService;
+import com.example.jhta_3team_finalproject.service.User.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.List;
+
+@Controller
+@RequestMapping("/admin/attendance")
+public class AttendanceManagementController {
+    private final UserService userService;
+    private final AttendanceService attendanceService;
+
+    @Autowired
+    public AttendanceManagementController(UserService userService, AttendanceService attendanceService) {
+        this.userService = userService;
+        this.attendanceService = attendanceService;
+    }
+    // 전 직원의 출퇴근 정보를 리스트로 보여주는 페이지로 이동
+//    @GetMapping("/list")
+//    public ModelAndView listAttendance(ModelAndView mv) {
+//        mv.setViewName("member/admin/attendance_list");
+//        return mv;
+//    }
+
+    // 전 직원의 출퇴근 정보를 반환
+    @GetMapping("/all")
+    public ModelAndView getAllAttendances(ModelAndView mv,
+                                          @RequestParam(value = "startDate", required = false) String startDateStr,
+                                          @RequestParam(value = "endDate", required = false) String endDateStr) {
+
+        LocalDateTime startDateTime = attendanceService.getStartOfMonth(startDateStr);
+        LocalDateTime endDateTime = attendanceService.getEndOfMonth(endDateStr);
+
+        List<Attendence> attendances = attendanceService.getMonthlyAttendancesForAll(startDateTime, endDateTime);
+
+        mv.setViewName("member/admin/attendance_list");
+        mv.addObject("attendances", attendances);
+        mv.addObject("startDate", startDateTime.toLocalDate());
+        mv.addObject("endDate", endDateTime.toLocalDate());
+        return mv;
+    }
+}
+//
+//    // 특정 직원의 한 달 일한 시간을 반환
+//    @GetMapping("/monthly/{userNum}")
+//    @ResponseBody
+//    public Attendence getMonthlyAttendance(@PathVariable int userNum) {
+//        LocalDate now = LocalDate.now();
+//        LocalDateTime startDate = now.with(TemporalAdjusters.firstDayOfMonth()).atStartOfDay();
+//        LocalDateTime endDate = now.with(TemporalAdjusters.lastDayOfMonth()).atTime(LocalTime.MAX);
+//        return userService.getMonthlyAttendance(userNum, startDate, endDate);
+//    }
+
