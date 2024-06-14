@@ -25,10 +25,10 @@ public class User implements UserDetails {
     private String userName;
     private String userPhoneNumber;
     private String userAge;
-    private int departmentId = 0; // 기본값 설정
+    private int departmentId;
     private String departmentName;
     private String userGender;
-    private int positionId = 0;// 기본값 설정
+    private int positionId;
     private String positionName;
     private int userIsApproved;
     private String userCreatedAt;
@@ -41,8 +41,6 @@ public class User implements UserDetails {
     private int viewCheck;
 
 
-    // 동규
-    private int viewCheck;
 
 
     @Override

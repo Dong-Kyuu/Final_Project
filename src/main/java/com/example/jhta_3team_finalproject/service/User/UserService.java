@@ -48,6 +48,8 @@ public interface UserService {
     //한 사람의 출퇴근 한달 정보를 가져오는 메서드
     List<Attendence> getMonthlyAttendances(int userNum, LocalDateTime startDate, LocalDateTime endDate);
 
+    //직원 전체의 출퇴근 정보를 가져오는 메서드
+
     //신규사원 요청 처리
     void saveUser(User user);
 

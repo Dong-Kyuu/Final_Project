@@ -57,29 +57,29 @@
         select count(*) from user
     </select>
 
-    <!-- 사용자 승인 -->
-    <update id="approveUser">
-        UPDATE user
-        SET user_is_approved = 1
-        WHERE user_num = #{userNum}
-    </update>
-
     <!-- 사용자 승인 및 부서, 직책 설정 -->
     <update id="approveUserWithDepartmentAndPosition" parameterType="User">
         UPDATE user
         SET user_is_approved = 1,
-            department_id = #{departmentId},
-            position_id = #{positionId},
-            user_auth = CASE
-                            WHEN #{positionId} = 0 THEN 'ROLE_NEWBIE'    -- 신입사원
-                            WHEN #{positionId} = 1 THEN 'ROLE_MEMBER'    -- 사원
-                            WHEN #{positionId} = 2 THEN 'ROLE_TEAM'      -- 팀장
-                            WHEN #{positionId} = 3 THEN 'ROLE_HEAD'      -- 부장
-                            WHEN #{positionId} = 4 THEN 'ROLE_SUB_MASTER'-- 이사
-                            WHEN #{positionId} = 5 THEN 'ROLE_MASTER'    -- 대표
-                            ELSE 'ROLE_NEWBIE' -- 기본값
+            department_id    = #{departmentId},
+            position_id      = #{positionId},
+            user_auth        = CASE
+                                   WHEN #{positionId} = 0 THEN 'ROLE_NEWBIE' -- 신입사원
+                                   WHEN #{positionId} = 1 THEN 'ROLE_MEMBER' -- 사원
+                                   WHEN #{positionId} = 2 THEN 'ROLE_TEAM' -- 팀장
+                                   WHEN #{positionId} = 3 THEN 'ROLE_HEAD' -- 부장
+                                   WHEN #{positionId} = 4 THEN 'ROLE_SUB_MASTER'-- 이사
+                                   WHEN #{positionId} = 5 THEN 'ROLE_MASTER' -- 대표
+                                   ELSE 'ROLE_NEWBIE' -- 기본값
                 END,
-            user_department = #{userDepartment}
+            user_department  = #{userDepartment}
+        WHERE user_num = #{userNum}
+    </update>
+
+    <!-- 사용자 승인 -->
+    <update id="approveUser">
+        UPDATE user
+        SET user_is_approved = 1
         WHERE user_num = #{userNum}
     </update>
 
@@ -117,4 +117,6 @@
                  JOIN user_departments d ON u.department_id = d.department_id
         WHERE u.user_id = #{userId}
     </select>
+
+
 </mapper>

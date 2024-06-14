@@ -18,7 +18,7 @@ import com.example.jhta_3team_finalproject.domain.User.MailVO;
 @Component
 public class SendMail {
     private JavaMailSenderImpl mailSender;
-
+    public static final String MEMBER_JOIN_MESSAGE  = "회원가입을축하합니다";
     @Autowired
     public SendMail(JavaMailSenderImpl mailSender) {
         this.mailSender=mailSender;
@@ -40,7 +40,7 @@ public class SendMail {
 
                 //1.문자로만 전송하는경우
                 //두번째 인자는html을 사용하겠다는 뜻 입니다
-                helper.setText("회원가입을축하합니다");    //true);
+                helper.setText(MEMBER_JOIN_MESSAGE);    //true);
 
             }
         };

@@ -1,14 +1,12 @@
-package com.example.jhta_3team_finalproject.controller;
+package com.example.jhta_3team_finalproject.controller.User;
 
 import com.example.jhta_3team_finalproject.domain.User.*;
-import com.example.jhta_3team_finalproject.service.S3.S3Service;
 import com.example.jhta_3team_finalproject.service.User.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -61,14 +59,14 @@ public class UserController {
             Principal userPrincipal
     ) {
         if (readCookie != null) {
-            log.info("저장된 아이디:" + userPrincipal.getName());
+//            log.info("저장된 아이디:" + userPrincipal.getName());
             mv.setViewName("redirect:/user/login");
         } else {
             mv.setViewName("member/login");
             mv.addObject("fail", session.getAttribute("fail"));
             session.removeAttribute("fail");
         }
-        log.info("login 페이지");
+//        log.info("login 페이지");
         return mv;
     }
 
@@ -78,6 +76,7 @@ public class UserController {
         return "member/register";
     }
 
+    //신입사원이 로그인 한 경우 해당 페이지 이동
     @RequestMapping(value = "/newbie", method = RequestMethod.GET)
     public String newbie() {
         return "member/newbie";
@@ -86,9 +85,9 @@ public class UserController {
     //회원가입
     @PostMapping(value = "/joinProcess")
     public String joinProcess(User user, Model model, RedirectAttributes rattr, HttpServletRequest request) {
-        log.info("User: " + user.toString());
+//        log.info("User: " + user.toString());
         user.setUserPassword(passwordEncoder.encode(user.getPassword()));
-        log.info(user.getPassword());
+//        log.info(user.getPassword());
         int result = userservice.join(user);
 
         if (result == JOIN_SUCCESS) {
@@ -119,15 +118,12 @@ public class UserController {
     @GetMapping("/register_requests")
     @ResponseBody
     public List<User> getRegisterRequests(@RequestParam(value = "filter", defaultValue = "all") String filter) {
-        log.info("filter=" + filter);
+//        log.info("filter=" + filter);
         if (filter.equals("approved")) {
-            log.info("어프로브");
             return userservice.getApprovedRequests();
         } else if (filter.equals("rejected")){
-            log.info("리젝트");
             return userservice.getRejectedRequests();
         } else {
-            log.info("올");
             return userservice.getAllRequests();
         }
     }
@@ -139,6 +135,7 @@ public class UserController {
     public Map<String, String> approveUser(@PathVariable int userNum) {
         userservice.approveUser(userNum);
         return Map.of("status", "success", "message", "승인 완료");
+
     }
 
     // 사용자 거절
@@ -187,7 +184,6 @@ public class UserController {
         }
         return mv;
     }
-
 
     @PostMapping(value = "/updateProcess") //회원 정보 수정
     public String updateProcess(User user, Model model,
@@ -287,9 +283,11 @@ public class UserController {
 
         }
         return response;
-
-
     }
+
+    // 직원 근태 관리(전 직원의 출퇴근 기록을 확인)
+//    @GetMapping("/")
+    //직원 정보 관리 ( 직원 직책, 부서 수정)
 
 
 }
