@@ -1,7 +1,6 @@
 package com.example.jhta_3team_finalproject.service.board;
 
 import com.example.jhta_3team_finalproject.domain.Board.AnnounceBoard;
-import com.example.jhta_3team_finalproject.domain.Board.Board;
 import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
 import com.example.jhta_3team_finalproject.domain.User.User;
 
@@ -52,4 +51,6 @@ public interface AnnounceBoardService {
     int doTopFix(int annboardNum);
 
     int TopFixclear(int annboardNum);
+
+    int[] searchFixAuth();
 }
