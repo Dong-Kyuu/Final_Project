@@ -40,9 +40,6 @@ public class User implements UserDetails {
     // 동규
     private int viewCheck;
 
-    // 동규
-    private int viewCheck;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
