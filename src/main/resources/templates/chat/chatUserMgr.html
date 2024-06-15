@@ -162,6 +162,7 @@
         /** 2024-05-28, 채팅방 유저 관리 화면, < 버튼 클릭 시 */
         $(".chat-mgr-screen-back-arrow").click(function () {
             $(".chat-mgr-screen").fadeOut(300).css("display", "none");
+            $(".mgr-room-screen").fadeOut(300).css("display", "none");
             $(".messages-area").css("display", "block");
             $(".text-media-area").css("display", "block");
         });
@@ -175,8 +176,8 @@
                 return false;
             }
 
-            console.log($('input[name=chatSessionId]').val());
-            console.log($('input[name=chatRoomNum]').val());
+            //console.log($('input[name=chatSessionId]').val());
+            //console.log($('input[name=chatRoomNum]').val());
 
             var msg = {
                 chatRoomNum: $('input[name=chatRoomNum]').val(),
@@ -189,6 +190,7 @@
             });
 
             $(".chat-mgr-screen").fadeOut(300).css("display", "none");
+            $(".mgr-room-screen").fadeOut(300).css("display", "none");
             $(".messages-area").css("display", "block");
             $(".text-media-area").css("display", "block");
         });
@@ -203,8 +205,8 @@
                 return false;
             }
 
-            console.log($('input[name=chatSessionId]').val());
-            console.log($('input[name=chatRoomNum]').val());
+            //console.log($('input[name=chatSessionId]').val());
+            //console.log($('input[name=chatRoomNum]').val());
 
             var msg = {
                 chatRoomNum: $('input[name=chatRoomNum]').val(),
@@ -223,7 +225,7 @@
         /*[/]*/
 
         var sourceData = [[${userList}]];
-        console.log(sourceData);
+        //console.log(sourceData);
 
         function loadMembers() {
             return {
@@ -247,7 +249,7 @@
          * 2024-06-12, 채팅방 정보 가져오기 (채팅방 이름, 인원 수, 유저리스트)
          */
         function initChatRoomInfo(chatRoomNum) {
-            console.log($('input[name=chatSessionId]').val());
+            //console.log($('input[name=chatSessionId]').val());
             $.ajax({
                 type: "post",
                 url: "/chat/getChatRoomInfo",
@@ -269,7 +271,7 @@
 
                     $(".activity-container").empty();
                     $(res.chatRoomPartList).each(function (index, item) {
-                        console.log(index);
+                        //console.log(index);
                         let img = ''; // 이미지 처리 시
                         if (item.userProfilePicture != null) {
                             img = "<img style='width: 40px; height: 40px; border-radius: 50%;' src='" + item.userProfilePicture + "' />";
@@ -296,6 +298,7 @@
                     });
 
                     $(".chat-mgr-screen").fadeOut(300).css("display", "none");
+                    $(".mgr-room-screen").fadeOut(300).css("display", "none");
                     $(".messages-area").css("display", "block");
                     $(".text-media-area").css("display", "block");
                 }

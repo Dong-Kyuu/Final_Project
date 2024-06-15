@@ -441,7 +441,7 @@
     <script>
         $(document).ready(function () {
             /**
-             * 2024-06-14, 채팅방 리스트 새로고침
+             * 2024-06-14, SSE 채팅방 리스트 새로고침
              */
             let eventSource = new EventSource("/chat/sse"); //http://localhost:9001/chat/sse
             let sseStatus = true;
@@ -449,7 +449,7 @@
                 if(event.data != '') {
                     if(sseStatus) {
                         getUserChatRoomList();
-                        console.log(event.data);
+                        //console.log(event.data);
                     }
                 }
             });
@@ -613,28 +613,32 @@
                 $(".messages-list > ul > li").bind('click', showMessages);
             }
 
-            /** 2024-05-30, 채팅방 리스트와 사원 리스트 동작 분리 */
+            /**
+             * 2024-05-30, 채팅방 리스트와 사원 리스트 동작 분리
+             */
             let messageRoomNum = $('input[name="message_room_num"]');
             function showMessages() {
                 sseStatus = false;
 
-                //console.log('show message');
-                //console.log(this);
                 var type = $(this).find('input[name=chat_room_type]').val();
-                //console.log(type);
                 var chatRoomNum = '';
                 var chatUserId = '';
+
+                //console.log('show message');
+                //console.log(this);
+                //console.log(type);
+
                 if (type === 'p2p') { // 1대1 채팅방으로 접속 시
                     var chatCounterpartId = $(this).find('input[name=chat_counterpart_id]').val();
-                    //console.log(chatCounterpartId);
                     chatUserId = $("#chat_user_id").val();
                     isp2pChatRoom(chatCounterpartId, chatUserId, type);
                     chatRoomNum =  messageRoomNum.val();
+                    //console.log(chatCounterpartId);
                 } else { // 채팅방 목록에서 접속 시
                     chatRoomNum = $(this).find('input[name=chat_room_num]').val();
-                    //console.log(chatRoomNum);
                     chatUserId = $("#chat_user_id").val();
                     messageRoomNum.val(chatRoomNum); // 해당 방의 번호를 기억해놓습니다.
+                    //console.log(chatRoomNum);
                 }
 
                 loadingStart();
@@ -656,6 +660,7 @@
              * 2024-06-15, 채팅방 방문 시간 업데이트
              */
             function initChatRoomVisitTime(chatRoomNum, chatUserId) {
+
                 $.ajax({
                     type: "post",
                     url: "/chat/initChatRoomVisitTime",
@@ -751,7 +756,7 @@
                         xhr.setRequestHeader(header, token);
                     },
                     success: function (chatRoomNum) {
-                        console.log(chatRoomNum + '입니다.');
+                        // console.log(chatRoomNum + '입니다.');
                         messageRoomNum.val(chatRoomNum);
                     }
                 }) // ajax end
@@ -794,12 +799,12 @@
                             if(d.userProfileImage != null) {
                                 var profileImage = "";
                                 profileImage += "        <span class='user-avatar offline small'>";
-                                profileImage += "            <img src=" + d.userProfileImage +" />";
+                                profileImage += "            <img style='width:40px; height: 40px; border-radius: 50%;' src=" + d.userProfileImage +" />";
                                 profileImage += "        </span>"
                             } else {
                                 var profileImage = "";
                                 profileImage += "        <span class='user-avatar offline small'>";
-                                profileImage += "            <img src='/image/chat/default.png' />";
+                                profileImage += "            <img style='width:40px; height: 40px; border-radius: 50%;' src='/image/chat/default.png' />";
                                 profileImage += "        </span>"
                             }
 
@@ -963,7 +968,6 @@
 
             var isRun = false;
             $(".back-arrow").click(function () {
-                var chatUserId = $("#chat_user_id").val();
                 loadingStart();
                 /**
                  * 2024-06-12, isRun을 통해 나가기 버튼 중복 동작 방지
@@ -980,10 +984,12 @@
                     ws.close();
                 }
 
+                let messageRoomNum = $('input[name="message_room_num"]');
+                let chatUserId = $("#chat_user_id");
+                initChatRoomVisitTime(messageRoomNum.val(), chatUserId.val()); // 채팅방 방문 시간 업데이트
                 getChatUserList();
                 getUserChatRoomList();
                 getChatUserProfile();
-                initChatRoomVisitTime(messageRoomNum, chatUserId); // 채팅방 방문 시간 업데이트
 
                 setTimeout(function () {
                     $(".view-main").removeClass("deactive");
@@ -1286,7 +1292,7 @@
                         calbak(html);
                     },
                     error: function (err) {
-                        console.log('error');
+                        //console.log('error');
                         //calbak(err);
                     }
                 })
@@ -1304,7 +1310,7 @@
              * 2024-05-28, 채팅 유저 관리 화면 보여주기
              */
             function chatRoomUserDisplay(html) {
-                console.log("chat-room-user-mgr");
+                //console.log("chat-room-user-mgr");
                 $(".chat-room-user-mgr").empty();
                 $(".chat-room-user-mgr").append(html);
                 $(".chat-mgr-screen").fadeIn(500).css("display", "block");
@@ -1314,7 +1320,7 @@
              * 2024-05-29, 채팅방 관리 화면 보여주기
              */
             function chatRoomMgrDisplay(html) {
-                console.log("chat-room-mgr");
+                //console.log("chat-room-mgr");
                 document.querySelector('.list-container-mgr').classList.toggle('active');
                 $(".chat-room-mgr").empty();
                 $(".chat-room-mgr").append(html);
@@ -1612,7 +1618,7 @@
                         resultCount = res;
                     },
                     error: function (res) {
-                        console.log('안 읽은 메시지가 없습니다.');
+                        ///console.log('안 읽은 메시지가 없습니다.');
                     }
                 }) // ajax end
                 return resultCount;
@@ -1638,7 +1644,7 @@
                         //console.log(rdata);
                     }, // success end
                     error: function () {
-                        console.log('에러');
+                        //console.log('에러');
                     } // error end
 
                 }) // ajax end
