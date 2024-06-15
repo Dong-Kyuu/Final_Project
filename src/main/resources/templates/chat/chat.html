@@ -1261,6 +1261,7 @@
                     // toggle(false)는 선택한 요소에 style="display: none;" 속성이 추가되어 보이지 않도록 합니다.
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
+                $(".touch-employee").css("transform", "translateY(0)");
             });
 
             /**
@@ -1462,7 +1463,7 @@
 
                 $(".user-search-input").toggleClass("active").focus;
                 $(this).toggleClass("animate");
-                $(".user-search-input").val("");
+                //$(".user-search-input").val("");
                 isUserSearchRun = false;
 
                 setTimeout(() => {
