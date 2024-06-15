@@ -37,6 +37,8 @@
         <link th:href="@{/css/chat/chat-send-button.css}" rel="stylesheet" type="text/css"/>
         <!-- 2024-06-16, 토스트 메시지 -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <!-- 2024-06-16, 이모티콘 박스 추가 -->
+        <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@3.0.3/dist/index.min.js"></script>
 
         <!-- CSRF Token -->
         <meta name="_csrf" th:content="${_csrf.token}">
@@ -343,7 +345,7 @@
                                 <i class="material-icons">sms_failed</i>
                                 <span>공지사항</span>
                             </li>
-                            <li class="more-button-list-item">
+                            <li id="emoji_btn" class="more-button-list-item">
                                 <i class="material-icons">insert_emoticon</i>
                                 <span>이모티콘</span>
                             </li>
@@ -1780,8 +1782,38 @@
                     sendButton.style.width = '35px';
                     document.getElementById("sendButton").addEventListener ("click", sendFunc, false);
                 }, 1000);
-
             }
+
+            /**
+             * 2024-06-16, 이모티콘 박스 처리
+             */
+            const emojiButton = document.querySelector("#emoji_btn");
+            const picker = new EmojiButton({
+                position: 'center-center'
+            });
+
+            emojiButton.addEventListener('click', () => {
+                document.querySelector('.list-container').classList.toggle('active');
+                document.querySelector('.button-container').classList.toggle('active');
+
+                picker.togglePicker(emojiButton);
+
+                // picker가 열릴 때 위치를 조정
+                const emojiPickerElement = document.querySelector('.emoji-picker');
+                if (emojiPickerElement) {
+                    emojiPickerElement.style.position = 'fixed';
+                    emojiPickerElement.style.width = '300px'; // 원하는 너비 조정
+                    emojiPickerElement.style.height = '300px'; // 원하는 높이 조정
+                    emojiPickerElement.style.bottom = '170px'; // 원하는 위치 조정
+                    emojiPickerElement.style.left = '5px'; // 원하는 위치 조정
+                    emojiPickerElement.style.zIndex = '99'; // 다른 요소 위에 표시되도록 z-index 설정
+                }
+            });
+
+            picker.on('emoji', emoji => {
+                const text_box = document.querySelector('.message-text');
+                text_box.value += emoji;
+            });
 
         });
     </script>
