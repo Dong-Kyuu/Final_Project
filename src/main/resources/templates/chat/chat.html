@@ -441,6 +441,7 @@
         </div>
     </div>
 
+
     <style>
         img {
             display: inline-block;
@@ -637,7 +638,7 @@
                 var chatRoomNum = '';
                 var chatUserId = '';
 
-                //console.log('show message');
+                console.log('show message');
                 //console.log(this);
                 //console.log(type);
 
@@ -803,18 +804,18 @@
                     ws.onmessage = function (data) {
                         //메시지를 받으면 동작
                         var msg = data.data;
-                        var url;
                         if (msg != null && msg.type !== '') {
                             //파일 업로드가 아닌 경우 메시지를 뿌려준다.
                             var d = JSON.parse(msg);
-                            console.log(d);
-                            console.log(d.type);
+                            //console.log(d);
+                            //console.log(d.type);
 
                             if(d.userProfileImage != null) {
                                 var profileImage = "";
                                 profileImage += "        <span class='user-avatar offline small'>";
                                 profileImage += "            <img style='width:40px; height: 40px; border-radius: 50%;' src=" + d.userProfileImage +" />";
                                 profileImage += "        </span>"
+
                             } else {
                                 var profileImage = "";
                                 profileImage += "        <span class='user-avatar offline small'>";
@@ -824,7 +825,31 @@
 
                             if (d.fileUrl != null) {
                                 //console.log(d.fileUrl);
-                                url = "<img class='msgImg' style='width: 120px;' src='" + d.fileUrl + "'>";
+                                var url;
+                                //url = "<img class='msgImg' style='width: 120px;' src='" + d.fileUrl + "'>"; // 이전
+
+                                /**
+                                 * 2024-06-16, 다운로드 이미지 UI 추가
+                                 */
+                                url = "<div class='group relative my-2.5'>";
+                                url += "    <div class='absolute w-full h-full bg-gray-900/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center'>";
+                                url += "        <a href='"+ d.fileUrl + "' download='"+ d.fileOriginName +"'>";
+                                url += "            <button data-tooltip-target='download-image' class='download-image-button inline-flex items-center justify-center ";
+                                url += "                rounded-full h-10 w-10 bg-white/30 hover:bg-white/50 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50'>";
+                                url += "                <svg class='w-5 h-5 text-white' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 18'>";
+                                url += "                    <path stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' ";
+                                url += "                        d='M8 1v11m0 0 4-4m-4 4L4 8m11 4v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3' />";
+                                url += "                </svg>";
+                                url += "            </button>";
+                                url += "        </a>";
+                                url += "        <div id='download-image' role='tooltip' class='absolute z-10 invisible inline-block px-3 py-2 ";
+                                url += "            text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700'>";
+                                url += "            Download image";
+                                url += "            <div class='tooltip-arrow' data-popper-arrow></div>";
+                                url += "        </div>";
+                                url += "    </div>";
+                                url += "    <img class='download-image rounded-lg' style='width: 120px;' src='" + d.fileUrl +  "' />";
+                                url += "</div>";
                             }
 
                             if (d.type === "getId") {
@@ -925,15 +950,13 @@
                                 }
                             } else if (d.type === "imgurl") {
                                 //파일 업로드한 경우 업로드한 파일을 채팅방에 뿌려준다.
-                                var srcUrl = d.imageurl;
-                                url = "<img class='msgImg' style='width: 120px;' src='" + srcUrl + "'>";
                                 if (d.sessionId === $("#chat_user_id").val()) {
                                     output = "";
                                     output += "<li class='sent goto'>";
                                     output += "    <div>";
                                     output += "         <span class='my-chat'>";
                                     output += d.msg;
-                                    if (srcUrl != null) {
+                                    if (d.fileUrl != null) {
                                         output += url;
                                     }
                                     output += "         </span>";
@@ -957,7 +980,7 @@
                                     output += "    <p class='chat-nickname'>" + d.userName + "</p>";
                                     output += "    <div class='chat-content'>";
                                     output += d.msg;
-                                    if (srcUrl != null) {
+                                    if (d.fileUrl != null) {
                                         output += url;
                                     }
                                     output += "        <span>";
@@ -1024,7 +1047,7 @@
                 //console.log('showMessages bind');
                 $(".messages-list > ul > li").off('click', showMessages);
                 $(".messages-list > ul > li").bind('click', showMessages);
-            }, 1000);
+            }, 10000);
 
             $(document).keyup(function (e) {
                 if (e.which == 13 && $('.view-message').hasClass("active")) {
@@ -1814,6 +1837,24 @@
                 const text_box = document.querySelector('.message-text');
                 text_box.value += emoji;
             });
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const buttons = document.querySelectorAll('.download-image-button');
+                buttons.forEach(button => {
+                    button.addEventListener('click', function(event) {
+                        event.stopPropagation(); // 이벤트 전파 중지
+                        const imageElement = button.closest('.group').querySelector('.download-image');
+                        const imageUrl = imageElement.src;
+                        const link = document.createElement('a');
+                        link.href = imageUrl;
+                        link.download = 'downloaded_image.jpg'; // 다운로드 파일 이름 설정
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    });
+                });
+            });
+
 
         });
     </script>

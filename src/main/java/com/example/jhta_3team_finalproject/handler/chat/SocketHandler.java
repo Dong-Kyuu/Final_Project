@@ -260,7 +260,8 @@ public class SocketHandler extends TextWebSocketHandler {
                 JSONObject obj = new JSONObject();
                 obj.put("type", "imgurl");
                 obj.put("sessionId", chatMessage.getSenderId());
-                obj.put("imageurl", imageurl);
+                obj.put("fileUrl", imageurl);
+                obj.put("fileOriginName", chatMessage.getFileOriginName());
                 obj.put("msg", chatMessage.getMessageContent());
                 obj.put("sendTime", chatMessage.getSendTime().getTime());
                 obj.put("readCount", chatMessage.getReadCount());
@@ -342,6 +343,7 @@ public class SocketHandler extends TextWebSocketHandler {
             obj.put("msg", content);
             obj.put("readCount", readCount);
             obj.put("fileUrl", fileUrl);
+            obj.put("fileOriginName", chatMessage.getFileOriginName());
             obj.put("sendTime", sendTime.getTime()); // milliseconds 밀리초로 구해진 값으로 JS와 호환
             obj.put("userName", userName);
             obj.put("userProfileImage", userProfileImage);
@@ -364,12 +366,14 @@ public class SocketHandler extends TextWebSocketHandler {
         // 소켓 종료
         if (rls.size() > 0) { // 소켓이 종료되면 해당 세션값들을 찾아서 지운다.
             for (int i = 0; i < rls.size(); i++) {
-                rls.get(i).remove(session.getId()); // 세션값과 관련된 obj들을 제거함.
+                //rls.get(i).remove(session.getId()); // 세션값과 관련된 obj들을 제거함.
+                rls.get(i).remove(session.getId());
                 // 만약 위에서 세션값을 설정 안해준다면 기존 세션값을 지우고 새 소켓을 만들 시 새로운 세션으로 시작.
                 // obj.put(session.getId(),session);의 session.getId() 속성값을
                 // map의 session.getId() 속성값과  비교하였을때 서로 일치하는 세션값을 가진 obj를 제거함.
             }
         }
+        log.info("{}", rls);
         super.afterConnectionClosed(session, status);
     }
 
