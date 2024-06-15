@@ -49,7 +49,7 @@
         <!-- Card -->
         <div class="invite-card w-full h-5/6 max-w-lg flex-auto flex-col space-y-4 bg-white rounded-2xl overflow-hidden customShadow relative">
             <!-- Titling -->
-            <div class="w-full border-b border-blue-100">
+            <div class="w-full border-b border-sky-100">
                 <div class="p-6 flex flex-col space-y-4 invite-title">
                     <h2 class="text-2ml font-semibold text-gray-900">
                         <i class="material-icons chat-mgr-screen-back-arrow">navigate_before</i>[[${name}]]
@@ -69,17 +69,17 @@
                     </svg>
                     <input type="text" placeholder="사원 검색" x-ref="searchField" x-model="search"
                            x-on:keydown.window.prevent.slash="$refs.searchField.focus()"
-                           class="border border-blue-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-blue-400 focus:border-blue-400 focus:bg-blue-50 focus:bg-opacity-25"/>
+                           class="border border-sky-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-sky-200 focus:border-sky-200 focus:bg-sky-50 focus:bg-opacity-25"/>
                 </div>
 
-                <input type="hidden" name="sessionId" th:value="${chatUserId}"/>
+                <input type="hidden" name="chatSessionId" th:value="${chatUserId}"/>
                 <input type="hidden" name="chatRoomNum" th:value="${chatRoomNum}"/>
 
                 <!-- Member List -->
                 <div id="memberList" class="flex-grow flex flex-col py-2 px-6 -mt-2 pb-72 overflow-scroll">
                     <template x-for="member in filteredMembers" :key="member">
-                        <div class="flex p-2 mb-2 space-x-2 rounded-lg cursor-pointer hover:bg-blue-50"
-                             :class="{'bg-blue-50 ring-2 ring-blue-400 ring-offset-1 ring-offset-white': selectedMembers.includes(member.userId)}"
+                        <div class="flex p-2 mb-2 space-x-2 rounded-lg cursor-pointer hover:bg-sky-50"
+                             :class="{'bg-sky-50 ring-1 ring-sky-400 ring-offset-1 ring-offset-white': selectedMembers.includes(member.userId)}"
                              x-on:click="selectedMembers.includes(member.userId) ? selectedMembers.splice(selectedMembers.indexOf(member.userId), 1) : selectedMembers.push(member.userId)">
 <!--                            <img :src="`${member.photo}`" class="rounded-full" width="36px" style="height: 36px;"/>-->
                             <div style="display: flex; justify-content: center; align-items: center;">
@@ -139,10 +139,10 @@
                 </div>
 
                 <!-- Fixed Footer -->
-                <div class="absolute bottom-0 w-full h-24 flex justify-center items-center bg-white border-t border-blue-100">
+                <div class="absolute bottom-0 w-full h-24 flex justify-center items-center bg-white border-t border-sky-100">
                     <div class="py-2 px-4 bg-gray-200 text-white rounded inline-block outline-none cursor-default"
                          th:classappend="${type == 'chat-invite'} ? 'chat-user-invite' : 'chat-user-mgr'"
-                         :class="{'bg-blue-500 cursor-pointer hover:bg-blue-600' : selectedMembers.length > 0}"
+                         :class="{'bg-sky-200 cursor-pointer hover:bg-sky-300' : selectedMembers.length > 0}"
                          style="margin-bottom: 10px;">
                         <span>[[${userButton}]]</span>
                         <span x-show="selectedMembers.length !== 0" x-text="selectedMembers.length"></span>
@@ -171,9 +171,16 @@
          * 2024-06-13, 초대 버튼 클릭 시
          */
         $(".chat-user-invite").click(function () {
+            if($("#selectedUserList").text() == '') {
+                return false;
+            }
+
+            console.log($('input[name=chatSessionId]').val());
+            console.log($('input[name=chatRoomNum]').val());
+
             var msg = {
                 chatRoomNum: $('input[name=chatRoomNum]').val(),
-                sessionId: $('input[name=sessionId]').val(),
+                sessionId: $('input[name=chatSessionId]').val(),
                 chatInviteUserList: $("#selectedUserList").text()
             };
 
@@ -192,9 +199,16 @@
          * 2024-06-13, 추방 버튼 클릭 시
          */
         $(".chat-user-mgr").click(function () {
+            if($("#selectedUserList").text() == '') {
+                return false;
+            }
+
+            console.log($('input[name=chatSessionId]').val());
+            console.log($('input[name=chatRoomNum]').val());
+
             var msg = {
                 chatRoomNum: $('input[name=chatRoomNum]').val(),
-                sessionId: $('input[name=sessionId]').val(),
+                sessionId: $('input[name=chatSessionId]').val(),
                 chatExitUserList: $("#selectedUserList").text()
             };
 
@@ -233,12 +247,13 @@
          * 2024-06-12, 채팅방 정보 가져오기 (채팅방 이름, 인원 수, 유저리스트)
          */
         function initChatRoomInfo(chatRoomNum) {
+            console.log($('input[name=chatSessionId]').val());
             $.ajax({
                 type: "post",
                 url: "/chat/getChatRoomInfo",
                 data: {
                     "chatRoomNum": chatRoomNum,
-                    "chatUserId": $('input[name=sessionId]').val()
+                    "chatUserId": $('input[name=chatSessionId]').val()
                 },
                 dataType: "json",
                 beforeSend: function (xhr) {
@@ -280,6 +295,9 @@
                         $(".activity-container").append(output);
                     });
 
+                    $(".chat-mgr-screen").fadeOut(300).css("display", "none");
+                    $(".messages-area").css("display", "block");
+                    $(".text-media-area").css("display", "block");
                 }
             }) // ajax end
         }
