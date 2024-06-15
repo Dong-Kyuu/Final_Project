@@ -35,6 +35,8 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link th:href="@{/css/chat/chat-send-button.css}" rel="stylesheet" type="text/css"/>
+        <!-- 2024-06-16, 토스트 메시지 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
         <!-- CSRF Token -->
         <meta name="_csrf" th:content="${_csrf.token}">
@@ -551,8 +553,11 @@
                     viewport($ele).find('.viewportShadow').css('box-shadow', '0 0 0 rgba(80,152,230,.5)');
                 }
                 setTimeout(function () {
+                    //console.log('wheel');
                     $ele.removeClass("reset");
                     viewport($ele).find('.viewportShadow').remove();
+                    //$(".messages-list > ul > li").off('click');
+                    //$(".messages-list > ul > li").bind('click', showMessages);
                 }, 200);
             });
 
@@ -1006,6 +1011,7 @@
             });
 
             setInterval(function() {
+                //console.log('showMessages bind');
                 $(".messages-list > ul > li").off('click', showMessages);
                 $(".messages-list > ul > li").bind('click', showMessages);
             }, 1000);
@@ -1017,10 +1023,50 @@
             });
 
             function sendMassage() {
+                //console.log('sendMessage');
                 var message = $('input[name=message-text]').val();
                 var chatUserId = $("#chat_user_id").val();
+
                 if (message === '') {
-                    alert('채팅을 입력해주세요.');
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-start',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer);
+                            toast.addEventListener('mouseleave', Swal.resumeTimer);
+                        }
+                    })
+
+                    Toast.fire({
+                        icon: 'info',
+                        title: '채팅을 입력해주세요.',
+                        didOpen: (toast) => {
+                            // 위치를 px 단위로 조정
+                            const offsetX = 0; // 원하는 x 위치
+                            const offsetY = 20; // 원하는 y 위치
+
+                            // 화면의 크기 가져오기
+                            const windowWidth = window.innerWidth;
+                            const windowHeight = window.innerHeight;
+
+                            // 요소의 크기 가져오기
+                            const toastRect = toast.getBoundingClientRect();
+                            const toastWidth = toastRect.width;
+                            const toastHeight = toastRect.height;
+
+                            // 화면 크기 내에서 위치 제한
+                            const left = Math.min(offsetX, windowWidth - toastWidth); // 10px의 여유 공간
+                            const top = Math.min(offsetY, windowHeight - toastHeight - 10); // 10px의 여유 공간
+
+                            // 위치 설정
+                            toast.style.position = 'fixed';
+                            toast.style.left = `${left}px`;
+                            toast.style.top = `${top}px`;
+                        }
+                    })
                     return false;
                 } else {
 
@@ -1362,10 +1408,18 @@
             });
 
             /** 2024-05-27, 채팅방 검색 버튼 클릭 이벤트 구현 */
+            var isSearchRun = true;
             $(".chat-search-btn").click(function () {
+
+                if(isSearchRun == false) {
+                    return false;
+                }
+
                 $(".chat-search-input").toggleClass("active").focus;
                 $(this).toggleClass("animate");
                 $(".chat-search-input").val("");
+                isSearchRun = false;
+
                 if ($('.chat-room-name').css('display') == 'none') {
                     $('.chat-room-name').fadeIn(300);
                     $('.chat-room-part-num').fadeIn(300);
@@ -1373,6 +1427,10 @@
                     $('.chat-room-name').fadeOut(300);
                     $('.chat-room-part-num').fadeOut(300);
                 }
+
+                setTimeout(() => {
+                    isSearchRun = true;
+                }, 300);
             });
 
             /** 2024-05-28, 로딩 화면 구현 */
