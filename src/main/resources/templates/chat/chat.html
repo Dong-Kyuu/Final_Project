@@ -29,6 +29,13 @@
         <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.js"></script>
         <!-- 2024-05-17, 채팅방 대화상대 확인 -->
         <link th:href="@{/css/chat/chat-member-check.css}" rel="stylesheet" type="text/css"/>
+        <!-- 2024-06-15, 채팅 버튼 -->
+        <script src="https://kit.fontawesome.com/21847b008a.js" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link th:href="@{/css/chat/chat-send-button.css}" rel="stylesheet" type="text/css"/>
+
         <!-- CSRF Token -->
         <meta name="_csrf" th:content="${_csrf.token}">
         <meta name="_csrf_header" th:content="${_csrf.headerName}">
@@ -243,7 +250,7 @@
                                     <input type="text" id="searchChatUser" placeholder="검색" x-ref="searchField"
                                            x-model="search"
                                            x-on:keydown.window.prevent.slash="$refs.searchField.focus()"
-                                           class="border border-blue-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-blue-400 focus:border-blue-400 focus:bg-blue-50 focus:bg-opacity-25"/>
+                                           class="border border-sky-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-sky-200 focus:border-sky-200 focus:bg-sky-50 focus:bg-opacity-25"/>
                                 </div>
                                 <div id="user-scroller-container" class="activity-container">
                                     <div class=avatar-container>
@@ -396,8 +403,15 @@
                     </div>
                     <div class="text-media-area">
                         <div class=message-form>
-                            <button id="send-message"><i class="material-icons"
-                                                         style="font-size: 30px;">send</i></button>
+                            <button id='sendButton' class="chat-primary-button">
+                                <div id='send' class='chat-send-button'>
+                                    <i class="fa-solid fa-comment fa-xl"></i>
+                                </div>
+                                <div id='sending' class='chat-sending-button'></div>
+                                <div id='sent' class='chat-sent-button'>
+                                    <i class="fa-solid fa-check fa-xl"></i>
+                                </div>
+                            </button>
                             <input class="message-text" type="text" name="message-text" placeholder="채팅을 입력하세요." maxlength="150">
                             <div class="chat-menu-container">
                                 <div class="list-container button-container">
@@ -417,14 +431,12 @@
         </div>
     </div>
 
-
     <style>
         img {
             display: inline-block;
             vertical-align: baseline;
         }
     </style>
-
 
     <script>
         $(document).ready(function () {
@@ -967,7 +979,6 @@
                 $(".messages-list > ul > li").bind('click', showMessages);
             }, 1000);
 
-            $("#send-message").click(sendMassage);
             $(document).keyup(function (e) {
                 if (e.which == 13 && $('.view-message').hasClass("active")) {
                     sendMassage();
@@ -978,6 +989,7 @@
                 var message = $('input[name=message-text]').val();
                 if (message === '') {
                     alert('채팅을 입력해주세요.');
+                    return false;
                 } else {
 
                     var option = {
@@ -989,6 +1001,7 @@
 
                     ws.send(JSON.stringify(option));
                     $(".message-text").val("");
+                    return true;
                 }
             }
 
@@ -1605,6 +1618,42 @@
                 }) // ajax end
 
             });
+
+            /**
+             * 2024-06-15, 채팅 버튼 구현
+             */
+            //$("#sendButton").click(sendMassage);
+            document.getElementById("sendButton").addEventListener ("click", sendFunc, false);
+
+            function sendFunc(){
+                //document.getElementById("sendButton").removeEventListener ("click", sendFunc, false);
+                const send = document.getElementById('send');
+                const sending = document.getElementById('sending');
+                const sent = document.getElementById('sent');
+                const sendButton = document.getElementById('sendButton')
+
+                if(sendMassage() == false) {
+                    //console.log('false');
+                    return false;
+                }
+
+                sending.style.opacity = 1;
+                send.style.opacity = 0;
+                sendButton.style.width = '35px';
+
+                setTimeout(() => {
+                    sending.style.opacity = 0;
+                    sent.style.opacity = 1;
+                }, 500);
+
+                setTimeout(() => {
+                    sent.style.opacity = 0;
+                    send.style.opacity = 1;
+                    sendButton.style.width = '35px';
+                    document.getElementById("sendButton").addEventListener ("click", sendFunc, false);
+                }, 1000);
+
+            }
 
         });
     </script>
