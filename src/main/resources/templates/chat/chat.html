@@ -101,6 +101,12 @@
                         </div>
                         <div id="master-nav-items" data-viewport="true">
                             <div id="item-1">
+                                <div class="user-search-box">
+                                    <input type="text" placeholder="검색" class="user-search-input">
+                                    <div class="user-search-btn">
+                                        <i class="material-icons user-search-icon">search</i>
+                                    </div>
+                                </div>
                                 <div class="messages-list">
                                     <ul class="touch-y touch-employee">
                                         <!-- 채팅 사원 리스트 -->
@@ -219,7 +225,7 @@
                             </a>
                         </div>
                         <div class="chat-search-box">
-                            <input type="text" placeholder="" class="chat-search-input">
+                            <input type="text" placeholder="검색" class="chat-search-input">
                             <div class="chat-search-btn">
                                 <i class="material-icons chat-search-icon">search</i>
                             </div>
@@ -657,6 +663,7 @@
 
                 $('.view-main').addClass("deactive");
                 $('.view-message').addClass("active");
+                $(".user-search-box").css("display", "none");
                 $(".chat-menu-container-mgr").css("display", "none");
                 $(".app-detail").css("display", "none");
             }
@@ -1000,6 +1007,7 @@
                     $(".view-main").removeClass("deactive");
                     $(".view-message").removeClass("active");
                     $("#chat-menu").css("display", "none");
+                    $(".user-search-box").css("display", "block");
                     $(".chat-menu-container-mgr").css("display", "block");
                     $(".app-detail").css("display", "block");
                     $("#chat-message-list").css("transform", "translateY(0)");
@@ -1045,8 +1053,8 @@
                         title: '채팅을 입력해주세요.',
                         didOpen: (toast) => {
                             // 위치를 px 단위로 조정
-                            const offsetX = 0; // 원하는 x 위치
-                            const offsetY = 20; // 원하는 y 위치
+                            const offsetX = -5; // 원하는 x 위치
+                            const offsetY = 50; // 원하는 y 위치
 
                             // 화면의 크기 가져오기
                             const windowWidth = window.innerWidth;
@@ -1058,8 +1066,8 @@
                             const toastHeight = toastRect.height;
 
                             // 화면 크기 내에서 위치 제한
-                            const left = Math.min(offsetX, windowWidth - toastWidth); // 10px의 여유 공간
-                            const top = Math.min(offsetY, windowHeight - toastHeight - 10); // 10px의 여유 공간
+                            const left = Math.min(offsetX, windowWidth - toastWidth + 5); // 10px의 여유 공간
+                            const top = Math.min(offsetY, windowHeight - toastHeight - 40); // 10px의 여유 공간
 
                             // 위치 설정
                             toast.style.position = 'fixed';
@@ -1241,6 +1249,17 @@
                     // toggle(true)는 선택한 요소를 보이도록 설정하는 메소드입니다.
                     // toggle(false)는 선택한 요소에 style="display: none;" 속성이 추가되어 보이지 않도록 합니다.
                     $(this).toggle($(this).find('p').text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            /** 2024-05-17, 채팅방 유저 검색 */
+            $(".user-search-input").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $(".touch-employee>li").filter(function () {
+                    //console.log($(this).find('p').text().toLowerCase().indexOf(value) > -1)
+                    // toggle(true)는 선택한 요소를 보이도록 설정하는 메소드입니다.
+                    // toggle(false)는 선택한 요소에 style="display: none;" 속성이 추가되어 보이지 않도록 합니다.
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
             });
 
@@ -1430,6 +1449,24 @@
 
                 setTimeout(() => {
                     isSearchRun = true;
+                }, 300);
+            });
+
+            /** 2024-05-27, 채팅방 검색 버튼 클릭 이벤트 구현 */
+            var isUserSearchRun = true;
+            $(".user-search-btn").click(function () {
+
+                if(isUserSearchRun == false) {
+                    return false;
+                }
+
+                $(".user-search-input").toggleClass("active").focus;
+                $(this).toggleClass("animate");
+                $(".user-search-input").val("");
+                isUserSearchRun = false;
+
+                setTimeout(() => {
+                    isUserSearchRun = true;
                 }, 300);
             });
 

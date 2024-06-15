@@ -22,22 +22,6 @@
 /*    position: relative;*/
 /*}*/
 
-.chat-search-input {
-    position: absolute;
-    right: 40px;
-    top: 14px;
-    box-sizing: border-box;
-    width: 23px;
-    height: 23px;
-    padding: 0 9px;
-    outline: none;
-    font-size: 18px;
-    border-radius: 50px;
-    color: #29313a;
-    border: 2px solid skyblue;
-    transition: all 0.8s ease;
-}
-
 ::-webkit-input-placeholder {
     /* Chrome/Opera/Safari */
     color: skyblue;
@@ -58,6 +42,22 @@
     color: skyblue;
 }
 
+.chat-search-input {
+    position: absolute;
+    right: 40px;
+    top: 14px;
+    box-sizing: border-box;
+    width: 23px;
+    height: 23px;
+    padding: 0 9px;
+    outline: none;
+    font-size: 18px;
+    border-radius: 50px;
+    color: #29313a;
+    border: 2px solid skyblue;
+    transition: all 0.8s ease;
+}
+
 .chat-search-btn {
     position: absolute;
     width: 25px;
@@ -75,7 +75,7 @@
 }
 
 .chat-search-input.active {
-    width: 200px;
+    width: 220px;
     right: 40px;
     font-family: 'Open Sans', sans-serif;
     font-size: 13px;
@@ -91,4 +91,64 @@
     top: 5px;
     right: 3px;
     font-size: 15px;
+    user-select: none; /* 텍스트 선택 비활성화 */
+    outline: none; /* 포커스 시 나타나는 외곽선 비활성화 */
+}
+
+.user-search-input {
+    position: absolute;
+    right: 15px;
+    top: 287px;
+    box-sizing: border-box;
+    width: 42px;
+    height: 42px;
+    padding: 0 9px 0 30px;
+    outline: none;
+    font-size: 18px;
+    border-radius: 50px;
+    color: #29313a;
+    border: 2px solid skyblue;
+    transition: all 0.8s ease;
+    z-index: 10;
+}
+
+.user-search-btn {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    /*background: #4f97e5;*/
+    border-radius: 50%;
+    right: 15px;
+    top: 286px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 80px;
+    font-size: 20px;
+    color: skyblue;
+    transition: all 0.8s ease;
+    z-index: 10;
+}
+
+.user-search-input.active {
+    width: 290px;
+    right: 15px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    z-index: 10;
+}
+
+.user-search-btn.animate {
+    transform: rotate(-360deg);
+    right: 15px;
+    z-index: 10;
+}
+
+.user-search-icon {
+    position: absolute;
+    top: 7px;
+    right: 5px;
+    font-size: 30px;
+    z-index: 10;
+    user-select: none; /* 텍스트 선택 비활성화 */
+    outline: none; /* 포커스 시 나타나는 외곽선 비활성화 */
 }
