@@ -70,5 +70,5 @@ public interface ChatMapper {
 
     public List<User> chatRoomParticipateList(ChatRoom chatRoom);
 
-
+    public int initChatRoomVisitTime(ChatParticipate chatParticipate);
 }

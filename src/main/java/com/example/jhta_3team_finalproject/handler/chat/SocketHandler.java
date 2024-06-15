@@ -76,18 +76,18 @@ public class SocketHandler extends TextWebSocketHandler {
         JSONObject obj = jsonToObjectParser(msg); // JSON데이터를 JSONObject로 파싱한다.
         String roomNum = (String) obj.get("roomNumber"); // 방의 번호
         String content = (String) obj.get("msg"); // 메시지
-        String userName = (String) obj.get("userName"); // 유저의 아이디
+        String chatUserId = (String) obj.get("chatUserId"); // 유저의 아이디
         String fileName = (String) obj.get("fileName"); // 파일의 원본 이름
 
         log.info("{}", roomNum);
         log.info(content);
-        log.info(userName);
+        log.info(chatUserId);
         log.info(fileName);
 
         // 상태를 저장하기 위해 vo에 값을 넣어주고 insert
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setChatRoomNum(Long.valueOf(roomNum));
-        chatMessage.setSenderId(userName);
+        chatMessage.setSenderId(chatUserId);
         chatMessage.setMessageContent(content);
         chatMessage.setReadCount(1);
         /**
@@ -112,7 +112,7 @@ public class SocketHandler extends TextWebSocketHandler {
         if(chatMessage != null) {
             ChatRoom chatRoom = new ChatRoom();
             chatRoom.setChatRoomNum(Long.valueOf(roomNum));
-            chatRoom.setChatSessionId(userName);
+            chatRoom.setChatSessionId(chatUserId);
             List<User> users = chatService.chatRoomParticipateList(chatRoom);
 
             /**

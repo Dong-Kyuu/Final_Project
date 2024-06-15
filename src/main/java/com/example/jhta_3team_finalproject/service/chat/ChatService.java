@@ -258,6 +258,6 @@ public class ChatService {
 
 
     public int initChatRoomVisitTime(ChatParticipate chatParticipate) {
-        return initChatRoomVisitTime(chatParticipate);
+        return dao.initChatRoomVisitTime(chatParticipate);
     }
 }

@@ -963,6 +963,7 @@
 
             var isRun = false;
             $(".back-arrow").click(function () {
+                var chatUserId = $("#chat_user_id").val();
                 loadingStart();
                 /**
                  * 2024-06-12, isRun을 통해 나가기 버튼 중복 동작 방지
@@ -982,6 +983,7 @@
                 getChatUserList();
                 getUserChatRoomList();
                 getChatUserProfile();
+                initChatRoomVisitTime(messageRoomNum, chatUserId); // 채팅방 방문 시간 업데이트
 
                 setTimeout(function () {
                     $(".view-main").removeClass("deactive");
@@ -1010,6 +1012,7 @@
 
             function sendMassage() {
                 var message = $('input[name=message-text]').val();
+                var chatUserId = $("#chat_user_id").val();
                 if (message === '') {
                     alert('채팅을 입력해주세요.');
                     return false;
@@ -1018,7 +1021,7 @@
                     var option = {
                         type: "message",
                         roomNumber: messageRoomNum.val(),
-                        userName: $("#chat_user_id").val(),
+                        chatUserId: chatUserId,
                         msg: message
                     }
 
