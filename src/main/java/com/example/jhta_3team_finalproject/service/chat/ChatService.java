@@ -255,4 +255,9 @@ public class ChatService {
     public List<User> chatRoomParticipateList(ChatRoom chatRoom) {
         return dao.chatRoomParticipateList(chatRoom);
     }
+
+
+    public int initChatRoomVisitTime(ChatParticipate chatParticipate) {
+        return initChatRoomVisitTime(chatParticipate);
+    }
 }

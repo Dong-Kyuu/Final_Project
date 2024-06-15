@@ -638,6 +638,7 @@
                 }
 
                 loadingStart();
+                initChatRoomVisitTime(chatRoomNum, chatUserId); // 채팅방 방문 시간 업데이트
                 getChatRoomInfo(chatRoomNum); // 채팅방 정보 가져오기 (채팅방 이름, 인원 수, 유저리스트)
                 openChatRoom(chatRoomNum, chatUserId, type); // 웹소켓 연결 + 채팅 기록 가져오기
                 setTimeout(function () {
@@ -649,6 +650,28 @@
                 $('.view-message').addClass("active");
                 $(".chat-menu-container-mgr").css("display", "none");
                 $(".app-detail").css("display", "none");
+            }
+
+            /**
+             * 2024-06-15, 채팅방 방문 시간 업데이트
+             */
+            function initChatRoomVisitTime(chatRoomNum, chatUserId) {
+                $.ajax({
+                    type: "post",
+                    url: "/chat/initChatRoomVisitTime",
+                    data: {
+                        "chatRoomNum": chatRoomNum,
+                        "chatUserId": chatUserId
+                    },
+                    dataType: "json",
+                    beforeSend: function (xhr) {
+                        //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function (res) {
+                        //console.log(res);
+                    }
+                }) // ajax end
             }
 
             /**

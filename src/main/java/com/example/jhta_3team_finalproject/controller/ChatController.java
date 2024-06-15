@@ -262,6 +262,7 @@ public class ChatController {
         //mv.addObject("roomButton", roomButton);
         mv.addObject("userButton", userButton);
         mv.addObject("chatRoomNum", chatRoomNum);
+        mv.addObject("chatUserId", chatUserId);
         mv.addObject("userList", chatParticipates);
         return mv;
     }
@@ -282,6 +283,11 @@ public class ChatController {
             return chatService.participateExitChatRoom(chatParticipate, chatExitUserList);
         }
         return NO_USER;
+    }
+
+    @RequestMapping("initChatRoomVisitTime")
+    public @ResponseBody int initChatRoomVisitTime(ChatParticipate chatParticipate) {
+        return chatService.initChatRoomVisitTime(chatParticipate);
     }
 
 }

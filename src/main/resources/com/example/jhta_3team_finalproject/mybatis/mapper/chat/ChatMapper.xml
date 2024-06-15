@@ -190,7 +190,7 @@
             SELECT *
             FROM chat_room
         ) cr
-                     ON cp.chat_room_num = cr.chat_room_num
+        ON cp.chat_room_num = cr.chat_room_num
         WHERE chat_user_id = #{chatSessionId}
         AND cp.chat_room_num = (SELECT MAX(chat_room_num) FROM chat_room)
         ORDER BY last_send_time DESC
