@@ -1838,24 +1838,6 @@
                 text_box.value += emoji;
             });
 
-            document.addEventListener('DOMContentLoaded', () => {
-                const buttons = document.querySelectorAll('.download-image-button');
-                buttons.forEach(button => {
-                    button.addEventListener('click', function(event) {
-                        event.stopPropagation(); // 이벤트 전파 중지
-                        const imageElement = button.closest('.group').querySelector('.download-image');
-                        const imageUrl = imageElement.src;
-                        const link = document.createElement('a');
-                        link.href = imageUrl;
-                        link.download = 'downloaded_image.jpg'; // 다운로드 파일 이름 설정
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    });
-                });
-            });
-
-
         });
     </script>
     </body>
