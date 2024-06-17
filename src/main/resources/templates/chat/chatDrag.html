@@ -6,8 +6,14 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
     <script>
         /** 2024-05-16, 채팅창 Drag UI 기능 */
+        let isSet = false;
         $("#opener").on("click", function () {
             $("#dialog").dialog("open");
+            if(isSet == false) {
+                var $content = "<iframe id='chatIframe' style='width: 330px; height: 587px;' src='/chat/chat'></iframe>";
+                $("#dialog").before($content);
+                isSet = true;
+            }
         });
 
         /** 2024-06-06, scale 기능 추가 */
@@ -61,11 +67,6 @@
                 effect: "drop",
                 duration: 500
             }
-        });
-
-        $("#opener").on("click", function () {
-            console.log('showChat');
-            $("#dialog").dialog("open");
         });
 
         $("#dialog").css('width', '310px');
