@@ -12,4 +12,10 @@ public interface SseService {
     public int update(String name) ;
 
     int notificationRead(int notifiNum);
+
+    void deleteNotificationUrl(String s);
+
+    int readAll(int userNum);
+
+    int deleteAll(int userNum);
 }

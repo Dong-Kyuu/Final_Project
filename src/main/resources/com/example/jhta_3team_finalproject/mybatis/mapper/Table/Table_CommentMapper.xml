@@ -12,7 +12,8 @@
     <select id = "getCommentList" resultType = "BoardComment">
         SELECT
             subquery.*,
-            u.user_department,
+            d.department_name,
+            p.position_name,
             u.user_profile_picture,
             u.user_name
         FROM (
@@ -22,7 +23,9 @@
                  ORDER BY comm_regdate DESC
                      LIMIT #{start}, #{end}
              ) AS subquery
-                 JOIN user u ON subquery.user_num = u.user_num;
+                 JOIN user u ON subquery.user_num = u.user_num
+                 JOIN user_departments d ON u.department_id = d.department_id
+                 JOIN user_positions p ON u.position_id = p.position_id
     </select>
 
     <insert id = "commentsInsert">

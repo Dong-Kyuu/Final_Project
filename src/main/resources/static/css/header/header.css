@@ -1,8 +1,8 @@
 .notification-modal {
     left:-400% !important;
     width: 400px;
-    max-height : 700px;
-    overflow: auto; /* 자동으로 스크롤 추가 */
+    max-height : 600px;
+    overflow: auto;
 }
 
 .readNotify {
@@ -12,3 +12,47 @@
 .unreadNotify {
     border-left:5px orangered solid;
 }
+
+.notification-modal {
+    position: relative;
+}
+
+.notification-area {
+    max-height: 400px; /* 원하는 높이 설정 */
+    overflow-y: auto;
+    padding-bottom: 50px; /* see-all-notifications 높이만큼 패딩 추가 */
+}
+
+.see-all-notifications {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: white;
+    z-index: 1;
+    padding: 10px 0;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.see-all-notifications:hover {
+    background-color: #f0f0f0; /* 호버시 배경 색상 */
+    color: #007bff; /* 호버시 글자 색상 */
+}
+
+.see-all-notifications:active {
+    background-color: #e0e0e0; /* 클릭시 배경 색상 */
+    color: #0056b3; /* 클릭시 글자 색상 */
+}
+
+.deleteNotifi {
+    float:right;
+    color : #ffc4c4;
+    font-size:13px
+}
+
+.deleteNotifi:hover {
+    color: #ff5f5f; /* 호버시 글자 색상 */
+    cursor: pointer;
+}
+

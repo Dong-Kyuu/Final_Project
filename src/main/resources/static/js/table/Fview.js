@@ -179,7 +179,7 @@ $(function () {
                                 "               <input type='hidden' class='comment_num' value='" + this.commNum + "' >" +
                                 "               <div style=\"height: 25px;\">\n" +
                                 // 프사
-                                "                   <img src=\"../upload/user" + this.writerProfilePicture + "\" alt=\"../image/default.png\" style=\"width:30px !important; height:30px; border-radius:15px; float: left; margin: 2px 15px 0px 0px;\">\n"
+                                "                   <img src=\"" + this.writerProfilePicture + "\" alt=\"../image/default.png\" style=\"width:30px !important; height:30px; border-radius:15px; float: left; margin: 2px 15px 0px 0px;\">\n"
 
                             if ($("#loginNum").val() == this.userNum) {
                                 output += "     <i class=\"mdi mdi-dots-vertical\" style=\"float: right; font-size: 25px; margin-top:3px;\"></i>\n"
@@ -197,7 +197,7 @@ $(function () {
                                 "                       </span>\n" +
                                 "                       <p class=\"card-description\" style=\"font-size:10px\">\n" +
                                                            this.writerDepartment +
-                                "                               <code style=\"font-size:10px\"> 직급 </code> <code style=\"font-size:10px; color:dimgray\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + this.commRegdate + "</code>\n" +
+                                "                               <code style=\"font-size:10px\">" + this.writerPosition + "</code> <code style=\"font-size:10px; color:dimgray\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + this.commRegdate + "</code>\n" +
                                 "                       </p>\n" +
                                 "                   </div>\n" +
                                 "               </div>\n" +

@@ -17,7 +17,15 @@ public class Board {
     private String boardWriter;
     private String writerDepartment;
     private String writerProfilePicture;
+    private String writerPosition;
 
+    public String getWriterPosition() {
+        return writerPosition;
+    }
+
+    public void setPositionName(String writerPosition) {
+        this.writerPosition = writerPosition;
+    }
 
     public int getBoardNum() {
         return boardNum;
@@ -107,7 +115,7 @@ public class Board {
         return writerDepartment;
     }
 
-    public void setUserDepartment(String writerDepartment) {
+    public void setDepartmentName(String writerDepartment) {
         this.writerDepartment = writerDepartment;
     }
 

@@ -2,6 +2,7 @@ $(function () {
     $('#importance').val(1);
 
     $('#upload-btn').on('click', function () {
+
         $('#upfile').click();
     });
 
@@ -55,10 +56,10 @@ $(function () {
     });
 
     $('.dropdown-item').on('click', function () {
-       var choice = $(this).text();
-       var choiceVal = $(this).val();
-       $('.importance').text(choice);
-       $('#importance').val(choiceVal);
+        var choice = $(this).text();
+        var choiceVal = $(this).val();
+        $('.importance').text(choice);
+        $('#importance').val(choiceVal);
     });
 
     // 권한 확인 및 체크박스 표시/숨기기

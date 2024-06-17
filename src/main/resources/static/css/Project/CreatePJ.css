@@ -1,0 +1,43 @@
+body {
+    font-family: 'Arial', sans-serif;
+}
+.department, .employee {
+    padding: 10px;
+    border: none;
+    margin: 5px 0;
+    cursor: pointer;
+}
+.employee-list {
+    display: none;
+    padding-left: 20px;
+}
+.show .employee-list {
+    display: block;
+}
+.employee {
+    display: flex;
+    align-items: center;
+}
+.employee input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.card-description {
+    margin-bottom:10px
+}
+
+.UserList {
+    border-top:1px dimgray solid;
+    border-bottom:1px dimgray solid;
+    max-height : 350px !important;
+    overflow: auto !important;
+}
+
+.section {
+    padding : 10px 40px 10px 40px !important;
+}
+
+.date-picker-container {
+    display: flex;
+    gap: 20px;
+}

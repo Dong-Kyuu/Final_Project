@@ -21,6 +21,7 @@ public class AnnounceBoard {
     private Date annboardDate;
     private int annboardImportance;
     private int annboardFix;
+    private int annboardRequest;
 
     private String boardWriter;
     private String writerDepartment;
@@ -41,7 +42,7 @@ public class AnnounceBoard {
         this.writerProfilePicture = writerProfilePicture;
     }
 
-    public void setUserPosition (String writerProfilePicture) {
-        this.writerProfilePicture = writerProfilePicture;
+    public void setUserPosition (String writerPosition) {
+        this.writerPosition = writerPosition;
     }
 }

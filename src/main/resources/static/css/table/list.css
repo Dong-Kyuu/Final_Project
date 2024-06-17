@@ -26,7 +26,7 @@ th:first-of-type {
 }
 
 .dept-blue {
-    border-left: 4px solid #4f4faf;
+    border-left: 4px solid #4f6aaf;
 }
 
 .dept-black {
@@ -34,19 +34,23 @@ th:first-of-type {
 }
 
 .dept-red {
-    border-left: 4px solid #ff7b7b;
+    border-left: 4px solid #ff6161;
 }
 
 .dept-yellow {
-    border-left: 4px solid #fd9bdb;
+    border-left: 4px solid #ffee00;
 }
 
 .dept-green {
-    border-left: 4px solid #93cab3;
+    border-left: 4px solid #aeffc1;
+}
+
+.dept-orange {
+    border-left: 4px solid #ff8900;
 }
 
 .yellow {
-    color: #fd9bdb
+    color: #caca4c;
 }
 
 .black {
@@ -54,15 +58,19 @@ th:first-of-type {
 }
 
 .blue {
-    color : #4f4faf;
+    color : #4f6aaf;
 }
 
 .red {
-    color: #ff7b7b;
+    color: #ff6161;
 }
 
 .green {
     color: #93cab3;
+}
+
+.orange {
+    color: #ff8900;
 }
 
 .search-space {
@@ -168,4 +176,3 @@ tr td:nth-child(2):hover {
     text-decoration: none; /* 밑줄 제거 */
     color: inherit; /* 텍스트 색상을 상속 */
 }
-
