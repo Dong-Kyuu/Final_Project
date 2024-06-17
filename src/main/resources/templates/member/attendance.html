@@ -215,22 +215,26 @@
             responsive: true,
             ajax: {
                 url: '/user/monthlyAttendance',
+                data: {userNum: userNum},
                 dataSrc: ''
             },
             columns: [
-                { data: 'checkInTime', render: function (data, type, row) {
+                {
+                    data: 'check_in_time', render: function (data, type, row) {
                         return data.substring(0, 10);
                     }
                 },
-                { data: 'checkInTime', render: function (data, type, row) {
+                {
+                    data: 'check_in_time', render: function (data, type, row) {
                         return data.substring(11, 19);
                     }
                 },
-                { data: 'checkOutTime', render: function (data, type, row) {
+                {
+                    data: 'check_out_time', render: function (data, type, row) {
                         return data ? data.substring(11, 19) : '';
                     }
                 },
-                { data: 'workTime' }
+                {data: 'work_time'}
             ],
             language: {
                 "decimal": "",
@@ -253,7 +257,7 @@
             lengthMenu: [10, 25, 35, 50, {label: '전체', value: -1}]
 
 
-    });
+        });
 
         // 날짜 표시
         var today = new Date();

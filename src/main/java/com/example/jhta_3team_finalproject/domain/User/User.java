@@ -36,12 +36,10 @@ public class User implements UserDetails {
     private String userProfilePicture;
     private String userChatStatusMsg;
     private String userAuth = "ROLE_NEWBIE";
+    private String userStatus;
 
     // 동규
     private int viewCheck;
-
-
-
 
 
     @Override

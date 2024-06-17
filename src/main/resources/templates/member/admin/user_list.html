@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>직원 근태 관리</title>
+    <title>직원 정보 관리</title>
     <link href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/assets/vendors/mdi/css/materialdesignicons.min.css}">
     <link rel="stylesheet" th:href="@{/assets/vendors/css/vendor.bundle.base.css}">
@@ -54,7 +54,6 @@
             padding: 5px 10px;
             font-size: 14px;
         }
-
     </style>
 </head>
 <body>
@@ -66,11 +65,11 @@
         <div class="main-panel">
             <div class="content-wrapper">
                 <div class="page-header">
-                    <h4 class="page-title">직원 근태 관리 </h4>
+                    <h4 class="page-title">직원 정보 관리</h4>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a th:href="@{/admin/attendance/list}">근태관리</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><a th:href="@{/user/update}">직원 정보
+                            <li class="breadcrumb-item active" aria-current="page"><a th:href="@{/admin/users}">직원 정보
                                 관리</a></li>
                             <li class="breadcrumb-item active" aria-current="page">신규 등록 사원</li>
                         </ol>
@@ -88,30 +87,32 @@
                                         전 직원
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="filterMenuButton">
-                                        <a class="dropdown-item filter-option" data-filter="-1" href="#">전 직원</a>
-                                        <a class="dropdown-item filter-option" data-filter="1" href="#">인사부</a>
-                                        <a class="dropdown-item filter-option" data-filter="2" href="#">관리부</a>
-                                        <a class="dropdown-item filter-option" data-filter="3" href="#">홍보부</a>
-                                        <a class="dropdown-item filter-option" data-filter="4" href="#">지원부</a>
-                                        <a class="dropdown-item filter-option" data-filter="5" href="#">영업부</a>
-                                        <a class="dropdown-item filter-option" data-filter="6" href="#">임원</a>
+                                        <a class="dropdown-item filter-option" data-department-id="-1" href="#">전 직원</a>
+                                        <a class="dropdown-item filter-option" data-department-id="1" href="#">인사부</a>
+                                        <a class="dropdown-item filter-option" data-department-id="2" href="#">관리부</a>
+                                        <a class="dropdown-item filter-option" data-department-id="3" href="#">홍보부</a>
+                                        <a class="dropdown-item filter-option" data-department-id="4" href="#">지원부</a>
+                                        <a class="dropdown-item filter-option" data-department-id="5" href="#">영업부</a>
+                                        <a class="dropdown-item filter-option" data-department-id="6" href="#">임원</a>
                                     </div>
                                 </div>
                                 <input type="date" name="startDate" id="startDate" value="2024-06-01">
                                 <input type="date" name="endDate" id="endDate" value="2024-06-30">
                                 <button id="filterButton" class="btn btn-primary">적용</button>
                             </div>
-                            <table class="table" id="admin_attendance_table">
+                            <table class="table" id="admin_user_table">
                                 <thead>
                                 <tr>
                                     <th>번호</th>
                                     <th>직원이름</th>
                                     <th>부서</th>
                                     <th>직책</th>
-                                    <th>근무날짜</th>
-                                    <th>출근시간</th>
-                                    <th>퇴근시간</th>
-                                    <th>총시간</th>
+                                    <th>핸드폰번호</th>
+                                    <th>입사일</th>
+                                    <th>이메일</th>
+                                    <th>상태</th>
+                                    <th>성별</th>
+                                    <th>권한정보</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -138,17 +139,18 @@
     $(document).ready(function () {
         var csrfToken = $("meta[name='_csrf']").attr("content");
         var csrfHeader = $("meta[name='_csrf_header']").attr("content");
-        var startDate = new Date().toISOString().substring(0, 10)
-        var endDate = startDate
-        console.log("오늘날짜" + endDate)
-        console.log(new Date().toISOString())
+        var startDate = $('#startDate').val();
+        var endDate = $('#endDate').val();
 
-        function loadAttendanceData(startDate, endDate, filter) {
-            var url = '/admin/attendance/all?filter=' + filter + '&startDate=' + startDate + '&endDate=' + endDate;
+        function loadUserData(startDate, endDate, departmentId) {
+            var url = '/admin/filterUsers?departmentId=' + departmentId + '&startDate=' + startDate + '&endDate=' + endDate;
 
             $.ajax({
                 url: url,
                 type: 'GET',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
                 success: function (data) {
                     requestTable.clear().rows.add(data).draw();
                 },
@@ -159,31 +161,29 @@
             });
         }
 
-        loadAttendanceData(startDate, endDate, -1)
+        loadUserData(startDate, endDate, -1);
 
-        var requestTable = $('#admin_attendance_table').DataTable({
+        var requestTable = $('#admin_user_table').DataTable({
             responsive: true,
             columns: [
-                {data: 'user_num'},
-                {data: 'user_name'},
-                {data: 'department_name'},
-                {data: 'position_name'},
+                {data: 'userNum'},
+                {data: 'username'},
+                {data: 'departmentName'},
+                {data: 'positionName'},
+                {data: 'userPhoneNumber'},
                 {
-                    data: 'check_in_time', render: function (data, type, row) {
-                        return data.substring(0, 10);
+                    data: 'userCreatedAt', render: function (data, type, row) {
+                        return data ? data.substring(0, 10) : '';
                     }
                 },
+                {data: 'userEmail'},
+                {data: 'userStatus'},
                 {
-                    data: 'check_in_time', render: function (data, type, row) {
-                        return data.substring(11, 19);
+                    data: 'userGender', render: function (data, type, row) {
+                        return data === 'M' ? '남' : data === 'F' ? '여' : '';
                     }
                 },
-                {
-                    data: 'check_out_time', render: function (data, type, row) {
-                        return data ? data.substring(11, 19) : '';
-                    }
-                },
-                {data: 'work_time'}
+                {data: 'userAuth'}
             ],
             language: {
                 "decimal": "",
@@ -209,20 +209,18 @@
         $('#filterButton').on('click', function () {
             var startDate = $('#startDate').val();
             var endDate = $('#endDate').val();
-            loadAttendanceData(startDate, endDate);
+            var departmentId = $('#filterMenuButton').data('department-id');
+            loadUserData(startDate, endDate, departmentId);
         });
-
 
         $('.filter-option').on('click', function (e) {
             e.preventDefault();
-            var filter = $(this).data('filter');
+            var departmentId = $(this).data('department-id');
             var filterText = $(this).text();
-            $('#filterMenuButton').text(filterText).css('color', 'black').data('filter', filter);
-            var startDate = $('#startDate').val();
-            var endDate = $('#endDate').val();
-            loadAttendanceData(startDate, endDate, filter);
+            $('#filterMenuButton').text(filterText).css('color', 'black').data('department-id', departmentId);
         });
     });
+
 </script>
 
 </body>

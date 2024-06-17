@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.User.AdminMapper">
+
+    <!-- 사용자 정보 업데이트 쿼리 -->
+    <update id="updateUserInfo" parameterType="User">
+        UPDATE user
+        SET department_id = #{departmentId},
+            position_id   = #{positionId},
+            user_auth     = #{userAuth},
+            user_status   = CASE
+                                WHEN #{status} IS NOT NULL THEN #{status}
+                                WHEN EXISTS (SELECT 1
+                                             FROM user_attendance ua
+                                             WHERE ua.user_num = user.user_num
+                                               AND ua.check_in_time BETWEEN #{startDate} AND #{endDate}) THEN '근무중'
+                                ELSE '휴가중'
+                END
+        WHERE user_num = #{userNum}
+    </update>
+
+    <!-- 사용자 조회 쿼리 -->
+    <select id="getUsersFilter" parameterType="map" resultType="User">
+        SELECT u.user_num,
+        u.user_name,
+        u.user_created_at,
+        u.user_is_approved,
+        u.user_phone_number,
+        u.user_email,
+        u.user_gender,
+        u.user_auth,
+        u.user_status,
+        d.department_name,
+        p.position_name
+        FROM user u
+        JOIN user_departments d ON u.department_id = d.department_id
+        JOIN user_positions p ON u.position_id = p.position_id
+        <where>
+            <if test="params.user_is_approved != null">
+                u.user_is_approved = #{params.user_is_approved}
+            </if>
+            <if test="params.user_name != null and params.user_name != ''">
+                AND MATCH(u.user_name) AGAINST(#{params.user_name} IN NATURAL LANGUAGE MODE)
+            </if>
+            <if test="params.department_id != null and params.department_id != -1">
+                AND u.department_id = #{params.department_id}
+            </if>
+            <if test="params.position_id != null">
+                AND u.position_id = #{params.position_id}
+            </if>
+            <if test="params.user_status != null">
+                AND u.user_status = #{params.user_status}
+            </if>
+            <if test="params.startDate != null">
+                AND u.user_num IN (
+                SELECT ua.user_num
+                FROM user_attendance ua
+                WHERE ua.check_in_time >= #{params.startDate}
+                )
+            </if>
+            <if test="params.endDate != null">
+                <![CDATA[
+            AND u.user_num IN (
+                SELECT ua.user_num
+                FROM user_attendance ua
+                WHERE ua.check_out_time <= #{params.endDate}
+            )
+            ]]>
+            </if>
+        </where>
+        ORDER BY u.user_created_at DESC, u.user_num;
+    </select>
+
+</mapper>

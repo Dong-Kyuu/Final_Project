@@ -13,7 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -24,11 +27,11 @@ public class UserServicelmpl implements UserService {
     private S3Service amazonS3Client;
 
     @Autowired
-    public UserServicelmpl(UserMapper userMapper, AttendenceMapper attendenceMapper, PasswordEncoder passwordEncoder,S3Service amazonS3Client) {
+    public UserServicelmpl(UserMapper userMapper, AttendenceMapper attendenceMapper, PasswordEncoder passwordEncoder, S3Service amazonS3Client) {
         this.userMapper = userMapper;
         this.attendenceMapper = attendenceMapper;
         this.passwordEncoder = passwordEncoder;
-        this.amazonS3Client= amazonS3Client;
+        this.amazonS3Client = amazonS3Client;
     }
 
 
@@ -138,22 +141,37 @@ public class UserServicelmpl implements UserService {
     }
 
     @Override
-    public List<Attendence> getMonthlyAttendances(int userNum, LocalDateTime startDate, LocalDateTime endDate) {
-        return attendenceMapper.getMonthlyAttendances(userNum, startDate, endDate);
+    public List<Map<String, Object>> getMonthlyAttendances(int userNum, String startDateStr, String endDateStr) {
+
+        String startDateTimeStr = startDateStr + " 00:00:00";
+        String endDateTimeStr = endDateStr + " 23:59:59";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        LocalDateTime startDate = LocalDateTime.parse(startDateTimeStr, formatter);
+        LocalDateTime endDate = LocalDateTime.parse(endDateTimeStr, formatter);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("startDate", startDate);
+        params.put("endDate", endDate);
+        params.put("userNum", userNum);
+        return attendenceMapper.getMonthlyAttendances(params);
     }
 
 
-
     //신규사원 요청 처리
+    @Override
+    public List<Map<String, Object>> getUsersFilter(int user_is_approved) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("user_is_approved", user_is_approved);
+        return userMapper.getUsersFilter(params);
+    }
+
+
     @Override
     public void saveUser(User user) {
         userMapper.join(user);
     }
 
-    @Override
-    public List<User> getRegisterRequests() {
-        return userMapper.findAllRequests();
-    }
 
     @Override
     public void approveUser(int userNum) {
@@ -166,20 +184,21 @@ public class UserServicelmpl implements UserService {
         userMapper.rejectUser(userNum);
     }
 
-    @Override
-    public List<User> getAllRequests() {
-        return userMapper.findAllRequests();
-    }
 
-    @Override
-    public List<User> getApprovedRequests() {
-        return userMapper.getApprovedRequests();
-    }
-
-    @Override
-    public List<User> getRejectedRequests() {
-        return userMapper.getRejectedRequests();
-    }
+//    @Override
+//    public List<User> getAllRequests() {
+//        return userMapper.findAllRequests();
+//    }
+//
+//    @Override
+//    public List<User> getApprovedRequests() {
+//        return userMapper.getApprovedRequests();
+//    }
+//
+//    @Override
+//    public List<User> getRejectedRequests() {
+//        return userMapper.getRejectedRequests();
+//    }
 
     @Override
     public Attendence getTodayAttendance(int userNum) {

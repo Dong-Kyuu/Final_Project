@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
@@ -46,24 +47,18 @@ public interface UserService {
     Attendence recordAttendance(int userNum, String action);
 
     //한 사람의 출퇴근 한달 정보를 가져오는 메서드
-    List<Attendence> getMonthlyAttendances(int userNum, LocalDateTime startDate, LocalDateTime endDate);
+    List<Map<String, Object>> getMonthlyAttendances(int userNum, String startDate, String endDate);
 
     //직원 전체의 출퇴근 정보를 가져오는 메서드
 
     //신규사원 요청 처리
     void saveUser(User user);
 
-    List<User> getRegisterRequests();
-
     void approveUser(int userNum); //요청 승인
 
     void rejectUser(int userNum);// 요청 거절
 
-    public List<User> getAllRequests(); //모든 요청
-
-    public List<User> getApprovedRequests(); //승인된 요청들
-
-    public List<User> getRejectedRequests(); //거절된 요청들
+    public List<Map<String, Object>> getUsersFilter(int user_is_approved); //모든 요청
 
     int[] getUsersByDepartmentAndPosition(int departmentId, int positionId); //부서와 직급에 해당하는 인물넘버 호츌 -- sse에서 특정인물에게 전달시 활용 등
 

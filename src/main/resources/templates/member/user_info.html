@@ -106,9 +106,8 @@
                             <div class="card-body">
                                 <h4 class="card-title">내 프로필</h4>
                                 <div class="form-group">
-                                    <th:block th:with="profilePicture=${#strings.replace(#authentication.principal.userProfilePicture, '\\', '/')}">
-                                        <img th:src="@{|/upload/user${#authentication.principal.getUserProfilePicture()}|}" class="profile-img">
-                                    </th:block>
+                                 <img th:src="${#authentication.principal.userProfilePicture}" class="profile-img">
+
                                 </div>
                                 <div class="form-group">
                                     <label class="profile-label">이름</label>

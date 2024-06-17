@@ -19,12 +19,13 @@
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/User/UserMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/User/AttendenceMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/AnnounceBoardMapper.xml"/>
+        <mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/User/AdminMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/ViewCheckMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/BoardMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/UpfileMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/Table_CommentMapper.xml"/>
-		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Project/ProjectMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/chat/ChatMapper.xml"/>
+        <mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Project/ProjectMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/customer/InqCommentMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/customer/InqueryBoardMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/TourPackage/TripMapper.xml"/>
