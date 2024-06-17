@@ -15,4 +15,7 @@ public class ChatRoom {
     private String chatSessionId;
     private String roomName;
     private Date roomCreateDate;
+    private String roomType;
+    private String chatInviteUserList;
+    private String chatExitRoomList;
 }

@@ -19,14 +19,14 @@
 
             .chat-mgr-screen {
                 width: 310px;
-                height: 547px;
+                height: 550px;
                 display: none;
                 z-index: 99999;
                 background-color: white;
             }
 
             .invite-card {
-                height: 547px;
+                height: 550px;
                 left: 5px;
             }
 
@@ -172,6 +172,7 @@
          * 2024-06-13, 초대 버튼 클릭 시
          */
         $(".chat-user-invite").click(function () {
+            console.log($("#selectedUserList").text());
             if($("#selectedUserList").text() == '') {
                 return false;
             }
@@ -201,6 +202,7 @@
          * 2024-06-13, 추방 버튼 클릭 시
          */
         $(".chat-user-mgr").click(function () {
+            console.log($("#selectedUserList").text());
             if($("#selectedUserList").text() == '') {
                 return false;
             }

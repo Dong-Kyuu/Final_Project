@@ -19,14 +19,14 @@
 
             .mgr-room-screen {
                 width: 310px;
-                height: 547px;
+                height: 550px;
                 display: none;
                 z-index: 99999;
                 background-color: white;
             }
 
             .invite-card {
-                height: 547px;
+                height: 550px;
                 left: 5px;
             }
 
@@ -227,7 +227,7 @@
          */
         $(".chat-room-create").click(function () {
             //onsole.log('roomType: ' + $('#roomType').val());
-            //console.log($("#selectedUserList").text());
+            console.log($("#selectedUserList").text());
             if($("#selectedUserList").text() == '' || $('input[name=roomName]').val() == '') {
                 return false;
             }
@@ -235,7 +235,7 @@
             var msg = {
                 roomType: $('#roomType').val(),
                 roomName: $('input[name=roomName]').val(),
-                sessionId: $('input[name=sessionId]').val(),
+                chatSessionId: $('input[name=sessionId]').val(),
                 chatInviteUserList: $("#selectedUserList").text()
             };
 
@@ -277,10 +277,13 @@
                 let output = '';
                 let img = ''; // 이미지 처리 시
 
-                if (d.profile_picture === 'default.png') {
-                    img = "<img src='/image/chat/default.png' />";
-                } else {
-                    // 업로드된 프로필을 보여주도록 한다. (채팅방 화면은 임시 처리)
+                if (d.roomType === '부서') {
+                    img = "<img src='/image/chat/department.png' />";
+                } else if (d.roomType === '프로젝트') {
+                    img = "<img src='/image/chat/project.png' />";
+                } else if (d.roomType === '팀') {
+                    img = "<img src='/image/chat/team.png' />";
+                } else { // 자유
                     img = "<img src='/image/chat/default.png' />";
                 }
 
@@ -342,19 +345,21 @@
          * 2024-05-30, 채팅방 버튼 클릭 시
          */
         $(".chat-room-exit").click(function () {
-            //console.log($("#selectedRoomList").text());
+            console.log($("#selectedRoomList").text());
 
             if($("#selectedRoomList").text() == '') {
                 return false;
             }
 
             var msg = {
-                sessionId: $('input[name=sessionId]').val(),
+                chatSessionId: $('input[name=sessionId]').val(),
                 chatExitRoomList: $("#selectedRoomList").text()
             };
 
+            console.log(msg);
+
             commonAjax('/chat/exitRoomProcess', msg, 'post', function (result) {
-                exitChattingRoom(result);
+                exitChattingRoom();
             });
 
             $(".mgr-room-screen").fadeOut(300);
@@ -400,14 +405,17 @@
                     xhr.setRequestHeader(header, token);
                 },
                 success: function (res) {
-                    //console.log(res);
+                    console.log(res);
                     let output = '';
                     res.forEach(function (d, idx) {
                         let img = ''; // 이미지 처리 시
-                        if (this.profilePicture === 'default.png') {
-                            img = "<img src='/image/chat/default.png' />";
-                        } else {
-                            // 업로드된 프로필을 보여주도록 한다. (채팅방 화면은 임시 처리)
+                        if (d.roomType === '부서') {
+                            img = "<img src='/image/chat/department.png' />";
+                        } else if (d.roomType === '프로젝트') {
+                            img = "<img src='/image/chat/project.png' />";
+                        } else if (d.roomType === '팀') {
+                            img = "<img src='/image/chat/team.png' />";
+                        } else { // 자유
                             img = "<img src='/image/chat/default.png' />";
                         }
 
@@ -419,7 +427,7 @@
                         var lastMessageContent = d.messageContent;
                         var roomName = d.roomName;
                         var roomCreateDate = d.roomCreateDate;
-                        var unreadMessageCount = getUnreadMessage(roomNumber, sessionId);
+                        var unreadMessageCount = d.unreadMessageCount;
 
                         output += "<li>";
                         output += "<input type='hidden' name='chat_room_num' value='" + roomNumber + "' />";
