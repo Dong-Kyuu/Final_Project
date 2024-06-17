@@ -1082,8 +1082,12 @@
                         icon: 'info',
                         title: '채팅을 입력해주세요.',
                         didOpen: (toast) => {
+                            // 크기 조정
+                            toast.style.width = '315px'; // 원하는 너비
+                            toast.style.fontSize = '14px'; // 글자 크기 조정
+
                             // 위치를 px 단위로 조정
-                            const offsetX = -5; // 원하는 x 위치
+                            const offsetX = 0; // 원하는 x 위치
                             const offsetY = 50; // 원하는 y 위치
 
                             // 화면의 크기 가져오기
@@ -1096,7 +1100,7 @@
                             const toastHeight = toastRect.height;
 
                             // 화면 크기 내에서 위치 제한
-                            const left = Math.min(offsetX, windowWidth - toastWidth + 5); // 10px의 여유 공간
+                            const left = Math.min(offsetX, windowWidth - toastWidth); // 10px의 여유 공간
                             const top = Math.min(offsetY, windowHeight - toastHeight - 40); // 10px의 여유 공간
 
                             // 위치 설정
