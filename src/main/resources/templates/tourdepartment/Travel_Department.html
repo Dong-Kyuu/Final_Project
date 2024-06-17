@@ -168,73 +168,20 @@
                 <div class="page-header">
                     <h3 class="page-title"> Travel Department </h3>
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#">Tables</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Basic tables</li>
-                        </ol>
+
                     </nav>
                 </div>
 
                 <div class="row">
-                    <div class="col-lg-6 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">승인 및 거부</h4>
-                                <p class="card-description"> <code>.table</code> 클래스 추가하기</p>
 
-                                <!-- 스크롤 가능한 리스트를 감싸는 컨테이너 div -->
-                                <div style="max-height: 300px; overflow-y: auto;">
-                                    <ul class="list-group">
-                                        <!-- 여행 일정 변경 요청 리스트 아이템 -->
-                                        <li class="list-group-item" th:each="trip, status : ${pendingTrip}">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <h5 class="mb-1" th:text="'상품 등록 승인 #' + ${status.count}"></h5>
-                                                    <p class="mb-1" th:text="'내용: ' + ${trip.tripName} + ' / ' + ${trip.tripDate} + ' / ' + ${trip.tripPrice}+'won'"></p>
-                                                    <p class="mb-1" th:text="'상태: '+${trip.status == 'PENDING' ? '결제 대기' : trip.status}"></p>
-                                                </div>
-                                                <div class="col-sm-6 text-right">
-                                                    <!-- 승인 또는 거부 버튼 -->
-                                                    <form th:action="@{/approveTrip}" method="post" style="display: inline;">
-                                                        <input type="hidden" name="tripNo" th:value="${trip.tripNo}" />
-                                                        <button type="submit" class="btn btn-success mr-2">승인</button>
-                                                    </form>
-                                                    <form th:action="@{/rejectTrip}" method="post" style="display: inline;">
-                                                        <input type="hidden" name="tripNo" th:value="${trip.tripNo}" />
-                                                        <button type="submit" class="btn btn-danger">거부</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <!-- 기타 요청들 추가 -->
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--병훈이형 캘린더(여행부서 사람들의 일정 공유 캘린더) -->
-                    <div class="col-lg-6 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">병훈's Calendar Work</h4>
-                                <p class="card-description"> Add class <code>.table-hover</code>
-                                </p>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!---->
                     <div class="col-lg-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body" >
                                 <h4 class="card-title">Booking List</h4>
-                                <p class="card-description"> Add class <code>.table-striped</code>
-                                </p>
                                 <table class="table table-striped" >
                                     <thead>
                                     <tr>
-                                        <th> 예약번호</th>
+                                        <th> 번호</th>
                                         <th> 예약자</th>
                                         <th> 예약 상품 + 날짜</th>
                                         <th> 신청 시간</th>
@@ -245,16 +192,32 @@
 
                                     <tbody>
 
-                                    <tr th:each="purchase : ${purchaseList}">
-                                        <td th:text="${purchase.id}"></td>
+                                    <tr th:each="purchase, status : ${purchaseList}">
+                                        <td th:text="${status.count}"></td>
                                         <td th:text="${purchase.customerNameKor}"></td>
                                         <td th:text="${purchase.tripName}+'/'+${purchase.tripDate}"></td>
                                         <td th:text="${purchase.createdAt}"></td>
-                                        <td th:text="${purchase.status == 'PENDING' ? '예약 대기' : purchase.status}"></td>
-                                        <td> <div class="button-UserProfile">
-                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
-                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
-                                        </div></td>
+                                        <td th:text="${(purchase.status == 'PENDING' ? '예약 대기' :
+                                                      (purchase.status == 'APPROVED' ? '예약 승인' :
+                                                      (purchase.status == 'REJECTED' ? '예약 거절' :
+                                                      (purchase.status == 'REFUND' ? '환불' : purchase.status))))}">
+                                        </td>
+                                        <td>
+                                            <div class="purchase-button">
+                                                <form th:action="@{/trip/approvePurchase}" method="post" style="display:inline;">
+                                                    <input type="hidden" name="purchaseId" th:value="${purchase.id}" />
+                                                    <input type="hidden" name="buyerNo" th:value="${purchase.buyerNo}" />
+                                                    <input type="hidden" name="tripNo" th:value="${purchase.tripNo}" />
+                                                    <button type="submit" class="btn btn-gradient-success btn-sm">승인</button>
+                                                </form>
+                                                <form th:action="@{/trip/rejectPurchase}" method="post" style="display:inline;">
+                                                    <input type="hidden" name="purchaseId" th:value="${purchase.id}" />
+                                                    <input type="hidden" name="buyerNo" th:value="${purchase.buyerNo}" />
+                                                    <input type="hidden" name="tripNo" th:value="${purchase.tripNo}" />
+                                                    <button type="submit" class="btn btn-gradient-danger btn-sm">거절</button>
+                                                </form>
+                                            </div>
+                                        </td>
                                     </tr>
 
                                     </tbody>
@@ -278,8 +241,8 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6">
                                             <div class="button-tripRegister">
-                                                <button type="button" id="trip_register" class="btn btn-gradient-success" onclick="window.location.href='/tripRegister'">메인등록</button>
-                                                <button type="button" id="option_register" class="btn btn-gradient-warning" onclick="window.location.href='/optionRegister'">옵션등록</button>
+                                                <button type="button" id="trip_register" class="btn btn-gradient-success" onclick="window.location.href='/trip/tripRegister'">메인등록</button>
+                                                <button type="button" id="option_register" class="btn btn-gradient-warning" onclick="window.location.href='/trip/optionRegister'">옵션등록</button>
 
                                                 <div class="modal">
                                                     <div class="modal_body">

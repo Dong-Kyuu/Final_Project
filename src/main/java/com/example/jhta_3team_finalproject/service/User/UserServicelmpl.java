@@ -206,5 +206,14 @@ public class UserServicelmpl implements UserService {
         return attendenceMapper.getTodayAttendance(userNum);
     }
 
+    @Override
+    public int[] getUsersByDepartmentAndPosition(int departmentId, int positionId) {
+        return userMapper.getUsersByDepartmentAndPosition(departmentId,positionId);
+    }
+
+    @Override
+    public List<User> getEmployeeListByDepartment(int departmentId) {
+        return userMapper.getEmployeeListByDepartment(departmentId);
+    }
 
 }

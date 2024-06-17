@@ -8,6 +8,6 @@ import lombok.Setter;
 public class City {
     String cityNo;
     String cityName;
-    String countryName;
+    String countryNo;
 
 }

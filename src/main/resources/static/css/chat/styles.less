@@ -4,9 +4,9 @@
 /* @Color Palette */
 @white: #FFFFFF;
 @black: #000000;
-@darkPrimaryColor: #60a5fa;
+@darkPrimaryColor: skyblue;
 @primaryColor: #FFF;
-@lightPrimaryColor: #60a5fa;
+@lightPrimaryColor: skyblue;
 @textPrimaryColor: #212121;
 @accentColor: #FF5722;
 @primaryTextColor: #212121;
@@ -350,7 +350,7 @@
                             }
 
                             .mes-count {
-                                background: red;
+                                background: #ff7a6b;
                                 padding: 3px 5.5px 3px 5.5px;
                                 line-height: 100%;
                                 border-radius: 10px;
@@ -490,6 +490,8 @@
 
             i {
                 font-size: 35px;
+                user-select: none; /* 텍스트 선택 비활성화 */
+                outline: none; /* 포커스 시 나타나는 외곽선 비활성화 */
             }
         }
 
@@ -716,6 +718,7 @@
             height: 62px;
 
             .message-text {
+                width: 70%;
                 //box-sizing: border-box;
                 //margin: 0;
                 //padding: 0;

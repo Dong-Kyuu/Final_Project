@@ -12,7 +12,15 @@ public class BoardComment {
     private String commWriter;
     private String writerDepartment;
     private String writerProfilePicture;
+    private String writerPosition;
 
+    public String getWriterPosition() {
+        return writerPosition;
+    }
+
+    public void setPositionName(String writerPosition) {
+        this.writerPosition = writerPosition;
+    }
 
     public int getCommNum() {
         return commNum;
@@ -74,7 +82,7 @@ public class BoardComment {
         return writerDepartment;
     }
 
-    public void setUserDepartment(String writerDepartment) {
+    public void setDepartmentName(String writerDepartment) {
         this.writerDepartment = writerDepartment;
     }
 

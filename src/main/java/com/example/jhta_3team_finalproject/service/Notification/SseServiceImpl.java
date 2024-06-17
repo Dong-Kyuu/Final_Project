@@ -1,15 +1,22 @@
 package com.example.jhta_3team_finalproject.service.Notification;
 
 import com.example.jhta_3team_finalproject.domain.Notification.Notification;
+import com.example.jhta_3team_finalproject.domain.User.User;
+import com.example.jhta_3team_finalproject.domain.User.UserAuth;
 import com.example.jhta_3team_finalproject.mybatis.mapper.Notification.NotificationMapper;
 import com.example.jhta_3team_finalproject.mybatis.mapper.Table.TableCommentMapper;
+import com.example.jhta_3team_finalproject.service.User.UserAuthService;
+import com.example.jhta_3team_finalproject.service.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,10 +28,13 @@ public class SseServiceImpl implements SseService{
 
     private final Map<Integer, SseEmitter> emitters = new ConcurrentHashMap<>();
     private NotificationMapper notificationMapper;
-
+    private final UserAuthService userAuthService;
+    private final UserService userService;
     @Autowired
-    public SseServiceImpl(NotificationMapper notificationMapper) {
+    public SseServiceImpl(NotificationMapper notificationMapper, UserAuthService userAuthService, UserService userService) {
         this.notificationMapper = notificationMapper;
+        this.userAuthService = userAuthService;
+        this.userService = userService;
     }
 
     /*
@@ -54,8 +64,10 @@ public class SseServiceImpl implements SseService{
             //SseEmitter.event().name("notification").data(message)를 사용하여 이름이 "notification"이고
             //데이터가 message인 이벤트를 생성하고 전송합니다.
             if(list.size() == 0 ) {
+                emitter.send(SseEmitter.event().name("notifyBefore").data("html수정"));
                 emitter.send(SseEmitter.event().name("notification").data(""));
             }else {  //로그인 했을 때 읽지 않은 알림을 보냅니다.
+                emitter.send(SseEmitter.event().name("notifyBefore").data("html수정"));
                 for(Notification message : list) {
                     emitter.send(SseEmitter.event().name("notification").data(message));
                     logger.info("Notification="+message);
@@ -108,5 +120,44 @@ public class SseServiceImpl implements SseService{
     @Override
     public int notificationRead(int notifiNum) {
         return notificationMapper.readAction(notifiNum);
+    }
+
+    @Override
+    public void deleteNotificationUrl(String s) {
+        notificationMapper.deleteNotificationUrl(s);
+    }
+
+    @Override
+    public int readAll(int userNum) {
+        return notificationMapper.readAll(userNum);
+    }
+
+    @Override
+    public int deleteAll(int userNum) {
+        return notificationMapper.deleteAll(userNum);
+    }
+
+
+
+    @Override
+    public void sendByDepartmentAndPosition(int departmentNo, int positionNo, String message, String url) {
+        // SSE 알림 보내기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserAuth userInfo = userAuthService.getUserInfo(authentication);
+
+        User loginUser = (User) authentication.getPrincipal();
+        int fromUserNum = loginUser.getUserNum();
+        String fromUserName = loginUser.getUsername();
+
+        List<Integer> toUserNumsList = new ArrayList<>();
+
+            int[] users = userService.getUsersByDepartmentAndPosition(departmentNo, positionNo);
+
+
+        for (int toUserNum : users) {
+            System.out.println("send to "+toUserNum);
+            // 받는 사람 넘버(필수) , 보내는 사람 넘버, 보내는사람 이름(안넣으면 이상하게보임), 링크, 메세지(필수)
+            sendNotification(toUserNum,fromUserNum,fromUserName,url, message);
+        }
     }
 }

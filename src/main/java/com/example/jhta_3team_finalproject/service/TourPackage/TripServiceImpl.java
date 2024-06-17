@@ -1,9 +1,12 @@
 package com.example.jhta_3team_finalproject.service.TourPackage;
 import com.example.jhta_3team_finalproject.domain.TourPackage.*;
 import com.example.jhta_3team_finalproject.domain.User.User;
+import com.example.jhta_3team_finalproject.domain.User.UserAuth;
 import com.example.jhta_3team_finalproject.mybatis.mapper.TourPackage.TripMapper;
 import com.example.jhta_3team_finalproject.service.Notification.SseService;
 import com.example.jhta_3team_finalproject.service.S3.S3Service;
+import com.example.jhta_3team_finalproject.service.User.UserAuthService;
+import com.example.jhta_3team_finalproject.service.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
@@ -14,6 +17,7 @@ import com.example.jhta_3team_finalproject.service.Notification.SseService;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,15 +28,19 @@ public class TripServiceImpl implements TripService{
     private final TripMapper tripMapper;
     private final RedisTemplate<String, Object> redisTemplate;
     private final SseService sseService;
+    private  final UserAuthService userAuthService;
+    private final UserService userService;
 
     private static final String STOCK_PREFIX = "trip:stock:";
 
     @Autowired
-    public TripServiceImpl(S3Service s3Service, TripMapper tripMapper, RedisTemplate<String, Object> redisTemplate, SseService sseService) {
+    public TripServiceImpl(S3Service s3Service, TripMapper tripMapper, RedisTemplate<String, Object> redisTemplate, SseService sseService, UserAuthService userAuthService, UserService userService) {
         this.s3Service = s3Service;
         this.tripMapper = tripMapper;
         this.redisTemplate = redisTemplate;
         this.sseService = sseService;
+        this.userAuthService = userAuthService;
+        this.userService = userService;
     }
 
     @Override
@@ -105,11 +113,11 @@ public class TripServiceImpl implements TripService{
 
         // S3에 파일 업로드
         String fileId = UUID.randomUUID().toString();
-        String mainIMG = s3Service.uploadFile(images[0]);
-        String introIMG = s3Service.uploadFile(images[1]);
-        String routeIMG = s3Service.uploadFile(images[2]);
-        String scheduleIMG = s3Service.uploadFile(images[3]);
-        String detailIMG = s3Service.uploadFile(images[4]);
+        String mainIMG = images[0] != null ? s3Service.uploadFile(images[0]) : null;
+        String introIMG = images[1] != null ? s3Service.uploadFile(images[1]) : null;
+        String routeIMG = images[2] != null ? s3Service.uploadFile(images[2]) : null;
+        String scheduleIMG = images[3] != null ? s3Service.uploadFile(images[3]) : null;
+        String detailIMG = images[4] != null ? s3Service.uploadFile(images[4]) : null;
 
         System.out.println("fileId = "+fileId);
         System.out.println("mainIMG = "+mainIMG);
@@ -123,13 +131,14 @@ public class TripServiceImpl implements TripService{
                 trip.getTripMaxStock(), trip.getTripDate(),String.valueOf(currentDate), trip.getExpireDate(),
                 mainIMG, trip.getTripCategory(), trip.getOptionIds(), fileId);
 
-        // SSE 알림 보내기
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User loginUser = (User) authentication.getPrincipal();
-        int userNum = loginUser.getUserNum();
-        System.out.println("userNum = "+userNum);
+        //SSE 알림
+        int departmentNo=5;
         String message = "상품 : " + trip.getTripName() + "이 결제 대기 상태입니다.";
-       // sseService.sendNotification(userNum, message);
+        String url="http://localhost:9091/trip/tripBoss";
+        for(int i=3;i<5;i++){
+            sseService.sendByDepartmentAndPosition(departmentNo,i,message,url);
+
+        }
 
         // 재고를 Redis에 저장
         /*
@@ -168,6 +177,48 @@ public class TripServiceImpl implements TripService{
     @Override
     public void updateTripStatus(int tripNo, String status) {
         tripMapper.updateTripStatus(tripNo,status);
+
+        Trip trip = tripMapper.getDetail(tripNo);
+        //SSE 알림
+        int departmentNo=5;
+        String statusKor="";
+        String url="http://localhost:9091/trip/TLManagement";
+
+        if(status.equals("APPROVED")){
+            statusKor="승인";
+            url += "?num="+tripNo;
+        } else if (status.equals("REJECTED")) {
+            statusKor="거절";
+        }
+
+        String message="상품 : " + trip.getTripName() + "이 "+statusKor+" 되었습니다.";
+
+        for(int i=1;i<2;i++){
+            sseService.sendByDepartmentAndPosition(departmentNo,i,message,url);
+
+        }
+    }
+
+    @Override
+    public boolean updateTravelLeader(int tripNo, int userNo) {
+        try {
+            tripMapper.updateTravelLeader(tripNo, userNo);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateTripStock(int tripNo, int stock) {
+        try {
+            tripMapper.updateTripStock(tripNo, stock);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

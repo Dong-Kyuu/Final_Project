@@ -13,6 +13,7 @@
 .spinner {
     position: relative;
     top: 45%;
+    left: 13px;
     margin: auto;
     width: 30px;
     height: 30px;

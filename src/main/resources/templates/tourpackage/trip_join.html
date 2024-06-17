@@ -39,7 +39,7 @@
             </div>
             <h4>MBTI 가입을 시작해 볼까요?</h4>
             <h6 class="font-weight-light">회원가입 하기</h6>
-            <form class="pt-3" th:action="@{/tripjoinProcess}" method="post">
+            <form class="pt-3" th:action="@{/trip/joinProcess}" method="post">
               <div class="form-group">
                 <div class="input-group">
                   <input type="text" name="customerId" class="form-control form-control-lg" id="id" placeholder="아이디">
@@ -83,7 +83,7 @@
                 <button class="btn btn-gradient-primary btn-lg btn-block" type="submit">가입하기</button>
               </div>
               <div class="text-center mt-4 font-weight-light text-muted">
-                이미 계정이 있으신가요? <a th:href="@{/triplogin}" class="text-primary">로그인 하러 가기</a>
+                이미 계정이 있으신가요? <a th:href="@{/trip/login}" class="text-primary">로그인 하러 가기</a>
               </div>
               <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
             </form>
@@ -131,7 +131,7 @@
             }
 
             $.ajax({
-              url:"tripidcheck",
+              url:"idcheck",
               data: { "customerId" :id}	,
               success : function (resp) {
                 if(resp=='-1'){

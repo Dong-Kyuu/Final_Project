@@ -16,7 +16,7 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar" th:fragment="sidebar">
     <ul class="nav" style=" position: fixed;">
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="tripPage" aria-expanded="false" aria-controls="dashboard-pages">
+            <a class="nav-link" data-bs-toggle="collapse" href="/trip/mainPage" aria-expanded="false" aria-controls="dashboard-pages">
                 <span class="menu-title">Home</span>
                 <i class="mdi mdi-home menu-icon"></i>
             </a>
@@ -67,12 +67,12 @@
             </a>
             <div class="collapse" id="trip-pages">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link" href="tripPage">전체보기</a></li>
-                    <li class="nav-item"><a class="nav-link" href="tripPage?category=WEU">서유럽</a></li>
-                    <li class="nav-item"><a class="nav-link" href="tripPage?category=CEU">센트럴유럽</a></li>
-                    <li class="nav-item"><a class="nav-link" href="tripPage?category=EEU">동유럽</a></li>
-                    <li class="nav-item"><a class="nav-link" href="tripPage?category=SEU">스위트유럽 22일</a></li>
-                    <li class="nav-item"><a class="nav-link" href="tripPage?category=DEU">돌체비타유럽 26일</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/trip/mainPage">전체보기</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/trip/mainPage?category=WEU">서유럽</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/trip/mainPage?category=CEU">센트럴유럽</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/trip/mainPage?category=EEU">동유럽</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/trip/mainPage?category=SEU">스위트유럽 22일</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/trip/mainPage?category=DEU">돌체비타유럽 26일</a></li>
                 </ul>
             </div>
         </li>
@@ -85,7 +85,7 @@
             </a>
             <div class="collapse" id="general-pages1">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link" href="tripCart" >장바구니</a></li>
+                    <li class="nav-item"><a class="nav-link" href="Cart" >장바구니</a></li>
                 </ul>
             </div>
         </li>
@@ -95,7 +95,7 @@
                 <div class="border-bottom">
                 </div>
                 <div class="shop__sidebar__search" style="padding-top: 20px;">
-                    <form action="/tripPage">
+                    <form action="/trip/mainPage">
                         <input type="text" name="keyword" placeholder="Search..." th:value="${keyword}" onchange="sortProducts()">
                         <button type="submit"> <i class="mdi mdi-magnify"></i></button>
                     </form>

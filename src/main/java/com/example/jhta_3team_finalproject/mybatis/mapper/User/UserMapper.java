@@ -42,4 +42,7 @@ public interface UserMapper {
 
     void rejectUser(int userNum); //사용자 거절
 
+    int[] getUsersByDepartmentAndPosition(int departmentId, int positionId);
+
+    List<User> getEmployeeListByDepartment(int departmentId);
 }

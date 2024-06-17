@@ -32,7 +32,7 @@
             </div>
             <h4>로그인</h4>
 
-            <form class="pt-3" th:action="@{/triploginProcess}" method="post">
+            <form class="pt-3" th:action="@{/trip/loginProcess}" method="post">
 
               <div class="form-group">
                 <input type="text" class="form-control form-control-lg" id="exampleInputUserId" placeholder="아이디" name="customerId">
@@ -52,7 +52,7 @@
                <!-- <a th:href="@{/user/findPassword}" class="auth-link text-black">비밀번호 찾기</a>-->
               </div>
 
-              <div class="text-center mt-4 font-weight-light"> 계정이 없으신가요? <a th:href="@{/tripjoin}" class="text-primary">회원가입 하기</a>
+              <div class="text-center mt-4 font-weight-light"> 계정이 없으신가요? <a th:href="@{/trip/join}" class="text-primary">회원가입 하기</a>
               </div>
 
               <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">

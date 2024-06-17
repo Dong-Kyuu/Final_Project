@@ -87,83 +87,9 @@
     <div class="container-fluid page-body-wrapper">
         <!-- partial:../../partials/_sidebar.html -->
         <th:block th:replace="~{TripHSF/_sidebar :: sidebar}"></th:block>
-        <!--
-        <div class="col-lg-2">
-            <div class="shop__sidebar">
-                <div class="shop__sidebar__search">
-                    <form action="#">
-                        <input type="text" name="keyword" placeholder="Search..." th:value="${keyword}" onchange="sortProducts()">
-                        <button type="submit"> <i class="mdi mdi-magnify"></i></button>
-                    </form>
-                </div>
-                <div class="shop__sidebar__accordion">
-                    <div class="accordion" id="accordionExample">
-                        <div class="card">
-                            <div class="card-heading">
-                                <a data-toggle="collapse" data-target="#collapseOne">20's유럽패키지<i class="mdi mdi-chevron-down"></i>
-                                </a>
-                            </div>
-                            <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
-                                <div class="card-body">
-                                    <div class="shop__sidebar__categories">
-                                        <ul class="nice-scroll">
-                                            <li><a href="tripPage">전체보기</a></li>
-                                            <li><a href="tripPage?category=WEU">서유럽</a></li>
-                                            <li><a href="tripPage?category=CEU">센트럴유럽</a></li>
-                                            <li><a href="tripPage?category=EEU">동유럽</a></li>
-                                            <li><a href="tripPage?category=SEU">스위트유럽 22일</a></li>
-                                            <li><a href="tripPage?category=DEU">돌체비타유럽 26일</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-heading">
-                                <a data-toggle="collapse" data-target="#collapseTwo">Continent<i class="mdi mdi-chevron-down"></i>
-                                </a>
-                            </div>
-                            <div id="collapseTwo" class="collapse show" data-parent="#accordionExample">
-                                <div class="card-body">
-                                    <div class="shop__sidebar__brand">
-                                        <ul>
-                                            <li><a href="#">America</a></li>
-                                            <li><a href="#">Europe</a></li>
-                                            <li><a href="#">Asia</a></li>
-                                            <li><a href="#">Africa</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-heading">
-                                <a data-toggle="collapse" data-target="#collapseThree">Filter Price<i class="mdi mdi-chevron-down"></i>
-                                </a>
-                            </div>
-                            <div id="collapseThree" class="collapse show" data-parent="#accordionExample">
-                                <div class="card-body">
-                                    <div class="shop__sidebar__price">
-                                        <ul>
-                                            <li><a href="#">$0.00 - $50.00</a></li>
-                                            <li><a href="#">$50.00 - $100.00</a></li>
-                                            <li><a href="#">$100.00 - $150.00</a></li>
-                                            <li><a href="#">$150.00 - $200.00</a></li>
-                                            <li><a href="#">$200.00 - $250.00</a></li>
-                                            <li><a href="#">250.00+</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                    </div>
-                </div>
-            </div>
-        </div>
-        -->
         <!-- partial -->
-        <div class="col-lg-10">
+        <div class="main-panel">
             <div class="content-wrapper">
                 <!-- Shop Section Begin -->
                 <section class="shop spad">
@@ -199,7 +125,7 @@
                                 <div class="row" id="productList">
                                     <div th:each="goods : ${triplist}" class="col-lg-4 col-md-6 col-sm-12">
                                         <div class="product__item">
-                                            <a th:href="'tripDetail?num=' + ${goods.tripNo}"> <!-- 이동 경로 -->
+                                            <a th:href="'Detail?num=' + ${goods.tripNo}"> <!-- 이동 경로 -->
                                                 <div class="product__item__pic set-bg">
                                                     <img th:src="@{${goods.tripMainImg}}" alt="Main Image">
                                                 </div>

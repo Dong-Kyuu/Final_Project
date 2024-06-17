@@ -187,4 +187,40 @@ public class AnnounceBoardServiceImpl implements AnnounceBoardService{
     public int[] searchFixAuth() {
         return AnnounceBoardMapper.searchFixAuth();
     }
+
+    @Override
+    public int fixRequest(int annboardNum) {
+        return AnnounceBoardMapper.fixRequest(annboardNum);
+    }
+
+    @Override
+    public int requestRefuse(int annboardNum) {
+        return AnnounceBoardMapper.requestRefuse(annboardNum);
+    }
+
+    @Override
+    public int[] getAllUserData(int userNum, String Department) {
+
+        int departmentId=0;
+
+        if(Department.equals("ALL")) {
+            departmentId=0;
+        } else if (Department.equals("인사부")) {
+            departmentId=1;
+        } else if (Department.equals("관리부")) {
+            departmentId=2;
+        } else if (Department.equals("홍보부")) {
+            departmentId=3;
+        } else if (Department.equals("지원부")) {
+            departmentId=4;
+        } else if (Department.equals("영업부")) {
+            departmentId=5;
+        }
+        return AnnounceBoardMapper.getAllUserData(userNum, departmentId);
+    }
+
+    @Override
+    public String getWriter(int userNum) {
+        return AnnounceBoardMapper.getWriter(userNum);
+    }
 }

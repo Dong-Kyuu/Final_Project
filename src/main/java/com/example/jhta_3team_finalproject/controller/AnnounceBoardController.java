@@ -39,11 +39,7 @@ import java.util.stream.Collectors;
 public class AnnounceBoardController {
 
     private static final Logger logger = LoggerFactory.getLogger(AnnounceBoardController.class);
-    
-    
-    
-    @Value("${my.savefolder.board}")
-    private String saveFolder;
+
     private AnnounceBoardService AnnounceBoardService;
     private S3Service S3Service;
     private UserAuthService UserAuthService;
@@ -130,7 +126,20 @@ public class AnnounceBoardController {
 
         AnnounceBoardService.insertFile(boardNum, files); // 저장메서드 호출
         AnnounceBoardService.autoCheck(AnnounceBoard.getUserNum(), boardNum);
+        AnnounceBoard.setBoardWriter(AnnounceBoardService.getWriter(AnnounceBoard.getUserNum()));
         logger.info(AnnounceBoardService.toString()); //selectKey로 정의한 BOARD_NUM 값 확인
+        if(AnnounceBoard.getAnnboardImportance() == 3) {
+            int[] allUserNum = AnnounceBoardService.getAllUserData(AnnounceBoard.getUserNum(), AnnounceBoard.getAnnboardDepartment());
+            logger.info(allUserNum.toString());
+            for (int userNum : allUserNum) {
+                // 받는 사람 넘버(필수) , 보내는 사람 넘버, 보내는사람 이름(안넣으면 이상하게보임), 링크, 메세지(필수)
+                sseService.sendNotification(userNum, AnnounceBoard.getUserNum(), AnnounceBoard.getBoardWriter(),
+                        "http://localhost:9000/annboard/detail?num="+boardNum,
+                        "필독 공지를 등록하셨습니다.");
+
+                logger.info("알림전송");
+            }
+        }
         return "redirect:announceList";
 
     }
@@ -140,7 +149,8 @@ public class AnnounceBoardController {
     public ModelAndView Detail(
             int num, ModelAndView mv,
             HttpServletRequest request,
-            @RequestHeader(value = "referer", required = false) String beforeURL
+            @RequestHeader(value = "referer", required = false) String beforeURL,
+            @RequestParam(value = "notidata", defaultValue = "0") int notidata
             ) {
 		/*
 			1. String BeforeURL = request.getHeader("referer"); 의미로
@@ -169,7 +179,11 @@ public class AnnounceBoardController {
 
             mv.addObject("boarddata", AnnounceBoard);
             mv.addObject("upfiles", upfiles);
-
+            // 조건에 따라 메시지를 추가
+            if (notidata == 1 && (AnnounceBoard.getAnnboardRequest() == 2)) {
+                logger.info("요청이미 처리됨");
+                mv.addObject("requestMessage", "이미 요청이 처리된 게시물입니다");
+            }
         }
         return mv;
     }
@@ -249,17 +263,19 @@ public class AnnounceBoardController {
 
         int addcheck=AnnounceBoardService.addCheck(loginNum, annboardNum);
         targetDepartment = AnnounceBoardService.targetDepartment(annboardNum);
+        AnnounceBoard AnnounceBoard = AnnounceBoardService.getDetail(annboardNum);
+        int writer = AnnounceBoard.getUserNum();
         logger.info(targetDepartment + "관련 글입니다.");
         maxCheck = AnnounceBoardService.getMaxCheck(targetDepartment);
         logger.info(targetDepartment+" 사원의 수는 " + maxCheck );
         checkedUserByDepartment = AnnounceBoardService.checkedUserByDepartment(targetDepartment, annboardNum);
         logger.info("확인한 " +targetDepartment+" 사원의 수는 " + checkedUserByDepartment );
-
+        int imsi;
         if(maxCheck == checkedUserByDepartment) {
             int boardImportance = AnnounceBoardService.downImportance(annboardNum);
             if(boardImportance == 1) {
                 logger.info("중요도 lev이 낮아졌습니다. 상단 고정이 해제됩니다.");
-
+                sseService.sendNotification(writer,0 , "", "http://localhost:9000/annboard/detail?num=" + annboardNum, "모든" + targetDepartment + "의 사원들이 No." + annboardNum + "공지를 확인했습니다.");
             }
         } else {
             logger.info("아직 공지를 확인하지 못한 사원이 존재합니다.");
@@ -396,6 +412,11 @@ public class AnnounceBoardController {
             update = AnnounceBoardService.doTopFix(annboardNum);
             if(update==1)
                 result = "상단고정 되었습니다.";
+                if(AnnounceBoard.getUserNum() != loginNum) {
+                    sseService.sendNotification(AnnounceBoard.getUserNum(), loginNum, loginuser.getUsername(),
+                            "http://localhost:9000/annboard/detail?num=" + annboardNum,
+                            "No." + annboardNum + "글을 상단고정하셨습니다.");
+                }
         }else {
             // 아니면 권한이 있는 사용자에게 상단 고정을 요청한다.
 
@@ -405,9 +426,11 @@ public class AnnounceBoardController {
             for (int recipient : FixAuthUser) {
                                             // 받는 사람 넘버(필수) , 보내는 사람 넘버, 보내는사람 이름(안넣으면 이상하게보임), 링크, 메세지(필수)
                 sseService.sendNotification(recipient, loginNum, loginuser.getUsername(),
-                                        "http://localhost:9000/annboard/detail?num="+annboardNum,
+                                        "http://localhost:9000/annboard/detail?num="+annboardNum+"&notidata=1",
                                         "공지게시판 No." +annboardNum+"글의 상단고정을 요청했습니다.");
+                int request = AnnounceBoardService.fixRequest(annboardNum);
                 logger.info("알림전송");
+
                 result="상단 고정을 요청합니다.";
             }
         }
@@ -451,6 +474,28 @@ public class AnnounceBoardController {
         return response;
     }
 
+    @PostMapping("/topfixRefuse")
+    @ResponseBody
+    public Map<String, Object> topFixRefuse(@RequestParam("loginNum") int loginNum,
+                                      @RequestParam("annboardNum") int annboardNum
+    ) {
+
+        Map<String, Object> response = new HashMap<>();
+        int result = AnnounceBoardService.requestRefuse(annboardNum);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginuser = (User)authentication.getPrincipal();
+
+        AnnounceBoard AnnounceBoard = AnnounceBoardService.getDetail(annboardNum);
+        int writer = AnnounceBoard.getUserNum();
+        sseService.sendNotification(writer, loginNum, loginuser.getUsername(), "", "공지게시판 No." + annboardNum + "글의 상단고정 요청을 거절했습니다.");
+        sseService.deleteNotificationUrl("http://localhost:9000/annboard/detail?num="+annboardNum);
+        response.put("status", "success");
+        response.put("result", result);
+
+        return response;
+    }
+
     @ResponseBody
     @PostMapping("/down")
     public void BoardFileDown(String filename,
@@ -480,4 +525,6 @@ public class AnnounceBoardController {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "The specified key does not exist.");
         }
     }
+
+
 }

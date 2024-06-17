@@ -53,4 +53,12 @@ public interface AnnounceBoardService {
     int TopFixclear(int annboardNum);
 
     int[] searchFixAuth();
+
+    int fixRequest(int annboardNum);
+
+    int requestRefuse(int annboardNum);
+
+    int[] getAllUserData(int userNum, String Department);
+
+    String getWriter(int userNum);
 }

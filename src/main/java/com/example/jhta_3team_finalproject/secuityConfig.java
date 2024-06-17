@@ -70,18 +70,21 @@ public class secuityConfig {
                 .tokenRepository(tokenRepository())); // 데이터 베이스에 토큰을 저장합니다
 
         http.authorizeHttpRequests(au -> au
-                .requestMatchers("/user/list", "/user/delete")
-                .hasAuthority("ROLE_MASTER")
+                        .requestMatchers("/user/list", "/user/delete")
+                        .hasAuthority("ROLE_MASTER")
 
-                .requestMatchers("/user/update", "/user/updateProcess", "/user/info", "/user/attendance", "/user/commute", "/admin/attendance/list", "/admin/users")
-                .hasAnyAuthority("ROLE_MASTER", "ROLE_MEMBER")
+                        .requestMatchers("/user/update", "/user/updateProcess", "/user/info", "/user/attendance", "/user/commute")
+                        .hasAnyAuthority("ROLE_MASTER", "ROLE_MEMBER")
 
-                .requestMatchers("/board/**", "/comment/**")
-                .hasAnyAuthority("ROLE_MASTER", "ROLE_MEMBER")
+                        .requestMatchers("/board/**", "/comment/**")
+                        .hasAnyAuthority("ROLE_MASTER", "ROLE_MEMBER")
 
-                .requestMatchers("/user/newbie/").hasAuthority("ROLE_NEWBIE")  // 신입사원 전용 페이지
+                        .requestMatchers("/trip/tripBoss").hasAuthority("ROLE_HEAD")
+                        .requestMatchers("/trip/updateTravelLeader").hasAuthority("ROLE_HEAD")
 
-                .requestMatchers("/**").permitAll()
+                        // 신입사원은 다른 모든 페이지 접근 불가
+                        .requestMatchers("/user/newbie/").hasAuthority("ROLE_NEWBIE")  // 신입사원 전용 페이지
+                        .requestMatchers("/**").permitAll()
         );
 
         http.exceptionHandling(ex -> ex.accessDeniedHandler(customAccessDeniedHandler));

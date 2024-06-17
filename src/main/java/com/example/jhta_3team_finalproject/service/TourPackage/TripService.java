@@ -39,4 +39,8 @@ public interface TripService {
     List<Trip> getPendingTrip();
 
     void updateTripStatus(int tripNo, String status);
+
+    boolean updateTravelLeader(int tripNo, int userNo);
+
+    boolean updateTripStock(int tripNo, int stock);
 }

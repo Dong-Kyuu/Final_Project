@@ -21,10 +21,15 @@
     </select>
 
     <insert id="insertPurchase" parameterType="Purchase">
-        INSERT INTO purchase (imp_uid, merchant_uid, buyer_no, amount, created_at, trip_no)
-        VALUES (#{impUid}, #{merchantUid}, #{buyerNo}, #{amount}, #{createdAt},#{tripNo})
+        INSERT INTO purchase (imp_uid, merchant_uid, buyer_no, amount, created_at, trip_no,option_ids)
+        VALUES (#{impUid}, #{merchantUid}, #{buyerNo}, #{amount}, #{createdAt},#{tripNo},#{optionIds})
     </insert>
 
-
+    <!-- status 업데이트 -->
+    <update id="updatePurchaseStatus">
+        UPDATE purchase
+        SET status = #{status}
+        WHERE id = #{id}
+    </update>
 
 </mapper>

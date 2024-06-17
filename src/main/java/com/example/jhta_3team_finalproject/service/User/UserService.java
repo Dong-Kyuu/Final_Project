@@ -62,6 +62,8 @@ public interface UserService {
     //이거
     public List<Map<String, Object>> getUsersFilter(int user_is_approved); //모든 요청
 
+    int[] getUsersByDepartmentAndPosition(int departmentId, int positionId); //부서와 직급에 해당하는 인물넘버 호츌 -- sse에서 특정인물에게 전달시 활용 등
 
+    List<User> getEmployeeListByDepartment(int departmentId);//부서에 해당하는 인원 호출
 }
 

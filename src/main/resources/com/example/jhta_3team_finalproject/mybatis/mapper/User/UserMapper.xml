@@ -128,5 +128,17 @@
         ORDER BY u.user_num;
     </select>
 
+    <!-- 부서와 직급에 해당하는 인물넘버 검색-->
+    <select id="getUsersByDepartmentAndPosition" resultType="int" parameterType="map">
+        SELECT user_num
+        FROM user
+        WHERE department_id = #{departmentId} AND position_id = #{positionId}
+    </select>
 
+    <!--부서에 소속한 인물 검색-->
+    <select id="getEmployeeListByDepartment" resultType="User">
+        SELECT *
+        FROM user
+        WHERE department_id = #{departmentId}
+    </select>
 </mapper>

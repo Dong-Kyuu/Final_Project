@@ -190,7 +190,7 @@
             SELECT *
             FROM chat_room
         ) cr
-                     ON cp.chat_room_num = cr.chat_room_num
+        ON cp.chat_room_num = cr.chat_room_num
         WHERE chat_user_id = #{chatSessionId}
         AND cp.chat_room_num = (SELECT MAX(chat_room_num) FROM chat_room)
         ORDER BY last_send_time DESC
@@ -257,4 +257,9 @@
                               FROM chat_participate
                               WHERE chat_room_num = #{chatRoomNum});
     </select>
+
+    <!-- 2024-06-15, 안 읽은 메시지 수 표시 - 채팅방 방문 시간 업데이트 -->
+    <update id="initChatRoomVisitTime">
+        UPDATE chat_participate SET chat_visit_time = NOW() WHERE chat_room_num = #{chatRoomNum} AND chat_user_id = #{chatUserId}
+    </update>
 </mapper>

@@ -20,6 +20,10 @@
         SELECT * FROM customer WHERE customer_id = #{customerId}
     </select>
 
+    <select id="findByCustomerNo" parameterType="String" resultType="Customer">
+        SELECT * FROM customer WHERE customer_no = #{customerNo}
+    </select>
+
     <update id="update">
         UPDATE customer
         SET

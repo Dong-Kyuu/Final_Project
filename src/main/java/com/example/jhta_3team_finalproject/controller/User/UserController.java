@@ -36,8 +36,8 @@ import java.util.Map;
 @RequestMapping("/user")
 public class UserController {
 
-    @Value("${my.savefolder}")
-    private String saveFolder;
+//    @Value("${my.savefolder}")
+//    private String saveFolder;
     private UserService userservice;
     private PasswordEncoder passwordEncoder;
     private SendMail sendMail;

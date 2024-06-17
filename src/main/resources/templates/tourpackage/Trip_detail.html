@@ -394,13 +394,13 @@
         console.log("cartNo ="+cartNo);
         console.log("check ="+check);
 
-        var redirectURL = "tripCart?selectedOptions=" + selectedOptions.join("-")+"&num=" + tripNo;
+        var redirectURL = "Cart?selectedOptions=" + selectedOptions.join("-")+"&num=" + tripNo;
         if (parseInt(check) === 1) {
             if (parseInt(tripNo) !== parseInt(cartNo)) {
                 alert("장바구니를 비워주세요.");
-                redirectURL = "tripDetail?num=" + tripNo;
+                redirectURL = "Detail?num=" + tripNo;
             } else {
-                redirectURL = "tripCart?selectedOptions=" + selectedOptions.join("-")+"&num=" + tripNo;
+                redirectURL = "Cart?selectedOptions=" + selectedOptions.join("-")+"&num=" + tripNo;
             }
         }
 
