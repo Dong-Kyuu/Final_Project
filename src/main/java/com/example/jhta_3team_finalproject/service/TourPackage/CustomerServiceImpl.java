@@ -39,9 +39,16 @@ public class CustomerServiceImpl implements CustomerService {
         // 1은 아이디가 존재하는 경우
     }
 
+
     @Override
-    public Customer findByCustomerId(String customerId) {
-        return customerMapper.findByCustomerId(customerId);
+    public Customer findByCustomerX(String key, String value){
+        if (key.equals("customerId")){
+            return customerMapper.findByCustomerId(value);
+        } else if(key.equals("customerNo")){
+            return  customerMapper.findByCustomerNo(value);
+        }
+        return null;
+
     }
 
     @Override

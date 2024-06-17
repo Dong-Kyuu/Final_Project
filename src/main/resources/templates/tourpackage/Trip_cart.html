@@ -152,7 +152,7 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="continue__btn">
-                                    <a href="tripPage">Continue Shopping</a>
+                                    <a href="/trip/mainPage">Continue Shopping</a>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6"></div>
@@ -262,10 +262,10 @@
         // tripNo가 null이면 장바구니가 비어있음을 알림
         if (tripNo == null) {
             alert("장바구니가 비어 있습니다.");
-            location.href = "tripCart";
+            location.href = "Cart";
         } else {
             // tripNo가 null이 아니면 구매 페이지로 이동
-            location.href = "tripPurchase";
+            location.href = "Purchase";
         }
     }
 </script>

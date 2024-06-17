@@ -26,4 +26,17 @@
         WHERE city_no = #{city_no}
     </select>
 
+    <select id="getLastOptionId" resultType="string">
+        SELECT option_id
+        FROM trip_option
+        WHERE option_id LIKE CONCAT('%', #{cityNo})
+        ORDER BY option_id DESC
+            LIMIT 1
+    </select>
+
+    <insert id="insertOption">
+        INSERT INTO trip_option (option_id, option_name, option_price, option_stock,option_max_stock, option_date, city_no, file_id,option_main_img)
+        VALUES (#{optionId}, #{optionName}, #{optionPrice},  #{optionStock},#{optionMaxStock}, #{optionDate}, #{cityNo}, #{fileId},#{mainIMG})
+    </insert>
+
 </mapper>

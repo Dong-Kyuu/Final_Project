@@ -63,6 +63,7 @@ public class PaymentController {
                     purchase.setBuyerNo(Integer.valueOf(paymentData.get("buyer_no")));
                     purchase.setAmount(new BigDecimal(Orderpayment));
                     purchase.setTripNo(Integer.valueOf(paymentData.get("trip_no")));
+                    purchase.setOptionIds(paymentData.get("option_ids"));
 
                     purchaseService.savePurchase(purchase);
 

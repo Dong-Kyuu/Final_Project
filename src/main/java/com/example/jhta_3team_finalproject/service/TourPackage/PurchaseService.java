@@ -10,4 +10,6 @@ public interface PurchaseService {
     List<Purchase> getAllPurchaseInfo();
 
     List<Purchase> getAllPurchaseInfoByTripNo(Integer num);
+
+    void updatePurchaseStatus(int id, String approved);
 }

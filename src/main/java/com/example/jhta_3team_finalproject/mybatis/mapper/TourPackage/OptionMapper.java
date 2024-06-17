@@ -17,4 +17,7 @@ public interface OptionMapper {
 
     City getCityByNo(String city_no);
 
+    String getLastOptionId(String countryNo, String cityNo);
+
+    void insertOption(String optionId, String optionName, int optionPrice, int optionStock, int optionMaxStock, String optionDate, String cityNo, String fileId,String mainIMG);
 }
