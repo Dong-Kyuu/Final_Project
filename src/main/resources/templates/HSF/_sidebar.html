@@ -15,39 +15,40 @@
                     <!--change to offline or busy as needed-->
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
-<!--                    TODO: 이거 있으면 페이지 안불러와짐 고쳐야 함-->
+                    <!--                    TODO: 이거 있으면 페이지 안불러와짐 고쳐야 함-->
                     <span class="font-weight-bold mb-2" th:text="${#authentication.principal.username}"></span>
-                    <span class="text-secondary text-small" th:text="${#authentication.principal.departmentName}" ></span>
+                    <span class="text-secondary text-small"
+                          th:text="${#authentication.principal.departmentName}"></span>
                     <span class="text-secondary text-small" th:text="${#authentication.principal.positionName}"></span>
                 </div>
                 <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link"  th:href="@{/dashboard}">
+            <a class="nav-link" th:href="@{/dashboard}">
                 <span class="menu-title">대시보드</span>
                 <i class="mdi mdi-database menu-icon"></i>
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link"  th:href="@{/cal/show}">
+            <a class="nav-link" th:href="@{/cal/show}">
                 <span class="menu-title">캘린더</span>
                 <i class="mdi mdi-calendar menu-icon"></i>
             </a>
         </li>
 
 
-
         <li class="nav-item">
-            <a class="nav-link"  th:href="@{/user/commute}">
+            <a class="nav-link" th:href="@{/user/commute}">
                 <span class="menu-title">출퇴근</span>
                 <i class="mdi mdi-contacts menu-icon"></i>
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
+               aria-controls="ui-basic">
                 <span class="menu-title">사내 게시판</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-crosshairs-gps menu-icon"></i>
@@ -61,7 +62,8 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#chat-pages" aria-expanded="false" aria-controls="chat-pages">
+            <a class="nav-link" data-bs-toggle="collapse" href="#chat-pages" aria-expanded="false"
+               aria-controls="chat-pages">
                 <span class="menu-title">채팅</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-chat menu-icon"></i>
@@ -74,7 +76,8 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#trip-pages" aria-expanded="false" aria-controls="trip-pages">
+            <a class="nav-link" data-bs-toggle="collapse" href="#trip-pages" aria-expanded="false"
+               aria-controls="trip-pages">
                 <span class="menu-title">여행부서</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-airplane menu-icon"></i>
@@ -87,15 +90,16 @@
         </li>
 
         <li class="nav-item" th:if="${#authorization.expression('hasRole(''ROLE_MASTER'')')}">
-            <a class="nav-link" data-bs-toggle="collapse" href="#admin-pages" aria-expanded="false" aria-controls="admin-pages">
+            <a class="nav-link" data-bs-toggle="collapse" href="#admin-pages" aria-expanded="false"
+               aria-controls="admin-pages">
                 <span class="menu-title">관리</span>
                 <i class="menu-arrow"></i>
                 <i class="mdi mdi-settings menu-icon"></i>
             </a>
             <div class="collapse" id="admin-pages">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/admin/attendance/all}">근태 관리</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">직원 정보 관리</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/admin/attendance/list}">근태 관리</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/admin/users}">직원 정보 관리</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/user/register_allow}">신규 등록 사원</a></li>
                 </ul>
             </div>
