@@ -2,23 +2,13 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.dashboard.DashBoardMapper">
-    <select id="getListCount" parameterType="map" resultType="int">
-        SELECT COUNT(*)
-        FROM calendar c
-        JOIN user u ON c.user_name = u.user_name
-        <if test="search_field != null and search_word != null and target_department == ''">
-            WHERE ${search_field} LIKE #{search_word}
-        </if>
-        <if test="search_field != null and search_word != null and target_department != ''">
-            WHERE ${search_field} LIKE #{search_word}
-            AND board_department = #{target_department}
-        </if>
-        <if test="search_field == null and search_word == null and target_department != ''">
-            WHERE board_department = #{target_department}
-        </if>
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.dashboard.DashBoardCalendarMapper">
+    <!--  남은기간 구하기/ 당일일자 구하기  -->
+    <select id="select">
+        select  user_name as username, cal_type as type,datediff(cal_end , DATE_FORMAT(now(), '%x-%m-%d')) as id, cal_title as title
+        from calendar
+        where cal_start &lt;= DATE_FORMAT(now(), '%x-%m-%d') and DATE_FORMAT(now(), '%x-%m-%d') &lt;= cal_end;
     </select>
-
 
 
 

@@ -7,14 +7,10 @@
 -->
 
 <configuration>
-
-
 	<settings>
 		<setting name="mapUnderscoreToCamelCase" value="true"/>
-
 		<setting name = "jdbcTypeForNull" value="NULL" />
 	</settings>
-
 	<mappers>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/User/UserMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/User/AttendenceMapper.xml"/>
@@ -32,8 +28,8 @@
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/TourPackage/OptionMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/TourPackage/CartMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/calendar/Calendar.xml"/>
+		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/dashboard/DashBoard.xml"/>
 	</mappers>
-
 </configuration>
 
 
