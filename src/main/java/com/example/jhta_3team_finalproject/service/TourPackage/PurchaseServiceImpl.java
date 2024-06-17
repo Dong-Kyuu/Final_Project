@@ -31,4 +31,9 @@ public class PurchaseServiceImpl implements PurchaseService {
     public List<Purchase> getAllPurchaseInfoByTripNo(Integer num) {
         return purchaseMapper.getAllPurchaseInfoByTripNo(num);
     }
+
+    @Override
+    public void updatePurchaseStatus(int id, String status) {
+        purchaseMapper.updatePurchaseStatus(id,status);
+    }
 }

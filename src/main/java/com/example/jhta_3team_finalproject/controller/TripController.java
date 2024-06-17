@@ -13,30 +13,26 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.*;
 
 @Controller
+@RequestMapping(value = "/trip")
 public class TripController {
     private static final Logger logger = LoggerFactory.getLogger(TripController.class);
 
@@ -72,7 +68,7 @@ public class TripController {
     }
 
     //로그인
-    @RequestMapping(value = "/triplogin", method = RequestMethod.GET)
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(
             ModelAndView mv,
             @CookieValue(value = "remember-me", required = false) Cookie readCookie,
@@ -81,7 +77,7 @@ public class TripController {
         if (readCookie != null) {
         //principal.getName():로그인 한 아이디 값을 알 수 있어요
         logger.info("저장됭 아이디:" + userPrincipal.getName());
-            mv.setViewName("redirect:/tripPage");
+            mv.setViewName("redirect:trip/mainPage");
        // mv.setViewName("redirect:/board/list");??어디로 가는거지
     } else {
         mv.setViewName("tourpackage/trip_login");
@@ -95,13 +91,13 @@ public class TripController {
     }
 
     //회원가입
-    @RequestMapping(value = "/tripjoin", method = RequestMethod.GET)
+    @RequestMapping(value = "/join", method = RequestMethod.GET)
     public String join() {
         return "tourpackage/trip_join";
     }
 
 
-    @RequestMapping(value = "/tripjoinProcess", method = RequestMethod.POST)
+    @RequestMapping(value = "/joinProcess", method = RequestMethod.POST)
     public String joinProcess(Customer customer , Model model, RedirectAttributes rattr, HttpServletRequest request) {
         System.out.println(customer.toString());
         customer.setCustomerPassword(passwordEncoder.encode(customer.getCustomerPassword()));
@@ -117,7 +113,7 @@ public class TripController {
             logger.info(tripSendMail +"확인");
 
             rattr.addFlashAttribute("result", "joinSuccess");
-            return "redirect:/triplogin";
+            return "redirect:/trip/login";
         } else {
             model.addAttribute("url", request.getRequestURI());
             model.addAttribute("message", "회원가입 실패");
@@ -127,18 +123,18 @@ public class TripController {
 
     //회원가입 폼에서 아이디 검사
     @ResponseBody
-    @RequestMapping(value ="/tripidcheck",method=RequestMethod.GET)
+    @RequestMapping(value ="/idcheck",method=RequestMethod.GET)
     public int idcheck(@RequestParam("customerId") String id) {
         return customerService.getcustomerId(id);
     }
 
-    @PostMapping("/triploginProcess")
+    @PostMapping("/loginProcess")
     public String loginProcess(@RequestParam("customerId") String customerId,
                                @RequestParam("customerPassword") String customerPassword,
                                HttpSession session,
                                RedirectAttributes redirectAttributes) {
         // DB에서 userId에 해당하는 사용자 정보를 가져옵니다.
-        Customer customer = customerService.findByCustomerId(customerId);
+        Customer customer = customerService.findByCustomerX("customerId",customerId);
 
         // 사용자 정보가 존재하고, 입력된 비밀번호와 DB에 저장된 비밀번호가 일치하는 경우
         if (customer != null && passwordEncoder.matches(customerPassword, customer.getCustomerPassword())) {
@@ -147,12 +143,12 @@ public class TripController {
             // 로그인 성공 메시지를 Flash 속성으로 전달합니다.
             redirectAttributes.addFlashAttribute("loginSuccess", true);
             // 로그인 성공 후 이동할 페이지를 지정합니다. 여기서는 예시로 메인 페이지로 이동합니다.
-            return "redirect:/tripPage";
+            return "redirect:/trip/mainPage";
         } else {
             // 로그인 실패 메시지를 Flash 속성으로 전달합니다.
             redirectAttributes.addFlashAttribute("loginFail", true);
             // 로그인 실패 시 로그인 페이지로 다시 이동합니다.
-            return "redirect:/triplogin";
+            return "redirect:/trip/login";
         }
     }
 
@@ -161,7 +157,7 @@ public class TripController {
 
 
 
-    @GetMapping("/tripPage")
+    @GetMapping("/mainPage")
     public String tripPage(
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "limit", defaultValue = "9") int limit,
@@ -228,7 +224,7 @@ public class TripController {
         return "tourpackage/Trip_Page";
     }
 
-    @GetMapping("/tripDetail")
+    @GetMapping("/Detail")
     public String tripDetail(@RequestParam(name = "num") int num, HttpServletRequest request, HttpServletResponse response,Model model) {
 
         // 세션에서 "customer" 값을 가져옴
@@ -252,15 +248,7 @@ public class TripController {
         String cookieValue = getCookieValue(request);// 쿠키 내용을 갖고오는 메서드
 
         DeleteCartCookie(cookieValue,customerNo,response);
-        /*
-        if(cookieValue!=null) {
-            String cartNoValue = getValueBetweenEquals(cookieValue, "cartNo");
-            if(!cartNoValue.equals(String.valueOf(customerNo))) {//쿠키의 cartNo와 mem_id비교
-                deleteCookie(response, "cart");
-                System.out.println("<카트 쿠키 삭제>");
-            }
-        }
-*/
+
         if(customerNo==ANONYMOUS_CUSTOMER_NO) {
             System.out.println("삭제");
             deleteCookie(response, "cart");
@@ -311,7 +299,7 @@ public class TripController {
     }
 
 
-    @GetMapping("/tripCart")
+    @GetMapping("/Cart")
     public String tripCart(@RequestParam(name = "num", required = false) Integer num,
                            @RequestParam(name="selectedOptions", required = false) String selectedOptions,
                            HttpServletRequest request, HttpServletResponse response,Model model) throws ServletException, IOException {
@@ -476,7 +464,7 @@ public class TripController {
     }
     //---------------------------------------------
 
-    @GetMapping("/tripPurchase")
+    @GetMapping("/Purchase")
     public String tripPurchase(HttpServletRequest request, HttpServletResponse response,Model model) {
 
         HttpSession session = request.getSession(false);
@@ -488,7 +476,7 @@ public class TripController {
         } else {
             // customer 정보가 없는 경우
             System.out.println("로그인된 사용자가 없습니다.");
-            customer = customerService.findByCustomerId("rlatks15");//임시
+         //   customer = customerService.findByCustomerX("customerNo","rlatks15");//임시
         }
 
         model.addAttribute("customer",customer);
@@ -620,7 +608,7 @@ public class TripController {
             }
         }
 
-        StringBuilder result = new StringBuilder("tripCart?");
+        StringBuilder result = new StringBuilder("Cart?");
         if (selectedOptions != null && !selectedOptions.equals("null")) {
             result.append("selectedOptions=").append(selectedOptions);
         }
@@ -691,6 +679,7 @@ public class TripController {
         System.out.println("======addMainTrip category=" + category);
         System.out.println("======addMainTrip optionIds=" + optionIds);
 
+        /*업어도 될듯?
         if (images != null && images.length > 0) {
             for (int i = 0; i < images.length; i++) {
                 MultipartFile image = images[i];
@@ -699,6 +688,7 @@ public class TripController {
         } else {
             System.out.println("======addMainTrip No images uploaded");
         }
+        */
 
             // Trip 객체 생성 및 저장
             Trip trip = new Trip();
@@ -710,23 +700,16 @@ public class TripController {
             trip.setTripCategory(category);
             trip.setOptionIds(optionIds);
 
-            //SSE위한 userNum 가져오기
-        int userNum = userDetails.getUserNum();
-
         try {
             tripService.saveTrip(trip, images);
             redirectAttributes.addFlashAttribute("message", "저장되었습니다");
-
-            // SSE 알림 보내기 (여기서는 모든 사용자에게 알림을 보냄)
-            String message = "새로운 상품 : <"+trip.getTripName()+"/"+trip.getTripDate()+">이 등록되었습니다: " ;
-           // sseService.sendNotification(userNum, message);
 
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("message", "저장에 실패했습니다");
             e.printStackTrace();
         }
 
-        return "redirect:/tripRegister";
+        return "redirect:/trip/tripRegister";
     }
 
     @GetMapping("/optionRegister")
@@ -741,9 +724,41 @@ public class TripController {
             model.addAttribute("message", message);
         }
 
-
-
         return "tourdepartment/Tour_Option_Register";
+    }
+
+    @PostMapping("/addOptionTrip")
+    public String addOptionTrip(@RequestParam(name ="OptionName", required = false) String optionName,
+                                @RequestParam(name ="OptionPrice", required = false) Integer optionPrice,
+                                @RequestParam(name ="OptionMaxStock", required = false) Integer optionMaxStock,
+                                @RequestParam(name ="OptionDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate optionDate,
+                                @RequestParam(name="cityNo",required =false) String cityNo,
+                                @RequestParam(name ="img[]", required = false) MultipartFile[] images,
+                                @AuthenticationPrincipal User userDetails,
+                                Model model, RedirectAttributes redirectAttributes) throws IOException{
+
+        //option 넘버 만들기
+        String optionId = optionService.generateOptionId(cityNo);
+
+        TripOption option = new TripOption();
+        option.setOptionId(optionId);
+        option.setOptionName(optionName);
+        option.setOptionPrice(optionPrice);
+        option.setOptionMaxStock(optionMaxStock);
+        option.setOptionDate(optionDate.toString());
+        option.setCityNo(cityNo);
+
+        System.out.println("optionmaxstock="+option.getOptionMaxStock());
+        try {
+            optionService.saveOption(option,images);
+            redirectAttributes.addFlashAttribute("message", "저장되었습니다");
+
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("message", "저장에 실패했습니다");
+            e.printStackTrace();
+        }
+
+        return "redirect:/trip/optionRegister";
     }
 
     @GetMapping("/tripUpdate")
@@ -760,7 +775,7 @@ public class TripController {
         return "tourdepartment/Tour_Update";
     }
 
-    @GetMapping("/tripDepartment")
+    @GetMapping("/Department")
     public String tripDepartment(
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "limit", defaultValue = "9") int limit,
@@ -813,8 +828,9 @@ public class TripController {
         }
 
         //purchase 정보 불러오기
-        List<Purchase> purchaseList= purchaseService.getAllPurchaseInfo();
+        List<Purchase> purchaseList= getPurchaseListWithoutStatus("REJECTED","REFUND");
         model.addAttribute("purchaseList",purchaseList);
+
 
         return "tourdepartment/Travel_Department";
     }
@@ -825,7 +841,7 @@ public class TripController {
 
         redirectAttributes.addFlashAttribute("message", "여행 일정을 승인하였습니다.");
 
-        return "redirect:/tripDepartment";
+        return "redirect:/trip/Department";
     }
 
     @PostMapping("/rejectTrip")
@@ -834,7 +850,77 @@ public class TripController {
 
         redirectAttributes.addFlashAttribute("message", "여행 일정을 거부하였습니다.");
 
-        return "redirect:/tripDepartment";
+        return "redirect:/trip/Department";
+    }
+
+
+    @PostMapping("/approvePurchase")
+    public String approvePurchase(@RequestParam("tripNo") int tripNo,@RequestParam("purchaseId") int id,@RequestParam("buyerNo") String buyerNo, RedirectAttributes redirectAttributes) {
+
+        Customer customer =null;
+        customer = customerService.findByCustomerX("customerNo",buyerNo);
+        String name = customer.getCustomerNameKor();
+
+        Trip trip =new Trip();
+        trip = tripService.getDetail(tripNo);
+
+        //예약확정 시 trip의 stock증가
+        int maxstock = trip.getTripMaxStock();
+        int stock = trip.getTripStock();
+
+        String message="";
+        if(maxstock>stock){
+
+            boolean isUpdated =tripService.updateTripStock(tripNo,stock+1);
+            if(isUpdated){
+                purchaseService.updatePurchaseStatus(id,"APPROVED");
+                message = name+"님의 예약을 승인하였습니다.";
+            }else{
+                message= "재고 업데이트에 실패했습니다.";
+            }
+
+        }else{
+            message="예약이 이미 가득 차있습니다.";
+        }
+
+        redirectAttributes.addFlashAttribute("message", message);
+        return "redirect:/trip/Department";
+
+    }
+
+    @PostMapping("/rejectPurchase")
+    public String rejectPurchase(@RequestParam("tripNo") int tripNo,@RequestParam("purchaseId") int id,@RequestParam("buyerNo") String buyerNo, RedirectAttributes redirectAttributes) {
+
+        Customer customer =null;
+        customer = customerService.findByCustomerX("customerNo",buyerNo);
+        String name = customer.getCustomerNameKor();
+
+        Trip trip =new Trip();
+        trip = tripService.getDetail(tripNo);
+
+        //예약거절 시 trip의 stock감소
+        int maxstock = trip.getTripMaxStock();
+        int stock = trip.getTripStock();
+
+        String message="";
+
+        purchaseService.updatePurchaseStatus(id,"REJECTED");
+
+        boolean isUpdated=true;
+        if(stock!=0){
+            isUpdated =tripService.updateTripStock(tripNo,stock-1);
+        }
+
+        if(isUpdated){
+            purchaseService.updatePurchaseStatus(id,"REJECTED");
+            message = name+"님의 예약을 거절하였습니다.";
+        }else{
+            message= "재고 업데이트에 실패했습니다.";
+        }
+
+        redirectAttributes.addFlashAttribute("message", message);
+
+        return "redirect:/trip/Department";
     }
 
 
@@ -847,11 +933,129 @@ public class TripController {
         model.addAttribute("trip", trip);
 
         //purchase 정보 불러오기 조건: tripNo
-        List<Purchase> purchaseList= purchaseService.getAllPurchaseInfoByTripNo(num);
+        List<Purchase> purchaseList= getPurchaseListWithoutStatus("REJECTED","REFUND");
         model.addAttribute("purchaseList",purchaseList);
+
+        //가이드 선출
+        List<User> users = userService.getEmployeeListByDepartment(5);
+        // positionId가 3 이하인 user만 필터링하여 저장
+        List<User> travelleader = new ArrayList<>();
+        for (User user : users) {
+            if (user.getPositionId() <= 3) {
+                travelleader.add(user);
+            }
+        }
+        model.addAttribute("travelleader",travelleader);
+
+        //가이드 존재시 가이드 이름 가져오기
+        User user = new User();
+        int TLNo = trip.getTravelleaderNo();
+        String userName = "트래블리더";
+        if(TLNo!=0){
+            user = userService.getEmployee(TLNo);
+            userName = user.getUsername();
+
+        }
+        model.addAttribute("userName",userName);
 
         return "tourdepartment/Tour_Management";
     }
+
+    @PostMapping("/updateTravelLeader")
+    public ResponseEntity<?> updateTravelLeader(@RequestBody Map<String, String> request) {
+        int tripId = Integer.parseInt(request.get("tripId"));
+        int userNo = Integer.parseInt(request.get("userNo"));
+        System.out.println(tripId);
+
+        boolean isUpdated = tripService.updateTravelLeader(tripId, userNo);
+
+        if (isUpdated) {
+            return ResponseEntity.ok().body(Map.of("success", true));
+        } else {
+            return ResponseEntity.ok().body(Map.of("success", false));
+        }
+    }
+
+    @GetMapping("/tripBoss")
+    public String tripBoss(
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "limit", defaultValue = "9") int limit,
+            @RequestParam(name = "category", required = false) String category,
+            @RequestParam(name = "sort", required = false) String sort,
+            @RequestParam(name = "keyword", required = false) String keyword,
+            HttpServletRequest request,HttpServletResponse response,
+            Model model) {
+
+        int startRow = (page - 1) * limit + 1;
+        int endRow = startRow + limit - 1;
+
+        int listcount = this.getListcount(category,keyword);
+        List<Trip> triplist = this.getTriplist(category,keyword,startRow,endRow,sort);
+
+        PagingUtil.Paging pageService = new PagingUtil.Paging(page,limit,listcount);
+
+        model.addAttribute("page", page);
+        model.addAttribute("maxpage",pageService.getMaxpage());
+        model.addAttribute("startpage",pageService.getStartpage());
+        model.addAttribute("endpage", pageService.getEndpage());
+        model.addAttribute("listcount", listcount);
+        model.addAttribute("triplist", triplist);
+        model.addAttribute("limit", limit);
+        model.addAttribute("pagefirst", pageService.getPagefirst());
+        model.addAttribute("pagelast", pageService.getPagelast());
+        model.addAttribute("sort", sort);  // 현재 정렬 기준 추가
+        model.addAttribute("keyword", keyword);  // 현재 검색어 추가
+        //--------------------------------------------------------------------------------
+
+        List<Trip> triplistAll = tripService.getAllTrip();
+        List<TripOption> optionlistAll = optionService.getAllOptions();
+
+        model.addAttribute("triplistAll",triplistAll);
+        model.addAttribute("optionlistAll",optionlistAll);
+
+        //trip status가 APPROVED인 tripList
+        List<Trip> approvedtripList = tripService.getApprovedTrip();
+        model.addAttribute("approvedTrip",approvedtripList);
+
+        //trip status가 PENDING인 tripList
+        List<Trip> pendingtripList = tripService.getPendingTrip();
+        model.addAttribute("pendingTrip",pendingtripList);
+
+        // 이전에 RedirectAttributes로 추가한 Flash attribute를 가져옴
+        String message = (String) model.asMap().get("message");
+        if (message != null) {
+            // 가져온 메시지를 다시 모델에 추가하여 Thymeleaf에서 사용할 수 있도록 함
+            model.addAttribute("message", message);
+        }
+
+        List<Purchase> purchaseList = getPurchaseListWithoutStatus("APPROVED","PENDING");
+        model.addAttribute("purchaseList",purchaseList);
+
+        return "tourdepartment/Travel_BossPage";
+    }
+
+    public List<Purchase> getPurchaseListWithoutStatus(String status1,String status2){
+        //purchase 정보 불러오기
+        List<Purchase> purchaseList= purchaseService.getAllPurchaseInfo();
+        List<Purchase> newpurchaseList= new ArrayList<>();
+        for(Purchase p : purchaseList){
+            if(!(p.getStatus().equals(status1)||p.getStatus().equals(status2))){
+                newpurchaseList.add(p);
+            }
+        }
+        return newpurchaseList;
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

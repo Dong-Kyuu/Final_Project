@@ -64,7 +64,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">Option Trip</h4>
                                 <p class="card-description"> Trip Info </p>
-                                <form th:action="@{/addOptionTrip}" method="post" enctype="multipart/form-data"
+                                <form th:action="@{/trip/addOptionTrip}" method="post" enctype="multipart/form-data"
                                       name="addOptionTrip" class="forms-sample">
                                     <div class="form-group">
                                         <label for="OptionName">Option Name</label>
@@ -92,9 +92,9 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="city">City</label>
+                                        <label for="cityNo">City</label>
                                         <div class="col-sm-9">
-                                            <select class="form-control" id="city" name="city" >
+                                            <select class="form-control" id="cityNo" name="cityNo" >
                                                 <option th:each="city : ${cities}" th:value="${city.cityNo}" th:text="${city.cityName}"></option>
                                             </select>
                                         </div>
@@ -209,44 +209,6 @@
 </script>
 
 <script th:inline="javascript">
-
-    function addOptionId(element) {
-        var optionNameList = document.getElementById('optionNameList');
-        var optionIdField = document.getElementById('optionIdField');
-
-        var optionName = element.innerText;
-        var optionId = element.getAttribute('data-option-id');
-
-        // Add optionName to the list with a remove button
-        var optionDiv = document.createElement('div');
-        optionDiv.className = 'option-item';
-        optionDiv.innerHTML = optionName + ' <button type="button" class="btn btn-link btn-sm" onclick="removeOptionId(this, \'' + optionId + '\')">Remove</button>';
-        optionNameList.appendChild(optionDiv);
-
-        // Add optionId to the hidden input field
-        var currentOptionIds = optionIdField.value;
-        if (currentOptionIds !== '') {
-            currentOptionIds += ',';
-        }
-        currentOptionIds += optionId;
-        optionIdField.value = currentOptionIds;
-    }
-
-    function removeOptionId(button, optionId) {
-        var optionDiv = button.parentElement;
-        var optionIdField = document.getElementById('optionIdField');
-
-        // Remove the optionName element
-        optionDiv.remove();
-
-        // Update the hidden input field
-        var currentOptionIds = optionIdField.value.split(',');
-        var index = currentOptionIds.indexOf(optionId);
-        if (index > -1) {
-            currentOptionIds.splice(index, 1);
-        }
-        optionIdField.value = currentOptionIds.join(',');
-    }
 
 </script>
 </body>

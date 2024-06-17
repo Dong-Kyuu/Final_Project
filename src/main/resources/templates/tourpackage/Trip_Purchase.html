@@ -157,7 +157,8 @@
                                                  th:data-customer-email="${customer.customerEmail}"
                                                  th:data-customer-name="${customer.customerNameKor}"
                                                 th:data-customer-phone="${customer.customerPhone}"
-                                                th:data-trip-name="${trip.tripName}">
+                                                th:data-trip-name="${trip.tripName}"
+                                                th:data-cart-option="${cart.optionIds}">
                                             </div>
                                             <button id="payBtn" type="submit" class="site-btn">PLACE ORDER</button>
                                         </div>
@@ -235,6 +236,7 @@
         var tripName = orderDetails.getAttribute('data-trip-name');
         var customerNo = orderDetails.getAttribute('data-customer-number');
         var tripNo = orderDetails.getAttribute('data-trip-number');
+        var optionIds = orderDetails.getAttribute('data-cart-option')
 
         var csrfTokenValue = $("meta[name='_csrf']").attr("content");
         var csrfHeaderName = $("meta[name='_csrf_header']").attr("content");
@@ -246,6 +248,7 @@
         console.log("csrfTokenValue",csrfTokenValue);
         console.log("customerNo",customerNo);
         console.log("tripNo",tripNo);
+        console.log("optionIds",optionIds);
 
         IMP.request_pay({
             pg: 'kakaopay.TC0ONETIME', // 카카오페이 사용
@@ -257,7 +260,8 @@
             buyer_name: customerName,
             buyer_tel: customerPhone,
             buyer_no: customerNo,
-            trip_no: tripNo
+            trip_no: tripNo,
+            option_ids: optionIds
         }, function (rsp) {
             console.log("결제 금액:", rsp.paid_amount);
             if (rsp.success) {
@@ -276,7 +280,8 @@
                         paid_amount: rsp.paid_amount,
                         apply_num : rsp.apply_num,
                         buyer_no: customerNo,
-                        trip_no: tripNo
+                        trip_no: tripNo,
+                        option_ids: optionIds
                         // 기타 필요한 데이터가 있으면 추가 전달
                     })
                 }).done(function (data,xhr, status, error) {

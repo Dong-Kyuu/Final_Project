@@ -18,4 +18,7 @@ public interface SseService {
     int readAll(int userNum);
 
     int deleteAll(int userNum);
+
+    //특정 부서와 직급을 받은 사람에게 알림을 보내는 메서드
+    void sendByDepartmentAndPosition(int departmentNo, int positionNo, String message, String url);
 }

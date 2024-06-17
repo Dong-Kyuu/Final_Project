@@ -151,7 +151,15 @@
             border-bottom: 1px solid #ddd;
         }
 
+        .col-sm-6.text-right {
+            display: flex;
+            justify-content: flex-end;
+        }
 
+        .col-sm-6.text-right form {
+            display: inline-block;
+            margin-left: 10px; /* 버튼들 사이에 간격 추가 */
+        }
 
     </style>
 
@@ -173,6 +181,41 @@
                 </div>
 
                 <div class="row">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">상품 결제</h4>
+
+                                <!-- 스크롤 가능한 리스트를 감싸는 컨테이너 div -->
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    <ul class="list-group">
+                                        <!-- 여행 일정 변경 요청 리스트 아이템 -->
+                                        <li class="list-group-item" th:each="trip, status : ${pendingTrip}">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <h5 class="mb-1" th:text="'상품 등록 승인 #' + ${status.count}"></h5>
+                                                    <p class="mb-1" th:text="'내용: ' + ${trip.tripName} + ' / ' + ${trip.tripDate} + ' / ' + ${trip.tripPrice}+'won'"></p>
+                                                    <p class="mb-1" th:text="'상태: '+${trip.status == 'PENDING' ? '결제 대기' : trip.status}"></p>
+                                                </div>
+                                                <div class="col-sm-6 text-right state-btn">
+                                                    <!-- 승인 또는 거부 버튼 -->
+                                                    <form th:action="@{/trip/approveTrip}" method="post" style="display: inline;">
+                                                        <input type="hidden" name="tripNo" th:value="${trip.tripNo}" />
+                                                        <button type="submit" class="btn btn-gradient-success btn-lg">승인</button>
+                                                    </form>
+                                                    <form th:action="@{/trip/rejectTrip}" method="post" style="display: inline;">
+                                                        <input type="hidden" name="tripNo" th:value="${trip.tripNo}" />
+                                                        <button type="submit" class="btn btn-gradient-danger btn-lg">거부</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <!-- 기타 요청들 추가 -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="col-lg-12 grid-margin stretch-card">
                         <div class="card">
@@ -181,7 +224,7 @@
                                 <table class="table table-striped" >
                                     <thead>
                                     <tr>
-                                        <th> 번호</th>
+                                        <th> 예약번호</th>
                                         <th> 예약자</th>
                                         <th> 예약 상품 + 날짜</th>
                                         <th> 신청 시간</th>
@@ -207,14 +250,12 @@
                                                 <form th:action="@{/trip/approvePurchase}" method="post" style="display:inline;">
                                                     <input type="hidden" name="purchaseId" th:value="${purchase.id}" />
                                                     <input type="hidden" name="buyerNo" th:value="${purchase.buyerNo}" />
-                                                    <input type="hidden" name="tripNo" th:value="${purchase.tripNo}" />
-                                                    <button type="submit" class="btn btn-gradient-success btn-sm">승인</button>
+                                                    <button type="submit" class="btn btn-gradient-success btn-sm">재승인</button>
                                                 </form>
                                                 <form th:action="@{/trip/rejectPurchase}" method="post" style="display:inline;">
                                                     <input type="hidden" name="purchaseId" th:value="${purchase.id}" />
                                                     <input type="hidden" name="buyerNo" th:value="${purchase.buyerNo}" />
-                                                    <input type="hidden" name="tripNo" th:value="${purchase.tripNo}" />
-                                                    <button type="submit" class="btn btn-gradient-danger btn-sm">거절</button>
+                                                    <button type="submit" class="btn btn-gradient-danger btn-sm">환불처리</button>
                                                 </form>
                                             </div>
                                         </td>
@@ -228,89 +269,23 @@
 
                     <div class="col-lg-12 grid-margin stretch-card">
                         <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title"> Trip Info</h4>
+                            <div class="card-body" >
+                                <h4 class="card-title">Booking List</h4>
+                                <table class="table table-striped" >
+                                    <thead>
+                                    <tr>
+                                        <th> 번호</th>
+                                        <th> 상품+날짜</th>
+                                        <th> 배정 TL</th>
+                                        <th> 예약인원</th>
+                                        <th> 관리</th>
+                                    </tr>
+                                    </thead>
 
-                                <!-- 상품페이지 상단 -->
-                                <div class="shop__product__option">
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 col-sm-6">
-                                            <div class="shop__product__option__left">
-                                                <p th:text="'Showing ' + ${pagefirst} + '-' + ${pagelast} + ' of ' + ${listcount} + ' results'"></p>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-6">
-                                            <div class="button-tripRegister">
-                                                <button type="button" id="trip_register" class="btn btn-gradient-success" onclick="window.location.href='/trip/tripRegister'">메인등록</button>
-                                                <button type="button" id="option_register" class="btn btn-gradient-warning" onclick="window.location.href='/trip/optionRegister'">옵션등록</button>
+                                    <tbody>
 
-                                                <div class="modal">
-                                                    <div class="modal_body">
-                                                        <div class="modal_header">
-                                                            <h1>여행선택 <button class="close_button" onclick="closeModal()">×</button> </h1>
-                                                        </div>
-                                                        <div class="section">
-                                                            <h2>Main Trip</h2>
-                                                            <ul>
-                                                                <li th:each="list,status : ${triplistAll}" >
-                                                                    <a th:href="'tripUpdate?num='+${list.tripNo}" th:text="${status.count}+'. '+${list.tripName}+' '+${list.tripDate}"></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <div class="section">
-                                                            <h2>Option Trip</h2>
-                                                            <ul>
-                                                                <li th:each="list,status : ${optionlistAll}" >
-                                                                    <a th:href="'tripUpdate?num='+${list.optionId}" th:text="${status.count}+'. '+${list.optionName}"></a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <button type="button" id="trip_update" class="btn btn-gradient-danger btn-open-modal">수정</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- 상품페이지 상단 -->
-                                <!-- 실제 적용할 상품 리스트 -->
-
-                                <div class="row" id="productList">
-                                    <div th:each="goods : ${approvedTrip}" class="col-lg-4 col-md-6 col-sm-6">
-                                        <div class="product__item__text">
-                                            <h6 th:text="${goods.tripName}"></h6>
-                                        </div>
-                                        <div class="product__item">
-                                            <a th:href="'TLManagement?num=' + ${goods.tripNo}"> <!-- 이동 경로 -->
-                                                <div class="product__item__pic set-bg">
-                                                    <img th:src="@{${goods.tripMainImg}}" alt="Main Image">
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- 실제 적용할 상품 리스트 -->
-
-
-                                <!-- 페이징 처리-->
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="product__pagination">
-                                            <span th:if="${page <= 1}">&lt;&nbsp;</span>
-                                            <a th:if="${page > 1}" th:href="|?page=${page - 1}&category=${category}&sort=${sort}&keyword=${keyword}|">&lt;&nbsp;</a>
-
-                                            <th:block th:each="a : ${#numbers.sequence(startpage, endpage)}">
-                                                <a th:if="${a == page}" th:text="${a}"></a>
-                                                <a th:if="${a != page}" th:href="|?page=${a}&category=${category}&sort=${sort}&keyword=${keyword}|" th:text="${a}"></a>
-                                            </th:block>
-
-                                            <span th:if="${page >= maxpage}">&nbsp;&gt;</span>
-                                            <a th:if="${page < maxpage}" th:href="|?page=${page + 1}&category=${category}&sort=${sort}&keyword=${keyword}|">&nbsp;&gt;</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- 페이징 처리 -->
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

@@ -35,5 +35,9 @@ public interface TripMapper {
     void updateTripStatus(int tripNo, String status);
 
     List<Trip> getTripByStatus(String Status);
+
+    void updateTravelLeader(int tripNo, int userNo);
+
+    void updateTripStock(int tripNo, int stock);
 }
 

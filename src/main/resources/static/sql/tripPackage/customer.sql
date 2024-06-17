@@ -11,8 +11,16 @@ CREATE TABLE customer (
                           customer_gender VARCHAR(3) NOT NULL,  -- 고객 성별 ('남' 또는 '여')
                           customer_email VARCHAR(30) NOT NULL,  -- 고객 이메일
                           customer_phone VARCHAR(15) NOT NULL,  -- 고객 전화번호
-                          customer_passport_no VARCHAR(20) NULL  -- 고객 여권 번호
+                          customer_passport_no VARCHAR(20) NULL,  -- 고객 여권 번호
+                          trip_no INT NULL, -- 구매한 여행상품
+                          trip_group INT NULL -- 여행상품내 포함 그룹
 );
 
 -- 테이블 생성 후 전체 레코드를 조회합니다.
 SELECT * FROM customer;
+
+ALTER TABLE customer
+    ADD COLUMN trip_no INT,
+ADD COLUMN trip_group INT;
+
+SELECT * FROM customer WHERE customer_id =1;

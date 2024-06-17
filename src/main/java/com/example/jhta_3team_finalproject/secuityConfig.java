@@ -81,6 +81,8 @@ public class secuityConfig {
 
                         .requestMatchers("/newbie/**").hasAuthority("ROLE_NEWBIE")  // 신입사원 전용 페이지
 
+                        .requestMatchers("/trip/tripBoss").hasAuthority("ROLE_HEAD")
+                        .requestMatchers("/trip/updateTravelLeader").hasAuthority("ROLE_HEAD")
                         // 신입사원은 다른 모든 페이지 접근 불가
 //                        .requestMatchers("/**").hasAnyAuthority("ROLE_MASTER")
 

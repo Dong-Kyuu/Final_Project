@@ -20,7 +20,7 @@
     <link rel="shortcut icon" th:href="@{../../assets/images/favicon.ico}"/>
 
     <style>
-        #TripInfo .col-md-6 img{
+        #TripInfo .col-md-6 img {
             /* 이미지를 화면에 꽉 채우도록 설정 */
             background-size: cover;
             /* 이미지가 잘릴 수 없도록 설정 */
@@ -31,8 +31,15 @@
             display: block;
         }
 
-    </style>
+        #TripInfo .col-md-6 .row .col-md-12{
+            padding-bottom: 10px;
+        }
 
+        #dropdownMenuButton{
+            width: 150px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <div class="container-scroller">
@@ -61,36 +68,43 @@
                                     <div class="col-md-6">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <h6 th:text="'여행 이름 : '+${trip.tripName}"></h6>
-                                                <h6 th:text="'여행 출발 : '+${trip.tripDate}"></h6>
+                                                <h6 th:text="'여행 이름 : ' + ${trip.tripName}"></h6>
+                                                <h6 th:text="'여행 출발 : ' + ${trip.tripDate}"></h6>
                                             </div>
-
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                담당TL 등록
+                                                <div>담당 TL 등록</div>
                                                 <!--아직 TL이 등록되어있지 않을때-->
                                                 <div class="btn-group-vertical" role="group" aria-label="Basic example">
                                                     <div class="btn-group">
-                                                        <button type="button"
+                                                        <button id="dropdownMenuButton" type="button"
                                                                 class="btn btn-outline-secondary dropdown-toggle"
-                                                                data-bs-toggle="dropdown">Dropdown
+                                                                data-bs-toggle="dropdown" th:text="${userName}">
                                                         </button>
                                                         <div class="dropdown-menu">
-                                                            <a class="dropdown-item">Go back</a>
-                                                            <a class="dropdown-item">Delete</a>
-                                                            <a class="dropdown-item">Swap</a>
+                                                            <a class="dropdown-item" th:each="user : ${travelleader}"
+                                                               th:text="${user.username}"
+                                                               th:attr="data-username=${user.username},data-usernum=${user.userNum}"
+                                                               onclick="updateDropdownText(this)"></a>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!--등록시 TL이름이 뜨게 하기 if문 이용하면 될듯-->
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button id="confirmButton" type="button" class="btn btn-gradient-success "  onclick="confirmSelection()">Confirm</button>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+
 
                     <!--병훈이형 캘린더(여행부서 사람들의 일정 공유 캘린더) -->
                     <div class="col-lg-6 grid-margin stretch-card">
@@ -99,7 +113,6 @@
                                 <h4 class="card-title">병훈's Calendar Work</h4>
                                 <p class="card-description"> Add class <code>.table-hover</code>
                                 </p>
-
                             </div>
                         </div>
                     </div>
@@ -121,21 +134,26 @@
                                         <th> 관리</th>
                                     </tr>
                                     </thead>
-
                                     <tbody>
-
                                     <tr th:each="purchase : ${purchaseList}">
                                         <td th:text="${purchase.id}"></td>
                                         <td th:text="${purchase.customerNameKor}"></td>
-                                        <td th:text="${purchase.tripName}+'/'+${purchase.tripDate}"></td>
+                                        <td th:text="${purchase.tripName} + '/' + ${purchase.tripDate}"></td>
                                         <td th:text="${purchase.createdAt}"></td>
-                                        <td th:text="${purchase.status == 'PENDING' ? '예약 대기' : purchase.status}"></td>
-                                        <td> <div class="button-UserProfile">
-                                            <button type="button" class="btn btn-gradient-success btn-sm">승인</button>
-                                            <button type="button" class="btn btn-gradient-danger btn-sm">거절</button>
-                                        </div></td>
+                                        <td th:text="${(purchase.status == 'PENDING' ? '예약 대기' :
+                                                      (purchase.status == 'APPROVED' ? '예약 승인' :
+                                                      (purchase.status == 'REJECTED' ? '예약 거절' :
+                                                      (purchase.status == 'REFUND' ? '환불' : purchase.status))))}">
+                                        </td>
+                                        <td>
+                                            <div class="button-UserProfile">
+                                                <button type="button" class="btn btn-gradient-success btn-sm">승인
+                                                </button>
+                                                <button type="button" class="btn btn-gradient-danger btn-sm">거절
+                                                </button>
+                                            </div>
+                                        </td>
                                     </tr>
-
                                     </tbody>
                                 </table>
                             </div>
@@ -148,7 +166,6 @@
                                 <h4 class="card-title">서류 관리</h4>
                                 <p class="card-description"> Add class <code>.table-hover</code>
                                 </p>
-
                             </div>
                         </div>
                     </div>
@@ -159,7 +176,6 @@
                                 <h4 class="card-title">조배정</h4>
                                 <p class="card-description"> Add class <code>.table-hover</code>
                                 </p>
-
                             </div>
                         </div>
                     </div>
@@ -194,5 +210,56 @@
 <!-- endinject -->
 <!-- Custom js for this page -->
 <!-- End custom js for this page -->
+<script>
+    function updateDropdownText(element) {
+        var selectedText = element.getAttribute("data-username");
+        var selectedUserNo = element.getAttribute("data-usernum");
+        document.getElementById("dropdownMenuButton").innerText = selectedText;
+        document.getElementById("dropdownMenuButton").setAttribute("data-usernum", selectedUserNo);
+    }
+
+    $(document).ready(function () {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        $('#confirmButton').click(function () {
+            var selectedUserNo = document.getElementById("dropdownMenuButton").getAttribute("data-usernum");
+            var tripId = getTripIdFromURL();
+
+            console.log(selectedUserNo);
+
+            console.log(tripId);
+
+            $.ajax({
+                type: "POST",
+                url: "/trip/updateTravelLeader",
+                contentType: "application/json",
+                headers: {
+                    'X-CSRF-TOKEN': token
+                },
+                data: JSON.stringify({
+                    tripId: tripId,
+                    userNo: selectedUserNo
+                }),
+                success: function (response) {
+                    if (response.success) {
+                        alert('트래블 리더가 성공적으로 업데이트되었습니다.');
+                    } else {
+                        alert('트래블 리더 업데이트 중 오류가 발생했습니다.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('서버 요청 중 오류 발생:', error);
+                }
+            });
+        });
+        // URL에서 tripId를 추출하는 함수 예시
+        function getTripIdFromURL() {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('num');
+        }
+    });
+
+</script>
 </body>
 </html>
