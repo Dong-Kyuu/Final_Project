@@ -33,7 +33,7 @@
         FROM chat_message cm
         JOIN user u
         ON cm.sender_id = u.user_id
-        WHERE  chat_room_num = #{chatRoomNum}
+        WHERE chat_room_num = #{chatRoomNum}
         AND DATE_FORMAT(send_time, '%Y-%m-%d') = #{dateStr}
         GROUP BY message_num WITH ROLLUP
         ORDER BY time_stamp, message_num ASC
@@ -269,4 +269,23 @@
     <update id="initChatRoomVisitTime">
         UPDATE chat_participate SET chat_visit_time = NOW() WHERE chat_room_num = #{chatRoomNum} AND chat_user_id = #{chatUserId}
     </update>
+
+    <!-- 2024-06-17, Full Text Index 를 통한 채팅 기록 검색 -->
+    <!--    설정 정보 (parser ngram - (한글 - 2글자 이상부터) (영어 - 3글자 이상부터) (특수문자 - Global 설정 필요)) -->
+    <!--    ALTER TABLE chat_message DROP INDEX FULLTEXT_MESSAGE_CONTENT;-->
+    <!--    ALTER TABLE chat_message ADD FULLTEXT INDEX FULLTEXT_MESSAGE_CONTENT (message_content) WITH PARSER ngram;-->
+    <!--    성능 확인 정보-->
+    <!--    set profiling=1;-->
+    <!--    show profiles;-->
+    <!--    show profile for query '번호';-->
+    <select id="chatMessageContentSearch">
+        SELECT cm.*, u.user_id as user_id, u.user_name as user_name, u.user_profile_picture as user_profile_picture, DATE(send_time) as time_stamp
+        FROM chat_message cm
+                 JOIN user u
+                      ON cm.sender_id = u.user_id
+        WHERE chat_room_num = #{chatRoomNum}
+          AND MATCH(cm.message_content) AGAINST(#{messageCotent} IN BOOLEAN MODE)
+        GROUP BY message_num WITH ROLLUP
+        ORDER BY time_stamp, message_num ASC
+    </select>
 </mapper>
