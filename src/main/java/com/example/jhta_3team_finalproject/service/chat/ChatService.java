@@ -9,6 +9,7 @@ import com.example.jhta_3team_finalproject.domain.chat.ChatParticipate;
 import com.example.jhta_3team_finalproject.domain.chat.ChatRoom;
 import com.example.jhta_3team_finalproject.mybatis.mapper.chat.ChatMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,9 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -27,6 +30,7 @@ public class ChatService {
 
     private final ChatMapper dao;
     private final RedisChatUtils redisChatUtils;
+    private final ChatSseService chatSseService;
 
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     LocalTime localTime = LocalTime.of(0, 0, 0);
@@ -80,17 +84,19 @@ public class ChatService {
         return chatMessage;
     }
 
-    public ChatParticipate createChatRoom(ChatRoom chatRoom, String chatInviteUserList) throws Exception {
+    public ChatParticipate createChatRoom(ChatRoom chatRoom) throws Exception {
         ChatParticipate chatParticipate = new ChatParticipate();
 
         int result = dao.createChatRoom(chatRoom);
 
         if(result > 0) {
+            String chatInviteUserList = chatRoom.getChatInviteUserList();
+
             chatRoom = dao.lastChatRoom();
-
             addChatParticipate(chatRoom, chatInviteUserList, chatParticipate);
-
             chatParticipate = dao.searchLastRoomUser(chatRoom);
+
+            chatRoomRefresh(chatRoom, chatParticipate);
         }
 
         return chatParticipate;
@@ -151,10 +157,6 @@ public class ChatService {
 
     public List<User> chatUserList(String chatUserId) {
         return dao.chatUserList(chatUserId);
-    }
-
-    public int getUnreadMessage(ChatParticipate chatParticipate) throws Exception {
-        return dao.getUnreadMessage(chatParticipate);
     }
 
     public User chatUserProfile(String chatUserId) {
@@ -235,6 +237,10 @@ public class ChatService {
              */
             if(result > NO_CREATE_P2P_CHATROOM) {
                 addp2pChatParticipate(chatCounterpartId, chatUserId);
+
+                chatRoom = dao.lastChatRoom();
+                ChatParticipate chatParticipate = dao.searchLastRoomUser(chatRoom);
+                chatRoomRefresh(chatRoom, chatParticipate);
                 return dao.lastChatRoomNum();
             } else {
                 return NO_CHATROOM;
@@ -259,5 +265,24 @@ public class ChatService {
 
     public int initChatRoomVisitTime(ChatParticipate chatParticipate) {
         return dao.initChatRoomVisitTime(chatParticipate);
+    }
+
+    /**
+     * 2024-06-14, SSE 비동기 처리로 채팅방 목록 업데이트
+     */
+    public void chatRoomRefresh(ChatRoom chatRoom, ChatParticipate chatParticipate) {
+        if(chatParticipate != null) {
+            List<User> users = this.chatRoomParticipateList(chatRoom);
+
+            users.forEach(user ->
+                CompletableFuture.runAsync(() ->
+                    chatSseService.chatRoomListRefresh(user, "chatRoomListRefresh"))
+                    .exceptionally(throwable -> {
+                        // 개발자 담당자한테 web hook 및 전달할 있게 처리하기.
+                        log.error("Exception occurred: " + throwable.getMessage());
+                        return null;
+                    })
+            );
+        }
     }
 }

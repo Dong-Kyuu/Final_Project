@@ -205,7 +205,7 @@
                 <!-- @send message view -->
                 <div class="view-message">
                     <div class="chat-room-user-mgr">
-<!--                        <th:block th:replace="~{chat/chatUserMgr :: chatUserMgrFragment}"/>-->
+                        <!--                        <th:block th:replace="~{chat/chatUserMgr :: chatUserMgrFragment}"/>-->
                     </div>
                     <div class="status-bar">
                         <div class="back-arrow">
@@ -241,7 +241,7 @@
                                     <!-- <div class="back-arrow-nav" href='javascript:Display();'>
                                         <i class="material-icons">navigate_before</i>
                                     </div> -->
-                                    <h1 class="nav-profile-h1">  </h1>
+                                    <h1 class="nav-profile-h1"></h1>
                                     <span class="user-avatar">
                                         <span class="nav-profile-image">
 
@@ -352,7 +352,7 @@
                             <li id="sendFileBtn" class="more-button-list-item">
                                 <i class="material-icons">file_upload</i>
                                 <span>파일전송</span>
-                                <input type="file" id="fileUpload" name="fileUpload" style="display: none;" />
+                                <input type="file" id="fileUpload" name="fileUpload" style="display: none;"/>
                             </li>
                         </ul>
                     </div>
@@ -422,7 +422,8 @@
                                     <i class="fa-solid fa-check fa-xl"></i>
                                 </div>
                             </button>
-                            <input class="message-text" type="text" name="message-text" placeholder="채팅을 입력하세요." maxlength="150">
+                            <input class="message-text" type="text" name="message-text" placeholder="채팅을 입력하세요."
+                                   maxlength="150">
                             <div class="chat-menu-container">
                                 <div class="list-container button-container">
                                     <button class="more-button skill-menu" aria-label="Menu Button">
@@ -456,9 +457,9 @@
              */
             let eventSource = new EventSource("/chat/sse"); //http://localhost:9001/chat/sse
             let sseStatus = true;
-            eventSource.addEventListener('chatListRoomRefresh',  function(event) {
-                if(event.data != '') {
-                    if(sseStatus) {
+            eventSource.addEventListener('chatListRoomRefresh', function (event) {
+                if (event.data != '') {
+                    if (sseStatus) {
                         getUserChatRoomList();
                         //console.log(event.data);
                     }
@@ -527,7 +528,7 @@
                 });
             });
 
-            $(document).on('wheel', '.touch-y', function(e) {
+            $(document).on('wheel', '.touch-y', function (e) {
                 //e.preventDefault();
                 var $ele = $(this);
                 var delta = e.originalEvent.deltaY;
@@ -631,6 +632,7 @@
              * 2024-05-30, 채팅방 리스트와 사원 리스트 동작 분리
              */
             let messageRoomNum = $('input[name="message_room_num"]');
+
             function showMessages() {
                 sseStatus = false;
 
@@ -646,7 +648,7 @@
                     var chatCounterpartId = $(this).find('input[name=chat_counterpart_id]').val();
                     chatUserId = $("#chat_user_id").val();
                     isp2pChatRoom(chatCounterpartId, chatUserId, type);
-                    chatRoomNum =  messageRoomNum.val();
+                    chatRoomNum = messageRoomNum.val();
                     //console.log(chatCounterpartId);
                 } else { // 채팅방 목록에서 접속 시
                     chatRoomNum = $(this).find('input[name=chat_room_num]').val();
@@ -719,11 +721,11 @@
                         $chatRoomPartCount.html(res.userCount);
 
                         $(".activity-container").empty();
-                        $(res.chatRoomPartList).each(function(index, item) {
+                        $(res.chatRoomPartList).each(function (index, item) {
                             //console.log(index);
                             let img = ''; // 이미지 처리 시
                             if (item.userProfilePicture != null) {
-                                img = "<img style='width: 40px; height: 40px; border-radius: 50%;' src='" + item.userProfilePicture +  "' />";
+                                img = "<img style='width: 40px; height: 40px; border-radius: 50%;' src='" + item.userProfilePicture + "' />";
                             } else {
                                 // 업로드된 프로필을 보여주도록 한다.
                                 img = "<img style='width: 40px; height: 40px; border-radius: 50%;' src='/image/chat/default.png' />";
@@ -735,12 +737,12 @@
                             output += "    </span>";
                             output += "    <p>";
                             let userName = item.username;
-                            if(userName.length >= 3) {
+                            if (userName.length >= 3) {
                                 output += userName.substr(0, 3);
                             } else {
                                 output += userName;
                             }
-                            output +="     </p>";
+                            output += "     </p>";
                             output += "</div>";
 
                             $(".activity-container").append(output);
@@ -781,6 +783,7 @@
              * 2024-06-08, 채팅방 입장
              */
             let ws;
+
             function openChatRoom(chatRoomNum, chatUserId, type) {
                 //console.log(chatRoomNum);
                 //console.log(chatUserId);
@@ -810,10 +813,10 @@
                             //console.log(d);
                             //console.log(d.type);
 
-                            if(d.userProfileImage != null) {
+                            if (d.userProfileImage != null) {
                                 var profileImage = "";
                                 profileImage += "        <span class='user-avatar offline small'>";
-                                profileImage += "            <img style='width:40px; height: 40px; border-radius: 50%;' src=" + d.userProfileImage +" />";
+                                profileImage += "            <img style='width:40px; height: 40px; border-radius: 50%;' src=" + d.userProfileImage + " />";
                                 profileImage += "        </span>"
 
                             } else {
@@ -833,7 +836,7 @@
                                  */
                                 url = "<div class='group relative my-2.5'>";
                                 url += "    <div class='absolute w-full h-full bg-gray-900/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center'>";
-                                url += "        <a href='"+ d.fileUrl + "' download='"+ d.fileOriginName +"'>";
+                                url += "        <a href='" + d.fileUrl + "' download='" + d.fileOriginName + "' target='_blank' rel='noopener noreferrer'>";
                                 url += "            <button data-tooltip-target='download-image' class='download-image-button inline-flex items-center justify-center ";
                                 url += "                rounded-full h-10 w-10 bg-white/30 hover:bg-white/50 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50'>";
                                 url += "                <svg class='w-5 h-5 text-white' aria-hidden='true' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 18'>";
@@ -848,20 +851,20 @@
                                 url += "            <div class='tooltip-arrow' data-popper-arrow></div>";
                                 url += "        </div>";
                                 url += "    </div>";
-                                url += "    <img class='download-image rounded-lg' style='width: 120px;' src='" + d.fileUrl +  "' />";
+                                url += "    <img class='download-image rounded-lg' style='width: 120px;' src='" + d.fileUrl + "' alt='" + d.fileOriginName + "' />";
                                 url += "</div>";
                             }
 
                             if (d.type === "getId") {
                                 var si = d.sessionId != null ? d.sessionId : ""; // sessionId 가 널과 다르면 ""로 하라
                                 if (si !== '') { // 가져오기
-                                    if(d.timeStamp != null) {
+                                    if (d.timeStamp != null) {
                                         output = "";
-                                        output +="<h5 class='chat-timestamp-dash'>";
-                                        output +="    <span class='chat-timestamp-content'>";
-                                        output +="        &nbsp;&nbsp;"+ getDayStr(d.timeStamp) +"&nbsp;&nbsp;";
-                                        output +="    </span>";
-                                        output +="</h5>";
+                                        output += "<h5 class='chat-timestamp-dash'>";
+                                        output += "    <span class='chat-timestamp-content'>";
+                                        output += "        &nbsp;&nbsp;" + getDayStr(d.timeStamp) + "&nbsp;&nbsp;";
+                                        output += "    </span>";
+                                        output += "</h5>";
 
                                         $("#chat-message-list").append(output);
                                     } else if (d.sessionId === $("#chat_user_id").val()) {
@@ -1003,13 +1006,15 @@
                 }
             }
 
+
+
             var isRun = false;
             $(".back-arrow").click(function () {
                 loadingStart();
                 /**
                  * 2024-06-12, isRun을 통해 나가기 버튼 중복 동작 방지
                  */
-                if(isRun == true) {
+                if (isRun == true) {
                     return false;
                 }
 
@@ -1017,7 +1022,7 @@
                 isRun = true;
                 sseStatus = true;
 
-                if(ws != null) {
+                if (ws != null) {
                     ws.close();
                 }
 
@@ -1043,11 +1048,11 @@
                 }, 100);
             });
 
-            setInterval(function() {
+            setInterval(function () {
                 //console.log('showMessages bind');
                 $(".messages-list > ul > li").off('click', showMessages);
                 $(".messages-list > ul > li").bind('click', showMessages);
-            }, 10000);
+            }, 1000);
 
             $(document).keyup(function (e) {
                 if (e.which == 13 && $('.view-message').hasClass("active")) {
@@ -1121,12 +1126,11 @@
                 myInput.click();
             });
 
-            $("#fileUpload").change(function(e){
+            $("#fileUpload").change(function (e) {
                 fileSend();
             });
 
             function fileSend() {
-
                 var file = document.querySelector("#fileUpload").files[0];
                 var fileReader = new FileReader();
 
@@ -1136,7 +1140,7 @@
                         file: file,
                         fileName: file.name,
                         roomNumber: messageRoomNum.val(),
-                        userName: $("#chat_user_id").val(),
+                        chatUserId: $("#chat_user_id").val(),
                         msg: ''
                     }
 
@@ -1161,7 +1165,7 @@
             let minTimeStamp;
             let maxTimeStamp;
 
-            function getDayStr(yyyyMMdd){
+            function getDayStr(yyyyMMdd) {
                 const arr = yyyyMMdd.split('-');
                 dayStr = "";
                 dayStr += arr[0] + "년 ";
@@ -1171,7 +1175,7 @@
                 const dayOfWeek = new Date(yyyyMMdd).getDay();
 
                 //0:일, 1:월, 2:화, 3:수, 4:목, 5:금, 6:토
-                switch(dayOfWeek) {
+                switch (dayOfWeek) {
                     case 0:
                         dayStr += "일요일";
                         break;
@@ -1203,7 +1207,7 @@
                 const todayStr = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`;
                 //console.log(lastMessageDayStr);
                 //console.log(todayStr);
-                if(lastMessageDayStr === todayStr) {
+                if (lastMessageDayStr === todayStr) {
                     return true;
                 } else {
                     return false;
@@ -1239,15 +1243,15 @@
 
             function messageScrollFixChat() {
                 setTimeout(function () {
-                var mes_hieght = parseInt($(".messages-area > ul").height());
-                var viewportHeight = parseInt($(".messages-area").height());
-                // var li_height = parseInt($(".messages-area > ul").children().last().height());
-                // var sent_height = parseInt($(".messages-area > ul").children().last().children('div').height());
+                    var mes_hieght = parseInt($(".messages-area > ul").height());
+                    var viewportHeight = parseInt($(".messages-area").height());
+                    // var li_height = parseInt($(".messages-area > ul").children().last().height());
+                    // var sent_height = parseInt($(".messages-area > ul").children().last().children('div').height());
 
-                if (mes_hieght > viewportHeight)
-                    $(".messages-area > ul").css("transform", "translateY(" + ((viewportHeight - mes_hieght) - 10) + "px)");
+                    if (mes_hieght > viewportHeight)
+                        $(".messages-area > ul").css("transform", "translateY(" + ((viewportHeight - mes_hieght) - 10) + "px)");
 
-                //console.log('fix!');
+                    //console.log('fix!');
                 }, 250);
             }
 
@@ -1456,7 +1460,7 @@
             var isSearchRun = true;
             $(".chat-search-btn").click(function () {
 
-                if(isSearchRun == false) {
+                if (isSearchRun == false) {
                     return false;
                 }
 
@@ -1482,7 +1486,7 @@
             var isUserSearchRun = true;
             $(".user-search-btn").click(function () {
 
-                if(isUserSearchRun == false) {
+                if (isUserSearchRun == false) {
                     return false;
                 }
 
@@ -1531,7 +1535,7 @@
                     success: function (rdata) {
                         //console.log(rdata);
                         if (rdata.userProfilePicture != null) {
-                            img = "<img style='width: 50px; height: 50px;' src='" + rdata.userProfilePicture +  "' />";
+                            img = "<img style='width: 50px; height: 50px;' src='" + rdata.userProfilePicture + "' />";
                         } else {
                             // 업로드된 프로필을 보여주도록 한다.
                             img = "<img style='width: 50px; height: 50px;' src='/image/chat/default.png' />";
@@ -1561,7 +1565,7 @@
                         $chatProfilePhone.val(rdata.userPhoneNumber);
 
                         if (rdata.userProfilePicture != null) {
-                            img = "<img style='width: 40px; height: 40px; border-radius: 50%;' src='" + rdata.userProfilePicture +  "' />";
+                            img = "<img style='width: 40px; height: 40px; border-radius: 50%;' src='" + rdata.userProfilePicture + "' />";
                         } else {
                             // 업로드된 프로필을 보여주도록 한다.
                             img = "<img style='width: 40px; height: 40px; border-radius: 50%;' src='/image/chat/default.png' />";
@@ -1596,7 +1600,7 @@
                         $(rdata).each(function () {
                             let img = ''; // 이미지 처리 시
                             if (this.userProfilePicture != null) {
-                                img = "<img style='width: 50px; height: 50px;' src='" + this.userProfilePicture +  "' />";
+                                img = "<img style='width: 50px; height: 50px;' src='" + this.userProfilePicture + "' />";
                             } else {
                                 // 업로드된 프로필을 보여주도록 한다.
                                 img = "<img style='width: 50px; height: 50px;' src='/image/chat/default.png' />";
@@ -1651,14 +1655,17 @@
                         xhr.setRequestHeader(header, token);
                     },
                     success: function (res) {
-                        //console.log(res);
+                        console.log(res);
                         let output = '';
                         res.forEach(function (d, idx) {
                             let img = ''; // 이미지 처리 시
-                            if (this.profile_picture === 'default.png') {
-                                img = "<img src='/image/chat/default.png' />";
-                            } else {
-                                // 업로드된 프로필을 보여주도록 한다. (채팅방 화면은 임시 처리)
+                            if (d.roomType === '부서') {
+                                img = "<img src='/image/chat/department.png' />";
+                            } else if (d.roomType === '프로젝트') {
+                                img = "<img src='/image/chat/project.png' />";
+                            } else if (d.roomType === '팀') {
+                                img = "<img src='/image/chat/team.png' />";
+                            } else { // 자유
                                 img = "<img src='/image/chat/default.png' />";
                             }
 
@@ -1670,7 +1677,7 @@
                             var lastMessageContent = d.messageContent;
                             var roomName = d.roomName;
                             var roomCreateDate = d.roomCreateDate;
-                            var unreadMessageCount = getUnreadMessage(roomNumber, sessionId);
+                            var unreadMessageCount = d.unreadMessageCount;
 
                             output += "<li>";
                             output += "<input type='hidden' name='chat_room_num' value='" + roomNumber + "' />";
@@ -1684,15 +1691,15 @@
                             output += "                " + roomName;
                             output += "            </div>";
                             output += "            <div class='mes-preview'>";
-                                                    if (lastMessageContent != null) {
-                                                        output += lastMessageContent.substr(0, 20);
-                                                    }
+                            if (lastMessageContent != null) {
+                                output += lastMessageContent.substr(0, 20);
+                            }
                             output += "            </div>";
                             output += "        </div>";
                             output += "        <div class='mes-col2'>";
                             output += "            <div>";
-                            if(lastSendTime != null) {
-                                if(diffNowTime(lastSendTime)) {
+                            if (lastSendTime != null) {
+                                if (diffNowTime(lastSendTime)) {
                                     lastSendTime = getTime(lastSendTime);
                                     output += "                <div class='send-time'>" + lastSendTime + "</div>";
                                     output += "                <div class='mes-seen-status'>";
@@ -1726,7 +1733,7 @@
                     url: "/chat/getUnreadMessage",
                     data: {
                         "sessionId": sessionId,
-                        "roomNumber":roomNumber
+                        "roomNumber": roomNumber
                     },
                     dataType: "json",
                     async: false,
@@ -1776,16 +1783,16 @@
              * 2024-06-15, 채팅 버튼 구현
              */
             //$("#sendButton").click(sendMassage);
-            document.getElementById("sendButton").addEventListener ("click", sendFunc, false);
+            document.getElementById("sendButton").addEventListener("click", sendFunc, false);
 
-            function sendFunc(){
+            function sendFunc() {
                 //document.getElementById("sendButton").removeEventListener ("click", sendFunc, false);
                 const send = document.getElementById('send');
                 const sending = document.getElementById('sending');
                 const sent = document.getElementById('sent');
                 const sendButton = document.getElementById('sendButton')
 
-                if(sendMassage() == false) {
+                if (sendMassage() == false) {
                     //console.log('false');
                     return false;
                 }
@@ -1803,7 +1810,7 @@
                     sent.style.opacity = 0;
                     send.style.opacity = 1;
                     sendButton.style.width = '35px';
-                    document.getElementById("sendButton").addEventListener ("click", sendFunc, false);
+                    document.getElementById("sendButton").addEventListener("click", sendFunc, false);
                 }, 1000);
             }
 

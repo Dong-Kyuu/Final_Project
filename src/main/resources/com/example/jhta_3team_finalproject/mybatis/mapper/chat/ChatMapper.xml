@@ -60,8 +60,8 @@
 
     <!-- 2024-06-10, 채팅방 만들기 -->
     <insert id="createChatRoom" parameterType="chatRoom">
-        INSERT INTO chat_room(chat_room_num, room_name, chat_session_id, room_create_date)
-        VALUES (NULL, #{roomName}, #{chatSessionId}, NOW())
+        INSERT INTO chat_room(chat_room_num, room_name, chat_session_id, room_create_date, room_type)
+        VALUES (NULL, #{roomName}, #{chatSessionId}, NOW(), #{roomType})
     </insert>
 
     <!-- 2024-06-10, 마지막으로 생성된 채팅방 번호를 가져와서 참여 관계를 나타내는 테이블에서 사용 -->
@@ -91,8 +91,8 @@
 
     <!-- 2024-06-14, 1대1 채팅방 만들기 (P2P) -->
     <insert id="createp2pChatRoom" parameterType="chatRoom">
-        INSERT INTO chat_room(chat_room_num, room_name, chat_session_id, room_create_date)
-        VALUES (NULL, #{roomName}, #{chatSessionId}, NOW())
+        INSERT INTO chat_room(chat_room_num, room_name, chat_session_id, room_create_date, room_type)
+        VALUES (NULL, #{roomName}, #{chatSessionId}, NOW(), '자유')
     </insert>
 
     <!-- 2024-06-14, 1대1 채팅방 만들기에서 마지막으로 생성된 채팅방 번호를 가져와서 참여 관계를 나타내는 테이블에서 사용 -->
@@ -154,8 +154,18 @@
     </select>
 
     <!-- 2024-06-10, 방목록 가져오기 -> 마지막 메시지와 방 정보 -->
+    <!-- 2024-06-17, 안 읽은 메시지 수 구해오기 -->
     <select id="searchRoomUser" parameterType="chatRoom" resultType="chatParticipate">
-        SELECT *, GREATEST(IFNULL(cm.send_time, cr.room_create_date), cr.room_create_date) AS last_send_time
+        SELECT *,
+               (SELECT COUNT(*)
+                FROM chat_message
+                WHERE send_time BETWEEN (
+                    SELECT chat_visit_time
+                    FROM chat_participate
+                    WHERE chat_room_num = cp.chat_room_num
+                      AND chat_user_id =  #{chatSessionId}
+                ) AND NOW() AND chat_room_num = cp.chat_room_num) as unread_message_count,
+               GREATEST(IFNULL(cm.send_time, cr.room_create_date), cr.room_create_date) AS last_send_time
         FROM chat_participate cp
         LEFT JOIN(
                   SELECT *
@@ -175,8 +185,18 @@
     </select>
 
     <!-- 2024-06-10, 방 생성 시 해당 방 정보 가져오기 -->
+    <!-- 2024-06-17, 안 읽은 메시지 수 구해오기 -->
     <select id="searchLastRoomUser" parameterType="chatRoom" resultType="chatParticipate">
-        SELECT *, GREATEST(IFNULL(cm.send_time, cr.room_create_date), cr.room_create_date) AS last_send_time
+        SELECT *,
+               (SELECT COUNT(*)
+                FROM chat_message
+                WHERE send_time BETWEEN (
+                    SELECT chat_visit_time
+                    FROM chat_participate
+                    WHERE chat_room_num = cp.chat_room_num
+                    AND chat_user_id =  #{chatSessionId}
+                ) AND NOW() AND chat_room_num = cp.chat_room_num) as unread_message_count,
+               GREATEST(IFNULL(cm.send_time, cr.room_create_date), cr.room_create_date) AS last_send_time
         FROM chat_participate cp
         LEFT JOIN(
             SELECT *
@@ -194,19 +214,6 @@
         WHERE chat_user_id = #{chatSessionId}
         AND cp.chat_room_num = (SELECT MAX(chat_room_num) FROM chat_room)
         ORDER BY last_send_time DESC
-    </select>
-
-    <!-- 2024-06-10, 안 읽은 메시지 수 구해오기 -->
-    <select id="getUnreadMessage" parameterType="chatParticipate">
-        SELECT COUNT(*)
-        FROM chat_message
-        WHERE send_time BETWEEN (
-            SELECT chat_visit_time
-            FROM chat_participate
-            WHERE chat_room_num = #{chatRoomNum}
-              AND chat_user_id = #{chatUserId}
-        ) AND NOW()
-          AND chat_room_num = #{chatRoomNum}
     </select>
 
     <!-- 채팅 프로필 상태 메시지 변경 -->

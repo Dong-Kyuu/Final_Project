@@ -22,6 +22,7 @@ public class ChatParticipate {
     private String messageContent;
     private String roomName;
     private Date roomCreateDate;
+    private String roomType;
 
     /**
      * 2024-06-13, 확장 - 유저 이름, 유저 프로필 사진, 유저 이메일
@@ -30,4 +31,9 @@ public class ChatParticipate {
     private String username;
     private String userProfilePicture;
     private String userEmail;
+
+    /**
+     * 2024-06-17, 안 읽은 메시지 수
+     */
+    private int unreadMessageCount;
 }
