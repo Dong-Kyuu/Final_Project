@@ -49,7 +49,6 @@ dependencies {
     //implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
 
-
     //2024-05-27, 이지훈 - lombok
 
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
@@ -62,8 +61,12 @@ dependencies {
     //2024-06-09, 김산 - Iamport
     implementation 'com.github.iamport:iamport-rest-client-java:0.2.23'
 
-    //mail 선경
+    //mail 주선경
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+//    implementation 'com.fasterxml.jackson.core:jackson-databind' //LocalDateTime JSON벼환
+//    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+
 // Lombok 설정
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

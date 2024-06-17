@@ -1,7 +1,13 @@
 package com.example.jhta_3team_finalproject.controller.User;
 
-import com.example.jhta_3team_finalproject.domain.User.*;
+import com.example.jhta_3team_finalproject.domain.User.Attendence;
+import com.example.jhta_3team_finalproject.domain.User.MailVO;
+import com.example.jhta_3team_finalproject.domain.User.SendMail;
+import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.service.User.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,14 +26,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
-import java.util.*;
-
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -117,15 +119,8 @@ public class UserController {
     // 승인 대기 중인 사용자 요청 조회
     @GetMapping("/register_requests")
     @ResponseBody
-    public List<User> getRegisterRequests(@RequestParam(value = "filter", defaultValue = "all") String filter) {
-//        log.info("filter=" + filter);
-        if (filter.equals("approved")) {
-            return userservice.getApprovedRequests();
-        } else if (filter.equals("rejected")){
-            return userservice.getRejectedRequests();
-        } else {
-            return userservice.getAllRequests();
-        }
+    public List<Map<String, Object>> getRegisterRequests(@RequestParam(value = "filter", defaultValue = "-1") int filter) {
+        return userservice.getUsersFilter(filter);
     }
 
 
@@ -232,16 +227,17 @@ public class UserController {
     //사용자의 한달 출퇴근 기록을 반환
     @GetMapping(value = "/monthlyAttendance")
     @ResponseBody
-    public List<Attendence> getMonthlyAttendances(Principal principal) {
+    public List<Map<String, Object>> getMonthlyAttendances(Principal principal) {
         User userDetails = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         int userNum = userDetails.getUserNum();
 
-        LocalDate now = LocalDate.now();
-        LocalDateTime startDate = now.with(TemporalAdjusters.firstDayOfMonth()).atStartOfDay();
-        LocalDateTime endDate = now.with(TemporalAdjusters.lastDayOfMonth()).atTime(LocalTime.MAX);
+        String startDateStr = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth()).toString();
+        String endDateStr = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth()).toString();
 
-        return userservice.getMonthlyAttendances(userNum, startDate, endDate);
+        log.info(startDateStr + "시작" + endDateStr);
+        return userservice.getMonthlyAttendances(userNum, startDateStr, endDateStr);
     }
+
 
     // 사원 출퇴근 시간 기록
     @PostMapping("/attendance")
@@ -285,30 +281,8 @@ public class UserController {
         return response;
     }
 
-    // 직원 근태 관리(전 직원의 출퇴근 기록을 확인)
-//    @GetMapping("/")
-    //직원 정보 관리 ( 직원 직책, 부서 수정)
-
 
 }
-
-
-//    @PostMapping("/check-in")
-//    public String checkIn( Principal principal) {
-//        User userDetails = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-//        int userNum = userDetails.getUserNum();
-//        userservice.checkIn(userNum);
-//        return "출근 완료";
-//    }
-//
-//    @PostMapping("/check-out")
-//    public String checkOut(Principal principal) {
-//        User userDetails = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-//        int userNum = userDetails.getUserNum();
-//        userservice.checkOut(userNum);
-//        return "퇴근 완료";
-//    }
-
 
 
 

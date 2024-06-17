@@ -24,6 +24,7 @@
         FROM user_attendance
         WHERE user_num = #{userNum}
           AND DATE(check_in_time) = CURDATE()
+        LIMIT 1
 
     </select>
 
@@ -35,42 +36,29 @@
           AND check_in_time BETWEEN #{startDate} AND #{endDate}
     </select>
 
-    <!-- 전 직원의 한 달 출퇴근 정보 조회 -->
+    <!-- 전 직원의  출퇴근 정보 조회 -->
     <select id="getMonthlyAttendancesForAll" parameterType="map">
         SELECT u.user_num,
-               u.user_name,
-               d.department_name,
-               p.position_name,
-               ua.check_in_time,
-               ua.check_out_time,
-               ua.work_time
+        u.user_name,
+        d.department_name,
+        p.position_name,
+        ua.check_in_time,
+        ua.check_out_time,
+        ua.work_time
         FROM user_attendance ua
-                 JOIN user u ON ua.user_num = u.user_num
-                 JOIN user_departments d ON u.department_id = d.department_id
-                 JOIN user_positions p ON u.position_id = p.position_id
-        WHERE ua.check_in_time BETWEEN #{params.startDate} AND #{params.endDate}
+        JOIN user u ON ua.user_num = u.user_num
+        JOIN user_departments d ON u.department_id = d.department_id
+        JOIN user_positions p ON u.position_id = p.position_id
+        <where>
+            ua.check_in_time BETWEEN #{params.startDate} AND #{params.endDate}
+            <if test="params.department_id != -1">AND d.department_id = #{params.department_id}</if>
+        </where>
+
         ORDER BY u.user_num
     </select>
 
-    <!-- 부서 이름별 출퇴근 정보 조회 -->
-    <select id="getAttendancesByDepartmentName" parameterType="string" >
-        SELECT u.user_num,
-               u.user_name,
-               d.department_name,
-               p.position_name,
-               ua.check_in_time,
-               ua.check_out_time,
-               ua.work_time
-        FROM user_attendance ua
-                 JOIN user u ON ua.user_num = u.user_num
-                 JOIN user_departments d ON u.department_id = d.department_id
-                 JOIN user_positions p ON u.position_id = p.position_id
-        WHERE d.department_name = #{departmentName}
-          AND ua.check_in_time BETWEEN #{startDate} AND #{endDate}
-    </select>
-
     <!-- 직원 이름으로 출퇴근 정보 검색 (FULLTEXT INDEX 활용) -->
-    <select id="searchAttendancesByName" parameterType="string" >
+    <select id="searchAttendancesByName" parameterType="map">
         SELECT u.user_num,
                u.user_name,
                d.department_name,
@@ -82,7 +70,7 @@
                  JOIN user u ON ua.user_num = u.user_num
                  JOIN user_departments d ON u.department_id = d.department_id
                  JOIN user_positions p ON u.position_id = p.position_id
-        WHERE MATCH(u.user_name) AGAINST (#{searchTerm} IN BOOLEAN MODE)
+        WHERE MATCH(u.user_name) AGAINST(#{searchTerm} IN BOOLEAN MODE)
           AND ua.check_in_time BETWEEN #{startDate} AND #{endDate}
     </select>
 

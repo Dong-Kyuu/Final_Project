@@ -3,25 +3,22 @@ package com.example.jhta_3team_finalproject.domain.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+
 @Getter
 @Setter
 @ToString
-
-public class Attendence  {
+public class Attendence {
     private int attendenceId;
-    private int userNum;
     private LocalDateTime checkInTime;
     private LocalDateTime checkOutTime;
     private Time workTime;
-
     private int totalHours;
-
+    private int userNum;
     private String userId;
     private String userName;
+    private String departmentName;
+    private String positionName;
 }

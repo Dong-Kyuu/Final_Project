@@ -35,13 +35,8 @@ public interface UserMapper {
 
     //신규사원 요청 처리
 
-    List<User> findAllRequests(); //모든 요청
+    List<Map<String, Object>> getUsersFilter(@Param("params") Map<String, Object> params); //신입사원 모든 요청
 
-    List<User> getApprovedRequests(); //승인된 요청리스트
-
-    List<User> getRejectedRequests();//거절된 요청 리스트
-
-    List<User> getRegisterRequests();
 
     void approveUser(int userNum); //사용자 승인
 
