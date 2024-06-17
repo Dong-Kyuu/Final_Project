@@ -11,4 +11,10 @@ public interface NotificationMapper {
     void insert(Notification alarm);
 
     int readAction(int notifiNum);
+
+    void deleteNotificationUrl(String s);
+
+    int readAll(int userNum);
+
+    int deleteAll(int userNum);
 }

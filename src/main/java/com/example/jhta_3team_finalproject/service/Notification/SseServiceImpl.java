@@ -45,17 +45,16 @@ public class SseServiceImpl implements SseService{
 
         List<Notification> list = notificationMapper.getList(userNum);
 
-
-
-
         //503에러를 방지하기 위한 더미 이벤트 전송
         try {
             //알림은 emitter.send() 메서드를 사용하여 전송됩니다.
             //SseEmitter.event().name("notification").data(message)를 사용하여 이름이 "notification"이고
             //데이터가 message인 이벤트를 생성하고 전송합니다.
             if(list.size() == 0 ) {
+                emitter.send(SseEmitter.event().name("notifyBefore").data("html수정"));
                 emitter.send(SseEmitter.event().name("notification").data(""));
             }else {  //로그인 했을 때 읽지 않은 알림을 보냅니다.
+                emitter.send(SseEmitter.event().name("notifyBefore").data("html수정"));
                 for(Notification message : list) {
                     emitter.send(SseEmitter.event().name("notification").data(message));
                     logger.info("Notification="+message);
@@ -109,4 +108,21 @@ public class SseServiceImpl implements SseService{
     public int notificationRead(int notifiNum) {
         return notificationMapper.readAction(notifiNum);
     }
+
+    @Override
+    public void deleteNotificationUrl(String s) {
+        notificationMapper.deleteNotificationUrl(s);
+    }
+
+    @Override
+    public int readAll(int userNum) {
+        return notificationMapper.readAll(userNum);
+    }
+
+    @Override
+    public int deleteAll(int userNum) {
+        return notificationMapper.deleteAll(userNum);
+    }
+
+
 }

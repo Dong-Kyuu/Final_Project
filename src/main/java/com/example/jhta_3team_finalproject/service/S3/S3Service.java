@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class S3Service {
@@ -29,8 +31,10 @@ public class S3Service {
         return amazonS3Client.getUrl(S3Bucket, fileName).toString(); // 업로드된 파일의 URL 반환
     }
 
-    public S3Object downloadFile(String fileName) {
-        return amazonS3Client.getObject(S3Bucket, fileName);
+    public S3Object downloadFile(String fileName)throws IOException {
+
+        String decodedFileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8.toString());
+        return amazonS3Client.getObject(S3Bucket, decodedFileName);
     }
 
     private String generateFileName(MultipartFile file) {

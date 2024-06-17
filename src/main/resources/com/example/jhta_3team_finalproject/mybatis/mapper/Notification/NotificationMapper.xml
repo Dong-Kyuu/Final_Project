@@ -9,7 +9,7 @@
         FROM notification
         WHERE notification_to_user_num = #{userNum}
         ORDER BY notification_isread desc,
-                 notification_regdate desc
+                 notification_regdate asc
     </select>
 
     <insert id="insert" parameterType="com.example.jhta_3team_finalproject.domain.Notification.Notification">
@@ -25,8 +25,25 @@
     </insert>
 
     <update id="readAction">
-    UPDATE notification
-    SET notification_isread = 1
-    WHERE notification_num = #{notifiNum}
-</update>
+        UPDATE notification
+        SET notification_isread = 1
+        WHERE notification_num = #{notifiNum}
+    </update>
+
+    <delete id="deleteNotificationUrl">
+        DELETE FROM notification
+        WHERE notification_url = #{s}
+    </delete>
+
+    <update id="readAll">
+        UPDATE notification
+        SET notification_isread = 1
+        WHERE notification_to_user_num = #{userNum}
+          AND notification_isread = 0
+    </update>
+
+    <delete id="deleteAll">
+        DELETE FROM notification
+        WHERE notification_to_user_num = #{userNum}
+    </delete>
 </mapper>

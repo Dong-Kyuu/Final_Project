@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.Project.ProjectMapper">
+    <select id="getAllDepartment">
+        SELECT DISTINCT d.department_name
+        FROM user_departments d
+        JOIN user u ON d.department_id = u.department_id
+        WHERE d.department_id != 0
+    </select>
+
+    <select id="getAllUser">
+        SELECT u.*, d.department_name, p.position_name
+        FROM user u
+        JOIN user_departments d ON d.department_id = u.department_id
+        JOIN user_positions p ON p.position_id = u.position_id
+        WHERE user_num != #{userNum}
+        ORDER BY position_id
+    </select>
+
+    <insert id="createProject" useGeneratedKeys="true" keyProperty="projectNum">
+        INSERT INTO project
+        (master_user_num, project_title, project_start_period, project_end_period)
+        VALUES
+            (#{masterUserNum}, #{projectTitle}, #{projectStartPeriod}, #{projectEndPeriod})
+    </insert>
+
+    <select id="getMemberName">
+        SELECT user_name
+        FROM user
+        WHERE user_num = #{userNum}
+    </select>
+
+    <select id="getMemberProfile">
+        SELECT user_profile_picture
+        FROM user
+        WHERE user_num = #{userNum}
+    </select>
+
+    <select id="getMemberDepartment">
+        SELECT d.department_name
+        FROM user_departments d
+        JOIN user u ON u.department_id = d.department_id
+        WHERE u.user_num = #{userNum}
+    </select>
+
+    <select id="getMemberPosition">
+        SELECT p.position_name
+        FROM user_positions p
+                 JOIN user u ON u.position_id = p.position_id
+        WHERE u.user_num = #{userNum}
+    </select>
+
+    <insert id="insertMember">
+        INSERT INTO project_member
+        (project_num, project_member_num, project_member_name,
+        project_member_profile, project_member_department, project_member_position)
+        VALUES
+        (#{projectNum}, #{projectMemberNum}, #{projectMemberName},
+         #{projectMemberProfile}, #{projectMemberDepartment}, #{projectMemberPosition})
+    </insert>
+
+    <select id="getMyProject">
+        SELECT p.*
+        FROM project p
+        JOIN project_member pm ON p.project_num = pm.project_num
+        WHERE pm.project_member_num = #{loginNum}
+    </select>
+
+    <select id="getProject">
+        SELECT *
+        FROM project
+        WHERE project_num = #{projectNum}
+    </select>
+
+    <select id="getProjectMember">
+        SELECT *
+        FROM project_member
+        WHERE project_num = #{projectNum}
+    </select>
+
+    <select id="getProjectDepartment">
+    SELECT DISTINCT pm.project_member_department
+    FROM project_member pm
+    JOIN project p ON pm.project_num = p.project_num
+    WHERE p.project_num = #{projectNum}
+    AND pm.project_member_num != #{userNum}
+    </select>
+</mapper>

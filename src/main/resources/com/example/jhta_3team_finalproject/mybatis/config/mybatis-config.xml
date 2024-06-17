@@ -23,6 +23,7 @@
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/BoardMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/UpfileMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Table/Table_CommentMapper.xml"/>
+		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/Project/ProjectMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/chat/ChatMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/customer/InqCommentMapper.xml"/>
 		<mapper resource="com/example/jhta_3team_finalproject/mybatis/mapper/customer/InqueryBoardMapper.xml"/>
