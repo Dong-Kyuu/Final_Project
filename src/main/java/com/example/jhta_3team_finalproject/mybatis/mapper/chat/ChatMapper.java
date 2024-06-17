@@ -69,4 +69,6 @@ public interface ChatMapper {
     public int lastChatRoomNum();
 
     public List<User> chatRoomParticipateList(ChatRoom chatRoom);
+
+    public int initChatRoomVisitTime(ChatParticipate chatParticipate);
 }

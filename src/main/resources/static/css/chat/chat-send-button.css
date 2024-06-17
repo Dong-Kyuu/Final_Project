@@ -1,0 +1,64 @@
+:root{
+    --main-color: skyblue;
+    --text-color: white;
+    --check-color: white;
+    --loader-back: white;
+    --loader: black;
+    font-family:'Poppins';
+}
+
+.chat-primary-button {
+    position: absolute;
+    right: 12px;
+    top: 8px;
+    width: 35px;
+    height: 35px;
+    background-color: skyblue;
+    border: none;
+    font-size: 10pt;
+    color: var(--text-color);
+    border-radius: 30px;
+    cursor: pointer;
+    transition: .8s;
+    transform-origin: center;
+}
+.chat-send-button {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50% , -50%);
+    transition: .4s;
+    opacity: 1;
+    transition: .25s;
+}
+.chat-sending-button {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(90deg) ;
+    position: absolute;
+    border: 4px solid var(--loader-back);
+    border-top: 4px solid var(--loader);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1.5s linear infinite;
+    opacity: 0;
+    transition: .25s ease-in;
+}
+.chat-sent-button {
+    position:absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50% , -50%);
+    transition: .25s ease-in;
+    opacity:0;
+}
+
+.chat-button-icon {
+    color: var(--check-color);
+    font-size: 10pt;
+}
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}

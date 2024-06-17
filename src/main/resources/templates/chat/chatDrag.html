@@ -20,13 +20,23 @@
                     var $dialog = $("#dialog").parent();
                     if (scale === 1.4) {
                         scale = 1;
+                        $dialog.css({
+                            "transform": "scale(" + scale + ")",
+                            "transform-origin": "right top", // 오른쪽 위를 기준으로 스케일링
+                            "transition": "transform 0.5s, top 0.5s, right 0.5s" // 트랜지션 없이 즉시 변환
+                        });
                     } else {
                         scale = 1.4;
+                        $dialog.css({
+                            "transform": "scale(" + scale + ")",
+                            "transform-origin": "right top", // 오른쪽 위를 기준으로 스케일링
+                            "transition": "transform 0.5s, top 0.5s, right 0.5s" // 부드러운 전환을 위한 트랜지션
+                        });
                     }
-                    $dialog.css({
-                        "transform": "scale(" + scale + ")",
-                        "transform-origin": "right top", // 오른쪽 위를 기준으로 스케일링
-                        "transition": "transform 0.5s, top 0.5s, right 0.5s" // 부드러운 전환을 위한 트랜지션
+
+                    // transitionend 이벤트를 이용하여 트랜지션 비활성화
+                    $dialog.one("transitionend", function() {
+                        $dialog.css("transition", "none");
                     });
                 });
             });

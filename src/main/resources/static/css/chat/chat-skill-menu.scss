@@ -1,13 +1,16 @@
+/*
+  npx sass --watch chat-skill-menu.scss chat-skill-menu.css
+*/
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
 .chat-menu-test {
   box-sizing: border-box;
 }
 
-$body-bg: #84a0f4;
-$button-bg: #60a5fa;
+$button-bg: skyblue;
 $list-bg: #fff;
-$text-color: #60a5fa;
+$text-color: skyblue;
 $text-color-hover: #000;
 $menu-icon-transition: transform 300ms cubic-bezier(0.52, -0.80, 0.52, 0.52);
 
