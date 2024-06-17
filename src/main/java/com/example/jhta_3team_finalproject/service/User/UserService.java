@@ -54,12 +54,10 @@ public interface UserService {
     //신규사원 요청 처리
     void saveUser(User user);
 
-
     void approveUser(int userNum); //요청 승인
 
     void rejectUser(int userNum);// 요청 거절
 
-    //이거
     public List<Map<String, Object>> getUsersFilter(int user_is_approved); //모든 요청
 
     int[] getUsersByDepartmentAndPosition(int departmentId, int positionId); //부서와 직급에 해당하는 인물넘버 호츌 -- sse에서 특정인물에게 전달시 활용 등
