@@ -7,7 +7,6 @@ public interface CalendarService {
 
     public List<Calendar> getlist();
 
-
     int insert(Calendar calendar);
 
     int update(Calendar calendar);

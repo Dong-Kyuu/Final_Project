@@ -171,8 +171,8 @@ $(function () {
     var areaData = {
         labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
         datasets: [{
-            label: '월별 매출',
             data: [2, 1, 3, 6, 5, 7, 3, 5, 8, 5, 7, 8],
+            label: '월별 매출:'+ data +' 천만',
             backgroundColor: [
                 'rgba(54, 162, 235, 0.2)',
                 'rgba(255,99,132,1)',
@@ -209,8 +209,8 @@ $(function () {
     var areaDataDark = {
         labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
         datasets: [{
-            label: '월별 매출 : 천만',
             data: [2, 1, 3, 6, 5, 7, 3, 5, 8, 5, 7, 8],
+            label: '월별 매출 :' + data +'천만',
             backgroundColor: [
                 'rgba(54, 162, 235, 0.2)',
                 'rgba(255,99,132,1)',
