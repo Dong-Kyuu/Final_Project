@@ -1,7 +1,10 @@
 package com.example.jhta_3team_finalproject.controller;
 
+import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.S3Object;
 import com.example.jhta_3team_finalproject.domain.Board.Board;
 import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
+import com.example.jhta_3team_finalproject.service.S3.S3Service;
 import com.example.jhta_3team_finalproject.service.board.BoardService;
 import com.example.jhta_3team_finalproject.service.board.TableCommentService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,15 +33,16 @@ public class BoardController {
 
     private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 
-    @Value("${my.savefolder.board}")
-    private String saveFolder;
+
     private BoardService BS;
     private TableCommentService CS;
+    private S3Service s3Service;
 
     @Autowired
-    public BoardController(BoardService BS, TableCommentService CS) {
+    public BoardController(BoardService BS, TableCommentService CS, S3Service s3Service) {
         this.BS = BS;
         this.CS = CS;
+        this.s3Service = s3Service;
     }
 
     // 리스트 가져오기
@@ -102,20 +106,13 @@ public class BoardController {
         List<BoardUpfiles> files = new ArrayList<>();
         for (MultipartFile uploadfile : uploadfiles) {
             if (!uploadfile.isEmpty()) {
-                String fileName = uploadfile.getOriginalFilename(); // 원래 파일명
-
-                String fileDBName = fileDBName(fileName, saveFolder);
-                logger.info("fileDBName = " + fileDBName);
-
-                uploadfile.transferTo(new File(saveFolder + fileDBName));
-                logger.info("transferTo path = " + saveFolder + fileDBName);
+                String fileUrl = s3Service.uploadFile(uploadfile);
+                logger.info("Uploaded file URL: " + fileUrl);
 
                 BoardUpfiles file = new BoardUpfiles();
-                file.setUpfilesOriginalFileName(fileName);
-                file.setUpfilesFileName(fileDBName);
+                file.setUpfilesOriginalFileName(uploadfile.getOriginalFilename());
+                file.setUpfilesFileName(fileUrl); // S3 URL로 설정
                 files.add(file);
-
-
             }
         }
 
@@ -280,17 +277,12 @@ public class BoardController {
                 for (MultipartFile uploadfile : uploadfiles) {
                     if (!uploadfile.isEmpty()) {
 
-                        String fileName = uploadfile.getOriginalFilename(); // 원래 파일명
-
-                        String fileDBName = fileDBName(fileName, saveFolder);
-                        logger.info("fileDBName = " + fileDBName);
-
-                        uploadfile.transferTo(new File(saveFolder + fileDBName));
-                        logger.info("transferTo path = " + saveFolder + fileDBName);
+                        String fileUrl = s3Service.uploadFile(uploadfile);
+                        logger.info("Uploaded file URL: " + fileUrl);
 
                         BoardUpfiles file = new BoardUpfiles();
-                        file.setUpfilesOriginalFileName(fileName);
-                        file.setUpfilesFileName(fileDBName);
+                        file.setUpfilesOriginalFileName(uploadfile.getOriginalFilename());
+                        file.setUpfilesFileName(fileUrl); // S3 URL로 설정
                         files.add(file);
                     }
                 }
@@ -322,29 +314,32 @@ public class BoardController {
 
     @ResponseBody
     @PostMapping("/down")
-    public byte[] BoardFileDown(String filename,
+    public void BoardFileDown(String filename,
                                 HttpServletRequest request,
                                 String original,
-                                HttpServletResponse response) throws Exception {
+                                HttpServletResponse response) throws IOException {
 
-        // String savePath = "resources/upload";
-        // 서블릿의 실행 환경 정보를 담고 있는 객체를 리터한다.
-        // ServletContext context = request.getSession().getServletContext();
-        // String sDownloadPath = context.getRealPath(savePath);
-        // 수정
-        String sFilePath = saveFolder + filename;
+        String s3Key = filename.replace("https://mbtiawsbucket.s3.ap-northeast-2.amazonaws.com/", "");
+        logger.info("S3 Key: {}", s3Key);
 
-        File file = new File(sFilePath);
+        try {
+            S3Object s3Object = s3Service.downloadFile(s3Key);
+            InputStream inputStream = s3Object.getObjectContent();
 
-        byte[] bytes = FileCopyUtils.copyToByteArray(file);
+            String sEncoding = new String(original.getBytes("utf-8"), "ISO-8859-1");
 
-        String sEncoding = new String(original.getBytes("utf-8"), "ISO-8859-1");
+            response.setHeader("Content-Disposition", "attachment;filename=" + sEncoding);
+            response.setContentLength((int) s3Object.getObjectMetadata().getContentLength());
 
-        // Context-Disposition : attachment : 브라우저는 해당 Context를 처리하지 않고, 다운로드 하게 된다.
-        response.setHeader("Content-Disposition", "attachment;filename=" + sEncoding);
+            FileCopyUtils.copy(inputStream, response.getOutputStream());
 
-        response.setContentLength(bytes.length);
-        return bytes;
+            inputStream.close();
+            response.getOutputStream().close();
+            logger.info("File successfully written to response output stream.");
+        } catch (AmazonS3Exception e) {
+            logger.error("Error occurred while downloading file from S3", e);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "The specified key does not exist.");
+        }
     }
 
     @GetMapping("/t")

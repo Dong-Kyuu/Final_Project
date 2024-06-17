@@ -1,0 +1,154 @@
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Purple Admin</title>
+    <link rel="stylesheet" th:href="@{../assets/vendors/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{../assets/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{../css/Project/PJMain.css}">
+    <link rel="stylesheet" th:href="@{../assets/css/style.css}">
+    <link rel="shortcut icon" th:href="@{../assets/images/favicon.ico}"/>
+
+    <!-- js -->
+    <script th:src="@{/js/jquery-3.7.1.js}"></script>
+    <script th:src="@{../js/Project/PJMain.js}"></script>
+
+</head>
+<body>
+
+<div class="container-scroller">
+    <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
+    <div class="container-fluid page-body-wrapper">
+        <th:block th:replace="~{HSF/_sidebar :: sidebar}"></th:block>
+        <div class="main-panel">
+            <!-- 서브 헤더 -->
+            <div class="sub-header" style="padding-bottom:0px;">
+                <nav>
+                    <div style="margin-left:30px; margin-top:10px; font-size: 30px;">
+                        <h3 style="font-size:25px; margin-bottom:0px; padding-left:5px">[[${project.projectTitle}]]<code style="padding-bottom:0px; margin-left:30px; margin-top:2px">[[${project.projectIntroduce}]]</code></h3>
+                    </div>
+                    <ul class="nav-items" style="margin-bottom:0px; margin-top:12px; border-top:1px solid #ddd">
+                        <li><a href="#home"><i class="mdi mdi-home"></i>&nbsp;피드</a></li>
+                        <li><a href="#guide">파일</a></li>
+                        <li><a href="#calendar">캘린더</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="content-wrapper" style="margin-top:100px">
+
+                <!-- 프로젝트 멤버 리스트 -->
+                <div class="col-3 grid-margin stretch-card" style="float:right; position: fixed; right:5%">
+                    <div class="card">
+                        <div class="card-body memberList" style="padding:30px">
+                            <div style="margin-bottom:30px">
+                                Project Members
+                            </div>
+                            <hr>
+                            <div style="height: 30px; align-items:center; margin-bottom:20px">
+                                <img th:src="${#authentication.principal.userProfilePicture}" alt="image" style="width:30px; height:30px; border-radius: 18px; float: left; margin-top:3px; margin-right: 20px;">
+                                <div>
+                                    <span class="card-title" style="font-weight: bold; font-size:14px;">
+                                        [[${#authentication.principal.username}]]
+                                    </span>
+                                </div>
+                                <p class="card-description" style="font-size:11px; margin-bottom: 5px;">
+                                    부서
+                                    <code style="font-size:11px" th:text="직급"></code>
+                                </p>
+                            </div>
+                            <hr>
+                            <div class="UserList">
+                                <th:block th:each="department, iterStat:${department}">
+                                    <div id="departmentList">
+                                        <div class="department">
+                                            <span class="department-name" style="font-size:16px; font-weight: bold; margin-bottom:20px !important;">[[${department}]]</span>
+
+                                            <th:block th:each="members, iterStat:${members}">
+                                                <th:block th:if="${(members.getProjectMemberDepartment() == department) and (members.getProjectMemberNum() != #authentication.principal.userNum)}">
+                                                    <div class="employee-list" style="margin-top:20px; margin-bottom:20px">
+                                                        <div class="employee" style="height: 30px; align-items:center; margin-bottom:20px">
+                                                            <div style="height: 30px; align-items:center; margin-bottom:20px">
+                                                                <img th:src="${members.getProjectMemberProfile()}" alt="image" style="width:30px; height:30px; border-radius: 18px; float: left; margin-top:3px; margin-right: 20px;">
+                                                                <div>
+                                                                    <span class="card-title" style="font-weight: bold; font-size:14px;">
+                                                                        [[${members.getProjectMemberName()}]]
+                                                                    </span>
+                                                                </div>
+                                                                <p class="card-description" style="font-size:11px; margin-bottom: 5px;">
+                                                                    [[${members.getProjectMemberDepartment()}]]
+                                                                    <code style="font-size:11px" th:text="${members.getProjectMemberPosition()}"></code>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </th:block>
+                                            </th:block>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 업무 생성버튼 -->
+                <div class="col-7 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body" style="padding:15px">
+                            <div style="height: 30px; display:flex; align-items:center">
+                                <img th:src="${#authentication.principal.userProfilePicture}" alt="image" style="width:30px; height:30px; border-radius: 18px; float: left; margin-right: 20px;">
+                                <div style="display: flex; align-items: center;">
+                                </div>
+                                <input type="text" readonly class="createContent" placeholder="새로운 업무를 추가하세요!" onclick="openModal()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <div class="create-Work">
+            <p class="modal-head">New Work!</p>
+        </div>
+        <ul class="work-modal-item" style="margin-bottom:0px; margin-top:12px; border-top:1px solid #ddd">
+
+            <li><i class="mdi mdi-lead-pencil"></i>&nbsp;&nbsp;글</li>
+            <li><i class="mdi mdi-calendar-multiple" style="margin-right:8px;"></i>업무</li>
+            <li><i class="mdi mdi-checkbox-marked-outline"></i> do</li>
+            <li>일정</li>
+        </ul>
+        <div class="work-title">
+            <input type="text" class="work-title-input" name="projectBoardTitle" placeholder="제목을 입력하세요!" required>
+        </div>
+        <hr>
+        <div class="btn-flex">
+            <button type="button" class="btn btn-inverse-primary btn-fw workBtn">Primary</button>
+            <button type="button" class="btn btn-inverse-success btn-fw workBtn">Success</button>
+            <button type="button" class="btn btn-inverse-danger btn-fw workBtn">Danger</button>
+            <button type="button" class="btn btn-inverse-warning btn-fw workBtn">Warning</button>
+            <button type="button" class="btn btn-inverse-info btn-fw workBtn">Info</button>
+        </div>
+
+    </div>
+</div>
+
+<script th:src="@{../assets/vendors/js/vendor.bundle.base.js}"></script>
+<script th:src="@{../assets/js/off-canvas.js}"></script>
+<script th:src="@{../assets/js/hoverable-collapse.js}"></script>
+<script th:src="@{../assets/js/misc.js}"></script>
+<script th:src="@{../assets/js/file-upload.js}"></script>
+
+</body>
+</html>

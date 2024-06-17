@@ -61,9 +61,11 @@
     </update>
 
     <select id="getDetail" resultType="AnnounceBoard">
-        SELECT announce_board.*, user.user_profile_picture, user.user_department, user.user_name
+        SELECT announce_board.*, user.user_profile_picture, user_departments.department_name AS user_department, user.user_name, user_positions.position_name AS user_position
         FROM announce_board
                  LEFT JOIN user ON announce_board.user_num = user.user_num
+                 LEFT JOIN user_positions ON user.position_id = user_positions.position_id
+                 LEFT JOIN user_departments ON user.department_id = user_departments.department_id
         WHERE announce_board.annboard_num = #{number}
     </select>
 
@@ -146,7 +148,8 @@
 
     <update id="doTopFix">
         UPDATE announce_board
-        SET annboard_fix = 1
+        SET annboard_fix = 1,
+            annboard_request = 2
         WHERE annboard_num = #{annboardNum}
     </update>
 
@@ -161,5 +164,32 @@
         FROM user
         WHERE user_auth LIKE '%MASTER%'
            OR (user_auth = 'ROLE_HEAD' AND department_id = 2)
+    </select>
+
+    <update id="fixRequest">
+        UPDATE announce_board
+        SET annboard_request = 1
+        WHERE annboard_num = #{annboardNum}
+    </update>
+
+    <update id="requestRefuse">
+        UPDATE announce_board
+        SET annboard_request = 2
+        WHERE annboard_num = #{annboardNum}
+    </update>
+
+    <select id="getAllUserData">
+        SELECT user_num
+        FROM user
+        WHERE user_num != #{userNum}
+        <if test="departmentId != 0">
+            AND department_Id = #{departmentId}
+        </if>
+    </select>
+
+    <select id="getWriter">
+        SELECT user_name
+        FROM user
+        WHERE user_num = #{userNum}
     </select>
 </mapper>

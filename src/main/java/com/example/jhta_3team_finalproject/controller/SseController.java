@@ -38,4 +38,32 @@ public class SseController {
 
         return sseService.notificationRead(notifiNum);
     }
+
+    @PostMapping("/notification/readAll")
+    public int readAllNotifications() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginuser = (User)authentication.getPrincipal();
+        int userNum = loginuser.getUserNum();
+        int readNotifiCount = sseService.readAll(userNum);
+        int result = 0;
+        if(readNotifiCount > 0) {
+            result = 1;
+        }
+        return result;
+    }
+
+    @PostMapping("/notification/deleteAll")
+    public int deleteAllNotifications() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginuser = (User)authentication.getPrincipal();
+        int userNum = loginuser.getUserNum();
+        int readNotifiCount = sseService.deleteAll(userNum);
+        int result = 0;
+        if(readNotifiCount > 0) {
+            result = 1;
+        }
+        return result;
+    }
 }

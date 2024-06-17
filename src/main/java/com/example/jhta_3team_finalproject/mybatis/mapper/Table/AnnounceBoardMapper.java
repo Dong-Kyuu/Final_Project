@@ -38,4 +38,12 @@ public interface AnnounceBoardMapper {
     int topFixClear(int annboardNum);
 
     int[] searchFixAuth();
+
+    int fixRequest(int annboardNum);
+
+    int requestRefuse(int annboardNum);
+
+    int[] getAllUserData(int userNum, int departmentId);
+
+    String getWriter(int userNum);
 }

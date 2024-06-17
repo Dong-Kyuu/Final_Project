@@ -24,3 +24,22 @@
 .chart-board {
     padding:0px !important;
 }
+
+.icon-item {
+    font-size: 20px;
+    margin-top:15px;
+    float:right;
+    margin-left: auto;
+}
+
+.tooltip-message {
+    position: absolute;
+    background: #333;
+    color: #fff;
+    padding: 6px 10px 10px 10px;
+    border-radius: 5px;
+    z-index: 1000;
+    white-space: nowrap;
+    font-size : 12px;
+    height : 25px;
+}

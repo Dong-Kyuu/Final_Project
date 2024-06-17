@@ -66,9 +66,11 @@
     </update>
 
     <select id="getDetail" resultType="board">
-        SELECT board.*, user.user_profile_picture, user.user_department, user.user_name
+        SELECT board.*, user.user_profile_picture, user_departments.department_name, user.user_name, user_positions.position_name
         FROM board
                  LEFT JOIN user ON board.user_num = user.user_num
+                 LEFT JOIN user_positions ON user.position_id = user_positions.position_id
+                 LEFT JOIN user_departments ON user.department_id = user_departments.department_id
         WHERE board.board_num = #{number}
     </select>
 
