@@ -8,7 +8,7 @@ services:
   # 서비스명
   redis_container:
     # 사용할 이미지
-    image: chaterbox/redis:latest
+    image: redis:latest
     # 컨테이너명
     container_name: redis-pub-container
     # 접근 포트 설정(컨테이너 외부:컨테이너 내부)
