@@ -1,1 +1,3 @@
+// rootProject.name = 'JHTA_3Team_FinalProject'
 rootProject.name = 'JHTA_3Team_FinalProject'
+include ':JHTA_3Team_FinalProject'

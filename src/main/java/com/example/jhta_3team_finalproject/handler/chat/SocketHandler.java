@@ -100,7 +100,6 @@ public class SocketHandler extends TextWebSocketHandler {
         }
         chatMessage.setFileOriginName(fileName);
 
-
         chatMessage = chatService.createMessage(chatMessage);
 
         obj.put("sessionId", chatMessage.getSenderId());
@@ -325,7 +324,7 @@ public class SocketHandler extends TextWebSocketHandler {
         // 포문으로 연속 메시지를 보낸다. list 크기 만큼 돌린다.
         for (int i = 0; i < chatMessageList.size(); i++) {
             String content = chatMessageList.get(i).getMessageContent();
-            String senderId = chatMessageList.get(i).getUserId(); // 2024-06-08, 현재는 아이디 -> 나중에 이름으로 가져올 예정
+            String senderId = chatMessageList.get(i).getSenderId(); // 2024-06-08, 현재는 아이디 -> 나중에 이름으로 가져올 예정
             String fileUrl = chatMessageList.get(i).getFileUrl();
             int readCount = chatMessageList.get(i).getReadCount();
             Date sendTime = chatMessageList.get(i).getSendTime();

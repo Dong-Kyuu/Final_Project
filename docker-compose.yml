@@ -1,0 +1,12 @@
+services:
+  web_service:
+    container_name: web
+    image: chaterbox/security
+    ports:
+      - 9000:9000
+    
+    networks:
+      test2:
+
+networks:
+  test2:
