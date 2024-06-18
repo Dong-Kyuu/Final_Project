@@ -3,7 +3,7 @@ services:
     container_name: web
     image: chaterbox/security_aws:01
     ports:
-      - 9000:9900
+      - 9000:9000
     
     networks:
       test2:
