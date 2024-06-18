@@ -129,18 +129,71 @@
             <li><i class="mdi mdi-checkbox-marked-outline"></i> do</li>
             <li>일정</li>
         </ul>
+
         <div class="work-title">
             <input type="text" class="work-title-input" name="projectBoardTitle" placeholder="제목을 입력하세요!" required>
         </div>
-        <hr>
+        <hr style="margin-top:10px">
+
         <div class="btn-flex">
-            <button type="button" class="btn btn-inverse-primary btn-fw workBtn">Primary</button>
-            <button type="button" class="btn btn-inverse-success btn-fw workBtn">Success</button>
-            <button type="button" class="btn btn-inverse-danger btn-fw workBtn">Danger</button>
-            <button type="button" class="btn btn-inverse-warning btn-fw workBtn">Warning</button>
-            <button type="button" class="btn btn-inverse-info btn-fw workBtn">Info</button>
+            <button type="button" class="btn btn-inverse-primary btn-fw workBtn">요청</button>
+            <button type="button" class="btn btn-inverse-success btn-fw workBtn">진행</button>
+            <button type="button" class="btn btn-inverse-danger btn-fw workBtn">피드백</button>
+            <button type="button" class="btn btn-inverse-warning btn-fw workBtn">완료</button>
+            <button type="button" class="btn btn-inverse-info btn-fw workBtn">보류</button>
+        </div>
+        <hr>
+        <div style="font-weight: bold; margin-bottom:12px;">
+        Options
+        </div>
+        <div>
+            <div class="chargeShel">
+                담당자 <input type="text" placeholder="담당자를 추가하세요." class="chargeIn">
+            </div>
+            <div class="chargeList">
+                <div class="chargeitem">
+                    김동규 <span style="color:#878787; margin-left: 15px;">부서</span><code>직급</code>
+                </div>
+            </div>
         </div>
 
+        <div class="periodArea">
+            <div class="col-sm-5">
+                <label for="startDate">Start Date:</label>
+                <input type="date" class="form-control" name="projectStartPeriod" id="startDate" required/>
+            </div>
+            <div class="col-sm-5 endDate">
+                <label for="endDate">End Date (Optional):</label>
+                <input type="date" class="form-control" name="projectEndPeriod" id="endDate"/>
+            </div>
+        </div>
+        <p id="dateError" style="color:red; display:none;">프로젝트 시작 날짜는 끝나는 날짜보다 늦을 수 없습니다.</p>
+
+        <div style="margin-top:14px; font-size:15px; font-weight: bold; display: flex; align-items: center">
+            <i class="mdi mdi-flag-outline" style="font-size:18px;"></i> 우선순위
+        </div>
+        <hr style="margin-top:13px">
+
+        <textarea class="workcontent" rows="30" placeholder="내용을 입력하세요!" value="">
+        </textarea>
+        <hr>
+
+        <div class="last-btngroup">
+            <div class="btn-group workBtn" style="width:70px;">
+                <button type="button"
+                        class="btn btn-secondary btn-fw workBtn"
+                        data-bs-toggle="dropdown">전체보기
+                </button>
+                <div class="dropdown-menu scope" style="width:60px !important;">
+                    <a class="dropdown-item scope">전체보기</a>
+                    <a class="dropdown-item scope">나만보기</a>
+                    <a class="dropdown-item scope">프로젝트 관리자만</a>
+                </div>
+            </div>
+            <div style="margin : 70px">
+                <button type="button" class="btn btn-inverse-danger btn-fw workBtn">등록</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -149,6 +202,7 @@
 <script th:src="@{../assets/js/hoverable-collapse.js}"></script>
 <script th:src="@{../assets/js/misc.js}"></script>
 <script th:src="@{../assets/js/file-upload.js}"></script>
+
 
 </body>
 </html>

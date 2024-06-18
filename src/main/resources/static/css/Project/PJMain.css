@@ -119,8 +119,12 @@ body {
     margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
+    min-width: 400px;
+    max-width : 560px;
     width: 50% !important;
-    height : 70%
+    height : 80%;
+    max-height : 900px;
+
 }
 
 .create-Work {
@@ -183,5 +187,68 @@ body {
 }
 
 .workBtn {
-    width : 10% !important
+    width : 15%; !important;
+    min-width : 70px !important;
+    padding: 10px 0.6rem !important;
+    font-width: bold;
+}
+
+.chargeIn {
+    border : none;
+    height: 30px;
+    margin-left : 10px;
+}
+
+.chargeShel {
+    font-weight: bold;
+}
+
+.chargeList {
+    border:1px #d1d1d1 solid;
+    width:160px;
+    min-height: 40px;
+    max-height: 200px;
+    overflow: auto;
+    border-radius: 13px;
+    padding:10px 8px;
+    margin-left:10%;
+    margin-top:10px;
+    display: none;
+}
+
+.chargeitem {
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+}
+
+.periodArea {
+    margin : 15px 0px 0px 0px;
+    display : flex;
+}
+
+#startDate, #endDate {
+    height: 40px;
+    margin-top: 5px
+}
+
+.endDate {
+    margin-left:8% !important;
+}
+
+.workcontent {
+    border:none;
+    padding : 10px;
+}
+
+.last-btngroup {
+    display: flex;
+    height:40px;
+
+    align-items: center;
+}
+
+.scope {
+    min-width:145px !important;
+    width:145px !important
 }
