@@ -6,6 +6,7 @@ import com.example.jhta_3team_finalproject.domain.chat.ChatMessage;
 import com.example.jhta_3team_finalproject.domain.chat.ChatParticipate;
 import com.example.jhta_3team_finalproject.domain.chat.ChatRoom;
 import com.example.jhta_3team_finalproject.service.chat.ChatService;
+import com.example.jhta_3team_finalproject.service.chat.ChatSseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,7 +27,8 @@ import java.util.stream.Collectors;
 public class ChatController {
 
     private final ChatService chatService;
-    List<ChatParticipate> chaParticiPateList;
+    private final ChatSseService chatSseService;
+    List<ChatParticipate> chatParticiPateList;
     List<User> chatUserList;
     static int roomNumber = 0;
 
@@ -64,27 +67,16 @@ public class ChatController {
         String chatSessionId = params.get("chatUserId");
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setChatSessionId(chatSessionId);
-        chaParticiPateList = chatService.searchRoomUser(chatRoom);
-        return chaParticiPateList;
+        chatParticiPateList = chatService.searchRoomUser(chatRoom);
+        return chatParticiPateList;
     }
 
     @RequestMapping("getRoom")
     public @ResponseBody List<ChatParticipate> getRoom(@RequestParam HashMap<Object, Object> params) throws Exception {
         log.info("관리자용 채팅방 전체 구하기");
         ChatRoom chatRoomEmpty = new ChatRoom();
-        chaParticiPateList = chatService.searchRoom(chatRoomEmpty);
-        return chaParticiPateList;
-    }
-
-    @RequestMapping("getUnreadMessage")
-    public @ResponseBody int getUnreadMessage(@RequestParam HashMap<String, String> params) throws Exception {
-        String sessionId = params.get("sessionId");
-        String roomNumber = params.get("roomNumber");
-        ChatParticipate chatParticipate = new ChatParticipate();
-        chatParticipate.setChatUserId(sessionId);
-        chatParticipate.setChatRoomNum(Long.valueOf(roomNumber));
-        int unreadCount = chatService.getUnreadMessage(chatParticipate);
-        return unreadCount;
+        chatParticiPateList = chatService.searchRoom(chatRoomEmpty);
+        return chatParticiPateList;
     }
 
     @RequestMapping("getChatRoomInfo")
@@ -109,12 +101,22 @@ public class ChatController {
         /**
          * 2024-06-13, 해당 채팅방 참가 유저 리스트 가져오기
          */
-        chaParticiPateList = chatService.getChatRoomUserList(chatParticipate);
+        chatParticiPateList = chatService.getChatRoomUserList(chatParticipate);
 
         map.put("roomName", chatRoom.getRoomName());
         map.put("userCount", userCount);
-        map.put("chatRoomPartList", chaParticiPateList);
+        map.put("chatRoomPartList", chatParticiPateList);
         return map;
+    }
+
+    @RequestMapping(value = "getChatMessages")
+    public @ResponseBody List<ChatMessage> getChatMessages(ChatMessage chatMessage) throws Exception {
+        return chatService.getChatMessages(chatMessage);
+    }
+
+    @RequestMapping(value = "searchMessages")
+    public @ResponseBody List<ChatMessage> searchMessages(ChatMessage chatMessage) throws Exception {
+        return chatService.searchChatMessages(chatMessage);
     }
 
     @RequestMapping(value = "isp2pChatRoom")
@@ -144,17 +146,11 @@ public class ChatController {
     }
 
     @RequestMapping("createRoomProcess")
-    public @ResponseBody ChatParticipate createRoomProcess(@RequestParam HashMap<Object, Object> params) throws Exception {
-        String roomName = (String) params.get("roomName");
-        String sessionId = (String) params.get("sessionId");
-        String chatInviteUserList = (String) params.get("chatInviteUserList");
-        ChatRoom chatRoom = new ChatRoom();
+    public @ResponseBody ChatParticipate createRoomProcess(ChatRoom chatRoom) throws Exception {
         ChatParticipate chatParticipate = new ChatParticipate();
 
-        if (roomName != null && !roomName.trim().equals("")) {
-            chatRoom.setRoomName(roomName);
-            chatRoom.setChatSessionId(sessionId);
-            chatParticipate = chatService.createChatRoom(chatRoom, chatInviteUserList);
+        if (chatRoom.getRoomName() != null && !chatRoom.getRoomName().trim().equals("")) {
+            chatParticipate = chatService.createChatRoom(chatRoom);
             return chatParticipate;
         }
 
@@ -170,27 +166,25 @@ public class ChatController {
 
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setChatSessionId(chatUserId);
-        chaParticiPateList = chatService.searchRoomUser(chatRoom);
+        chatParticiPateList = chatService.searchRoomUser(chatRoom);
 
         mv.setViewName("chat/roomMgr");
         mv.addObject("type", type);
         mv.addObject("name", name);
         mv.addObject("roomButton", roomButton);
         mv.addObject("chatUserId", chatUserId);
-        mv.addObject("chatRoomList", chaParticiPateList);
+        mv.addObject("chatRoomList", chatParticiPateList);
         return mv;
     }
 
     @RequestMapping("exitRoomProcess")
-    public @ResponseBody List<ChatParticipate> exitRoomProcess(@RequestParam HashMap<Object, Object> params) throws Exception {
-        String sessionId = (String) params.get("sessionId");
-        String chatExitRoomList = (String) params.get("chatExitRoomList");
-        ChatRoom chatRoom = new ChatRoom();
+    public @ResponseBody List<ChatParticipate> exitRoomProcess(ChatRoom chatRoom) throws Exception {
+
         List<ChatParticipate> chatParticipate = new ArrayList<>();
 
-        if (sessionId != null && !sessionId.trim().equals("")) {
-            chatRoom.setChatSessionId(sessionId);
-            chatService.exitChatRoom(sessionId, chatExitRoomList);
+        if (chatRoom.getChatSessionId() != null && !chatRoom.getChatSessionId().trim().equals("")) {
+            chatRoom.setChatSessionId(chatRoom.getChatSessionId());
+            chatService.exitChatRoom(chatRoom.getChatSessionId(), chatRoom.getChatExitRoomList());
             chatParticipate = chatService.searchRoomUser(chatRoom);
             return chatParticipate;
         }

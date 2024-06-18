@@ -28,7 +28,7 @@ public interface ChatMapper {
 
     public ChatParticipate searchLastRoomUser(ChatRoom chatRoom);
 
-    public List<ChatMessage> searchMessages(ChatMessage chatMessage);
+    public List<ChatMessage> searchChatMessages(ChatMessage chatMessage);
 
     public List<ChatMessage> redisSearchMessages(ChatMessage chatMessage);
 
@@ -39,8 +39,6 @@ public interface ChatMapper {
     public ChatMessage searchNewMessage(ChatMessage chatMessage);
 
     public List<User> chatUserList(String chatUserId);
-
-    public int getUnreadMessage(ChatParticipate chatParticipate);
 
     public User chatUserProfile(String chatUserId);
 

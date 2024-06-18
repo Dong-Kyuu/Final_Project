@@ -12,41 +12,42 @@
             if(isSet == false) {
                 var $content = "<iframe id='chatIframe' style='width: 330px; height: 587px;' src='/chat/chat'></iframe>";
                 $("#dialog").before($content);
+                /** 2024-06-06, scale 기능 추가 */
+                $(document).ready(function() {
+                    var scale = 1;
+                    var $iframe = $('#chatIframe');
+                    $iframe.on('load', function() {
+                        var $iframeDoc = $iframe.contents();
+                        $iframeDoc.find('#zoomButton').on('click', function() {
+                            var $dialog = $("#dialog").parent();
+                            if (scale === 1.4) {
+                                scale = 1;
+                                $dialog.css({
+                                    "transform": "scale(" + scale + ")",
+                                    "transform-origin": "right top", // 오른쪽 위를 기준으로 스케일링
+                                    "transition": "transform 0.5s, top 0.5s, right 0.5s" // 트랜지션 없이 즉시 변환
+                                });
+                            } else {
+                                scale = 1.4;
+                                $dialog.css({
+                                    "transform": "scale(" + scale + ")",
+                                    "transform-origin": "right top", // 오른쪽 위를 기준으로 스케일링
+                                    "transition": "transform 0.5s, top 0.5s, right 0.5s" // 부드러운 전환을 위한 트랜지션
+                                });
+                            }
+
+                            // transitionend 이벤트를 이용하여 트랜지션 비활성화
+                            $dialog.one("transitionend", function() {
+                                $dialog.css("transition", "none");
+                            });
+                        });
+                    });
+                });
                 isSet = true;
             }
         });
 
-        /** 2024-06-06, scale 기능 추가 */
-        $(document).ready(function() {
-            var scale = 1;
-            var $iframe = $('#chatIframe');
-            $iframe.on('load', function() {
-                var $iframeDoc = $iframe.contents();
-                $iframeDoc.find('#zoomButton').on('click', function() {
-                    var $dialog = $("#dialog").parent();
-                    if (scale === 1.4) {
-                        scale = 1;
-                        $dialog.css({
-                            "transform": "scale(" + scale + ")",
-                            "transform-origin": "right top", // 오른쪽 위를 기준으로 스케일링
-                            "transition": "transform 0.5s, top 0.5s, right 0.5s" // 트랜지션 없이 즉시 변환
-                        });
-                    } else {
-                        scale = 1.4;
-                        $dialog.css({
-                            "transform": "scale(" + scale + ")",
-                            "transform-origin": "right top", // 오른쪽 위를 기준으로 스케일링
-                            "transition": "transform 0.5s, top 0.5s, right 0.5s" // 부드러운 전환을 위한 트랜지션
-                        });
-                    }
 
-                    // transitionend 이벤트를 이용하여 트랜지션 비활성화
-                    $dialog.one("transitionend", function() {
-                        $dialog.css("transition", "none");
-                    });
-                });
-            });
-        });
 
         $("#dialog").dialog({
             autoOpen: false,
@@ -80,7 +81,7 @@
         $(".ui-widget-header").css('font-family', '\'Open Sans\', sans-serif');
         $(".ui-dialog .ui-dialog-content").css('padding', '0');
         $(".ui-widget-content").css('background', 'transparent');
-        $(".ui-dialog-titlebar").css('width', '310px');
+        $(".ui-dialog-titlebar").css('width', '315px');
         $(".ui-dialog-titlebar").css('background', '#fff');
         $(".ui-dialog-title").css('background', '#fff');
         $(".ui-dialog-title").css('color', 'black');

@@ -1,547 +1,553 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<th:block th:fragment="roomMgrFragment">-->
-<!--    <head>-->
-<!--        <meta charset="UTF-8"/>-->
-<!--        &lt;!&ndash; 2024-05-28, 채팅방 생성 + 초대, 채팅방 삭제 화면 &ndash;&gt;-->
-<!--        <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>-->
-<!--        <link th:href="@{/css/chat/tailwind.css}" rel="stylesheet">-->
-<!--        &lt;!&ndash;<script src="https://cdn.tailwindcss.com"></script>&ndash;&gt;-->
-<!--        &lt;!&ndash;    <link th:href="@{/css/chat/chat-invite.css}" rel="stylesheet" type="text/css"/>&ndash;&gt;-->
-<!--        <style>-->
-<!--            #memberList::-webkit-scrollbar {-->
-<!--                display: none-->
-<!--            }-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="roomMgrFragment">
+    <head>
+        <meta charset="UTF-8"/>
+        <!-- 2024-05-28, 채팅방 생성 + 초대, 채팅방 삭제 화면 -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.8.0/alpine.js"></script>
+        <link th:href="@{/css/chat/tailwind.css}" rel="stylesheet">
+        <!--<script src="https://cdn.tailwindcss.com"></script>-->
+        <!--    <link th:href="@{/css/chat/chat-invite.css}" rel="stylesheet" type="text/css"/>-->
+        <style>
+            #memberList::-webkit-scrollbar {
+                display: none
+            }
 
-<!--            .customShadow {-->
-<!--                /* box-shadow: 0px 80px 63px -66px rgba(0, 0, 0, 0.1); */-->
-<!--            }-->
+            .customShadow {
+                /* box-shadow: 0px 80px 63px -66px rgba(0, 0, 0, 0.1); */
+            }
 
-<!--            .mgr-room-screen {-->
-<!--                width: 310px;-->
-<!--                height: 547px;-->
-<!--                display: none;-->
-<!--                z-index: 99999;-->
-<!--                background-color: white;-->
-<!--            }-->
+            .mgr-room-screen {
+                width: 310px;
+                height: 550px;
+                display: none;
+                z-index: 99999;
+                background-color: white;
+            }
 
-<!--            .invite-card {-->
-<!--                height: 547px;-->
-<!--                left: 5px;-->
-<!--            }-->
+            .invite-card {
+                height: 550px;
+                left: 5px;
+            }
 
-<!--            .mgr-room-screen-back-arrow {-->
-<!--                font-size: 35px;-->
-<!--                vertical-align: middle;-->
-<!--            }-->
+            .mgr-room-screen-back-arrow {
+                font-size: 35px;
+                vertical-align: middle;
+            }
 
-<!--            .invite-title {-->
-<!--                padding-bottom: 10px;-->
-<!--                padding-left: 5px;-->
-<!--                padding-top: 10px;-->
-<!--            }-->
-<!--        </style>-->
-<!--        <title>title</title>-->
-<!--    </head>-->
+            .invite-title {
+                padding-bottom: 10px;
+                padding-left: 5px;
+                padding-top: 10px;
+            }
+        </style>
+        <title>title</title>
+    </head>
 
-<!--    <body>-->
-<!--    <div class="bg-gray-50 h-screen flex justify-center items-center mgr-room-screen">-->
-<!--        &lt;!&ndash; Card &ndash;&gt;-->
-<!--        <div class="invite-card w-full h-5/6 max-w-lg flex-auto flex-col space-y-4 bg-white rounded-2xl overflow-hidden customShadow relative">-->
-<!--            &lt;!&ndash; Titling &ndash;&gt;-->
-<!--            <div class="w-full border-b border-sky-100">-->
-<!--                <div class="p-6 flex flex-col space-y-4 invite-title">-->
+    <body>
+    <div class="bg-gray-50 h-screen flex justify-center items-center mgr-room-screen">
+        <!-- Card -->
+        <div class="invite-card w-full h-5/6 max-w-lg flex-auto flex-col space-y-4 bg-white rounded-2xl overflow-hidden customShadow relative">
+            <!-- Titling -->
+            <div class="w-full border-b border-sky-100">
+                <div class="p-6 flex flex-col space-y-4 invite-title">
 
-<!--                    <h2 class="text-2ml font-semibold text-gray-900"><i-->
-<!--                            class="material-icons mgr-room-screen-back-arrow">navigate_before</i>[[${name}]]</h2>-->
-<!--                    &lt;!&ndash; 				<p class="text-xs text-gray-400">An email invite will be sent on your behalf to the selected team members.</p> &ndash;&gt;-->
-<!--                </div>-->
-<!--            </div>-->
+                    <h2 class="text-2ml font-semibold text-gray-900"><i
+                            class="material-icons mgr-room-screen-back-arrow">navigate_before</i>[[${name}]]</h2>
+                    <!-- 				<p class="text-xs text-gray-400">An email invite will be sent on your behalf to the selected team members.</p> -->
+                </div>
+            </div>
 
-<!--            &lt;!&ndash; Search Wrapper &ndash;&gt;-->
-<!--            <div x-data="loadMembers()" class="max-h-full flex flex-col flex-grow">-->
-<!--                &lt;!&ndash; RoomType Radio &ndash;&gt;-->
-<!--                <form class="py-2 px-6 relative flex flex-col justify-center" th:if="${type == 'room-create'}">-->
-<!--                    <svg class="absolute left-10"  xmlns="http://www.w3.org/2000/svg"-->
-<!--                         style="width: 16px; height: 16px;" viewBox="0 0 16 16">-->
-<!--                        <path class="fill-current text-gray-400" d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>-->
-<!--                        <path class="fill-current text-gray-400" d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9 9 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.4 10.4 0 0 1-.524 2.318l-.003.011a11 11 0 0 1-.244.637c-.079.186.074.394.273.362a22 22 0 0 0 .693-.125m.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8 8 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a11 11 0 0 0 .398-2"/>-->
-<!--                    </svg>-->
-<!--                    <select id="roomType" style="font-size: 16px;" class="border border-sky-100 p-2 pl-10 text-black-300 text-sm rounded focus:ring-sky-300 focus:border-sky-300 block w-full outline-none dark:bg-sky-200 dark:border-sky-200 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-300 dark:focus:border-sky-300">-->
-<!--                        <option selected>대화 주제</option>-->
-<!--                        <option value="프로젝트">프로젝트</option>-->
-<!--                        <option value="팀">팀</option>-->
-<!--                        <option value="부서">부서</option>-->
-<!--                        <option value="자유">자유</option>-->
-<!--                    </select>-->
-<!--                </form>-->
+            <!-- Search Wrapper -->
+            <div x-data="loadMembers()" class="max-h-full flex flex-col flex-grow">
+                <!-- RoomType Radio -->
+                <form class="py-2 px-6 relative flex flex-col justify-center" th:if="${type == 'room-create'}">
+                    <svg class="absolute left-10"  xmlns="http://www.w3.org/2000/svg"
+                         style="width: 16px; height: 16px;" viewBox="0 0 16 16">
+                        <path class="fill-current text-gray-400" d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+                        <path class="fill-current text-gray-400" d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9 9 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.4 10.4 0 0 1-.524 2.318l-.003.011a11 11 0 0 1-.244.637c-.079.186.074.394.273.362a22 22 0 0 0 .693-.125m.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8 8 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a11 11 0 0 0 .398-2"/>
+                    </svg>
+                    <select id="roomType" style="font-size: 16px;" class="border border-sky-100 p-2 pl-10 text-black-300 text-sm rounded focus:ring-sky-300 focus:border-sky-300 block w-full outline-none dark:bg-sky-200 dark:border-sky-200 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-300 dark:focus:border-sky-300">
+                        <option selected>대화 주제</option>
+                        <option value="프로젝트">프로젝트</option>
+                        <option value="팀">팀</option>
+                        <option value="부서">부서</option>
+                        <option value="자유">자유</option>
+                    </select>
+                </form>
 
-<!--                &lt;!&ndash; RoomName Input &ndash;&gt;-->
-<!--                <div class="py-2 px-6 relative flex flex-col justify-center" th:if="${type == 'room-create'}">-->
-<!--                    <svg class="absolute left-10"  xmlns="http://www.w3.org/2000/svg"-->
-<!--                         style="width: 16px; height: 16px;" viewBox="0 0 16 16">-->
-<!--                        <path class="fill-current text-gray-400" d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>-->
-<!--                        <path class="fill-current text-gray-400" d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9 9 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.4 10.4 0 0 1-.524 2.318l-.003.011a11 11 0 0 1-.244.637c-.079.186.074.394.273.362a22 22 0 0 0 .693-.125m.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8 8 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a11 11 0 0 0 .398-2"/>-->
-<!--                    </svg>-->
-<!--                    <input type="text" name="roomName" placeholder="방 이름"-->
-<!--                           class="border border-sky-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-sky-200 focus:border-sky-200 focus:bg-sky-50 focus:bg-opacity-25"/>-->
-<!--                </div>-->
+                <!-- RoomName Input -->
+                <div class="py-2 px-6 relative flex flex-col justify-center" th:if="${type == 'room-create'}">
+                    <svg class="absolute left-10"  xmlns="http://www.w3.org/2000/svg"
+                         style="width: 16px; height: 16px;" viewBox="0 0 16 16">
+                        <path class="fill-current text-gray-400" d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+                        <path class="fill-current text-gray-400" d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9 9 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.4 10.4 0 0 1-.524 2.318l-.003.011a11 11 0 0 1-.244.637c-.079.186.074.394.273.362a22 22 0 0 0 .693-.125m.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6-3.004 6-7 6a8 8 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a11 11 0 0 0 .398-2"/>
+                    </svg>
+                    <input type="text" name="roomName" placeholder="방 이름"
+                           class="border border-sky-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-sky-200 focus:border-sky-200 focus:bg-sky-50 focus:bg-opacity-25"/>
+                </div>
 
-<!--                <input type="hidden" name="sessionId" th:value="${chatUserId}"/>-->
+                <input type="hidden" name="sessionId" th:value="${chatUserId}"/>
 
-<!--                &lt;!&ndash; Search Input &ndash;&gt;-->
-<!--                <div class="py-2 px-6 relative flex flex-col justify-center">-->
-<!--                    <svg class="absolute left-10" xmlns="http://www.w3.org/2000/svg"-->
-<!--                         style="width: 16px; height: 16px;" viewBox="0 0 16 16">-->
-<!--                        <path class="fill-current text-gray-400"-->
-<!--                              d="M6.4 1.6a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm-4.525.275a6.4 6.4 0 019.58 8.45l4.31 4.31a.8.8 0 01-1.13 1.13l-4.31-4.31A6.399 6.399 0 010 6.4a6.4 6.4 0 011.875-4.525z"/>-->
-<!--                    </svg>-->
-<!--                    <input th:if="${type == 'room-create'}" type="text" placeholder="사원 검색"-->
-<!--                           x-ref="searchField" x-model="search"-->
-<!--                           x-on:keydown.window.prevent.slash="$refs.searchField.focus()"-->
-<!--                           class="border border-sky-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-sky-200 focus:border-sky-200 focus:bg-sky-50 focus:bg-opacity-25"/>-->
-<!--                    <input th:if="${type == 'room-exit'}" type="text" placeholder="채팅방 검색"-->
-<!--                           x-ref="searchField" x-model="search"-->
-<!--                           x-on:keydown.window.prevent.slash="$refs.searchField.focus()"-->
-<!--                           class="border border-sky-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-sky-200 focus:border-sky-200 focus:bg-sky-50 focus:bg-opacity-25"/>-->
-<!--                </div>-->
+                <!-- Search Input -->
+                <div class="py-2 px-6 relative flex flex-col justify-center">
+                    <svg class="absolute left-10" xmlns="http://www.w3.org/2000/svg"
+                         style="width: 16px; height: 16px;" viewBox="0 0 16 16">
+                        <path class="fill-current text-gray-400"
+                              d="M6.4 1.6a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm-4.525.275a6.4 6.4 0 019.58 8.45l4.31 4.31a.8.8 0 01-1.13 1.13l-4.31-4.31A6.399 6.399 0 010 6.4a6.4 6.4 0 011.875-4.525z"/>
+                    </svg>
+                    <input th:if="${type == 'room-create'}" type="text" placeholder="사원 검색"
+                           x-ref="searchField" x-model="search"
+                           x-on:keydown.window.prevent.slash="$refs.searchField.focus()"
+                           class="border border-sky-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-sky-200 focus:border-sky-200 focus:bg-sky-50 focus:bg-opacity-25"/>
+                    <input th:if="${type == 'room-exit'}" type="text" placeholder="채팅방 검색"
+                           x-ref="searchField" x-model="search"
+                           x-on:keydown.window.prevent.slash="$refs.searchField.focus()"
+                           class="border border-sky-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-sky-200 focus:border-sky-200 focus:bg-sky-50 focus:bg-opacity-25"/>
+                </div>
 
-<!--                <div th:if="${type == 'room-create'}" style="height: 10px;"></div>-->
+                <div th:if="${type == 'room-create'}" style="height: 10px;"></div>
 
-<!--                &lt;!&ndash; Employee List or Room List &ndash;&gt;-->
-<!--                <div id="memberList"-->
-<!--                     class="flex-grow flex flex-col py-2 px-6 -mt-2 pb-72 overflow-scroll">-->
-<!--                    <template th:if="${type == 'room-create'}" x-for="member in filteredMembers" :key="member">-->
-<!--                        <div class="flex p-2 mb-2 space-x-2 rounded-lg cursor-pointer hover:bg-sky-50"-->
-<!--                             :class="{'bg-sky-50 ring-1 ring-sky-400 ring-offset-1 ring-offset-white': selectedMembers.includes(member.userId)}"-->
-<!--                             x-on:click="selectedMembers.includes(member.userId) ? selectedMembers.splice(selectedMembers.indexOf(member.userId), 1) : selectedMembers.push(member.userId)">-->
-<!--                            <div style="display: flex; justify-content: center; align-items: center;">-->
-<!--                                <img src="/image/chat/default.png" class="rounded-full" width="36px" style="height: 36px;"/>-->
-<!--&lt;!&ndash;                                <img :src="`${member.user_profile_picture}`" class="rounded-full" width="36px" style="height: 36px;"/>&ndash;&gt;-->
-<!--                            </div>-->
-<!--                            <div th:if="${type == 'room-create'}">-->
-<!--                                <p class="font-medium text-gray-900" x-text="member.username"></p>-->
+                <!-- Employee List or Room List -->
+                <div id="memberList"
+                     class="flex-grow flex flex-col py-2 px-6 -mt-2 pb-72 overflow-scroll">
+                    <template th:if="${type == 'room-create'}" x-for="member in filteredMembers" :key="member">
+                        <div class="flex p-2 mb-2 space-x-2 rounded-lg cursor-pointer hover:bg-sky-50"
+                             :class="{'bg-sky-50 ring-1 ring-sky-400 ring-offset-1 ring-offset-white': selectedMembers.includes(member.userId)}"
+                             x-on:click="selectedMembers.includes(member.userId) ? selectedMembers.splice(selectedMembers.indexOf(member.userId), 1) : selectedMembers.push(member.userId)">
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <img src="/image/chat/default.png" class="rounded-full" width="36px" style="height: 36px;"/>
+<!--                                <img :src="`${member.user_profile_picture}`" class="rounded-full" width="36px" style="height: 36px;"/>-->
+                            </div>
+                            <div th:if="${type == 'room-create'}">
+                                <p class="font-medium text-gray-900" x-text="member.username"></p>
+                                <p class="text-xs text-gray-400">
+                                    <span class="inline-block mr-2" x-text="member.userId"></span>
+                                </p>
+                                <p class="text-xs text-gray-400">
+                                    <span class="inline-block mr-2" x-text="member.userEmail"></span>
+                                </p>
+                                <div style="display: none;" id="selectedUserList" x-text="selectedMembers"></div>
+                            </div>
+                        </div>
+                    </template>
+                    <template th:if="${type == 'room-exit'}" x-for="member in filteredMembers" :key="member">
+                        <div class="flex p-2 mb-2 space-x-2 rounded-lg cursor-pointer hover:bg-sky-50"
+                             :class="{'bg-sky-50 ring-1 ring-sky-400 ring-offset-1 ring-offset-white': selectedMembers.includes(member.chatRoomNum)}"
+                             x-on:click="selectedMembers.includes(member.chatRoomNum) ? selectedMembers.splice(selectedMembers.indexOf(member.chatRoomNum), 1) : selectedMembers.push(member.chatRoomNum)">
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <img src="/image/chat/default.png" class="rounded-full" width="36px" style="height: 36px;"/>
+                                <!--                                <img :src="`${member.user_profile_picture}`" class="rounded-full" width="36px" style="height: 36px;"/>-->
+                            </div>
+                            <div th:if="${type == 'room-exit'}">
+                                <p class="font-medium text-gray-900" x-text="member.roomName"></p>
 <!--                                <p class="text-xs text-gray-400">-->
-<!--                                    <span class="inline-block mr-2" x-text="member.userId"></span>-->
+<!--                                    <span class="inline-block mr-2" x-text="member.message"></span>-->
 <!--                                </p>-->
-<!--                                <p class="text-xs text-gray-400">-->
-<!--                                    <span class="inline-block mr-2" x-text="member.userEmail"></span>-->
-<!--                                </p>-->
-<!--                                <div style="display: none;" id="selectedUserList" x-text="selectedMembers"></div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </template>-->
-<!--                    <template th:if="${type == 'room-exit'}" x-for="member in filteredMembers" :key="member">-->
-<!--                        <div class="flex p-2 mb-2 space-x-2 rounded-lg cursor-pointer hover:bg-sky-50"-->
-<!--                             :class="{'bg-sky-50 ring-1 ring-sky-400 ring-offset-1 ring-offset-white': selectedMembers.includes(member.chatRoomNum)}"-->
-<!--                             x-on:click="selectedMembers.includes(member.chatRoomNum) ? selectedMembers.splice(selectedMembers.indexOf(member.chatRoomNum), 1) : selectedMembers.push(member.chatRoomNum)">-->
-<!--                            <div style="display: flex; justify-content: center; align-items: center;">-->
-<!--                                <img src="/image/chat/default.png" class="rounded-full" width="36px" style="height: 36px;"/>-->
-<!--                                &lt;!&ndash;                                <img :src="`${member.user_profile_picture}`" class="rounded-full" width="36px" style="height: 36px;"/>&ndash;&gt;-->
-<!--                            </div>-->
-<!--                            <div th:if="${type == 'room-exit'}">-->
-<!--                                <p class="font-medium text-gray-900" x-text="member.roomName"></p>-->
-<!--&lt;!&ndash;                                <p class="text-xs text-gray-400">&ndash;&gt;-->
-<!--&lt;!&ndash;                                    <span class="inline-block mr-2" x-text="member.message"></span>&ndash;&gt;-->
-<!--&lt;!&ndash;                                </p>&ndash;&gt;-->
-<!--                                <input type="hidden" name="roomNum" x-text="member.chatRoomNum" />-->
-<!--                                <div style="display: none;" id="selectedRoomList" x-text="selectedMembers"></div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </template>-->
-<!--                    &lt;!&ndash; Empty State &ndash;&gt;-->
-<!--                    <div x-show="filteredMembers.length == 0">-->
-<!--                        <div class="w-full h-20 mb-2 flex justify-center items-center">-->
-<!--                            <p class="text-center text-gray-500">검색결과 : "<span x-text="search"></span>"가 없습니다.</p>-->
-<!--                        </div>-->
-<!--                        <div class="flex flex-col space-y-2">-->
-<!--                            <div class="w-full p-2 flex space-x-2 bg-gray-100 rounded-lg">-->
-<!--                                <div class="h-12 w-12 rounded-full bg-gray-200"></div>-->
-<!--                                <div class="flex flex-col space-y-2 justify-center">-->
-<!--                                    <div class="h-3	w-32 rounded-full bg-gray-200"></div>-->
-<!--                                    <div class="flex space-x-2">-->
-<!--                                        <div class="h-2 w-40 rounded-full bg-gray-200"></div>-->
-<!--                                        <div class="h-2 w-12 rounded-full bg-gray-200"></div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="w-full p-2 flex space-x-2 bg-gray-100 rounded-lg">-->
-<!--                                <div class="h-12 w-12 rounded-full bg-gray-200"></div>-->
-<!--                                <div class="flex flex-col space-y-2 justify-center">-->
-<!--                                    <div class="h-3	w-32 rounded-full bg-gray-200"></div>-->
-<!--                                    <div class="flex space-x-2">-->
-<!--                                        <div class="h-2 w-40 rounded-full bg-gray-200"></div>-->
-<!--                                        <div class="h-2 w-12 rounded-full bg-gray-200"></div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div th:if="${type == 'room-exit'}"-->
-<!--                                 class="w-full p-2 flex space-x-2 bg-gray-100 rounded-lg">-->
-<!--                                <div class="h-12 w-12 rounded-full bg-gray-200"></div>-->
-<!--                                <div class="flex flex-col space-y-2 justify-center">-->
-<!--                                    <div class="h-3	w-32 rounded-full bg-gray-200"></div>-->
-<!--                                    <div class="flex space-x-2">-->
-<!--                                        <div class="h-2 w-40 rounded-full bg-gray-200"></div>-->
-<!--                                        <div class="h-2 w-12 rounded-full bg-gray-200"></div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
+                                <input type="hidden" name="roomNum" x-text="member.chatRoomNum" />
+                                <div style="display: none;" id="selectedRoomList" x-text="selectedMembers"></div>
+                            </div>
+                        </div>
+                    </template>
+                    <!-- Empty State -->
+                    <div x-show="filteredMembers.length == 0">
+                        <div class="w-full h-20 mb-2 flex justify-center items-center">
+                            <p class="text-center text-gray-500">검색결과 : "<span x-text="search"></span>"가 없습니다.</p>
+                        </div>
+                        <div class="flex flex-col space-y-2">
+                            <div class="w-full p-2 flex space-x-2 bg-gray-100 rounded-lg">
+                                <div class="h-12 w-12 rounded-full bg-gray-200"></div>
+                                <div class="flex flex-col space-y-2 justify-center">
+                                    <div class="h-3	w-32 rounded-full bg-gray-200"></div>
+                                    <div class="flex space-x-2">
+                                        <div class="h-2 w-40 rounded-full bg-gray-200"></div>
+                                        <div class="h-2 w-12 rounded-full bg-gray-200"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-full p-2 flex space-x-2 bg-gray-100 rounded-lg">
+                                <div class="h-12 w-12 rounded-full bg-gray-200"></div>
+                                <div class="flex flex-col space-y-2 justify-center">
+                                    <div class="h-3	w-32 rounded-full bg-gray-200"></div>
+                                    <div class="flex space-x-2">
+                                        <div class="h-2 w-40 rounded-full bg-gray-200"></div>
+                                        <div class="h-2 w-12 rounded-full bg-gray-200"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${type == 'room-exit'}"
+                                 class="w-full p-2 flex space-x-2 bg-gray-100 rounded-lg">
+                                <div class="h-12 w-12 rounded-full bg-gray-200"></div>
+                                <div class="flex flex-col space-y-2 justify-center">
+                                    <div class="h-3	w-32 rounded-full bg-gray-200"></div>
+                                    <div class="flex space-x-2">
+                                        <div class="h-2 w-40 rounded-full bg-gray-200"></div>
+                                        <div class="h-2 w-12 rounded-full bg-gray-200"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-<!--                &lt;!&ndash; Fixed Footer &ndash;&gt;-->
-<!--                <div class="absolute bottom-0 w-full h-24 flex justify-center items-center bg-white border-t border-sky-100">-->
-<!--                    <div class="py-2 px-4 bg-gray-200 text-white rounded inline-block outline-none cursor-default"-->
-<!--                         th:classappend="${type == 'room-create'} ? 'chat-room-create' : 'chat-room-exit'"-->
-<!--                         :class="{'bg-sky-200 cursor-pointer hover:bg-sky-300' : selectedMembers.length > 0}"-->
-<!--                         style="margin-bottom: 10px;">-->
-<!--                        <span>[[${roomButton}]]</span>-->
-<!--                        <span x-show="selectedMembers.length !== 0" x-text="selectedMembers.length"></span>-->
-<!--                        <th:block th:if="${roomButton == '방 초대'}">-->
-<!--                            <span x-text="selectedMembers.length > 0 ? '명' : ''"></span>-->
-<!--                        </th:block>-->
-<!--                        <th:block th:if="${roomButton == '방 나가기'}">-->
-<!--                            <span x-text="selectedMembers.length > 0 ? '개' : ''"></span>-->
-<!--                        </th:block>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!-- Fixed Footer -->
+                <div class="absolute bottom-0 w-full h-24 flex justify-center items-center bg-white border-t border-sky-100">
+                    <div class="py-2 px-4 bg-gray-200 text-white rounded inline-block outline-none cursor-default"
+                         th:classappend="${type == 'room-create'} ? 'chat-room-create' : 'chat-room-exit'"
+                         :class="{'bg-sky-200 cursor-pointer hover:bg-sky-300' : selectedMembers.length > 0}"
+                         style="margin-bottom: 10px;">
+                        <span>[[${roomButton}]]</span>
+                        <span x-show="selectedMembers.length !== 0" x-text="selectedMembers.length"></span>
+                        <th:block th:if="${roomButton == '방 초대'}">
+                            <span x-text="selectedMembers.length > 0 ? '명' : ''"></span>
+                        </th:block>
+                        <th:block th:if="${roomButton == '방 나가기'}">
+                            <span x-text="selectedMembers.length > 0 ? '개' : ''"></span>
+                        </th:block>
+                    </div>
+                </div>
 
-<!--            </div>&lt;!&ndash;end of search wrapper &ndash;&gt;-->
+            </div><!--end of search wrapper -->
 
-<!--        </div>&lt;!&ndash; end of card &ndash;&gt;-->
-<!--    </div>-->
+        </div><!-- end of card -->
+    </div>
 
-<!--    <script th:inline="javascript">-->
-<!--        token = $("meta[name='_csrf']").attr("content");-->
-<!--        header = $("meta[name='_csrf_header']").attr("content");-->
+    <script th:inline="javascript">
+        token = $("meta[name='_csrf']").attr("content");
+        header = $("meta[name='_csrf_header']").attr("content");
 
-<!--        /** 2024-05-28, 채팅방 관리 화면, < 버튼 클릭 시 */-->
-<!--        $(".mgr-room-screen-back-arrow").click(function () {-->
-<!--            $(".mgr-room-screen").fadeOut(300);-->
-<!--        });-->
+        /** 2024-05-28, 채팅방 관리 화면, < 버튼 클릭 시 */
+        $(".mgr-room-screen-back-arrow").click(function () {
+            $(".mgr-room-screen").fadeOut(300);
+        });
 
-<!--        /*[# th:if="${type == 'room-create'}"]*/-->
-<!--        /**-->
-<!--         * 2024-05-30, 버튼 클릭 시-->
-<!--         */-->
-<!--        $(".chat-room-create").click(function () {-->
-<!--            //onsole.log('roomType: ' + $('#roomType').val());-->
-<!--            //console.log($("#selectedUserList").text());-->
-<!--            if($("#selectedUserList").text() == '' || $('input[name=roomName]').val() == '') {-->
-<!--                return false;-->
-<!--            }-->
+        /*[# th:if="${type == 'room-create'}"]*/
+        /**
+         * 2024-05-30, 버튼 클릭 시
+         */
+        $(".chat-room-create").click(function () {
+            //onsole.log('roomType: ' + $('#roomType').val());
+            console.log($("#selectedUserList").text());
+            if($("#selectedUserList").text() == '' || $('input[name=roomName]').val() == '') {
+                return false;
+            }
 
-<!--            var msg = {-->
-<!--                roomType: $('#roomType').val(),-->
-<!--                roomName: $('input[name=roomName]').val(),-->
-<!--                sessionId: $('input[name=sessionId]').val(),-->
-<!--                chatInviteUserList: $("#selectedUserList").text()-->
-<!--            };-->
+            var msg = {
+                roomType: $('#roomType').val(),
+                roomName: $('input[name=roomName]').val(),
+                chatSessionId: $('input[name=sessionId]').val(),
+                chatInviteUserList: $("#selectedUserList").text()
+            };
 
-<!--            commonAjax('/chat/createRoomProcess', msg, 'post', function (result) {-->
-<!--                createChattingRoom(result);-->
-<!--            });-->
+            commonAjax('/chat/createRoomProcess', msg, 'post', function (result) {
+                createChattingRoom(result);
+            });
 
-<!--            $(".mgr-room-screen").fadeOut(300);-->
-<!--        });-->
+            $(".mgr-room-screen").fadeOut(300);
+        });
 
-<!--        /**-->
-<!--         * 2024-06-10, 초대 유저 검색-->
-<!--         */-->
-<!--        function loadMembers() {-->
-<!--            return {-->
-<!--                selectedMembers: [],-->
-<!--                search: "",-->
-<!--                myForData: sourceData,-->
-<!--                get filteredMembers() {-->
-<!--                    if (this.search === "") {-->
-<!--                        return this.myForData;-->
-<!--                    }-->
-<!--                    return this.myForData.filter((item) => {-->
-<!--                        return item.username-->
-<!--                            .toLowerCase()-->
-<!--                            .includes(this.search.toLowerCase());-->
-<!--                    });-->
-<!--                },-->
-<!--            };-->
-<!--        }-->
+        /**
+         * 2024-06-10, 초대 유저 검색
+         */
+        function loadMembers() {
+            return {
+                selectedMembers: [],
+                search: "",
+                myForData: sourceData,
+                get filteredMembers() {
+                    if (this.search === "") {
+                        return this.myForData;
+                    }
+                    return this.myForData.filter((item) => {
+                        return item.username
+                            .toLowerCase()
+                            .includes(this.search.toLowerCase());
+                    });
+                },
+            };
+        }
 
-<!--        var sourceData = [[${chatUserList}]];-->
-<!--        //console.log(sourceData);-->
+        var sourceData = [[${chatUserList}]];
+        //console.log(sourceData);
 
-<!--        function createChattingRoom(d) {-->
-<!--            if (d != null) {-->
-<!--                //console.log(d);-->
+        function createChattingRoom(d) {
+            if (d != null) {
+                //console.log(d);
 
-<!--                let output = '';-->
-<!--                let img = ''; // 이미지 처리 시-->
+                let output = '';
+                let img = ''; // 이미지 처리 시
 
-<!--                if (d.profile_picture === 'default.png') {-->
-<!--                    img = "<img src='/image/chat/default.png' />";-->
-<!--                } else {-->
-<!--                    // 업로드된 프로필을 보여주도록 한다. (채팅방 화면은 임시 처리)-->
-<!--                    img = "<img src='/image/chat/default.png' />";-->
-<!--                }-->
+                if (d.roomType === '부서') {
+                    img = "<img src='/image/chat/department.png' />";
+                } else if (d.roomType === '프로젝트') {
+                    img = "<img src='/image/chat/project.png' />";
+                } else if (d.roomType === '팀') {
+                    img = "<img src='/image/chat/team.png' />";
+                } else { // 자유
+                    img = "<img src='/image/chat/default.png' />";
+                }
 
-<!--                var roomNumber = d.chatRoomNum;-->
-<!--                var sessionId = d.chatUserId;-->
-<!--                var entryTime = d.chatEntryTime;-->
-<!--                var visitTime = d.chatVisitTime;-->
-<!--                var lastSendTime = d.lastSendTime;-->
-<!--                var lastMessageContent = d.messageContent;-->
-<!--                var roomName = d.roomName;-->
-<!--                var roomCreateDate = d.roomCreateDate;-->
-<!--                //var unreadMessageCount = getUnreadMessage(roomNumber, sessionId);-->
+                var roomNumber = d.chatRoomNum;
+                var sessionId = d.chatUserId;
+                var entryTime = d.chatEntryTime;
+                var visitTime = d.chatVisitTime;
+                var lastSendTime = d.lastSendTime;
+                var lastMessageContent = d.messageContent;
+                var roomName = d.roomName;
+                var roomCreateDate = d.roomCreateDate;
+                //var unreadMessageCount = getUnreadMessage(roomNumber, sessionId);
 
-<!--                output += "<li>";-->
-<!--                output += "<input type='hidden' name='chat_room_num' value='" + roomNumber + "' />";-->
-<!--                output += "    <input type='hidden' name='chat_room_type' value='multi'/>";-->
-<!--                output += "    <div class='sender-image'>";-->
-<!--                output += "        " + img;-->
-<!--                output += "    </div>";-->
-<!--                output += "    <div class='mes-detail'>";-->
-<!--                output += "        <div class='mes-col1'>";-->
-<!--                output += "            <div class='sender-name'>";-->
-<!--                output += "                " + roomName;-->
-<!--                output += "            </div>";-->
-<!--                output += "            <div class='mes-preview'>";-->
-<!--                if (lastMessageContent != null) {-->
-<!--                    output += lastMessageContent.substr(0, 20);-->
-<!--                }-->
-<!--                output += "            </div>";-->
-<!--                output += "        </div>";-->
-<!--                output += "        <div class='mes-col2'>";-->
-<!--                output += "            <div>";-->
-<!--                if(lastSendTime != null) {-->
-<!--                    if(diffNowTime(lastSendTime)) {-->
-<!--                        lastSendTime = getTime(lastSendTime);-->
-<!--                        output += "                <div class='send-time'>" + lastSendTime + "</div>";-->
-<!--                        output += "                <div class='mes-seen-status'>";-->
-<!--                        output += "                <span class='new'>new</span>";-->
-<!--                        output += "                </div>";-->
-<!--                    } else {-->
-<!--                        lastSendTime = getDate(lastSendTime);-->
-<!--                        output += "                <div class='send-time'>" + lastSendTime + "</div>";-->
-<!--                    }-->
-<!--                }-->
-<!--                output += "            </div>";-->
-<!--                output += "        </div>";-->
-<!--                output += "    </div>";-->
-<!--                output += "</li>";-->
+                output += "<li>";
+                output += "<input type='hidden' name='chat_room_num' value='" + roomNumber + "' />";
+                output += "    <input type='hidden' name='chat_room_type' value='multi'/>";
+                output += "    <div class='sender-image'>";
+                output += "        " + img;
+                output += "    </div>";
+                output += "    <div class='mes-detail'>";
+                output += "        <div class='mes-col1'>";
+                output += "            <div class='sender-name'>";
+                output += "                " + roomName;
+                output += "            </div>";
+                output += "            <div class='mes-preview'>";
+                if (lastMessageContent != null) {
+                    output += lastMessageContent.substr(0, 20);
+                }
+                output += "            </div>";
+                output += "        </div>";
+                output += "        <div class='mes-col2'>";
+                output += "            <div>";
+                if(lastSendTime != null) {
+                    if(diffNowTime(lastSendTime)) {
+                        lastSendTime = getTime(lastSendTime);
+                        output += "                <div class='send-time'>" + lastSendTime + "</div>";
+                        output += "                <div class='mes-seen-status'>";
+                        output += "                <span class='new'>new</span>";
+                        output += "                </div>";
+                    } else {
+                        lastSendTime = getDate(lastSendTime);
+                        output += "                <div class='send-time'>" + lastSendTime + "</div>";
+                    }
+                }
+                output += "            </div>";
+                output += "        </div>";
+                output += "    </div>";
+                output += "</li>";
 
-<!--                $(".touch-chatroom").prepend(output);-->
-<!--                $(".touch-chatroom").off('click');-->
-<!--                $(".touch-chatroom").bind('click');-->
-<!--            }-->
-<!--        }-->
-<!--        /*[/]*/-->
+                $(".touch-chatroom").prepend(output);
+                $(".touch-chatroom").off('click');
+                $(".touch-chatroom").bind('click');
+            }
+        }
+        /*[/]*/
 
-<!--        /*[# th:if="${type == 'room-exit'}"]*/-->
-<!--        /**-->
-<!--         * 2024-05-30, 채팅방 버튼 클릭 시-->
-<!--         */-->
-<!--        $(".chat-room-exit").click(function () {-->
-<!--            //console.log($("#selectedRoomList").text());-->
+        /*[# th:if="${type == 'room-exit'}"]*/
+        /**
+         * 2024-05-30, 채팅방 버튼 클릭 시
+         */
+        $(".chat-room-exit").click(function () {
+            //console.log($("#selectedRoomList").text());
 
-<!--            if($("#selectedRoomList").text() == '') {-->
-<!--                return false;-->
-<!--            }-->
+            if($("#selectedRoomList").text() == '') {
+                return false;
+            }
 
-<!--            var msg = {-->
-<!--                sessionId: $('input[name=sessionId]').val(),-->
-<!--                chatExitRoomList: $("#selectedRoomList").text()-->
-<!--            };-->
+            var msg = {
+                chatSessionId: $('input[name=sessionId]').val(),
+                chatExitRoomList: $("#selectedRoomList").text()
+            };
 
-<!--            commonAjax('/chat/exitRoomProcess', msg, 'post', function (result) {-->
-<!--                exitChattingRoom(result);-->
-<!--            });-->
+            commonAjax('/chat/exitRoomProcess', msg, 'post', function (result) {
+                exitChattingRoom();
+            });
 
-<!--            $(".mgr-room-screen").fadeOut(300);-->
-<!--        });-->
+            $(".mgr-room-screen").fadeOut(300);
+        });
 
-<!--        /**-->
-<!--         * 2024-06-10, 채팅방 목록 검색-->
-<!--         */-->
-<!--        function loadMembers() {-->
-<!--            return {-->
-<!--                selectedMembers: [],-->
-<!--                search: "",-->
-<!--                myForData: sourceData,-->
-<!--                get filteredMembers() {-->
-<!--                    if (this.search === "") {-->
-<!--                        return this.myForData;-->
-<!--                    }-->
-<!--                    return this.myForData.filter((item) => {-->
-<!--                        return item.roomName-->
-<!--                            .toLowerCase()-->
-<!--                            .includes(this.search.toLowerCase());-->
-<!--                    });-->
-<!--                },-->
-<!--            };-->
-<!--        }-->
+        /**
+         * 2024-06-10, 채팅방 목록 검색
+         */
+        function loadMembers() {
+            return {
+                selectedMembers: [],
+                search: "",
+                myForData: sourceData,
+                get filteredMembers() {
+                    if (this.search === "") {
+                        return this.myForData;
+                    }
+                    return this.myForData.filter((item) => {
+                        return item.roomName
+                            .toLowerCase()
+                            .includes(this.search.toLowerCase());
+                    });
+                },
+            };
+        }
 
-<!--        var sourceData = [[${chatRoomList}]];-->
-<!--        //console.log(sourceData);-->
+        var sourceData = [[${chatRoomList}]];
+        //console.log(sourceData);
 
-<!--        /**-->
-<!--         * 2024-05-29, getUserChatRoomList - 채팅방 리스트 가져오기-->
-<!--         */-->
-<!--        function exitChattingRoom() {-->
-<!--            $.ajax({-->
-<!--                type: "post",-->
-<!--                url: "/chat/userChatRoomList",-->
-<!--                data: {-->
-<!--                    "chatUserId": $('input[name=sessionId]').val()-->
-<!--                },-->
-<!--                dataType: "json",-->
-<!--                beforeSend: function (xhr) {-->
-<!--                    //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.-->
-<!--                    xhr.setRequestHeader(header, token);-->
-<!--                },-->
-<!--                success: function (res) {-->
-<!--                    //console.log(res);-->
-<!--                    let output = '';-->
-<!--                    res.forEach(function (d, idx) {-->
-<!--                        let img = ''; // 이미지 처리 시-->
-<!--                        if (this.profilePicture === 'default.png') {-->
-<!--                            img = "<img src='/image/chat/default.png' />";-->
-<!--                        } else {-->
-<!--                            // 업로드된 프로필을 보여주도록 한다. (채팅방 화면은 임시 처리)-->
-<!--                            img = "<img src='/image/chat/default.png' />";-->
-<!--                        }-->
+        /**
+         * 2024-05-29, getUserChatRoomList - 채팅방 리스트 가져오기
+         */
+        function exitChattingRoom() {
+            $.ajax({
+                type: "post",
+                url: "/chat/userChatRoomList",
+                data: {
+                    "chatUserId": $('input[name=sessionId]').val()
+                },
+                dataType: "json",
+                beforeSend: function (xhr) {
+                    //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function (res) {
+                    console.log(res);
+                    let output = '';
+                    res.forEach(function (d, idx) {
+                        let img = ''; // 이미지 처리 시
+                        if (d.roomType === '부서') {
+                            img = "<img src='/image/chat/department.png' />";
+                        } else if (d.roomType === '프로젝트') {
+                            img = "<img src='/image/chat/project.png' />";
+                        } else if (d.roomType === '팀') {
+                            img = "<img src='/image/chat/team.png' />";
+                        } else { // 자유
+                            img = "<img src='/image/chat/default.png' />";
+                        }
 
-<!--                        var roomNumber = d.chatRoomNum;-->
-<!--                        var sessionId = d.chatUserId;-->
-<!--                        var entryTime = d.chatEntryTime;-->
-<!--                        var visitTime = d.chatVisitTime;-->
-<!--                        var lastSendTime = d.lastSendTime;-->
-<!--                        var lastMessageContent = d.messageContent;-->
-<!--                        var roomName = d.roomName;-->
-<!--                        var roomCreateDate = d.roomCreateDate;-->
-<!--                        var unreadMessageCount = getUnreadMessage(roomNumber, sessionId);-->
+                        var roomNumber = d.chatRoomNum;
+                        var sessionId = d.chatUserId;
+                        var entryTime = d.chatEntryTime;
+                        var visitTime = d.chatVisitTime;
+                        var lastSendTime = d.lastSendTime;
+                        var lastMessageContent = d.messageContent;
+                        var roomName = d.roomName;
+                        var roomCreateDate = d.roomCreateDate;
+                        var unreadMessageCount = d.unreadMessageCount;
 
-<!--                        output += "<li>";-->
-<!--                        output += "<input type='hidden' name='chat_room_num' value='" + roomNumber + "' />";-->
-<!--                        output += "    <input type='hidden' name='chat_room_type' value='multi'/>";-->
-<!--                        output += "    <div class='sender-image'>";-->
-<!--                        output += "        " + img;-->
-<!--                        output += "    </div>";-->
-<!--                        output += "    <div class='mes-detail'>";-->
-<!--                        output += "        <div class='mes-col1'>";-->
-<!--                        output += "            <div class='sender-name'>";-->
-<!--                        output += "                " + roomName;-->
-<!--                        output += "            </div>";-->
-<!--                        output += "            <div class='mes-preview'>";-->
-<!--                        if (lastMessageContent != null) {-->
-<!--                            output += lastMessageContent.substr(0, 20);-->
-<!--                        }-->
-<!--                        output += "            </div>";-->
-<!--                        output += "        </div>";-->
-<!--                        output += "        <div class='mes-col2'>";-->
-<!--                        output += "            <div>";-->
-<!--                        if(lastSendTime != null) {-->
-<!--                            if(diffNowTime(lastSendTime)) {-->
-<!--                                lastSendTime = getTime(lastSendTime);-->
-<!--                                output += "                <div class='send-time'>" + lastSendTime + "</div>";-->
-<!--                                output += "                <div class='mes-seen-status'>";-->
-<!--                                output += "                <span class='new'>new</span>";-->
-<!--                                output += "                </div>";-->
-<!--                            } else {-->
-<!--                                lastSendTime = getDate(lastSendTime);-->
-<!--                                output += "                <div class='send-time'>" + lastSendTime + "</div>";-->
-<!--                            }-->
-<!--                        }-->
-<!--                        output += "            </div>";-->
-<!--                        if (unreadMessageCount > 0) {-->
-<!--                            output += "            <span class='mes-count'>"-->
-<!--                            output += unreadMessageCount;-->
-<!--                            output += "            </span>";-->
-<!--                        }-->
-<!--                        output += "        </div>";-->
-<!--                        output += "    </div>";-->
-<!--                        output += "</li>";-->
+                        output += "<li>";
+                        output += "<input type='hidden' name='chat_room_num' value='" + roomNumber + "' />";
+                        output += "    <input type='hidden' name='chat_room_type' value='multi'/>";
+                        output += "    <div class='sender-image'>";
+                        output += "        " + img;
+                        output += "    </div>";
+                        output += "    <div class='mes-detail'>";
+                        output += "        <div class='mes-col1'>";
+                        output += "            <div class='sender-name'>";
+                        output += "                " + roomName;
+                        output += "            </div>";
+                        output += "            <div class='mes-preview'>";
+                        if (lastMessageContent != null) {
+                            output += lastMessageContent.substr(0, 20);
+                        }
+                        output += "            </div>";
+                        output += "        </div>";
+                        output += "        <div class='mes-col2'>";
+                        output += "            <div>";
+                        if(lastSendTime != null) {
+                            if(diffNowTime(lastSendTime)) {
+                                lastSendTime = getTime(lastSendTime);
+                                output += "                <div class='send-time'>" + lastSendTime + "</div>";
+                                output += "                <div class='mes-seen-status'>";
+                                output += "                <span class='new'>new</span>";
+                                output += "                </div>";
+                            } else {
+                                lastSendTime = getDate(lastSendTime);
+                                output += "                <div class='send-time'>" + lastSendTime + "</div>";
+                            }
+                        }
+                        output += "            </div>";
+                        if (unreadMessageCount > 0) {
+                            output += "            <span class='mes-count'>"
+                            output += unreadMessageCount;
+                            output += "            </span>";
+                        }
+                        output += "        </div>";
+                        output += "    </div>";
+                        output += "</li>";
 
-<!--                    }); // each end-->
-<!--                    $(".touch-chatroom").empty().html(output);-->
-<!--                }-->
-<!--            }) // ajax end-->
-<!--        }-->
-<!--        /*[/]*/-->
+                    }); // each end
+                    $(".touch-chatroom").empty().html(output);
+                }
+            }) // ajax end
+        }
+        /*[/]*/
 
-<!--        function commonAjax(url, parameter, type, calbak, contentType) {-->
-<!--            $.ajax({-->
-<!--                url: url,-->
-<!--                data: parameter,-->
-<!--                type: type,-->
-<!--                beforeSend: function (xhr) {-->
-<!--                    //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.-->
-<!--                    xhr.setRequestHeader(header, token);-->
-<!--                },-->
-<!--                contentType: contentType != null ? contentType-->
-<!--                    : 'application/x-www-form-urlencoded; charset=UTF-8',-->
-<!--                success: function (res) {-->
-<!--                    calbak(res);-->
-<!--                },-->
-<!--                error: function (err) {-->
-<!--                    console.log('error');-->
-<!--                    calbak(err);-->
-<!--                }-->
-<!--            });-->
-<!--        }-->
+        function commonAjax(url, parameter, type, calbak, contentType) {
+            $.ajax({
+                url: url,
+                data: parameter,
+                type: type,
+                beforeSend: function (xhr) {
+                    //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
+                    xhr.setRequestHeader(header, token);
+                },
+                contentType: contentType != null ? contentType
+                    : 'application/x-www-form-urlencoded; charset=UTF-8',
+                success: function (res) {
+                    calbak(res);
+                },
+                error: function (err) {
+                    console.log('error');
+                    calbak(err);
+                }
+            });
+        }
 
-<!--        function diffNowTime(time) {-->
-<!--            var lastMessageDayStr = `${new Date(time).getFullYear()}-${new Date(time).getMonth() + 1}-${new Date(time).getDate()}`;-->
-<!--            const todayStr = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`;-->
-<!--            //console.log(lastMessageDayStr);-->
-<!--            //console.log(todayStr);-->
-<!--            if(lastMessageDayStr === todayStr) {-->
-<!--                return true;-->
-<!--            } else {-->
-<!--                return false;-->
-<!--            }-->
-<!--        }-->
+        function diffNowTime(time) {
+            var lastMessageDayStr = `${new Date(time).getFullYear()}-${new Date(time).getMonth() + 1}-${new Date(time).getDate()}`;
+            const todayStr = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}`;
+            //console.log(lastMessageDayStr);
+            //console.log(todayStr);
+            if(lastMessageDayStr === todayStr) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 
-<!--        function getDate(time) {-->
-<!--            var date = new Date(time);-->
-<!--            var lastMessageDayStr = `${new Date(time).getFullYear()}-${new Date(time).getMonth() + 1}-${new Date(time).getDate()}`;-->
-<!--            return lastMessageDayStr;-->
-<!--        }-->
+        function getDate(time) {
+            var date = new Date(time);
+            var lastMessageDayStr = `${new Date(time).getFullYear()}-${new Date(time).getMonth() + 1}-${new Date(time).getDate()}`;
+            return lastMessageDayStr;
+        }
 
-<!--        function getTime(time) {-->
-<!--            var date = new Date(time);-->
-<!--            var hours = date.getHours();-->
-<!--            var minutes = date.getMinutes();-->
-<!--            var ampm = hours >= 12 ? 'PM' : 'AM';-->
-<!--            hours = hours % 12;-->
-<!--            hours = hours ? hours : 12;-->
-<!--            minutes = minutes < 10 ? '0' + minutes : minutes;-->
-<!--            var strTime = hours + ':' + minutes + ' ' + ampm;-->
-<!--            return strTime;-->
-<!--        }-->
+        function getTime(time) {
+            var date = new Date(time);
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            var strTime = hours + ':' + minutes + ' ' + ampm;
+            return strTime;
+        }
 
-<!--        function getUnreadMessage(roomNumber, sessionId) {-->
-<!--            var resultCount;-->
-<!--            $.ajax({-->
-<!--                type: "post",-->
-<!--                url: "/chat/getUnreadMessage",-->
-<!--                data: {-->
-<!--                    "sessionId": sessionId,-->
-<!--                    "roomNumber":roomNumber-->
-<!--                },-->
-<!--                dataType: "json",-->
-<!--                async: false,-->
-<!--                beforeSend: function (xhr) {-->
-<!--                    //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.-->
-<!--                    xhr.setRequestHeader(header, token);-->
-<!--                },-->
-<!--                success: function (res) {-->
-<!--                    //console.log(res);-->
-<!--                    resultCount = res;-->
-<!--                }-->
-<!--            }) // ajax end-->
-<!--            return resultCount;-->
-<!--        }-->
-<!--    </script>-->
-<!--    </body>-->
-<!--</html>-->
+        function getUnreadMessage(roomNumber, sessionId) {
+            var resultCount;
+            $.ajax({
+                type: "post",
+                url: "/chat/getUnreadMessage",
+                data: {
+                    "sessionId": sessionId,
+                    "roomNumber":roomNumber
+                },
+                dataType: "json",
+                async: false,
+                beforeSend: function (xhr) {
+                    //데이터를 전송하기 전에 헤더에 csrf값을 설정합니다.
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function (res) {
+                    //console.log(res);
+                    resultCount = res;
+                }
+            }) // ajax end
+            return resultCount;
+        }
+    </script>
+    </body>
+</html>
