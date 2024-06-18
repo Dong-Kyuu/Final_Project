@@ -160,10 +160,24 @@ public class UserServicelmpl implements UserService {
 
     //신규사원 요청 처리
     @Override
-    public List<Map<String, Object>> getUsersFilter(int user_is_approved) {
+    public List<Map<String, Object>> getUsersFilter(int userIsApproved) {
         Map<String, Object> params = new HashMap<>();
-        params.put("user_is_approved", user_is_approved);
-        return userMapper.getUsersFilter(params);
+        params.put("user_is_approved", userIsApproved);
+        List<Map<String, Object>> users = userMapper.getUsersFilter(params);
+
+        for (Map<String, Object> user : users) {
+            Boolean approvalStatus = (Boolean) user.get("user_is_approved");
+            user.put("user_is_approved", convertApprovalStatus(approvalStatus));
+        }
+
+        return users;
+    }
+
+    private int convertApprovalStatus(Boolean userIsApproved) {
+        if (userIsApproved == null) {
+            return 0; // 대기중
+        }
+        return userIsApproved ? 1 : 2; // true -> 1 (승인됨), false -> 2 (거절됨)
     }
 
 
@@ -208,7 +222,7 @@ public class UserServicelmpl implements UserService {
 
     @Override
     public int[] getUsersByDepartmentAndPosition(int departmentId, int positionId) {
-        return userMapper.getUsersByDepartmentAndPosition(departmentId,positionId);
+        return userMapper.getUsersByDepartmentAndPosition(departmentId, positionId);
     }
 
     @Override

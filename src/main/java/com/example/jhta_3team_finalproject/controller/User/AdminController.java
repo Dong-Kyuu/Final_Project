@@ -13,7 +13,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    private final AdminService adminService;
+    private AdminService adminService;
 
     @Autowired
     public AdminController(AdminService adminService) {
@@ -26,6 +26,7 @@ public class AdminController {
         mv.setViewName("member/admin/user_list");
         return mv;
     }
+    
 
     @PostMapping("/updateUserInfo")
     @ResponseBody

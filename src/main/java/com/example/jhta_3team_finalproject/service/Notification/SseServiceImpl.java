@@ -22,14 +22,15 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class SseServiceImpl implements SseService{
+public class SseServiceImpl implements SseService {
 
-    private static final Logger logger   = LoggerFactory.getLogger(SseService.class);
+    private static final Logger logger = LoggerFactory.getLogger(SseService.class);
 
     private final Map<Integer, SseEmitter> emitters = new ConcurrentHashMap<>();
     private NotificationMapper notificationMapper;
     private final UserAuthService userAuthService;
     private final UserService userService;
+
     @Autowired
     public SseServiceImpl(NotificationMapper notificationMapper, UserAuthService userAuthService, UserService userService) {
         this.notificationMapper = notificationMapper;
@@ -50,12 +51,16 @@ public class SseServiceImpl implements SseService{
         this.emitters.put(userNum, emitter);
         logger.info("여기는 이미터 생성" + emitter.toString());
         // emitter의 완료 이벤트와 타임아웃 이벤트가 발생할 때마다 해당 userId에 해당하는 emitter를 맵에서 제거하는 작업을 수행합니다.
-        emitter.onCompletion(() -> {this.emitters.remove(userNum); logger.info("onCompletion()");});
-        emitter.onTimeout(() -> {this.emitters.remove(userNum);logger.info("onTimeout()");});
+        emitter.onCompletion(() -> {
+            this.emitters.remove(userNum);
+            logger.info("onCompletion()");
+        });
+        emitter.onTimeout(() -> {
+            this.emitters.remove(userNum);
+            logger.info("onTimeout()");
+        });
 
         List<Notification> list = notificationMapper.getList(userNum);
-
-
 
 
         //503에러를 방지하기 위한 더미 이벤트 전송
@@ -63,14 +68,14 @@ public class SseServiceImpl implements SseService{
             //알림은 emitter.send() 메서드를 사용하여 전송됩니다.
             //SseEmitter.event().name("notification").data(message)를 사용하여 이름이 "notification"이고
             //데이터가 message인 이벤트를 생성하고 전송합니다.
-            if(list.size() == 0 ) {
+            if (list.size() == 0) {
                 emitter.send(SseEmitter.event().name("notifyBefore").data("html수정"));
                 emitter.send(SseEmitter.event().name("notification").data(""));
-            }else {  //로그인 했을 때 읽지 않은 알림을 보냅니다.
+            } else {  //로그인 했을 때 읽지 않은 알림을 보냅니다.
                 emitter.send(SseEmitter.event().name("notifyBefore").data("html수정"));
-                for(Notification message : list) {
+                for (Notification message : list) {
                     emitter.send(SseEmitter.event().name("notification").data(message));
-                    logger.info("Notification="+message);
+                    logger.info("Notification=" + message);
                 }
             }
         } catch (IOException e) {
@@ -82,32 +87,43 @@ public class SseServiceImpl implements SseService{
 
     //특정 사용자에게 알림을 보내는 메서드입니다.
     public void sendNotification(int toUserNum, int fromUserNum, String fromUserName, String url, String message) {
-        //userId를 사용하여 this.emitters 맵에서 해당 사용자에 대한 SseEmitter를 가져옵니다.
-        SseEmitter emitter = this.emitters.get(toUserNum);
 
-        Notification alarm = new Notification(toUserNum, fromUserNum, fromUserName, url, message);
-        notificationMapper.insert(alarm);
+        // 알림 받는 사용자의 승인 상태를 확인합니다.
+        User toUser = userService.getUserInfo(toUserNum);
+        if (toUser.getUserIsApproved() == 0) {
+            logger.info("User with userNum: {} is not approved. No notification will be sent.", toUserNum);
 
-        List<Notification> list =  notificationMapper.getList(toUserNum);
-        //가져온 emitter가 null이 아닌 경우, 즉 해당 사용자에게 SseEmitter가 존재하는 경우에만 알림을 전송합니다.
-        if (emitter != null) {
-            try {
-                // 알림 전송하면 기존의 보여져있는 알림 삭제
-                emitter.send(SseEmitter.event().name("notifyBefore").data("html수정"));
-                //알림은 emitter.send() 메서드를 사용하여 전송됩니다.
-                //SseEmitter.event().name("notification").data(message)를 사용하여 이름이 "notification"이고
-                //데이터가 message인 이벤트를 생성하고 전송합니다.
-                if(list.size() == 0 ) {
-                    emitter.send(SseEmitter.event().name("notification").data(""));
-                }else {
-                    for(Notification msg : list) {
-                        emitter.send(SseEmitter.event().name("notification").data(msg));
-                        logger.info("msg = " + msg);
+        } else {
+
+
+            //userId를 사용하여 this.emitters 맵에서 해당 사용자에 대한 SseEmitter를 가져옵니다.
+            SseEmitter emitter = this.emitters.get(toUserNum);
+
+            Notification alarm = new Notification(toUserNum, fromUserNum, fromUserName, url, message);
+            notificationMapper.insert(alarm);
+
+            List<Notification> list = notificationMapper.getList(toUserNum);
+            //가져온 emitter가 null이 아닌 경우, 즉 해당 사용자에게 SseEmitter가 존재하는 경우에만 알림을 전송합니다.
+            if (emitter != null) {
+                try {
+                    // 알림 전송하면 기존의 보여져있는 알림 삭제
+                    emitter.send(SseEmitter.event().name("notifyBefore").data("html수정"));
+                    //알림은 emitter.send() 메서드를 사용하여 전송됩니다.
+                    //SseEmitter.event().name("notification").data(message)를 사용하여 이름이 "notification"이고
+                    //데이터가 message인 이벤트를 생성하고 전송합니다.
+                    if (list.size() == 0) {
+                        emitter.send(SseEmitter.event().name("notification").data(""));
+                    } else {
+                        for (Notification msg : list) {
+                            emitter.send(SseEmitter.event().name("notification").data(msg));
+                            logger.info("msg = " + msg);
+                        }
                     }
-                };
-            } catch (IOException e) {
-                //전송 중 예외가 발생하면(IOException), 해당 emitter를 에러 상태로 완료합니다.
-                emitter.completeWithError(e);
+                    ;
+                } catch (IOException e) {
+                    //전송 중 예외가 발생하면(IOException), 해당 emitter를 에러 상태로 완료합니다.
+                    emitter.completeWithError(e);
+                }
             }
         }
     }
@@ -138,7 +154,6 @@ public class SseServiceImpl implements SseService{
     }
 
 
-
     @Override
     public void sendByDepartmentAndPosition(int departmentNo, int positionNo, String message, String url) {
         // SSE 알림 보내기
@@ -151,13 +166,13 @@ public class SseServiceImpl implements SseService{
 
         List<Integer> toUserNumsList = new ArrayList<>();
 
-            int[] users = userService.getUsersByDepartmentAndPosition(departmentNo, positionNo);
+        int[] users = userService.getUsersByDepartmentAndPosition(departmentNo, positionNo);
 
 
         for (int toUserNum : users) {
-            System.out.println("send to "+toUserNum);
+            System.out.println("send to " + toUserNum);
             // 받는 사람 넘버(필수) , 보내는 사람 넘버, 보내는사람 이름(안넣으면 이상하게보임), 링크, 메세지(필수)
-            sendNotification(toUserNum,fromUserNum,fromUserName,url, message);
+            sendNotification(toUserNum, fromUserNum, fromUserName, url, message);
         }
     }
 }

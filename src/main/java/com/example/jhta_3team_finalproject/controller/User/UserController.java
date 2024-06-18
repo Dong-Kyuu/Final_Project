@@ -4,13 +4,13 @@ import com.example.jhta_3team_finalproject.domain.User.Attendence;
 import com.example.jhta_3team_finalproject.domain.User.MailVO;
 import com.example.jhta_3team_finalproject.domain.User.SendMail;
 import com.example.jhta_3team_finalproject.domain.User.User;
+import com.example.jhta_3team_finalproject.service.Notification.SseService;
 import com.example.jhta_3team_finalproject.service.User.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,22 +35,22 @@ import java.util.Map;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-
-//    @Value("${my.savefolder}")
-//    private String saveFolder;
     private UserService userservice;
     private PasswordEncoder passwordEncoder;
     private SendMail sendMail;
+    private SseService sseService;
     private static final int UPDATE_SUCCESS = 1;
     private static final int JOIN_SUCCESS = 1;
 
 
     @Autowired
-    public UserController(UserService userservicece,
-                          PasswordEncoder passwordEncoder, SendMail sendMail) {
-        this.userservice = userservicece;
+    public UserController(UserService userservice,
+                          PasswordEncoder passwordEncoder, SendMail sendMail, SseService sseService) {
+
+        this.userservice = userservice;
         this.passwordEncoder = passwordEncoder;
         this.sendMail = sendMail;
+        this.sseService = sseService;
     }
 
     @GetMapping(value = "/login")
@@ -127,8 +127,19 @@ public class UserController {
     // 사용자 승인
     @PostMapping("/approve/{userNum}")
     @ResponseBody
-    public Map<String, String> approveUser(@PathVariable int userNum) {
+    public Map<String, String> approveUser(@PathVariable int userNum, @AuthenticationPrincipal User userDetails) {
         userservice.approveUser(userNum);
+
+
+        // 알림 보낼 데이터 가져오기 (예: 승인한 사람의 이름, 해당 링크 등)
+        User user = userservice.getUserInfo(userNum); // 승인된 사용자 정보
+        String approverName = userDetails.getUsername();
+        String notificationMessage = approverName + "님이 승인 완료 했습니다.";
+        String notificationLink = "http://localhost:9000/dashboard/user/detail/" + userNum;
+
+        // 알림 전송
+        sseService.sendNotification(user.getUserNum(), userDetails.getUserNum(), approverName, notificationLink, notificationMessage);
+
         return Map.of("status", "success", "message", "승인 완료");
 
     }

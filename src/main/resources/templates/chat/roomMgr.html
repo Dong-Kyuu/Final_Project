@@ -141,9 +141,6 @@
                             </div>
                             <div th:if="${type == 'room-exit'}">
                                 <p class="font-medium text-gray-900" x-text="member.roomName"></p>
-<!--                                <p class="text-xs text-gray-400">-->
-<!--                                    <span class="inline-block mr-2" x-text="member.message"></span>-->
-<!--                                </p>-->
                                 <input type="hidden" name="roomNum" x-text="member.chatRoomNum" />
                                 <div style="display: none;" id="selectedRoomList" x-text="selectedMembers"></div>
                             </div>
