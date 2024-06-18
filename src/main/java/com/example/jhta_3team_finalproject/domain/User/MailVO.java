@@ -1,7 +1,7 @@
 package com.example.jhta_3team_finalproject.domain.User;
 
 public class MailVO {
-    private String  from ="joosun7647@naver.com";
+    private String  from ="iopz0304@naver.com";
     private String to;
     private String subject="회원가입을 축하드립니다.";
     private String content;
