@@ -5,6 +5,9 @@ services:
     ports:
       - 9000:9000
 
+    networks:
+      test2:
+
   # 서비스명
   redis_container:
     # 사용할 이미지
