@@ -28,7 +28,7 @@ public interface ChatMapper {
 
     public ChatParticipate searchLastRoomUser(ChatRoom chatRoom);
 
-    public List<ChatMessage> searchMessages(ChatMessage chatMessage);
+    public List<ChatMessage> searchChatMessages(ChatMessage chatMessage);
 
     public List<ChatMessage> redisSearchMessages(ChatMessage chatMessage);
 

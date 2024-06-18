@@ -29,7 +29,7 @@
     <!--    set profiling=1;-->
     <!--    show profiles;-->
     <!--    show profile for query '번호';-->
-    <select id="searchMessages" resultType="chatMessage">
+    <select id="searchChatMessages" resultType="chatMessage">
         WITH TimestampRow AS (
             SELECT DISTINCT
                 DATE(send_time) as time_stamp,
@@ -46,7 +46,7 @@
                 NULL as user_profile_picture
             FROM chat_message cm
             WHERE chat_room_num = #{chatRoomNum}
-            AND DATE_FORMAT(send_time, '%Y-%m-%d') = #{dateStr}
+            AND MATCH(cm.message_content) AGAINST(#{messageContent} IN BOOLEAN MODE)
             LIMIT 1
         ),
         MessageData AS (
@@ -75,7 +75,7 @@
     </select>
 
     <!-- 채팅방의 채팅 기록 1일씩 가져오기 -->
-    <!--    2024-06-05, ROLLUP을 통한 타임 스탬프 구현-->
+    <!-- 2024-06-05, ROLLUP을 통한 타임 스탬프 구현-->
     <select id="redisSearchMessages" resultType="chatMessage">
         WITH TimestampRow AS (
             SELECT DISTINCT
@@ -93,7 +93,7 @@
                 NULL as user_profile_picture
             FROM chat_message cm
             WHERE chat_room_num = #{chatRoomNum}
-            AND DATE_FORMAT(send_time, '%Y-%m-%d') = #{dateStr}
+            AND DATE_FORMAT(send_time, '%Y-%m-%d') = #{timeStamp}
             LIMIT 1
         ),
         MessageData AS (
@@ -113,7 +113,7 @@
              FROM chat_message cm
              JOIN user u ON cm.sender_id = u.user_id
              WHERE cm.chat_room_num = #{chatRoomNum}
-             AND DATE_FORMAT(cm.send_time, '%Y-%m-%d') =#{dateStr}
+             AND DATE_FORMAT(cm.send_time, '%Y-%m-%d') =#{timeStamp}
         )
         SELECT * FROM TimestampRow
         UNION ALL

@@ -36,9 +36,9 @@ public class RedisService {
             LocalDate localDate = LocalDate.now().minusDays(dayCount);
             LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
             Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-            String dateStr = simpleDateFormat.format(date.getTime());
-            String key = num + ":" + dateStr;
-            List<ChatMessage> oneDayList = getChatMessageList(num, key, dateStr);
+            String timeStamp = simpleDateFormat.format(date.getTime());
+            String key = num + ":" + timeStamp;
+            List<ChatMessage> oneDayList = getChatMessageList(num, key, timeStamp);
             oneDayList.forEach(chatMsg -> {
                 if(chatMsg.getMessageNum() == 0 && !chatMsg.getTimeStamp().isEmpty()) {
                     chatMsg.setType(ChatMessage.MessageType.TIMESTAMP);
@@ -54,7 +54,7 @@ public class RedisService {
      * true, 키가 있다면 레디스에서 가져와서 return
      * false, 키가 없다면 레디스에 올려준 후 해당 List 는 바로 return
      */
-    private List<ChatMessage> getChatMessageList(long num, String key, String dateStr) {
+    private List<ChatMessage> getChatMessageList(long num, String key, String timeStamp) {
         if (redisChatUtils.isKeyExists(key)) {
             log.info("RedisGet");
             Set<ChatMessage> chatMessageSet = redisChatUtils.getSets(key);
@@ -65,7 +65,7 @@ public class RedisService {
             log.info("RdbGet");
             ChatMessage chatMessage = new ChatMessage();
             chatMessage.setChatRoomNum(num);
-            chatMessage.setDateStr(dateStr);
+            chatMessage.setTimeStamp(timeStamp);
             List<ChatMessage> chatMessageList = dao.redisSearchMessages(chatMessage);
             if (!chatMessageList.isEmpty()) {
                 chatMessageList.forEach(chatMsg -> {

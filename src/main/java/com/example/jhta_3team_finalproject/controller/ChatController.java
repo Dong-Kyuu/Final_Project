@@ -109,9 +109,14 @@ public class ChatController {
         return map;
     }
 
+    @RequestMapping(value = "getChatMessages")
+    public @ResponseBody List<ChatMessage> getChatMessages(ChatMessage chatMessage) throws Exception {
+        return chatService.getChatMessages(chatMessage);
+    }
+
     @RequestMapping(value = "searchMessages")
-    public @ResponseBody List<ChatMessage> chatUserProfileMsg(ChatMessage chatMessage) throws Exception {
-        return chatService.searchMessages(chatMessage);
+    public @ResponseBody List<ChatMessage> searchMessages(ChatMessage chatMessage) throws Exception {
+        return chatService.searchChatMessages(chatMessage);
     }
 
     @RequestMapping(value = "isp2pChatRoom")
