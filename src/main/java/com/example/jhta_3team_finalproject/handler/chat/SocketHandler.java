@@ -257,7 +257,7 @@ public class SocketHandler extends TextWebSocketHandler {
             WebSocketSession webSocketSession = (WebSocketSession) temp.get(k);
             try {
                 JSONObject obj = new JSONObject();
-                obj.put("type", "fileUpload");
+                obj.put("type", "imgurl");
                 obj.put("sessionId", chatMessage.getSenderId());
                 obj.put("fileUrl", imageurl);
                 obj.put("fileOriginName", chatMessage.getFileOriginName());
