@@ -4,9 +4,8 @@ services:
     image: chaterbox/security
     ports:
       - 9000:9000
-
-    networks:
-      test2:
+    depends_on:
+      - redis
 
   # 서비스명
   redis_container:
@@ -29,9 +28,6 @@ services:
     # 컨테이너 종료시 재시작 여부 설정
     restart: always
     command: redis-server /usr/local/conf/redis.conf
-
-    networks:
-      test2:
 
 networks:
   test2:
