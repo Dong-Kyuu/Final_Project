@@ -89,7 +89,7 @@ pipeline {
             steps{
                 sh 'echo " docker hub push"'
                 sh 'docker push  $DOCKERHUB_CREDENTIALS_USR/security:$BUILD_NUMBER'   
-                sh 'docker push  $DOCKERHUB_CREDENTIALS_USR/security'
+                sh 'docker push  $DOCKERHUB_CREDENTIALS_USR/security:latest'
             }
             post {
                 success {
@@ -107,7 +107,7 @@ pipeline {
             steps{
                 sh 'echo " docker image rmi"'
                 sh "docker rmi $DOCKERHUB_CREDENTIALS_USR/security:$BUILD_NUMBER" // docker image 제거
-                sh "docker rmi $DOCKERHUB_CREDENTIALS_USR/security"              // docker image 제거
+                sh "docker rmi $DOCKERHUB_CREDENTIALS_USR/security:latest"              // docker image 제거
             }
             post {
                 success {
