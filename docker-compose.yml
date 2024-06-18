@@ -6,6 +6,8 @@ services:
       - 9000:9000
     depends_on:
       - redis
+    networks:
+      - app-network
 
   # 서비스명
   redis:
@@ -28,7 +30,9 @@ services:
     # 컨테이너 종료시 재시작 여부 설정
     restart: always
     command: redis-server /usr/local/conf/redis.conf
+    networks:
+      - app-network
 
 networks:
-  test2:
-
+  app-network:
+    driver: bridge
