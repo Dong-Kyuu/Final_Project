@@ -503,6 +503,7 @@
                         });
                     }
                 });
+
                 $(document).on('mouseup touchend', function () {
                     $(document).off('mousemove touchmove mouseup touchend');
                     if (!distY) return;
@@ -561,7 +562,7 @@
                                 profileImage += "        </span>"
                             }
 
-                            if (d.chatRoomNum == 0) {
+                            if (d.chatRoomNum === 0) {
                                 if (d.timeStamp != null) {
                                     output = "";
                                     output += "<h5 class='chat-timestamp-dash'>";
@@ -781,7 +782,7 @@
              * 2024-06-15, 채팅방 방문 시간 업데이트
              */
             function initChatRoomVisitTime(chatRoomNum, chatUserId) {
-
+                console.log('visitUpdate');
                 $.ajax({
                     type: "post",
                     url: "/chat/initChatRoomVisitTime",
@@ -1137,7 +1138,6 @@
                 let chatUserId = $("#chat_user_id");
                 initChatRoomVisitTime(messageRoomNum.val(), chatUserId.val()); // 채팅방 방문 시간 업데이트
                 getChatUserList();
-                getUserChatRoomList();
                 getChatUserProfile();
 
                 setTimeout(function () {
@@ -1150,6 +1150,7 @@
                     $("#chat-message-list").css("transform", "translateY(0)");
                     $(".messages-list > ul > li").off('click', showMessages);
                     $(".messages-list > ul > li").bind('click', showMessages);
+                    getUserChatRoomList();
                     loadingEnd();
                     isRun = false;
                 }, 100);
