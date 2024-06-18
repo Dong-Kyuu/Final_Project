@@ -109,6 +109,11 @@ public class ChatController {
         return map;
     }
 
+    @RequestMapping(value = "searchMessages")
+    public @ResponseBody List<ChatMessage> chatUserProfileMsg(ChatMessage chatMessage) throws Exception {
+        return chatService.searchMessages(chatMessage);
+    }
+
     @RequestMapping(value = "isp2pChatRoom")
     public @ResponseBody int isp2pChatRoom(@RequestParam(value = "chatCounterpartId") String chatCounterpartId,
                                            @RequestParam(value = "chatUserId") String chatUserId,
