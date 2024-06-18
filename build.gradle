@@ -63,12 +63,14 @@ dependencies {
 
     //mail 주선경
     implementation 'org.springframework.boot:spring-boot-starter-mail'
-//    implementation 'com.fasterxml.jackson.core:jackson-databind' //LocalDateTime JSON벼환
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+
 //    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
 
 // Lombok 설정
     compileOnly 'org.projectlombok:lombok'
+
     annotationProcessor 'org.projectlombok:lombok'
 
     //2024-06-11,김산 spring validation
@@ -83,3 +85,8 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+//test {
+//    useJUnitPlatform()
+//    systemProperty "jasypt.encryptor.password", project.getProperties().get("jasypt.encryptor.password")
+//}

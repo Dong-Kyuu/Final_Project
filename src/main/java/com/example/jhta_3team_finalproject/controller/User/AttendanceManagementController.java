@@ -22,14 +22,14 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/admin/attendance")
+@RequestMapping ("/admin/attendance")
 public class AttendanceManagementController {
-    private final UserService userService;
-    private final AttendanceService attendanceService;
+    private UserService userservice;
+    private AttendanceService attendanceService;
 
     @Autowired
-    public AttendanceManagementController(UserService userService, AttendanceService attendanceService) {
-        this.userService = userService;
+    public AttendanceManagementController(UserService userservice, AttendanceService attendanceService) {
+        this.userservice = userservice;
         this.attendanceService = attendanceService;
     }
 

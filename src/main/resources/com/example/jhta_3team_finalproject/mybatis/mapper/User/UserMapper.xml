@@ -86,12 +86,12 @@
     <!-- 사용자 거절 -->
     <update id="rejectUser">
         UPDATE user
-        SET user_is_approved = 0
+        SET user_is_approved = 2
         WHERE user_num = #{userNum}
     </update>
 
     <!-- 모든 신규 사원 정보( 요청)-->
-    <select id="findAllRequests"  parameterType="map">
+    <select id="findAllRequests" parameterType="map">
         SELECT *
         FROM user
     </select>
@@ -107,7 +107,7 @@
     <select id="getRejectedRequests" resultType="User">
         SELECT *
         FROM user
-        WHERE user_is_approved = 0
+        WHERE user_is_approved = 2
     </select>
 
     <select id="getUsersFilter" parameterType="map">
@@ -121,7 +121,7 @@
         join user_departments d on u.department_id = d.department_id
         join user_positions p on u.position_id = p.position_id
         <where>
-            <if test="params.user_is_approved != 0">
+            <if test="params.user_is_approved != -1">
                 u.user_is_approved = #{params.user_is_approved}
             </if>
         </where>
@@ -132,7 +132,8 @@
     <select id="getUsersByDepartmentAndPosition" resultType="int" parameterType="map">
         SELECT user_num
         FROM user
-        WHERE department_id = #{departmentId} AND position_id = #{positionId}
+        WHERE department_id = #{departmentId}
+          AND position_id = #{positionId}
     </select>
 
     <!--부서에 소속한 인물 검색-->
