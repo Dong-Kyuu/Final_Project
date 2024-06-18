@@ -1,7 +1,7 @@
 services:
   web_service:
     container_name: web
-    image: chaterbox/security_aws:01
+    image: chaterbox/security
     ports:
       - 9000:9000
     
