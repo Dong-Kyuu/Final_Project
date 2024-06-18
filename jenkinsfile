@@ -27,9 +27,8 @@ pipeline {
 
          //clone 받은 프로젝트 안의 Spring10_Security_War 디렉토리에서 stage 실행
         stage('Build') {
-            steps {    
-        
-                    sh "chmod +x gradlew"  // gradlew 파일에 실행 권한 부여
+            steps {
+                sh "chmod +x gradlew"  // gradlew 파일에 실행 권한 부여
                 sh "./gradlew clean build -x test"
                   
             }
@@ -52,7 +51,8 @@ pipeline {
                     sh 'echo " Image Bulid Start"'
                     sh 'docker build . -t $DOCKERHUB_CREDENTIALS_USR/security:$BUILD_NUMBER'  //예) 빌드 번호가 10번인 경우      도커허브_username/security:10  이름의 이미지 생성
                     sh 'docker build . -t $DOCKERHUB_CREDENTIALS_USR/security:latest'                          // 도커허브_username/security:latest 이름의 이미지 생성
-                
+                    sh 'docker build . -t $DOCKERHUB_CREDENTIALS_USR/redis:latest'                          // 도커허브_username/redis:latest 이름의 이미지 생성
+
             }
                 post {
                     success {
@@ -90,6 +90,7 @@ pipeline {
                 sh 'echo " docker hub push"'
                 sh 'docker push  $DOCKERHUB_CREDENTIALS_USR/security:$BUILD_NUMBER'   
                 sh 'docker push  $DOCKERHUB_CREDENTIALS_USR/security:latest'
+                sh 'docker push  $DOCKERHUB_CREDENTIALS_USR/redis:latest'
             }
             post {
                 success {
@@ -108,6 +109,7 @@ pipeline {
                 sh 'echo " docker image rmi"'
                 sh "docker rmi $DOCKERHUB_CREDENTIALS_USR/security:$BUILD_NUMBER" // docker image 제거
                 sh "docker rmi $DOCKERHUB_CREDENTIALS_USR/security:latest"              // docker image 제거
+                sh "docker rmi $DOCKERHUB_CREDENTIALS_USR/redis:latest"
             }
             post {
                 success {
@@ -128,6 +130,7 @@ pipeline {
                     ssh -o StrictHostKeyChecking=no ${TARGET_HOST} '
                     sudo docker-compose down --rmi all
                     sudo docker-compose up -d
+                    sudo docker-compose up -f docker-compose-redis.yml -d
                     '
                 """
                 }
