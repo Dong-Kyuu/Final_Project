@@ -4,16 +4,7 @@ services:
     image: chaterbox/security_aws:01
     ports:
       - 9000:9900
-    environment:
-      spring.datasource.url: jdbc:mysql://mbti.c9gsay8wiey2.ap-northeast-2.rds.amazonaws.com:3306/mbt
-      spring.datasource.username: admin
-      spring.datasource.password: admin1234
-      spring.datasource.driver-class-name: com.mysql.cj.jdbc.Driver
-      # S3 관련 환경 변수 추가
-      aws.s3.bucket: your-s3-bucket-name
-      aws.s3.region: your-s3-region
-      aws.accessKeyId: your-access-key-id
-      aws.secretKey: your-secret-key
+    
     networks:
       test2:
 
