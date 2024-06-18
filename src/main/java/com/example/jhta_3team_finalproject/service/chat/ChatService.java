@@ -57,6 +57,24 @@ public class ChatService {
         return chatMessage; // 마지막 메시지를 반환
     }
 
+    /**
+     * 2024-06-18, 1일 데이터 가져오기
+     */
+    public List<ChatMessage> getChatMessages(ChatMessage chatMessage) {
+        String[] dateStr = chatMessage.getTimeStamp().split("-");
+        int year = Integer.parseInt(dateStr[0]);
+        int month = Integer.parseInt(dateStr[1]);
+        int day = Integer.parseInt(dateStr[2]);
+
+        // 주어진 날짜를 LocalDate 객체로 생성
+        LocalDate givenDate = LocalDate.of(year, month, day);
+        // 하루를 뺀 날짜 계산
+        LocalDate previousDate = givenDate.minusDays(1);
+        // 하루 뺀 날짜를 다시 계산하여 1일 이전 데이터를 가져오기
+        chatMessage.setTimeStamp(previousDate.toString());
+        return dao.redisSearchMessages(chatMessage);
+    }
+
     public ChatMessage updateMsgImageUrl(ChatMessage chatMessage) throws Exception {
         /**
          * 2024-06-07, Redis 에서 Update 가 필요한 oldChatMessage 를 저장해놓습니다.
@@ -143,12 +161,11 @@ public class ChatService {
         }
     }
 
-
-    public List<ChatMessage> searchMessages(ChatMessage chatMessage) throws Exception {
+    public List<ChatMessage> searchChatMessages(ChatMessage chatMessage) throws Exception {
         /**
          * 2024-06-18, 채팅 기록 검색
          */
-        return dao.searchMessages(chatMessage);
+        return dao.searchChatMessages(chatMessage);
     }
 
     public List<ChatParticipate> searchRoom(ChatRoom chatRoom) throws Exception {
