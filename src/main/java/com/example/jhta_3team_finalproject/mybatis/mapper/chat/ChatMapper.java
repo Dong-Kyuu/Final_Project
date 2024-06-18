@@ -40,8 +40,6 @@ public interface ChatMapper {
 
     public List<User> chatUserList(String chatUserId);
 
-    public int getUnreadMessage(ChatParticipate chatParticipate);
-
     public User chatUserProfile(String chatUserId);
 
     public int chatUserProfileMsgUpdate(User user);

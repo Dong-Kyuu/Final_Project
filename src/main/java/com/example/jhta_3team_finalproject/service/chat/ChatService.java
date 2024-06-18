@@ -137,13 +137,17 @@ public class ChatService {
 
             /**
              * 2024-06-12, 참가 테이블의 인원이 0명인 경우, 해당되는 채팅방을 삭제합니다.
-             *              채팅방 삭제 시, 채팅방에 해당하는 메시지들을 cascade delete 합니다.
+             *             채팅방 삭제 시, 채팅방에 해당하는 메시지들을 cascade delete 합니다.
              */
             if(dao.isChatRoomParticipate(chatParticipate) == NO_PARTICIPATE) dao.deleteChatRoom(chatParticipate);
         }
     }
 
+
     public List<ChatMessage> searchMessages(ChatMessage chatMessage) throws Exception {
+        /**
+         * 2024-06-18, 채팅 기록 검색
+         */
         return dao.searchMessages(chatMessage);
     }
 
