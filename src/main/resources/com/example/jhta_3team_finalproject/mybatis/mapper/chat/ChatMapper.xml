@@ -219,7 +219,11 @@
 
     <!-- 2024-06-12, 채팅 사원 전체 리스트 가져오기 -->
     <select id="chatUserList" resultType="user">
-        SELECT user_id, user_name, user_profile_picture, user_chat_status_msg, user_email, ud.department_name
+        SELECT user_id,
+               user_name,
+               user_profile_picture,
+               user_chat_status_msg, user_email,
+               ud.department_name
         FROM user u
         JOIN user_departments ud
         ON u.department_id = ud.department_id
