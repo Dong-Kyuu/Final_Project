@@ -30,5 +30,7 @@ public class Trip {
     private String optionIds;
     private String status;
     private int travelleaderNo;
+    private String travelleaderName;
+    private int tripProgress;
 
 }

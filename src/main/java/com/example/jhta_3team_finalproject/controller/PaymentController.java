@@ -6,6 +6,7 @@ import com.example.jhta_3team_finalproject.service.TourPackage.CartService;
 import com.example.jhta_3team_finalproject.service.TourPackage.CustomerService;
 import com.example.jhta_3team_finalproject.service.TourPackage.PurchaseService;
 import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import jakarta.servlet.http.Cookie;
@@ -88,6 +89,24 @@ public class PaymentController {
             response.put("success", false);
             response.put("message", "결제 처리 중 오류가 발생했습니다.(controller)");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PostMapping("/refund")
+    public ResponseEntity<String> refundPayment(@RequestBody Purchase refundRequest) {
+        CancelData cancelData = new CancelData(refundRequest.getImpUid(),true);
+        cancelData.setChecksum(refundRequest.getAmount()); // 환불 금액 설정
+        cancelData.setReason(refundRequest.getRejectReason()); // 환불 사유 설정
+
+        try {
+            IamportResponse<Payment> response = iamportConfig.getIamportClient().cancelPaymentByImpUid(cancelData);
+            if ("cancelled".equals(response.getResponse().getStatus())) {
+                return ResponseEntity.ok("Payment cancelled successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to cancel payment");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Exception occurred: " + e.getMessage());
         }
     }
 

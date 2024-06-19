@@ -12,4 +12,6 @@ public interface PurchaseService {
     List<Purchase> getAllPurchaseInfoByTripNo(Integer num);
 
     void updatePurchaseStatus(int id, String approved);
+
+    void updateRejectReason(int purchaseId, String rejectReason);
 }

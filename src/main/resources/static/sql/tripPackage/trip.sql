@@ -24,8 +24,9 @@ create table trip
 create index file_id
     on trip (file_id);
 
--- status 컬럼 추가
+-- 컬럼 추가
 ALTER TABLE trip
+    ADD COLUMN trip_progress INT DEFAULT 0;
     ADD COLUMN travelleader_no int null;
     ADD COLUMN status VARCHAR(20) DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED'));
 

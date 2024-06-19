@@ -23,6 +23,6 @@ public class Purchase {
     private String customerNameKor;
     private String tripName;
     private String tripDate;
-
+    private String rejectReason;
 
 }

@@ -54,37 +54,7 @@
             float: right;
             padding-right: 3rem;
         }
-        /*
-        .modal{
-            position:fixed;
-            display:none;
 
-            justify-content: center;
-            top:0;
-            left:0;
-
-            width:100%;
-            height:100%;
-
-
-
-            background-color: rgba(0,0,0,0.4);
-        }
-        .modal_body{
-            position:absolute;
-            top:50%;
-
-            width:400px;
-            height:600px;
-            padding:40px;
-            text-align: center;
-
-            background-color: rgb(255,255,255);
-            border-radius:10px;
-            box-shadow:0 2px 3px 0 rgba(34,36,38,0.15);
-            transform:translateY(-50%);
-        }
-*/
         .modal {
             position: fixed;
             display: none;
@@ -178,6 +148,8 @@
                         <div class="card">
                             <div class="card-body" >
                                 <h4 class="card-title">Booking List</h4>
+                                <div style="max-height: 300px; width:100%; overflow-y: auto;position: relative;">
+
                                 <table class="table table-striped" >
                                     <thead>
                                     <tr>
@@ -210,18 +182,18 @@
                                                     <input type="hidden" name="tripNo" th:value="${purchase.tripNo}" />
                                                     <button type="submit" class="btn btn-gradient-success btn-sm">승인</button>
                                                 </form>
-                                                <form th:action="@{/trip/rejectPurchase}" method="post" style="display:inline;">
-                                                    <input type="hidden" name="purchaseId" th:value="${purchase.id}" />
-                                                    <input type="hidden" name="buyerNo" th:value="${purchase.buyerNo}" />
-                                                    <input type="hidden" name="tripNo" th:value="${purchase.tripNo}" />
-                                                    <button type="submit" class="btn btn-gradient-danger btn-sm">거절</button>
-                                                </form>
+                                                <!-- 예약 거절 버튼 -->
+                                                <button type="button" class="btn btn-danger btn-sm reject-btn"
+                                                        th:data-purchaseid="${purchase.id}" th:data-toggle="modal" th:data-target="'#rejectModal-' + ${purchase.id}">
+                                                    거절
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
 
                                     </tbody>
                                 </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -276,7 +248,7 @@
                                 <!-- 실제 적용할 상품 리스트 -->
 
                                 <div class="row" id="productList">
-                                    <div th:each="goods : ${approvedTrip}" class="col-lg-4 col-md-6 col-sm-6">
+                                    <div th:each="goods : ${triplist}" class="col-lg-4 col-md-6 col-sm-6">
                                         <div class="product__item__text">
                                             <h6 th:text="${goods.tripName}"></h6>
                                         </div>
@@ -352,18 +324,7 @@
 </script>
 
 <script>
-    /*
-    const modal = document.querySelector('.modal');
-    const btnOpenModal=document.querySelector('.btn-open-modal');
 
-    btnOpenModal.addEventListener("click", ()=>{
-        modal.style.display="flex";
-    });
-
-    function closeModal() {
-        document.querySelector('.modal').style.display = 'none';
-    }
-*/
     // Function to open the modal
     function openModal() {
         document.querySelector('.modal').style.display = 'flex';
@@ -376,8 +337,46 @@
 
     // Attach the openModal function to the trip_register button
     document.getElementById('trip_update').addEventListener('click', openModal);
+
+    // 예약 거절 버튼 클릭 시 모달 생성
+    $(document).on('click', '.reject-btn', function () {
+        var purchaseId = $(this).data('purchaseid');
+        $('#rejectModal-' + purchaseId).modal('show');
+    });
+
+    // 모달 닫기 버튼 클릭 시 모달 닫기
+    $(document).on('click', '.modal .close', function () {
+        $(this).closest('.modal').modal('hide');
+    });
 </script>
 
+<!-- 거절 모달 -->
+<div th:each="purchase : ${purchaseList}" class="modal fade" th:id="'rejectModal-' + ${purchase.id}" tabindex="-1"
+     role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rejectModalLabel">예약 거절</h5>
+                <button type="button" class="mdi mdi-close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- 거절 사유 입력 폼 -->
+                <form th:action="@{/trip/rejectPurchase}" method="post" id="rejectForm">
+                    <input type="hidden" name="purchaseId" th:id="'purchaseId-' + ${purchase.id}" th:value="${purchase.id}" />
+                    <input type="hidden" name="buyerNo" th:value="${purchase.buyerNo}" />
+                    <input type="hidden" name="tripNo" th:value="${purchase.tripNo}" />
+                    <div class="form-group">
+                        <label for="rejectReason">거절 사유</label>
+                        <textarea class="form-control" id="rejectReason" name="rejectReason" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">확인</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 거절 모달 끝 -->
 
 
 

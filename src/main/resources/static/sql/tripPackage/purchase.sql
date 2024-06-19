@@ -19,5 +19,7 @@ SELECT * FROM purchase;
 
 -- status 컬럼 추가
 ALTER TABLE purchase
+    ADD COLUMN reject_reason VARCHAR(500);
     ADD COLUMN option_ids VARCHAR(300);
+
 
