@@ -1,20 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="sidebar">
 <head>
     <title>Sidebar Fragment</title>
     <th:block th:replace="~{TripHSF/_navbar ::navbar}"></th:block>
+    <script th:src="@{../js/HSF/SideBar.js}"></script>
 
     <style>
-
-        #sidebar .nav {
-            position: fixed;
-        }
 
     </style>
 </head>
 <body>
 <nav class="sidebar sidebar-offcanvas" id="sidebar" th:fragment="sidebar">
-    <ul class="nav" style=" position: fixed;">
+    <ul class="nav" >
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="/trip/mainPage" aria-expanded="false" aria-controls="dashboard-pages">
                 <span class="menu-title">Home</span>

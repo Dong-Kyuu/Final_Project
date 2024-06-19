@@ -36,4 +36,9 @@ public class PurchaseServiceImpl implements PurchaseService {
     public void updatePurchaseStatus(int id, String status) {
         purchaseMapper.updatePurchaseStatus(id,status);
     }
+
+    @Override
+    public void updateRejectReason(int purchaseId, String rejectReason) {
+        purchaseMapper.updateRejectReason(purchaseId,rejectReason);
+    }
 }

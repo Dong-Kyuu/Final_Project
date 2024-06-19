@@ -202,7 +202,7 @@
             var csrfHeaderName = $("meta[name='_csrf_header']").attr("content");
 
             $.ajax({
-                url: "/UpdateCustomer",
+                url: "/trip/UpdateCustomer",
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(formData),

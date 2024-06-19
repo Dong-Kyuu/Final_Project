@@ -105,7 +105,7 @@
     </select>
 
     <select id="getAllTrip" resultType="Trip">
-        SELECT * FROM trip where status = 'APPROVED'
+        SELECT * FROM trip where status = 'APPROVED' order by trip_date asc
     </select>
 
     <insert id="insertTrip" parameterType="Trip">
@@ -143,6 +143,12 @@
     <update id="updateTripStock">
         UPDATE trip
         SET trip_stock = #{stock}
+        WHERE trip_no = #{tripNo}
+    </update>
+
+    <update id="updateTripProgress">
+        UPDATE trip
+        SET trip_progress = #{tripProgressNo}
         WHERE trip_no = #{tripNo}
     </update>
 

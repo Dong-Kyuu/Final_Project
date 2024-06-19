@@ -142,4 +142,10 @@
         FROM user
         WHERE department_id = #{departmentId}
     </select>
+
+    <select id="getUserByUserNo" resultType="User">
+        SELECT *
+        FROM user
+        WHERE user_num = #{userNo}
+    </select>
 </mapper>

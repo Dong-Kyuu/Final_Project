@@ -501,7 +501,9 @@ public class TripController {
     }
 
     @GetMapping("/PurchaseSuccess")
-    public String purchaseSuccess() {
+    public String purchaseSuccess(HttpServletResponse cookieresponse) {
+        deleteCookie(cookieresponse, "cart");
+
         return"tourpackage/PurchaseSuccess";
     }
 
@@ -828,7 +830,7 @@ public class TripController {
         }
 
         //purchase 정보 불러오기
-        List<Purchase> purchaseList= getPurchaseListWithoutStatus("REJECTED","REFUND");
+        List<Purchase> purchaseList= getPurchaseListWithoutStatus("REJECTED","APPROVED");
         model.addAttribute("purchaseList",purchaseList);
 
 
@@ -845,7 +847,9 @@ public class TripController {
     }
 
     @PostMapping("/rejectTrip")
-    public String rejectTrip(@RequestParam("tripNo") int tripNo, RedirectAttributes redirectAttributes) {
+    public String rejectTrip(@RequestParam("tripNo") int tripNo,
+                             RedirectAttributes redirectAttributes) {
+
         tripService.updateTripStatus(tripNo, "REJECTED");
 
         redirectAttributes.addFlashAttribute("message", "여행 일정을 거부하였습니다.");
@@ -889,7 +893,11 @@ public class TripController {
     }
 
     @PostMapping("/rejectPurchase")
-    public String rejectPurchase(@RequestParam("tripNo") int tripNo,@RequestParam("purchaseId") int id,@RequestParam("buyerNo") String buyerNo, RedirectAttributes redirectAttributes) {
+    public String rejectPurchase(@RequestParam("tripNo") int tripNo,@RequestParam("purchaseId") int id,
+                                 @RequestParam("buyerNo") String buyerNo,@RequestParam("rejectReason") String rejectReason
+                                 ,RedirectAttributes redirectAttributes) {
+
+        System.out.println(rejectReason);
 
         Customer customer =null;
         customer = customerService.findByCustomerX("customerNo",buyerNo);
@@ -905,6 +913,7 @@ public class TripController {
         String message="";
 
         purchaseService.updatePurchaseStatus(id,"REJECTED");
+        purchaseService.updateRejectReason(id,rejectReason);
 
         boolean isUpdated=true;
         if(stock!=0){
@@ -933,8 +942,14 @@ public class TripController {
         model.addAttribute("trip", trip);
 
         //purchase 정보 불러오기 조건: tripNo
-        List<Purchase> purchaseList= getPurchaseListWithoutStatus("REJECTED","REFUND");
-        model.addAttribute("purchaseList",purchaseList);
+        List<Purchase> purchaseList= getPurchaseListWithoutStatus("REJECTED","PENDING");
+        List<Purchase> newpurchaseList =new ArrayList<>();
+        for(Purchase p : purchaseList){
+            if(p.getTripNo()==num){
+                newpurchaseList.add(p);
+            }
+        }
+        model.addAttribute("purchaseList",newpurchaseList);
 
         //가이드 선출
         List<User> users = userService.getEmployeeListByDepartment(5);
@@ -1031,20 +1046,37 @@ public class TripController {
         List<Purchase> purchaseList = getPurchaseListWithoutStatus("APPROVED","PENDING");
         model.addAttribute("purchaseList",purchaseList);
 
+        List<Trip> newtripList = new ArrayList<>();
+        String status ="";
+        User user;
+        String TLName="";
+
+        for(Trip trip : triplistAll){
+            status = trip.getStatus();
+            if(status.equals("APPROVED")){
+
+                if(trip.getTravelleaderNo()!=0){
+                    user = userService.getEmployee(trip.getTravelleaderNo());
+                    TLName=user.getUsername();
+                    trip.setTravelleaderName(TLName);
+                }
+                newtripList.add(trip);
+            }
+        }
+        model.addAttribute("newtripList",newtripList);
+
         return "tourdepartment/Travel_BossPage";
     }
 
-    public List<Purchase> getPurchaseListWithoutStatus(String status1,String status2){
-        //purchase 정보 불러오기
-        List<Purchase> purchaseList= purchaseService.getAllPurchaseInfo();
-        List<Purchase> newpurchaseList= new ArrayList<>();
-        for(Purchase p : purchaseList){
-            if(!(p.getStatus().equals(status1)||p.getStatus().equals(status2))){
-                newpurchaseList.add(p);
-            }
-        }
-        return newpurchaseList;
+    @GetMapping("/tripSales")
+    public String tripSales(
+            HttpServletRequest request,HttpServletResponse response,
+            Model model) {
+
+        return "tourdepartment/Tour_Sales";
     }
+
+
 
 
 
@@ -1240,4 +1272,16 @@ public class TripController {
     }
 
     //------------------------------
+
+    public List<Purchase> getPurchaseListWithoutStatus(String status1,String status2){
+        //purchase 정보 불러오기
+        List<Purchase> purchaseList= purchaseService.getAllPurchaseInfo();
+        List<Purchase> newpurchaseList= new ArrayList<>();
+        for(Purchase p : purchaseList){
+            if(!(p.getStatus().equals(status1)||p.getStatus().equals(status2))){
+                newpurchaseList.add(p);
+            }
+        }
+        return newpurchaseList;
+    }
 }

@@ -3,6 +3,7 @@ import com.example.jhta_3team_finalproject.domain.TourPackage.*;
 import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.domain.User.UserAuth;
 import com.example.jhta_3team_finalproject.mybatis.mapper.TourPackage.TripMapper;
+import com.example.jhta_3team_finalproject.mybatis.mapper.User.UserMapper;
 import com.example.jhta_3team_finalproject.service.Notification.SseService;
 import com.example.jhta_3team_finalproject.service.S3.S3Service;
 import com.example.jhta_3team_finalproject.service.User.UserAuthService;
@@ -32,15 +33,17 @@ public class TripServiceImpl implements TripService{
     private final UserService userService;
 
     private static final String STOCK_PREFIX = "trip:stock:";
+    private final UserMapper userMapper;
 
     @Autowired
-    public TripServiceImpl(S3Service s3Service, TripMapper tripMapper, RedisTemplate<String, Object> redisTemplate, SseService sseService, UserAuthService userAuthService, UserService userService) {
+    public TripServiceImpl(S3Service s3Service, TripMapper tripMapper, RedisTemplate<String, Object> redisTemplate, SseService sseService, UserAuthService userAuthService, UserService userService, UserMapper userMapper) {
         this.s3Service = s3Service;
         this.tripMapper = tripMapper;
         this.redisTemplate = redisTemplate;
         this.sseService = sseService;
         this.userAuthService = userAuthService;
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -140,27 +143,7 @@ public class TripServiceImpl implements TripService{
 
         }
 
-        // 재고를 Redis에 저장
-        /*
-        int tripNo = trip.getTripNo();
-        Integer tripStock = trip.getTripStock(); // int를 Integer로 오토박싱
-        redisTemplate.opsForValue().set(STOCK_PREFIX + tripNo, tripStock);
-         */
     }
-
-/*
-    //@Override
-    public int getTripStock(String tripNo) {
-        Integer tripStock = redisTemplate.opsForValue().get(STOCK_PREFIX + tripNo);
-        return tripStock != null ? tripStock : 0;
-    }
-
-    //@Override
-    public void updateTripStock(String tripNo, int tripStock) {
-        redisTemplate.opsForValue().set(STOCK_PREFIX + tripNo, tripStock);
-    }
-*/
-
 
     @Override
     public List<Trip> getApprovedTrip() {
@@ -202,7 +185,44 @@ public class TripServiceImpl implements TripService{
     @Override
     public boolean updateTravelLeader(int tripNo, int userNo) {
         try {
+            Trip trip = tripMapper.getDetail(tripNo);
+            String tripName = trip.getTripName();
+
+            User user = userMapper.getUserByUserNo(userNo);
+            String userName = user.getUsername();
+
+            int OriginalTL = trip.getTravelleaderNo();
+
+            int tripProgressNo = trip.getTripProgress();
+
+            // TL업데이트
             tripMapper.updateTravelLeader(tripNo, userNo);
+
+            //tripProgress업데이트
+            if(OriginalTL==0){
+                tripProgressNo +=20;
+                tripMapper.updateTripProgress(tripNo,tripProgressNo);
+            }
+
+            // SSE 알림 보내기
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserAuth userInfo = userAuthService.getUserInfo(authentication);
+
+            User loginUser = (User) authentication.getPrincipal();
+            int fromUserNum = loginUser.getUserNum();
+            String fromUserName = loginUser.getUsername();
+            String url="http://localhost:9091/trip/TLManagement?num="+tripNo;
+            String message=tripName+"/"+tripNo+"의 가이드로 "+userName+"님을 지정하셨습니다.";
+
+            sseService.sendNotification(userNo,fromUserNum,fromUserName,url,message);
+
+            //이미 TL이 존재했던 경우
+            if(OriginalTL!=0){
+                message=tripName+"/"+tripNo+"의 가이드가 "+userName+"으로 변경되었습니다.";
+                url="http://localhost:9091/trip/TLManagement";
+                sseService.sendNotification(OriginalTL,fromUserNum,fromUserName,url,message);
+            }
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
