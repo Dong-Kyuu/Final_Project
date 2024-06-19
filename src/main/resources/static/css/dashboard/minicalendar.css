@@ -32,3 +32,11 @@ div.content-wrapper{
 #depart{
     height: 375px;
 }
+
+.card .card-body {
+    padding: 1.7rem;
+}
+
+.page-header {
+    margin: 13px 0 1.9rem 0;
+}

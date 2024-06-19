@@ -217,4 +217,12 @@ public class MainPageController {
     }
 
 
+    @GetMapping("/dashSales")
+    public String tripSales(
+            HttpServletRequest request,HttpServletResponse response,
+            Model model) {
+
+        return "dashboard/DashTour_Sales";
+    }
+
 }

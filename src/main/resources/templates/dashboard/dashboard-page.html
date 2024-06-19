@@ -53,18 +53,18 @@
                                     <table class="table">
                                         <thead>
                                         <tr>
-                                            <th class="text">등록자</th>
-                                            <th class="text">구분</th>
-                                            <th class="text">남은일수</th>
                                             <th class="text">제목</th>
+                                            <th class="text">등록자</th>
+                                            <th class="text">남은일수</th>
+<!--                                            <th class="text">구분</th>-->
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr th:each = "a : ${list}">
-                                            <td class="text" th:text="${a.username}" ></td>
-                                            <td class="text" th:text="${a.type}"></td>
-                                            <td class="text" th:text="${a.id}+일"></td>
                                             <td class="text" th:text="${a.title}"></td>
+                                            <td class="text" th:text="${a.username}" ></td>
+                                            <td class="text" th:text="${a.id}+일"></td>
+<!--                                            <td class="text" th:text="${a.type}"></td>-->
                                         </tr>
                                         </tbody>
                                     </table>
@@ -80,7 +80,7 @@
                             <div class="card-body">
                                 <form class="forms-sample">
                                     <h3 id="calendarDate"></h3>
-                                    <iframe id="calendarFrame" style="width: 780px; height: 580px;" th:src="@{/cal/mycalendar}"></iframe>
+                                    <iframe id="calendarFrame" style="width: 550px; height: 480px;" th:src="@{/cal/mycalendar}"></iframe>
                                 </form>
                             </div>
                         </div>
@@ -94,15 +94,15 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <h4 class="card-title">월별 매출</h4>
-                                        <canvas id="areaChart" style="height:250px"></canvas>
+                                        <canvas id="monthlyIncomeSalesChart" style="height:250px"></canvas>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-6 grid-margin stretch-card">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h4 class="card-title">대륙별 판매량</h4>
-                                        <canvas id="barChart" style="height:230px"></canvas>
+                                        <h4 class="card-title">월별 예약수</h4>
+                                        <canvas id="monthlySalesChart" style="height:250px"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4>공지사항</h4>
-                                <iframe id="announceFrame" style="width: 1250px; height: 200px;" th:src="@{/dashAnnounceList}"></iframe>
+                                <iframe id="announceFrame" style="width: 870px; height: 200px;" th:src="@{/dashAnnounceList}"></iframe>
                                 `                        </div>
                         </div>
                     </div>
@@ -129,7 +129,7 @@
                                 <h4 class="card-title">결제진행사항</h4>
                                 <table class="table table-bordered">
                                     <thead>
-                                    <iframe id="tripFrame" style="width: 1270px;height: 300px " th:src="@{/dashDepartment}"></iframe>
+                                    <iframe id="tripFrame" style="width: 870px;height: 300px " th:src="@{/dashDepartment}"></iframe>
                                     </thead>
                                 </table>
                             </div>
@@ -154,7 +154,7 @@
         <script th:src="@{/js/calendar/main_dashboard.js}"></script>
         <script th:src="@{../../assets/vendors/chart.js/Chart.min.js}"></script>
         <script th:src="@{../../js/dashboard/chart.js}"></script>
-
+        <script th:src="@{../../js/dashboard/dashtriplist.js}"></script>
         <script>
             // $(document).ready(function() {
             var $iframe = $('#calendarFrame');
