@@ -58,7 +58,7 @@ public class SocketHandler extends TextWebSocketHandler {
     ChatSseService chatSseService;
 
     List<HashMap<String, Object>> rls = new ArrayList<>(); // 웹소켓 세션을 담아둘 리스트 ---roomListSessions
-    String FILE_UPLOAD_PATH = "";
+    String FILE_UPLOAD_PATH = "/static/upload/chat";
     private String S3Bucket = "mybucketchatupload"; // Bucket 이름 aws img test
     static int fileUploadIdx = 0;
     static String fileUploadSession = "";
@@ -164,7 +164,6 @@ public class SocketHandler extends TextWebSocketHandler {
         //바이너리 메시지 발송
         ByteBuffer byteBuffer = message.getPayload(); // (3)
         String fileName = "file.jpg";
-
 
         File dir = new File(FILE_UPLOAD_PATH);
         if (!dir.exists()) {
