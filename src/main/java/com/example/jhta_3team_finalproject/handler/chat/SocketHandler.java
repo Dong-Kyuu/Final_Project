@@ -20,6 +20,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
@@ -57,8 +58,11 @@ public class SocketHandler extends TextWebSocketHandler {
     @Autowired
     ChatSseService chatSseService;
 
+    @Value("${temp.chat.savefolder}")
+    String FILE_UPLOAD_PATH;
+
     List<HashMap<String, Object>> rls = new ArrayList<>(); // 웹소켓 세션을 담아둘 리스트 ---roomListSessions
-    String FILE_UPLOAD_PATH = "/static/upload/chat";
+
     private String S3Bucket = "mybucketchatupload"; // Bucket 이름 aws img test
     static int fileUploadIdx = 0;
     static String fileUploadSession = "";
@@ -165,7 +169,9 @@ public class SocketHandler extends TextWebSocketHandler {
         ByteBuffer byteBuffer = message.getPayload(); // (3)
         String fileName = "file.jpg";
 
-        File dir = new File(FILE_UPLOAD_PATH);
+        log.info("{} - FILE_UPLOAD_PATH", FILE_UPLOAD_PATH);
+
+        File dir = new File("/home");
         if (!dir.exists()) {
             dir.mkdirs();
         }
