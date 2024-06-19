@@ -1,0 +1,230 @@
+<!DOCTYPE>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title >Page Title</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- MetisMenu CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.7/metisMenu.min.css">
+    <!-- SB Admin CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.1/css/sb-admin-2.min.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Dynatree CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css">
+
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        .signTitle {
+            height:90px;
+            width:30px;
+            border: 1px solid #dedede;
+            text-align:center;
+            vertical-align:middle;
+            float:right;
+        }
+        .signPath {
+            float:right;
+        }
+        .signArea {
+            display:inline-block;
+            border:1px solid #dedede;
+            text-align:center;
+            height:100%;
+            width:100px;
+            vertical-align:top;
+            margin: 0px 5px;
+        }
+        .signAreaCenter {
+            border-top: 1px solid #dedede;
+            border-bottom: 1px solid #dedede;
+            height:50px;
+            width:100%;
+            padding-top: 15px;
+        }
+        .signAreaBottom {
+            height:20px;
+        }
+        .signAreaTop {
+            height:20px;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper">
+<!--    th:replace="common/navigation :: navigation"-->
+    <div ></div>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header"><i class="fa fa-edit fa-fw"></i> 기안하기</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-9"></div>
+            <div class="col-lg-1">
+                <button class="btn btn-outline btn-primary" onclick="fn_tempSubmit()">임시저장</button>
+            </div>
+            <div class="col-lg-1">
+                <button class="btn btn-outline btn-primary" onclick="fn_formSubmit()">결재상신</button>
+            </div>
+            <div class="col-lg-1">
+                <button class="btn btn-outline btn-primary" onclick="fn_signPath()">결재경로</button>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 10px">
+            <div id="signPath" class="signPath">
+                <div th:each="signlist : ${signlist}">
+                    <div th:if="${signlist.sstype != '1'}" class="signArea">
+                        <div class="signAreaTop" th:text="${signlist.userpos}"></div>
+                        <div class="signAreaCenter">
+                            <div th:switch="${signlist.ssresult}">
+                                <div th:case="'1'">승인</div>
+                                <div th:case="'2'">반려</div>
+                                <div th:case="*"></div>
+                            </div>
+                        </div>
+                        <div class="signAreaBottom" th:text="${signlist.usernm}"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="signTitle"><br>결<br><br>재</div>
+        </div>
+        <div th:if="${#lists.size(signlist) > 0}">
+            <div class="row" style="margin-top: 10px">
+                <div id="signPath4Agree" class="signPath">
+                    <div th:each="signlist : ${signlist}">
+                        <div th:if="${signlist.sstype == '1'}" class="signArea">
+                            <div class="signAreaTop" th:text="${signlist.userpos}"></div>
+                            <div class="signAreaCenter">
+                                <div th:switch="${signlist.ssresult}">
+                                    <div th:case="'1'">결재</div>
+                                    <div th:case="'2'">반려</div>
+                                    <div th:case="*"></div>
+                                </div>
+                            </div>
+                            <div class="signAreaBottom" th:text="${signlist.usernm}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="signTitle"><br>합<br><br>의</div>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 10px">
+            <form id="form1" name="form1" th:action="@{/signDocSave}" method="post">
+                <input type="hidden" name="docno" th:value="${signDocInfo.docno}">
+                <input type="hidden" name="docstatus" id="docstatus" th:value="${signDocInfo.docstatus}">
+                <input type="hidden" name="dtno" th:value="${signDocInfo.dtno}">
+                <input type="hidden" name="docsignpath" id="docsignpath" th:value="${signDocInfo.docsignpath}">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row form-group">
+                            <label class="col-lg-1">제목</label>
+                            <div class="col-lg-11">
+                                <input type="text" class="form-control" id="doctitle" name="doctitle" maxlength="50" th:value="${signDocInfo.doctitle}">
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-lg-1">내용</label>
+                            <div class="col-lg-11">
+                                <textarea class="form-control" id="doccontents" name="doccontents" th:text="${signDocInfo.doccontents}"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="popupUsers" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"></div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.7/metisMenu.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.1/js/sb-admin-2.min.js"></script>
+<script src="/js/project9.js"></script>
+<script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
+
+<script>
+    window.onload = function() {
+        CKEDITOR.replace('doccontents', { 'filebrowserUploadUrl': 'upload4ckeditor' });
+    }
+
+    function fn_formSubmit(){
+        CKEDITOR.instances["doccontents"].updateElement();
+
+        if (!chkInputValue("#doctitle", "제목")) return false;
+        if (!chkInputValue("#doccontents", "내용")) return false;
+
+        document.getElementById("form1").submit();
+    }
+
+    function fn_tempSubmit(){
+        CKEDITOR.instances["doccontents"].updateElement();
+
+        if (!chkInputValue("#doctitle", "제목")) return false;
+
+        document.getElementById("docstatus").value = "0";
+        document.getElementById("form1").submit();
+    }
+
+    function fn_signPath(){
+        $.ajax({
+            url: "/popupUsers4SignPath",
+            type: "post"
+        }).done(function(result){
+            $("#popupUsers").html(result);
+            set_Users($("#docsignpath").val());
+        });
+        $("#popupUsers").modal("show");
+    }
+
+    function deptTreeInUsersActivate(node) {
+        if (node == null || node.data.key == 0) return;
+
+        $.ajax({
+            url: "/popupUsers4Users",
+            type: "post",
+            data: { deptno: node.data.key }
+        }).done(function(result){
+            $("#userlist4Users").html(result);
+        });
+    }
+
+    function fn_selectUsers(docsignpath) {
+        $("#docsignpath").val(docsignpath);
+        $("#popupUsers").modal("hide");
+
+        var signPath = $("#signPath");
+        var signPath4Agree = $("#signPath4Agree");
+
+        signPath.empty();
+        signPath4Agree.empty();
+
+        var typearr = ["기안", "합의", "결재"];
+        var nos = docsignpath.split("||");
+        for (var i in nos) {
+            if (nos[i] === "") continue;
+            var arr = nos[i].split(",");
+            var signArea = $("<div class='signArea'>");
+            if (arr[2] === "1")
+                signPath4Agree.append(signArea);
+            else signPath.append(signArea);
+            var signAreaTop = $("<div class='signAreaTop'>" + arr[3] + "</div>").appendTo(signArea);
+            var signAreaCenter = $("<div class='signAreaCenter'>").appendTo(signArea);
+            var signAreaBottom = $("<div class='signAreaBottom'>" + arr[1] +"</div>").appendTo(signArea);
+        }
+    }
+</script>
+
+</body>
+</html>

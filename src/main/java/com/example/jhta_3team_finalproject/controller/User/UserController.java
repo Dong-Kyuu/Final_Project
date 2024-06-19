@@ -135,7 +135,7 @@ public class UserController {
         User user = userservice.getUserInfo(userNum); // 승인된 사용자 정보
         String approverName = userDetails.getUsername();
         String notificationMessage = approverName + "님이 승인 완료 했습니다.";
-        String notificationLink = "http://localhost:9000/dashboard/user/detail/" + userNum;
+        String notificationLink = "http://43.203.196.38:9000//dashboard/user/detail/" + userNum;
 
         // 알림 전송
         sseService.sendNotification(user.getUserNum(), userDetails.getUserNum(), approverName, notificationLink, notificationMessage);

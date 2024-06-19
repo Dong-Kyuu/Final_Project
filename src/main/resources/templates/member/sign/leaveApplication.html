@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Leave Application</title>
+    <link rel="stylesheet" href="/css/approvalStyle.css">
+    <link rel="stylesheet" href="/css/leaveApplication.css">
+    <link rel="stylesheet" href="/css/appAutocomplete.css">
+    <script src="/js/jquery-3.5.1.js"></script>
+</head>
+<body>
+<form name="leaveWriteForm" action="#" method="POST" onsubmit="return check_onclick()">
+    <div class="cash-form-section" style="height: 100%; width:68%; margin: 0 300px 0 300px;">
+        <div class="cash-disbursement" style="text-align: center; margin: 80px 0px 80px 200px; border: 2px solid black;">
+            <table border="2" style="width: 100%; font-size: 20px; border-collapse: collapse;">
+                <tr>
+                    <td rowspan="2" colspan="4" style="width: 300px; height: 120px; font-family: 'InfinitySans-RegularA1'; font-size: 40px; font-weight: 600;">휴 가 신 청 서</td>
+                    <td rowspan="2" style="width: 15px; padding-top: 20px; font-family: 'InfinitySans-RegularA1'; font-size: 20px;">결 재</td>
+                    <td style="height: 30px; width: 100px; font-family: 'InfinitySans-RegularA1'; font-size: 15px;">최초승인자</td>
+                    <td style="width: 100px; font-family: 'InfinitySans-RegularA1'; font-size: 15px;">중간승인자</td>
+                    <td style="width: 100px; font-family: 'InfinitySans-RegularA1'; font-size: 15px;">최종승인자</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="text" value="" id="firstApprover" name="firstApprover" readonly="readonly" class="nameView">
+                        <input type="button" value="검색" class="searchMember" id="firstBtn" name="firstApprover">
+                    </td>
+                    <td>
+                        <input type="text" value="" id="interimName" name="interimApprover" readonly="readonly" class="nameView">
+                        <input type="button" value="검색" class="searchMember" id="secondBtn" name="interimApprover">
+                    </td>
+                    <td>
+                        <input type="text" value="" id="finalApprover" name="finalApprover" readonly="readonly" class="nameView">
+                        <input type="button" value="검색" class="searchMember" id="thirdBtn" name="finalApprover">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="height: 70px;">
+                        <button class="send-open" type="button">수신참조자 +</button>
+                    </td>
+                    <td colspan="6" style="height: 70px;">
+                        <textarea readonly name="referList" id="referList" style="border:none;margin-bottom:-12px; font-size:19px; width:600px; height:60px; text-align: center; resize: none;"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="height: 70px; width: 80px; font-family: 'InfinitySans-RegularA1'; font-size: 15px;">성 명</td>
+                    <td><input type="text" name="writerName" value="홍길동" readonly></td>
+                    <td style="width: 80px; font-family: 'InfinitySans-RegularA1'; font-size: 15px;">부 서</td>
+                    <td><input type="text" value="개발팀" readonly></td>
+                    <td style="width: 80px; font-family: 'InfinitySans-RegularA1'; font-size: 15px;">직 급</td>
+                    <td colspan="3"><input type="text" value="대리" readonly></td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="height: 70px; width: 80px; font-family: 'InfinitySans-RegularA1'; font-size: 15px;">비 상 연 락 망</td>
+                    <td colspan="5"><input type="tel" placeholder="전화번호만 입력하세요." class="callNumber" name="appEmergncyCall" style="font-size: 18px;" required></td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="height: 70px; width: 80px;  font-family: 'InfinitySans-RegularA1'; font-size: 15px;">기 간</td>
+                    <td colspan="5">
+                            <span>
+                                <input style="width: 160px; font-size: 18px;" type="date" name="leaveStart" id="startDate">
+                            </span>
+                        &nbsp;&nbsp; ~ &nbsp;&nbsp;
+                        <span>
+                                <input style="width: 160px; font-size: 18px;" type="date" name="leaveFinish" id="endDate">
+                            </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 80px; height: 70px; font-family: 'InfinitySans-RegularA1'; font-size: 15px;">휴가 구분</td>
+                    <td colspan="8">
+                        <div class="form-checkbox-wrap">
+                                <span class="form-inline">
+                                    <input type="radio" name="leaveClassify" class="input-radio" id="radio1" value="연차"> &nbsp;&nbsp;&nbsp;
+                                    <label for="radio1" class="form-radio">연차</label>
+                                </span>
+                            <span class="form-inline">
+                                    <input type="radio" name="leaveClassify" class="input-radio" id="radio2" value="반차"> &nbsp;&nbsp;&nbsp;
+                                    <label for="radio2" class="form-radio">반차</label>
+                                </span>
+                            <span class="form-inline">
+                                    <input type="radio" name="leaveClassify" class="input-radio" id="radio3" value="병가"> &nbsp;&nbsp;&nbsp;
+                                    <label for="radio3" class="form-radio">병가</label>
+                                </span>
+                            <span class="form-inline">
+                                    <input type="radio" name="leaveClassify" class="input-radio" id="radio4" value="보상휴가"> &nbsp;&nbsp;&nbsp;
+                                    <label for="radio4" class="form-radio">보상휴가</label>
+                                </span>
+                            <span class="form-inline">
+                                    <input type="radio" name="leaveClassify" class="input-radio" id="radio5" value="기타"> &nbsp;&nbsp;&nbsp;
+                                    <label for="radio5" class="form-radio">기타(세부사항 상세 기술)</label>
+                                </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 80px; font-family: 'InfinitySans-RegularA1'; font-size: 15px;">세부사항</td>
+                    <td colspan="8">
+                        <input style="height: 300px;" type="text" name="leaveDetail" class="leaveDetailTextArea">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8" style="text-align: center; height: 100px; border-bottom: none;">위와 같이 휴가를 신청하오니 허락하여 주시기 바랍니다.</td>
+                </tr>
+                <tr style="border: white;">
+                    <td colspan="8" style="text-align: center; height: 100px;">
+                        <span th:text="${#dates.format(new java.util.Date(), 'yyyy 년 MM 월 dd 일')}"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8" style="text-align: right; height: 100px; padding-right: 50px;">
+                        <input type="button" name="proposer" id="proposer" style="font-size: 15px; width: 70px; height: 30px; border: none; text-align: center; border-radius: 20px; margin-right: 10px" value="서명">
+                        신청자 :
+                        <textarea name="proposerText" id="proposerText" style="width: 130px; border: none; text-align: center; resize: none; font-size: 24px; margin-bottom: -42px;" readonly></textarea>
+                        (인)
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="button">
+            <input type="hidden" name="appKinds" value="휴가신청서">
+            <button type="submit" class="goToLeave" onclick="">등록</button>
+            <input type="text" style="border: none; width: 40px;" disabled>
+            <button type="reset" class="resetLeave" onclick="">취소</button>
+        </div>
+    </div>
+</form>
+
+<div id="testForm">
+    <div class="appModal Amodal">
+        <div class="appModal_content">
+            <div class="appModalInputName">이름을 입력해 주세요.</div>
+            <div>
+                <input type="text" id="memSearchInput2" name="userName" class="APPLE_searchArea">
+                <label class="anserMember">님이 맞으신가요?</label>
+            </div>
+            <br><br>
+            <button class="modalSearchMember" type="button" id="appModalClose2" style="">확인</button>
+        </div>
+    </div>
+</div>
+
+<div id="testForm1">
+    <div class="appModal Amodal1">
+        <div class="appModal_content">
+            <div class="appModalInputName">이름을 입력해 주세요.</div>
+            <div>
+                <input type="text" id="memSearchInput1" name="userName" class="APPLE_searchArea">
+                <label class="anserMember">님이 맞으신가요?</label>
+            </div>
+            <br><br>
+            <button class="modalSearchMember" type="button" id="appModalCloseFirst">확인</button>
+        </div>
+    </div>
+</div>
+
+<div id="testForm3">
+    <div class="appModal Amodal3">
+        <div class="appModal_content">
+            <div class="appModalInputName">이름을 입력해 주세요.</div>
+            <div>
+                <input type="text" id="memSearchInput3" name="userName" class="APPLE_searchArea">
+                <label class="anserMember">님이 맞으신가요?</label>
+            </div>
+            <br><br>
+            <button class="modalSearchMember" type="button" id="appModalCloseThird">확인</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $("#secondBtn").click(function() {
+            $(".Amodal").fadeIn();
+            $("#memSearchInput2").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "<spring:url value='/approval/search/json'/>",
+                        type: "get",
+                        dataType: 'json',
+                        data: {
+                            userName: $("#memSearchInput2").val()
+                        },
+                        success: function(data) {
+                            var result = data;
+                            response(result);
+                        },
+                        error: function(e) {
+                            alert("ajax에러발생..!")
+                        }
+                    });
+                },
+                focus: function(event, ui) {
+                    return false;
+                },
+                minLength: 1,
+                autoFocus: true,
+                delay: 300,
+            });
+        });
+
+        $("#appModalClose2").click(function() {
+            var secondName = $("#memSearchInput2").val();
+            secondName = secondName.split('_');
+            $('#interimName').attr('value', secondName[0]);
+            $(".Amodal").fadeOut();
+        });
+    });
+
+    $(function() {
+        $("#firstBtn").click(function() {
+            $(".Amodal1").fadeIn();
+            $("#memSearchInput1").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "<spring:url value='/approval/search/json'/>",
+                        type: "get",
+                        dataType: 'json',
+                        data: {
+                            userName: $("#memSearchInput1").val()
+                        },
+                        success: function(data) {
+                            var result = data;
+                            response(result);
+                        },
+                        error: function(e) {
+                            alert("ajax에러발생..!")
+                        }
+                    });
+                },
+                focus: function(event, ui) {
+                    return false;
+                },
+                minLength: 1,
+                autoFocus: true,
+                delay: 300,
+            });
+        });
+
+        $("#appModalCloseFirst").click(function() {
+            var firstName = $("#memSearchInput1").val();
+            firstName = firstName.split('_');
+            $('#firstApprover').attr('value', firstName[0]);
+            $(".Amodal1").fadeOut();
+        });
+    });
+
+    $(function() {
+        $("#thirdBtn").click(function() {
+            $(".Amodal3").fadeIn();
+            $("#memSearchInput3").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "<spring:url value='/approval/search/json'/>",
+                        type: "get",
+                        dataType: 'json',
+                        data: {
+                            userName: $("#memSearchInput3").val()
+                        },
+                        success: function(data) {
+                            var result = data;
+                            response(result);
+                        },
+                        error: function(e) {
+                            alert("ajax에러발생..!")
+                        }
+                    });
+                },
+                focus: function(event, ui) {
+                    return false;
+                },
+                minLength: 1,
+                autoFocus: true,
+                delay: 300,
+            });
+        });
+
+        $("#appModalCloseThird").click(function() {
+            var ThirdName = $("#memSearchInput3").val();
+            ThirdName = ThirdName.split('_');
+            $('#finalApprover').attr('value', ThirdName[0]);
+            $(".Amodal3").fadeOut();
+        });
+    });
+
+    const open3 = () => {
+        document.querySelector(".modal3").classList.remove("hidden");
+    }
+    const close3 = () => {
+        document.querySelector(".modal3").classList.add("hidden");
+    }
+    document.querySelector(".openRejectionWhy").addEventListener("click", open3);
+    document.querySelector(".closeBtn-in3").addEventListener("click", close3);
+
+    const open = () => {
+        document.querySelector(".modal1").classList.remove("hidden");
+    }
+    const close = () => {
+        document.querySelector(".modal1").classList.add("hidden");
+    }
+    document.querySelector("#openRejection").addEventListener("click", open);
+    document.querySelector(".rejModalNo1").addEventListener("click", close);
+
+    const open2 = () => {
+        document.querySelector(".modal2").classList.remove("hidden");
+    }
+    const close2 = () => {
+        document.querySelector(".modal2").classList.add("hidden");
+    }
+    document.querySelector(".rejModalOk1").addEventListener("click", close);
+    document.querySelector(".rejModalOk1").addEventListener("click", open2);
+    document.querySelector(".rejModalNo2").addEventListener("click", close2);
+    document.querySelector(".rejModalOk2").addEventListener("click", close2);
+
+    $(document).ready(function() {
+        $('#rejectReason').click(function() {
+            var rejectReasonText = $("textarea[name='rejectReasonText']").val();
+            var appNo = $("input[name=appNo]").val();
+            $.ajax({
+                type: "post",
+                url: "<spring:url value='/approval/letterOfApprovalUpdate'/>?appNo=" + appNo,
+                data: {
+                    rejectReasonText: rejectReasonText
+                },
+                success: function(data) {
+                    var url = "<spring:url value='/approval/approvalMain'/>";
+                    if (data != 0) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '결재반려 처리가 \n정상적으로 완료되었습니다.'
+                        })
+                        $(location).attr('href', url);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '결재반려 처리에 \n실패하였습니다.'
+                        })
+                        $(location).attr('href', url);
+                    }
+                },
+                error: function() {
+                    alert("잠시 후 다시 시도해주세요.");
+                }
+            });
+        });
+    });
+
+    $("#Approver1").one("click", function() {
+        $.ajax({
+            type: "post",
+            url: "<spring:url value='/approval/loaApproved1'/>?appNo=" + ${approval.appNo},
+            success: function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: '결재서명이 \n완료되었습니다.'
+                })
+                $("#firstA").append('<img src="<spring:url value="/images/approved.png"/>" id="checkIfApproved" style="position: absolute; width: 130px; height: 130px; margin-left: -92px; margin-top: -50px;">');
+            },
+            error: function() {
+                alert("잠시 후 다시 시도해주세요.");
+            }
+        });
+    });
+
+    $("#Approver2").one("click", function() {
+        $.ajax({
+            type: "post",
+            url: "<spring:url value='/approval/loaApproved2'/>?appNo=" + ${approval.appNo},
+            success: function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: '결재서명이 \n완료되었습니다.'
+                })
+                $("#interimA").append('<img src="<spring:url value="/images/approved.png"/>" id="checkIfApproved" style="position: absolute; width: 130px; height: 130px; margin-left: -92px; margin-top: -50px;">');
+            },
+            error: function() {
+                alert("잠시 후 다시 시도해주세요.");
+            }
+        });
+    });
+
+    $("#Approver3").one("click", function() {
+        $.ajax({
+            type: "post",
+            url: "<spring:url value='/approval/loaApproved3'/>?appNo=" + ${approval.appNo},
+            success: function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: '결재서명이 \n완료되었습니다.'
+                })
+                $("#finalA").append('<img src="<spring:url value="/images/approved.png"/>" id="checkIfApproved" style="position: absolute; width: 130px; height: 130px; margin-left: -92px; margin-top: -50px;">');
+            },
+            error: function() {
+                alert("잠시 후 다시 시도해주세요.");
+            }
+        });
+    });
+
+    $("#approveddone").click(function() {
+        if ($('#checkIfApproved').length > 0) {
+            var url = "<spring:url value='/approval/approvalMain'/>";
+            alert("결재가 완료되었습니다.");
+            $(location).attr('href', url);
+        } else {
+            var url = "<spring:url value='/approval/letterOfApprovalView'/>?appNo=" + ${approval.appNo};
+            alert("결재서명 후 결재를 진행해주세요.");
+        }
+    });
+
+    $(document).ready(function() {
+        $('#refer-listAll').click(function() {
+            if ($('#refer-listAll').prop('checked')) {
+                $('input[name=refer-list]:checkbox').prop('checked', true);
+            } else {
+                $('input[name=refer-list]:checkbox').prop('checked', false);
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        $('.refer-insert').click(function() {
+            var rowData = new Array();
+            var tdArr = new Array();
+            var checkbox = $("input[name=refer-list]:checked");
+            checkbox.each(function(i) {
+                var tr = checkbox.parent().parent().eq(i);
+                var td = tr.children();
+                rowData.push(tr.text());
+                var name = td.eq(1).text();
+                var dept = td.eq(2).text();
+                var position = td.eq(3).text();
+                tdArr.push(name);
+                tdArr.push(dept);
+                tdArr.push(position);
+                $('#refer-right-section > tbody:last').append('<tr><td><input type="checkbox" name="D-refer-list" id="D-refer-list" style="height: 15px; margin-top: 6px;"></td><td>' + name + '</td><td>' + dept + '</td><td>' + position + '</td></tr>');
+                for (var i = 1; i < tdArr.length; i++) {
+                    if ($('input[name=refer-list]:checked')) {
+                        $(this).parent().parent().remove();
+                        $('input[id=refer-listAll]:checkbox').prop('checked', false);
+                    }
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        $('#D-refer-listAll').click(function() {
+            if ($('#D-refer-listAll').prop('checked')) {
+                $('input[name=D-refer-list]:checkbox').prop('checked', true);
+            } else {
+                $('input[name=D-refer-list]:checkbox').prop('checked', false);
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        $('.refer-delete').click(function() {
+            var rowData = new Array();
+            var tdArr = new Array();
+            var checkbox = $("input[name=D-refer-list]:checked");
+            checkbox.each(function(i) {
+                var tr = checkbox.parent().parent().eq(i);
+                var td = tr.children();
+                rowData.push(tr.text());
+                var name = td.eq(1).text();
+                var dept = td.eq(2).text();
+                var position = td.eq(3).text();
+                tdArr.push(name);
+                tdArr.push(dept);
+                tdArr.push(position);
+                $('#refer-left-section > tbody:last').append('<tr><td><input type="checkbox" name="refer-list" id="refer-list" style="height: 15px; margin-top: 6px;"></td><td>' + name + '</td><td>' + dept + '</td><td>' + position + '</td></tr>');
+                for (var i = 1; i < tdArr.length; i++) {
+                    if ($('input[name=D-refer-list]:checked')) {
+                        $(this).parent().parent().remove();
+                        $('input[id=D-refer-listAll]:checkbox').prop('checked', false);
+                    }
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        $('#addRefer').click(function() {
+            var tdArr = new Array();
+            var checkbox = $("input[name=D-refer-list]");
+            checkbox.each(function(i) {
+                var tr = checkbox.parent().parent().eq(i);
+                var td = tr.children();
+                var name = td.eq(1).text();
+                var dept = td.eq(2).text();
+                var position = td.eq(3).text();
+                tdArr.push(name);
+                tdArr.push(dept);
+                tdArr.push(position);
+                var str = name + "_" + position + "_" + dept + ", ";
+                $('#referList').append(str);
+                $("#refer-right-section").empty();
+                $("#refer-right-section").append('<tr style="border-bottom: 1px solid black;"><th><input type="checkbox" name="refer-listAll" id="refer-listAll" style="height: 15px; margin-top: 6px;"></th><th>이 름</th><th>부 서</th><th>직 책</th></tr>');
+                $("#refer-right-section").append('<tbody></tbody>');
+            });
+            document.querySelector("#addRefer").addEventListener("click", close);
+        });
+    });
+
+    $("#startDate").change(function() {
+        $("#endDate").attr("min", $("#startDate").val());
+    });
+    $("#endDate").change(function() {
+        $("#startDate").attr("max", $("#endDate").val());
+    });
+</script>
+</body>
+</html>

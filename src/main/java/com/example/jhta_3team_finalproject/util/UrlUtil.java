@@ -4,7 +4,7 @@ import java.net.URL;
 
 public class UrlUtil {
 
-    //기본 URL을 추출 -> ex : http://localhost:9000/trip/updateMainTrip --> Output: http://localhost:9000/trip
+    //기본 URL을 추출 -> ex : http://http://43.203.196.38:9000//trip/updateMainTrip --> Output: http://localhost:9000/trip
     public static String getBaseUrl(String fullUrl) throws MalformedURLException {
         URL url = new URL(fullUrl);
         String scheme = url.getProtocol();         // http or https
