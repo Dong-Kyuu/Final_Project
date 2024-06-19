@@ -19,3 +19,16 @@ div.content-wrapper{
     padding-bottom: 0px;
     padding-top: 0px;
 }
+
+.main-panel .content-wrapper{
+    padding-top: 30px !important;
+}
+
+#calendar {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+#depart{
+    height: 375px;
+}
