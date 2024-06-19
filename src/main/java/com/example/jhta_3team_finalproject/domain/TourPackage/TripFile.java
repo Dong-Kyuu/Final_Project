@@ -55,4 +55,5 @@ public class TripFile {
     public void setDetailIMG(String detailIMG) {
         this.detailIMG = detailIMG;
     }
+
 }
