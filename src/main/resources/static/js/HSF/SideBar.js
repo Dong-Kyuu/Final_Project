@@ -14,7 +14,7 @@ $(document).ready(function () {
         type : "post",
         dataType : "json",
         success : function(rdata) {
-            console.log("프로젝트 - " + rdata.projects[1].projectTitle)
+            
             $('.project-menu').empty()
             if(rdata.projects.length > 0) {
                 $(rdata.projects).each(function () {
