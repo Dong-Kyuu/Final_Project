@@ -264,7 +264,7 @@ public class TripController {
 
         String optionIds = tripService.getOptionIds(num);
         System.out.println("==> optionIds = "+optionIds);
-        String[] optionId = optionIds.split(",");
+        String[] optionId = optionIds.split("-");
         List<TripOption> options = new ArrayList<TripOption>();
 
         for (String s : optionId) {
@@ -465,7 +465,9 @@ public class TripController {
     //---------------------------------------------
 
     @GetMapping("/Purchase")
-    public String tripPurchase(HttpServletRequest request, HttpServletResponse response,Model model) {
+    public String tripPurchase(HttpServletRequest request, HttpServletResponse response,Model model,@RequestParam(name = "loginNum", required = false) Integer loginNum) {
+
+        System.out.println("loginNum="+loginNum);
 
         HttpSession session = request.getSession(false);
         Customer customer = (Customer) session.getAttribute("customer");
@@ -777,7 +779,7 @@ public class TripController {
             String optionName=option.getOptionName();
             System.out.println("optionName =" +optionName);
             if(!optionName.isEmpty()){
-                currentoptionsName.append(optionName).append(",");
+                currentoptionsName.append(optionName).append("-");
             }
         }
         if (currentoptionsName.length() > 0) {
@@ -1217,7 +1219,7 @@ public class TripController {
     //------------------------------
     private List<TripOption> getOptions(String optionIds) {
         List<TripOption> options = new ArrayList<>();
-        String[] optionIdArray = optionIds.split(",");
+        String[] optionIdArray = optionIds.split("-");
         for (String optionId : optionIdArray) {
             TripOption option = optionService.getOptionsByOptionId(optionId);
             if (option != null) {
