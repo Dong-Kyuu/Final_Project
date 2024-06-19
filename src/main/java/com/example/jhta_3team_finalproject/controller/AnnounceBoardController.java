@@ -134,7 +134,7 @@ public class AnnounceBoardController {
             for (int userNum : allUserNum) {
                 // 받는 사람 넘버(필수) , 보내는 사람 넘버, 보내는사람 이름(안넣으면 이상하게보임), 링크, 메세지(필수)
                 sseService.sendNotification(userNum, AnnounceBoard.getUserNum(), AnnounceBoard.getBoardWriter(),
-                        "http://43.203.196.38:9000//annboard/detail?num="+boardNum,
+                        "http://43.203.196.38:9000/annboard/detail?num="+boardNum,
                         "필독 공지를 등록하셨습니다.");
 
                 logger.info("알림전송");
