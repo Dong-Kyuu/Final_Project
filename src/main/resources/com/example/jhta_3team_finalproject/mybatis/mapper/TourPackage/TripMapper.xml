@@ -153,10 +153,34 @@
     </update>
 
 
-    <update id="updateIMG">
+    <update id="updateMainImg">
         UPDATE tripfile
-        SET #{ImageWhich} = #{ImageX}
-        WHERE fileId = #{fileId}
+        SET main_img = #{imgUrl}
+        WHERE file_id = #{fileId}
+    </update>
+
+    <update id="updateIntroImg">
+        UPDATE tripfile
+        SET intro_img = #{imgUrl}
+        WHERE file_id = #{fileId}
+    </update>
+
+    <update id="updateRouteImg">
+        UPDATE tripfile
+        SET route_img = #{imgUrl}
+        WHERE file_id = #{fileId}
+    </update>
+
+    <update id="updateScheduleImg">
+        UPDATE tripfile
+        SET schedule_img = #{imgUrl}
+        WHERE file_id = #{fileId}
+    </update>
+
+    <update id="updateDetailImg">
+        UPDATE tripfile
+        SET detail_img = #{imgUrl}
+        WHERE file_id = #{fileId}
     </update>
 
     <update id="updateTrip">
@@ -168,7 +192,7 @@
             trip_date = #{tripDate},
             reg_date = #{regDate},
             expire_date = #{expireDate},
-            trip_main_img = #{tripMainIMG},
+            trip_main_img = #{tripMainImg},
             trip_category = #{tripCategory},
             option_ids = #{optionIds},
             file_id = #{fileId}
