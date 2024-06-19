@@ -14,7 +14,7 @@ $(document).ready(function () {
         type : "post",
         dataType : "json",
         success : function(rdata) {
-            console.log("프로젝트 - " + rdata.projects[1].projectTitle)
+            
             $('.project-menu').empty()
             if(rdata.projects.length > 0) {
                 $(rdata.projects).each(function () {
@@ -37,7 +37,7 @@ $(document).ready(function () {
                 location.href = "/project/createproject";
             } else {
                 // 권한이 없는 경우 경고 메시지 표시
-                alert("글 작성 권한이 없습니다.");
+                alert("권한이 없습니다.");
             }
         }).catch(error => {
             console.error("권한 확인 실패:", error);
