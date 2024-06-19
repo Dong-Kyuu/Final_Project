@@ -33,6 +33,7 @@ public interface TripService {
 
     void saveTrip(Trip trip,MultipartFile[] images) throws IOException;
 
+    void updateTrip(Trip trip, MultipartFile[] images) throws IOException;
 
     List<Trip> getApprovedTrip();
 
@@ -43,4 +44,5 @@ public interface TripService {
     boolean updateTravelLeader(int tripNo, int userNo);
 
     boolean updateTripStock(int tripNo, int stock);
+
 }
