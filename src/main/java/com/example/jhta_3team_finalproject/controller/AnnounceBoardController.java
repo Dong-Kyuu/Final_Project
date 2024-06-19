@@ -414,7 +414,7 @@ public class AnnounceBoardController {
                 result = "상단고정 되었습니다.";
                 if(AnnounceBoard.getUserNum() != loginNum) {
                     sseService.sendNotification(AnnounceBoard.getUserNum(), loginNum, loginuser.getUsername(),
-                            "http://http://43.203.196.38:9000//annboard/detail?num=" + annboardNum,
+                            "http://http://43.203.196.38:9000/annboard/detail?num=" + annboardNum,
                             "No." + annboardNum + "글을 상단고정하셨습니다.");
                 }
         }else {
@@ -426,7 +426,7 @@ public class AnnounceBoardController {
             for (int recipient : FixAuthUser) {
                                             // 받는 사람 넘버(필수) , 보내는 사람 넘버, 보내는사람 이름(안넣으면 이상하게보임), 링크, 메세지(필수)
                 sseService.sendNotification(recipient, loginNum, loginuser.getUsername(),
-                                        "http://http://43.203.196.38:9000//annboard/detail?num="+annboardNum+"&notidata=1",
+                                        "http://http://43.203.196.38:9000/annboard/detail?num="+annboardNum+"&notidata=1",
                                         "공지게시판 No." +annboardNum+"글의 상단고정을 요청했습니다.");
                 int request = AnnounceBoardService.fixRequest(annboardNum);
                 logger.info("알림전송");
@@ -489,7 +489,7 @@ public class AnnounceBoardController {
         AnnounceBoard AnnounceBoard = AnnounceBoardService.getDetail(annboardNum);
         int writer = AnnounceBoard.getUserNum();
         sseService.sendNotification(writer, loginNum, loginuser.getUsername(), "", "공지게시판 No." + annboardNum + "글의 상단고정 요청을 거절했습니다.");
-        sseService.deleteNotificationUrl("http://http://43.203.196.38:9000//annboard/detail?num="+annboardNum);
+        sseService.deleteNotificationUrl("http://http://43.203.196.38:9000/annboard/detail?num="+annboardNum);
         response.put("status", "success");
         response.put("result", result);
 
