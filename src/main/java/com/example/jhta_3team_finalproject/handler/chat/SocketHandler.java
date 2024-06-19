@@ -169,7 +169,9 @@ public class SocketHandler extends TextWebSocketHandler {
         ByteBuffer byteBuffer = message.getPayload(); // (3)
         String fileName = "file.jpg";
 
-        File dir = new File(FILE_UPLOAD_PATH);
+        log.info("{} - FILE_UPLOAD_PATH", FILE_UPLOAD_PATH);
+
+        File dir = new File("/home");
         if (!dir.exists()) {
             dir.mkdirs();
         }
