@@ -62,7 +62,7 @@ $(function () {
         event.preventDefault(); // 링크 기본 동작 막기
         var dis = $(this);
         var Link = $(this).attr('href');
-        console.log("알림넘버 = " + $(this).find('#notifiNum').val())
+        
         $.ajax({
             type: 'POST',
             url: '../notification/readAction',
