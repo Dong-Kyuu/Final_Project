@@ -32,4 +32,8 @@ public interface ProjectMapper {
     List<ProjectMember> getProjectMember(int projectNum);
 
     List<String> getProjectDepartment(int projectNum, int userNum);
+
+    List<ProjectMember> searchProjectMember(int projectNum, String searchWord);
+
+    ProjectMember masterMember(int loginNum);
 }

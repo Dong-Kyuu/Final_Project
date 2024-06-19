@@ -88,4 +88,17 @@
     WHERE p.project_num = #{projectNum}
     AND pm.project_member_num != #{userNum}
     </select>
+
+    <select id="searchProjectMember">
+        SELECT *
+        FROM project_member
+        WHERE project_num = #{projectNum}
+          AND project_member_name LIKE CONCAT('%', #{searchWord}, '%')
+    </select>
+
+    <select id="masterMember">
+        SELECT *
+        FROM user
+        WHERE user_num = #{loginNum}
+    </select>
 </mapper>
