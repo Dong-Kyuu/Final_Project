@@ -56,6 +56,14 @@ public class ProjectController {
     public String createProject(Project project,
                                 @RequestParam(required = false) List<Integer> userNums, HttpServletRequest request) {
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginuser = (User)authentication.getPrincipal();
+
+        if (userNums == null) {
+            userNums = new ArrayList<>();
+        }
+        userNums.add(loginuser.getUserNum());
+
         if (project.getProjectEndPeriod() != null && project.getProjectEndPeriod().isEmpty()) {
             project.setProjectEndPeriod(null);
         }
@@ -81,9 +89,11 @@ public class ProjectController {
             member.setProjectMemberPosition(memberPosition);
             Members.add(member);
 
-            sseService.sendNotification(userNum, project.getMasterUserNum(), projectService.getUserName(project.getMasterUserNum()),
-                    "",
-                    "프로젝트 \"" + project.getProjectTitle() + "\"에 초대하셨습니다.");
+            if(userNum != loginuser.getUserNum()) {
+                sseService.sendNotification(userNum, project.getMasterUserNum(), projectService.getUserName(project.getMasterUserNum()),
+                        "",
+                        "프로젝트 \"" + project.getProjectTitle() + "\"에 초대하셨습니다.");
+            }
         }
 
         projectService.insertMember(Members);
@@ -132,6 +142,19 @@ public class ProjectController {
 
         }
         return mv;
+    }
+
+    @PostMapping("/searchCharge")
+    @ResponseBody
+    public Map<String, Object> searchCharge(int loginNum, int projectNum, String searchWord) {
+
+        Map<String, Object> response = new HashMap<>();
+        List<ProjectMember> members = projectService.searchProjectMember(projectNum, searchWord);
+
+        response.put("status", "success");
+        response.put("members", members);
+
+        return response;
     }
 
     @GetMapping("/t")

@@ -88,4 +88,14 @@ public class ProjectServiceImpl implements ProjectService {
     public List<String> getProjectDepartment(int projectNum, int userNum) {
         return projectMapper.getProjectDepartment(projectNum, userNum);
     }
+
+    @Override
+    public List<ProjectMember> searchProjectMember(int projectNum, String searchWord) {
+        return projectMapper.searchProjectMember(projectNum, searchWord);
+    }
+
+    @Override
+    public ProjectMember MasterMember(int loginNum) {
+        return projectMapper.masterMember(loginNum);
+    }
 }

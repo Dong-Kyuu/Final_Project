@@ -30,4 +30,8 @@ public interface ProjectService {
     List<ProjectMember> getProjectMember(int projectNum);
 
     List<String> getProjectDepartment(int projectNum, int userNum);
+
+    List<ProjectMember> searchProjectMember(int projectNum, String searchWord);
+
+    ProjectMember MasterMember(int loginNum);
 }

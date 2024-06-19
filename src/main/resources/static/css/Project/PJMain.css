@@ -205,21 +205,25 @@ body {
 
 .chargeList {
     border:1px #d1d1d1 solid;
-    width:160px;
+    width:200px;
     min-height: 40px;
     max-height: 200px;
     overflow: auto;
     border-radius: 13px;
-    padding:10px 8px;
+    padding:15px 8px;
     margin-left:10%;
     margin-top:10px;
     display: none;
+    background: white;
+    position: absolute;
+    z-index:9999;
 }
 
 .chargeitem {
     display: flex;
-    justify-content: center !important;
+    justify-content: space-between !important;
     align-items: center;
+    margin:0px 5px;
 }
 
 .periodArea {
@@ -244,11 +248,53 @@ body {
 .last-btngroup {
     display: flex;
     height:40px;
-
+    justify-content: space-between;
     align-items: center;
 }
 
 .scope {
     min-width:145px !important;
     width:145px !important
+}
+
+.uploadBtn {
+    min-width : 30px !important;
+    width:36px !important;
+    height: 36px !important;
+    min-height: 36px !important;
+}
+
+.workBtn {
+    border-radius: 2px;
+    border : 1.5px black solid;
+}
+
+.type-R.active {
+    background-color : #b66dff !important;
+    color : white;
+}
+
+.type-Pr.active {
+    background-color : #1bcfb4;
+    color : white;
+}
+
+.type-P.active {
+    background-color : #198ae3;
+    color : white;
+}
+
+.type-S.active {
+    background-color : #fed713;
+    color : white;
+}
+
+.type-D.active {
+    background-color : #fe7c96;
+    color : white;
+}
+
+.chargeitem:hover {
+    background: #e4e4e4;
+    cursor : pointer;
 }
