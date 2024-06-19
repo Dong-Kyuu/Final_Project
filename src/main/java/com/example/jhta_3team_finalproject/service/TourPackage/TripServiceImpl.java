@@ -153,41 +153,50 @@ public class TripServiceImpl implements TripService{
         String fileId = trip.getFileId();
         TripFile tripfile = getTripFileByNo(fileId);
 
-        updateAndUploadImage(images[0], tripfile, "mainIMG", fileId);
-        updateAndUploadImage(images[1], tripfile, "introIMG", fileId);
-        updateAndUploadImage(images[2], tripfile, "routeIMG", fileId);
-        updateAndUploadImage(images[3], tripfile, "scheduleIMG", fileId);
-        updateAndUploadImage(images[4], tripfile, "detailIMG", fileId);
+        updateAndUploadImage(images[0], tripfile, "mainImg", fileId);
+        updateAndUploadImage(images[1], tripfile, "introImg", fileId);
+        updateAndUploadImage(images[2], tripfile, "routeImg", fileId);
+        updateAndUploadImage(images[3], tripfile, "scheduleImg", fileId);
+        updateAndUploadImage(images[4], tripfile, "detailImg", fileId);
 
         TripFile newtripfile = getTripFileByNo(fileId);
-        trip.setTripMainImg(newtripfile.getMainIMG());
+        trip.setTripMainImg(newtripfile.getMainImg());
         tripMapper.updateTrip(trip);
     }
 
-    private void updateAndUploadImage(MultipartFile image, TripFile tripFile, String IMG, String fileId) throws IOException {
+    private void updateAndUploadImage(MultipartFile image, TripFile tripFile, String imgType, String fileId) throws IOException {
 
-        String ImageX = switch (IMG) {
-            case "mainIMG" -> tripFile.getMainIMG();
-            case "introIMG" -> tripFile.getIntroIMG();
-            case "routeIMG" -> tripFile.getRouteIMG();
-            case "scheduleIMG" -> tripFile.getScheduleIMG();
-            case "detailIMG" -> tripFile.getDetailIMG();
+        String imgUrl = switch (imgType) {
+            case "mainImg" -> tripFile.getMainImg();
+            case "introImg" -> tripFile.getIntroImg();
+            case "routeImg" -> tripFile.getRouteImg();
+            case "scheduleImg" -> tripFile.getScheduleImg();
+            case "detailImg" -> tripFile.getDetailImg();
             default -> "";
         };
 
-        String ImageWhich = switch (IMG) {
-            case "mainIMG" -> "main_img";
-            case "introIMG" -> "intro_img";
-            case "routeIMG" -> "route_img";
-            case "scheduleIMG" -> "schedule_img";
-            case "detailIMG" -> "detail_img";
-            default -> IMG;
-        };
 
-        if (image != null && !image.isEmpty() && !ImageX.equals(image.getOriginalFilename())) {
-            s3Service.deleteFile(fileId,ImageX);
-            ImageX = s3Service.uploadFile(image);
-            tripMapper.updateIMG(fileId,ImageX,ImageWhich);
+        if (image != null && !image.isEmpty() && !imgUrl.equals(image.getOriginalFilename())) {
+            //s3Service.deleteFile(fileId,ImageX);
+            imgUrl = s3Service.uploadFile(image);
+            switch (imgType) {
+                case "mainImg":
+                    tripMapper.updateMainImg(fileId, imgUrl);
+                    break;
+                case "introImg":
+                    tripMapper.updateIntroImg(fileId, imgUrl);
+                    break;
+                case "routeImg":
+                    tripMapper.updateRouteImg(fileId, imgUrl);
+                    break;
+                case "scheduleImg":
+                    tripMapper.updateScheduleImg(fileId, imgUrl);
+                    break;
+                case "detailImg":
+                    tripMapper.updateDetailImg(fileId, imgUrl);
+                    break;
+            }
+
         }
     }
 

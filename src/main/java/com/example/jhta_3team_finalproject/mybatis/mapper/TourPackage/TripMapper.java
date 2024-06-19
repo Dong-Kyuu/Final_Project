@@ -8,9 +8,6 @@ import java.util.List;
 @Mapper
 public interface TripMapper {
 
-
-    void updateIMG(String fileId, String ImageX, String ImageWhich);
-
     int getListCount();
 
     int getCategoryListCount(String category);
@@ -46,5 +43,11 @@ public interface TripMapper {
     void updateTripProgress (int tripNo, int tripProgressNo);
 
     void updateTrip(Trip trip);
+
+    void updateMainImg(String fileId, String imgUrl);
+    void updateIntroImg(String fileId, String imgUrl);
+    void updateRouteImg(String fileId, String imgUrl);
+    void updateScheduleImg(String fileId, String imgUrl);
+    void updateDetailImg(String fileId, String imgUrl);
 }
 

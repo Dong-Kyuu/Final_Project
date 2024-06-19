@@ -19,6 +19,15 @@ ALTER TABLE tripfile
 
 SELECT * FROM tripfile;
 
+UPDATE tripfile
+SET main_img = "https://mbtiawsbucket.s3.ap-northeast-2.amazonaws.com/1718511993394-%E1%84%8B%E1%85%A7%E1%86%A8%E1%84%89%E1%85%A1%E1%84%90%E1%85%AE%E1%84%8B%E1%85%A5.png"
+WHERE file_id = "fd411210-4a3f-430b-ad02-d2a77866d259";
+
+UPDATE tripfile
+SET main_img = "1"
+WHERE file_id = "fd411210-4a3f-430b-ad02-d2a77866d259";
+
+
 INSERT INTO tripfile (file_id, main_img, intro_img, route_img, schedule_img, detail_img)
 VALUES
     ('1', '/image/product/mainIMG/WEU1.png', '/image/product/introIMG/Wintro1.png', '/image/product/routeIMG/WEUroute.png', '/image/product/scheduleIMG/WEUschedule.png', '/image/product/detailIMG/Wdetail1.png'),

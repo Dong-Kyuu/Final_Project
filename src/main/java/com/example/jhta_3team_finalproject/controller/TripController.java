@@ -805,6 +805,8 @@ public class TripController {
                               @AuthenticationPrincipal User userDetails,
                               Model model, RedirectAttributes redirectAttributes) throws IOException {
 
+        System.out.println("tripName="+tripName);
+        System.out.println("tripNo="+num);
         // Trip 객체 생성 및 저장
         Trip trip = tripService.getDetail(num);
         trip.setTripName(tripName);
