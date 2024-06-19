@@ -40,4 +40,8 @@ public class S3Service {
     private String generateFileName(MultipartFile file) {
         return System.currentTimeMillis() + "-" + file.getOriginalFilename().replace(" ", "_");
     }
+
+    public void deleteFile(String bucketName, String key){
+        amazonS3Client.deleteObject(bucketName,key);
+    }
 }
