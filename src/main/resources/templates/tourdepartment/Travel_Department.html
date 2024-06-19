@@ -345,8 +345,11 @@
     });
 
     // 모달 닫기 버튼 클릭 시 모달 닫기
-    $(document).on('click', '.modal .close', function () {
-        $(this).closest('.modal').modal('hide');
+    $(document).ready(function() {
+        // 모달 닫기 버튼 클릭 시 모달 닫기
+        $(document).on('click', '.btn-close', function() {
+            $(this).closest('.modal').modal('hide');
+        });
     });
 </script>
 
@@ -357,7 +360,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="rejectModalLabel">예약 거절</h5>
-                <button type="button" class="mdi mdi-close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                 </button>
             </div>
             <div class="modal-body">

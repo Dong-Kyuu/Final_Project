@@ -152,5 +152,27 @@
         WHERE trip_no = #{tripNo}
     </update>
 
+
+    <update id="updateIMG">
+        UPDATE tripfile
+        SET #{ImageWhich} = #{ImageX}
+        WHERE fileId = #{fileId}
+    </update>
+
+    <update id="updateTrip">
+        UPDATE trip
+        SET trip_name = #{tripName},
+            trip_price = #{tripPrice},
+            trip_stock = #{tripStock},
+            trip_max_stock = #{tripMaxStock},
+            trip_date = #{tripDate},
+            reg_date = #{regDate},
+            expire_date = #{expireDate},
+            trip_main_img = #{tripMainIMG},
+            trip_category = #{tripCategory},
+            option_ids = #{optionIds},
+            file_id = #{fileId}
+        WHERE file_id = #{fileId}
+    </update>
 </mapper>
 

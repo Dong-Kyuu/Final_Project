@@ -1,4 +1,5 @@
 package com.example.jhta_3team_finalproject.service.TourPackage;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.example.jhta_3team_finalproject.domain.TourPackage.*;
 import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.domain.User.UserAuth;
@@ -34,9 +35,10 @@ public class TripServiceImpl implements TripService{
 
     private static final String STOCK_PREFIX = "trip:stock:";
     private final UserMapper userMapper;
+    private final AmazonS3Client amazonS3Client;
 
     @Autowired
-    public TripServiceImpl(S3Service s3Service, TripMapper tripMapper, RedisTemplate<String, Object> redisTemplate, SseService sseService, UserAuthService userAuthService, UserService userService, UserMapper userMapper) {
+    public TripServiceImpl(S3Service s3Service, TripMapper tripMapper, RedisTemplate<String, Object> redisTemplate, SseService sseService, UserAuthService userAuthService, UserService userService, UserMapper userMapper, AmazonS3Client amazonS3Client) {
         this.s3Service = s3Service;
         this.tripMapper = tripMapper;
         this.redisTemplate = redisTemplate;
@@ -44,6 +46,7 @@ public class TripServiceImpl implements TripService{
         this.userAuthService = userAuthService;
         this.userService = userService;
         this.userMapper = userMapper;
+        this.amazonS3Client = amazonS3Client;
     }
 
     @Override
@@ -143,6 +146,49 @@ public class TripServiceImpl implements TripService{
 
         }
 
+    }
+
+    @Override
+    public void updateTrip(Trip trip, MultipartFile[] images) throws IOException {
+        String fileId = trip.getFileId();
+        TripFile tripfile = getTripFileByNo(fileId);
+
+        updateAndUploadImage(images[0], tripfile, "mainIMG", fileId);
+        updateAndUploadImage(images[1], tripfile, "introIMG", fileId);
+        updateAndUploadImage(images[2], tripfile, "routeIMG", fileId);
+        updateAndUploadImage(images[3], tripfile, "scheduleIMG", fileId);
+        updateAndUploadImage(images[4], tripfile, "detailIMG", fileId);
+
+        TripFile newtripfile = getTripFileByNo(fileId);
+        trip.setTripMainImg(newtripfile.getMainIMG());
+        tripMapper.updateTrip(trip);
+    }
+
+    private void updateAndUploadImage(MultipartFile image, TripFile tripFile, String IMG, String fileId) throws IOException {
+
+        String ImageX = switch (IMG) {
+            case "mainIMG" -> tripFile.getMainIMG();
+            case "introIMG" -> tripFile.getIntroIMG();
+            case "routeIMG" -> tripFile.getRouteIMG();
+            case "scheduleIMG" -> tripFile.getScheduleIMG();
+            case "detailIMG" -> tripFile.getDetailIMG();
+            default -> "";
+        };
+
+        String ImageWhich = switch (IMG) {
+            case "mainIMG" -> "main_img";
+            case "introIMG" -> "intro_img";
+            case "routeIMG" -> "route_img";
+            case "scheduleIMG" -> "schedule_img";
+            case "detailIMG" -> "detail_img";
+            default -> IMG;
+        };
+
+        if (image != null && !image.isEmpty() && !ImageX.equals(image.getOriginalFilename())) {
+            s3Service.deleteFile(fileId,ImageX);
+            ImageX = s3Service.uploadFile(image);
+            tripMapper.updateIMG(fileId,ImageX,ImageWhich);
+        }
     }
 
     @Override
