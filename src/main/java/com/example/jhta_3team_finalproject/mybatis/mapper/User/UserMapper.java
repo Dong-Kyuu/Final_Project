@@ -45,4 +45,6 @@ public interface UserMapper {
     int[] getUsersByDepartmentAndPosition(int departmentId, int positionId);
 
     List<User> getEmployeeListByDepartment(int departmentId);
+
+    User getUserByUserNo(int userNo);
 }

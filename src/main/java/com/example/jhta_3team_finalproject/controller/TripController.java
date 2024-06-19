@@ -295,7 +295,7 @@ public class TripController {
         model.addAttribute("check", check);
         model.addAttribute("cartTripNo", cartTripNo);
 
-        return "tourpackage/Trip_Detail";
+        return "tourpackage/Trip_detail";
     }
 
 
@@ -501,7 +501,9 @@ public class TripController {
     }
 
     @GetMapping("/PurchaseSuccess")
-    public String purchaseSuccess() {
+    public String purchaseSuccess(HttpServletResponse cookieresponse) {
+        deleteCookie(cookieresponse, "cart");
+
         return"tourpackage/PurchaseSuccess";
     }
 
@@ -766,13 +768,63 @@ public class TripController {
                              @RequestParam(name="num") int num) {
         List<TripOption> optionlistAll = optionService.getAllOptions();
         Trip trip = tripService.getDetail(num);
-        TripFile tripFile = tripService.getTripFileByNo(String.valueOf(num));
+        TripFile tripFile = tripService.getTripFileByNo(String.valueOf(trip.getFileId()));
+        String currentoption = trip.getOptionIds();
+        System.out.println(currentoption);
+        List<TripOption> currentoptions = (this).getOptions(currentoption);
+        StringBuilder currentoptionsName= new StringBuilder();
+        for(TripOption option : currentoptions){
+            String optionName=option.getOptionName();
+            System.out.println("optionName =" +optionName);
+            if(!optionName.isEmpty()){
+                currentoptionsName.append(optionName).append(",");
+            }
+        }
+        if (currentoptionsName.length() > 0) {
+            currentoptionsName.setLength(currentoptionsName.length() - 1);
+        }
 
         model.addAttribute("optionlistAll", optionlistAll);
         model.addAttribute("trip", trip);
         model.addAttribute("tripfile", tripFile);
-
+        model.addAttribute("categories", Arrays.asList("WEU", "CEU", "EEU", "SEU"));
+        model.addAttribute("currentoptionsName", currentoptionsName.toString());
         return "tourdepartment/Tour_Update";
+    }
+
+    @PostMapping("/updateMainTrip")
+    public String updateMainTrip(@RequestParam(name="tripNo") int num,
+                                 @RequestParam(name ="TripName", required = false) String tripName,
+                              @RequestParam(name ="TripPrice", required = false) Integer tripPrice,
+                              @RequestParam(name ="TripMaxStock", required = false) Integer tripMaxStock,
+                              @RequestParam(name ="tripDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate tripDate,
+                              @RequestParam(name ="expireDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate expireDate,
+                              @RequestParam(name ="TripCategory", required = false) String category,
+                              @RequestParam(name ="optionIds", required = false) String optionIds,
+                              @RequestParam(name ="img[]", required = false) MultipartFile[] images,
+                              @AuthenticationPrincipal User userDetails,
+                              Model model, RedirectAttributes redirectAttributes) throws IOException {
+
+        // Trip 객체 생성 및 저장
+        Trip trip = tripService.getDetail(num);
+        trip.setTripName(tripName);
+        trip.setTripPrice(tripPrice != null ? tripPrice : 0);
+        trip.setTripMaxStock(tripMaxStock != null ? tripMaxStock : 0);
+        trip.setTripDate(tripDate.toString());
+        trip.setExpireDate(expireDate.toString());
+        trip.setTripCategory(category);
+        trip.setOptionIds(optionIds);
+
+        try {
+            tripService.updateTrip(trip, images);
+            redirectAttributes.addFlashAttribute("message", "저장되었습니다");
+
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("message", "저장에 실패했습니다");
+            e.printStackTrace();
+        }
+
+        return "redirect:/trip/tripRegister";
     }
 
     @GetMapping("/Department")
@@ -828,7 +880,7 @@ public class TripController {
         }
 
         //purchase 정보 불러오기
-        List<Purchase> purchaseList= getPurchaseListWithoutStatus("REJECTED","REFUND");
+        List<Purchase> purchaseList= getPurchaseListWithoutStatus("REJECTED","APPROVED");
         model.addAttribute("purchaseList",purchaseList);
 
 
@@ -845,7 +897,9 @@ public class TripController {
     }
 
     @PostMapping("/rejectTrip")
-    public String rejectTrip(@RequestParam("tripNo") int tripNo, RedirectAttributes redirectAttributes) {
+    public String rejectTrip(@RequestParam("tripNo") int tripNo,
+                             RedirectAttributes redirectAttributes) {
+
         tripService.updateTripStatus(tripNo, "REJECTED");
 
         redirectAttributes.addFlashAttribute("message", "여행 일정을 거부하였습니다.");
@@ -889,7 +943,11 @@ public class TripController {
     }
 
     @PostMapping("/rejectPurchase")
-    public String rejectPurchase(@RequestParam("tripNo") int tripNo,@RequestParam("purchaseId") int id,@RequestParam("buyerNo") String buyerNo, RedirectAttributes redirectAttributes) {
+    public String rejectPurchase(@RequestParam("tripNo") int tripNo,@RequestParam("purchaseId") int id,
+                                 @RequestParam("buyerNo") String buyerNo,@RequestParam("rejectReason") String rejectReason
+                                 ,RedirectAttributes redirectAttributes) {
+
+        System.out.println(rejectReason);
 
         Customer customer =null;
         customer = customerService.findByCustomerX("customerNo",buyerNo);
@@ -905,6 +963,7 @@ public class TripController {
         String message="";
 
         purchaseService.updatePurchaseStatus(id,"REJECTED");
+        purchaseService.updateRejectReason(id,rejectReason);
 
         boolean isUpdated=true;
         if(stock!=0){
@@ -933,8 +992,14 @@ public class TripController {
         model.addAttribute("trip", trip);
 
         //purchase 정보 불러오기 조건: tripNo
-        List<Purchase> purchaseList= getPurchaseListWithoutStatus("REJECTED","REFUND");
-        model.addAttribute("purchaseList",purchaseList);
+        List<Purchase> purchaseList= getPurchaseListWithoutStatus("REJECTED","PENDING");
+        List<Purchase> newpurchaseList =new ArrayList<>();
+        for(Purchase p : purchaseList){
+            if(p.getTripNo()==num){
+                newpurchaseList.add(p);
+            }
+        }
+        model.addAttribute("purchaseList",newpurchaseList);
 
         //가이드 선출
         List<User> users = userService.getEmployeeListByDepartment(5);
@@ -1031,20 +1096,37 @@ public class TripController {
         List<Purchase> purchaseList = getPurchaseListWithoutStatus("APPROVED","PENDING");
         model.addAttribute("purchaseList",purchaseList);
 
+        List<Trip> newtripList = new ArrayList<>();
+        String status ="";
+        User user;
+        String TLName="";
+
+        for(Trip trip : triplistAll){
+            status = trip.getStatus();
+            if(status.equals("APPROVED")){
+
+                if(trip.getTravelleaderNo()!=0){
+                    user = userService.getEmployee(trip.getTravelleaderNo());
+                    TLName=user.getUsername();
+                    trip.setTravelleaderName(TLName);
+                }
+                newtripList.add(trip);
+            }
+        }
+        model.addAttribute("newtripList",newtripList);
+
         return "tourdepartment/Travel_BossPage";
     }
 
-    public List<Purchase> getPurchaseListWithoutStatus(String status1,String status2){
-        //purchase 정보 불러오기
-        List<Purchase> purchaseList= purchaseService.getAllPurchaseInfo();
-        List<Purchase> newpurchaseList= new ArrayList<>();
-        for(Purchase p : purchaseList){
-            if(!(p.getStatus().equals(status1)||p.getStatus().equals(status2))){
-                newpurchaseList.add(p);
-            }
-        }
-        return newpurchaseList;
+    @GetMapping("/tripSales")
+    public String tripSales(
+            HttpServletRequest request,HttpServletResponse response,
+            Model model) {
+
+        return "tourdepartment/Tour_Sales";
     }
+
+
 
 
 
@@ -1133,7 +1215,7 @@ public class TripController {
     //------------------------------
     private List<TripOption> getOptions(String optionIds) {
         List<TripOption> options = new ArrayList<>();
-        String[] optionIdArray = optionIds.split("-");
+        String[] optionIdArray = optionIds.split(",");
         for (String optionId : optionIdArray) {
             TripOption option = optionService.getOptionsByOptionId(optionId);
             if (option != null) {
@@ -1240,4 +1322,16 @@ public class TripController {
     }
 
     //------------------------------
+
+    public List<Purchase> getPurchaseListWithoutStatus(String status1,String status2){
+        //purchase 정보 불러오기
+        List<Purchase> purchaseList= purchaseService.getAllPurchaseInfo();
+        List<Purchase> newpurchaseList= new ArrayList<>();
+        for(Purchase p : purchaseList){
+            if(!(p.getStatus().equals(status1)||p.getStatus().equals(status2))){
+                newpurchaseList.add(p);
+            }
+        }
+        return newpurchaseList;
+    }
 }

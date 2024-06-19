@@ -14,4 +14,6 @@ public interface PurchaseMapper {
     List<Purchase> getAllPurchaseInfoByTripNo(Integer num);
 
     void updatePurchaseStatus(int id, String status);
+
+    void updateRejectReason(int purchaseId, String rejectReason);
 }

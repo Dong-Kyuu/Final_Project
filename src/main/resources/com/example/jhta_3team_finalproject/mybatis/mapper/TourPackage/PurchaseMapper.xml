@@ -32,4 +32,10 @@
         WHERE id = #{id}
     </update>
 
+    <!--거절사유 추가-->
+    <update id="updateRejectReason">
+        UPDATE purchase
+        SET reject_reason = #{rejectReason}
+        WHERE id = #{purchaseId}
+    </update>
 </mapper>

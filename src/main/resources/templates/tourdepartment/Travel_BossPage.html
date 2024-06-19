@@ -19,119 +19,18 @@
     <link rel="shortcut icon" th:href="@{../../assets/images/favicon.ico}"/>
 
     <style>
-        #productList{
-            padding : 0 3rem;
-        }
 
-        .product__item__pic {
-            /* 이미지를 화면에 꽉 채우도록 설정 */
-            background-size: cover;
-            /* 이미지가 잘릴 수 없도록 설정 */
-            background-position: center;
-            /* 배경 이미지가 적용된 div의 크기를 지정 */
-            width: 100%;
-            height: 60%; /* 이미지의 높이를 원하는 값으로 지정 */
-
-            object-fit: scale-down;
-
-
-        }
         .product__item__pic img {
             width: 100%;
             height: auto;
             display: block;
         }
 
-        .product__item__text{
-            padding-top:30px;
-        }
-
-        .product__pagination{
-            text-align: center
-        }
-
-        .button-tripRegister{
-            float: right;
-            padding-right: 3rem;
-        }
-        /*
-        .modal{
-            position:fixed;
-            display:none;
-
-            justify-content: center;
-            top:0;
-            left:0;
-
-            width:100%;
-            height:100%;
-
-
-
-            background-color: rgba(0,0,0,0.4);
-        }
-        .modal_body{
-            position:absolute;
-            top:50%;
-
-            width:400px;
-            height:600px;
-            padding:40px;
-            text-align: center;
-
-            background-color: rgb(255,255,255);
-            border-radius:10px;
-            box-shadow:0 2px 3px 0 rgba(34,36,38,0.15);
-            transform:translateY(-50%);
-        }
-*/
-        .modal {
-            position: fixed;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal_header {
-            text-align: center;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
         .modal_header h1 {
             margin: 5px;
             font-size: 1.5em;
         }
-        .close_button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            float: right;
-        }
 
-        .modal_body {
-            width: 400px;
-            height: 600px;
-            padding: 20px;
-            background-color: rgb(255, 255, 255);
-            border-radius: 10px;
-            box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .section {
-            height: 40%;
-            display: flex;
-            flex-direction: column;
-        }
         .section h2 {
             margin: 0;
             padding: 10px 0;
@@ -161,6 +60,9 @@
             margin-left: 10px; /* 버튼들 사이에 간격 추가 */
         }
 
+        table{
+            text-align: center;
+        }
     </style>
 
 
@@ -183,44 +85,55 @@
                 <div class="row">
                     <div class="col-lg-12 grid-margin stretch-card">
                         <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">상품 결제</h4>
-
-                                <!-- 스크롤 가능한 리스트를 감싸는 컨테이너 div -->
-                                <div style="max-height: 300px; overflow-y: auto;">
-                                    <ul class="list-group">
-                                        <!-- 여행 일정 변경 요청 리스트 아이템 -->
-                                        <li class="list-group-item" th:each="trip, status : ${pendingTrip}">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <h5 class="mb-1" th:text="'상품 등록 승인 #' + ${status.count}"></h5>
-                                                    <p class="mb-1" th:text="'내용: ' + ${trip.tripName} + ' / ' + ${trip.tripDate} + ' / ' + ${trip.tripPrice}+'won'"></p>
-                                                    <p class="mb-1" th:text="'상태: '+${trip.status == 'PENDING' ? '결제 대기' : trip.status}"></p>
-                                                </div>
-                                                <div class="col-sm-6 text-right state-btn">
-                                                    <!-- 승인 또는 거부 버튼 -->
-                                                    <form th:action="@{/trip/approveTrip}" method="post" style="display: inline;">
-                                                        <input type="hidden" name="tripNo" th:value="${trip.tripNo}" />
-                                                        <button type="submit" class="btn btn-gradient-success btn-lg">승인</button>
-                                                    </form>
-                                                    <form th:action="@{/trip/rejectTrip}" method="post" style="display: inline;">
-                                                        <input type="hidden" name="tripNo" th:value="${trip.tripNo}" />
-                                                        <button type="submit" class="btn btn-gradient-danger btn-lg">거부</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <!-- 기타 요청들 추가 -->
-                                    </ul>
+                            <div class="card-body" >
+                                <h4 class="card-title">Trip List</h4>
+                                <div style="max-height: 300px;  overflow-y: auto;">
+                                <table class="table table-striped" >
+                                        <thead>
+                                        <tr>
+                                            <th> 번호 </th>
+                                            <th> 상품 </th>
+                                            <th> 날짜 </th>
+                                            <th> 금액 </th>
+                                            <th> 신청 시간</th>
+                                            <th> 관리</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="trip, status : ${pendingTrip}">
+                                                <td th:text="${status.count}"></td>
+                                                <td th:text="${trip.tripName}"></td>
+                                                <td th:text="${trip.tripDate}"></td>
+                                                <td th:text="${trip.tripPrice}+'원'"></td>
+                                                <td th:text="${trip.regDate}"></td>
+                                                <td>
+                                                    <div class="state-btn">
+                                                        <!-- 승인 또는 거부 버튼 -->
+                                                        <form th:action="@{/trip/approveTrip}" method="post" style="display: inline;">
+                                                            <input type="hidden" name="tripNo" th:value="${trip.tripNo}" />
+                                                            <button type="submit" class="btn btn-gradient-success btn-sm">승인</button>
+                                                        </form>
+                                                        <form th:action="@{/trip/rejectTrip}" method="post" style="display: inline;">
+                                                            <input type="hidden" name="tripNo" th:value="${trip.tripNo}" />
+                                                            <button type="submit" class="btn btn-gradient-danger btn-sm">거부</button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
+                <div class="row">
                     <div class="col-lg-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body" >
                                 <h4 class="card-title">Booking List</h4>
+                                <div style="max-height: 300px; width:100%; overflow-y: auto;">
                                 <table class="table table-striped" >
                                     <thead>
                                     <tr>
@@ -229,12 +142,11 @@
                                         <th> 예약 상품 + 날짜</th>
                                         <th> 신청 시간</th>
                                         <th> 처리 현황</th>
+                                        <th> 거절 사유</th>
                                         <th> 관리</th>
                                     </tr>
                                     </thead>
-
                                     <tbody>
-
                                     <tr th:each="purchase, status : ${purchaseList}">
                                         <td th:text="${status.count}"></td>
                                         <td th:text="${purchase.customerNameKor}"></td>
@@ -245,52 +157,86 @@
                                                       (purchase.status == 'REJECTED' ? '예약 거절' :
                                                       (purchase.status == 'REFUND' ? '환불' : purchase.status))))}">
                                         </td>
+                                        <td th:text="${purchase.rejectReason}"></td>
                                         <td>
                                             <div class="purchase-button">
                                                 <form th:action="@{/trip/approvePurchase}" method="post" style="display:inline;">
                                                     <input type="hidden" name="purchaseId" th:value="${purchase.id}" />
                                                     <input type="hidden" name="buyerNo" th:value="${purchase.buyerNo}" />
+                                                    <input type="hidden" name="tripNo" th:value="${purchase.tripNo}" />
                                                     <button type="submit" class="btn btn-gradient-success btn-sm">재승인</button>
                                                 </form>
-                                                <form th:action="@{/trip/rejectPurchase}" method="post" style="display:inline;">
+                                                <form th:action="@{/api/payments/refund}" method="post" style="display:inline;">
                                                     <input type="hidden" name="purchaseId" th:value="${purchase.id}" />
                                                     <input type="hidden" name="buyerNo" th:value="${purchase.buyerNo}" />
+                                                    <input type="hidden" name="tripNo" th:value="${purchase.tripNo}" />
                                                     <button type="submit" class="btn btn-gradient-danger btn-sm">환불처리</button>
                                                 </form>
                                             </div>
                                         </td>
                                     </tr>
-
                                     </tbody>
                                 </table>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
+                <div class="row">
                     <div class="col-lg-12 grid-margin stretch-card">
+
                         <div class="card">
                             <div class="card-body" >
-                                <h4 class="card-title">Booking List</h4>
-                                <table class="table table-striped" >
-                                    <thead>
-                                    <tr>
-                                        <th> 번호</th>
-                                        <th> 상품+날짜</th>
-                                        <th> 배정 TL</th>
-                                        <th> 예약인원</th>
-                                        <th> 관리</th>
-                                    </tr>
-                                    </thead>
+                                <h4 class="card-title">Trip List</h4>
+                                <div style="max-height: 300px; width:100%; overflow-y: auto;position: relative;">
 
-                                    <tbody>
+                                    <table class="table table-striped" >
+                                        <thead>
+                                        <tr>
+                                            <th>번호</th>
+                                            <th>상품</th>
+                                            <th>날짜</th>
+                                            <th>배정 TL</th>
+                                            <th>예약인원</th>
+                                            <th>진행상황</th>
+                                            <th>관리</th>
+                                        </tr>
+                                        </thead>
 
-                                    </tbody>
-                                </table>
+                                        <tbody>
+                                        <tr th:each="trip, status : ${newtripList}">
+                                            <td th:text="${status.count}"></td>
+                                            <td th:text="${trip.tripName}"></td>
+                                            <td th:text="${trip.tripDate}"></td>
+                                            <td th:text="${trip.travelleaderName}"></td>
+                                            <td th:text="${trip.tripStock}+'/'+${trip.tripMaxStock}"></td>
+                                            <td>
+                                                <div class="progress">
+                                                    <div class="progress-bar" role="progressbar"
+                                                         th:style="'width: ' + ${trip.tripProgress} + '%'"
+                                                         th:aria-valuenow="${trip.tripProgress}"
+                                                         aria-valuemin="0" aria-valuemax="100"
+                                                         th:classappend="${((status.count % 4 == 1) ? 'progress-bar bg-danger' :
+                                                          ((status.count % 4 == 2) ? 'progress-bar bg-warning' :
+                                                          ((status.count % 4 == 3) ? 'progress-bar bg-primary' :
+                                                          'progress-bar bg-success')))}">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-link btn-fw" th:href="'TLManagement?num=' + ${trip.tripNo}">
+                                                    상세보기
+                                                </a>
+                                            </td>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
+
             </div>
             <!-- content-wrapper ends -->
             <!-- partial:../../partials/_footer.html -->
@@ -325,36 +271,6 @@
 <script  th:if="${message}" th:inline="javascript">
     alert([[${message}]]);
 </script>
-
-<script>
-    /*
-    const modal = document.querySelector('.modal');
-    const btnOpenModal=document.querySelector('.btn-open-modal');
-
-    btnOpenModal.addEventListener("click", ()=>{
-        modal.style.display="flex";
-    });
-
-    function closeModal() {
-        document.querySelector('.modal').style.display = 'none';
-    }
-*/
-    // Function to open the modal
-    function openModal() {
-        document.querySelector('.modal').style.display = 'flex';
-    }
-
-    // Function to close the modal
-    function closeModal() {
-        document.querySelector('.modal').style.display = 'none';
-    }
-
-    // Attach the openModal function to the trip_register button
-    document.getElementById('trip_update').addEventListener('click', openModal);
-</script>
-
-
-
 
 </body>
 </html>

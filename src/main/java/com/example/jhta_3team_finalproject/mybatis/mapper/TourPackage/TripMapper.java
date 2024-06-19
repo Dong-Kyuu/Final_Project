@@ -39,5 +39,7 @@ public interface TripMapper {
     void updateTravelLeader(int tripNo, int userNo);
 
     void updateTripStock(int tripNo, int stock);
+
+    void updateTripProgress (int tripNo, int tripProgressNo);
 }
 
