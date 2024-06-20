@@ -88,9 +88,9 @@
                                         </select>
                                         <th:block sec:authorize="hasAuthority('ROLE_SUB_MASTER')">
                                             <div class="form-check form-check-success" style="margin-left:30px">
-                                                <label class="form-check-label">
-                                                    <input type="checkbox" class="form-check-input" name="annboardFix" value="1"> Top Fix
-                                                </label>
+<!--                                                <label class="form-check-label">-->
+                                                    <input type="checkbox" class="form-check-input" name="annboardFix" value="1" style="margin-left:10px; margin-right:10px"> Top Fix
+<!--                                                </label>-->
                                             </div>
                                         </th:block>
                                         <th:block th:if="${#authentication.principal.getDepartmentId()}==1 and ${#authentication.principal.getUserAuth()}=='ROLE_HEAD'">
