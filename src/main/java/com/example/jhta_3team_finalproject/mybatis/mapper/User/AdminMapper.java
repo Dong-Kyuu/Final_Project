@@ -12,5 +12,5 @@ public interface AdminMapper {
 
     void updateUserInfo(User user);
 
-    List<User> getUsersFilter(@Param("params") Map<String, Object> params);
+    List<User> getUsersFilter(int department_id);
 }

@@ -54,8 +54,8 @@ public class AdminController {
 
     @GetMapping("/filterUsers")
     @ResponseBody
-    public List<User> getUsersFilter(@RequestParam Map<String, Object> params) {
-        return adminService.getUsersFilter(params);
+    public List<User> getUsersFilter(int departmentId) {
+        return adminService.getUsersFilter(departmentId);
     }
 
 }
