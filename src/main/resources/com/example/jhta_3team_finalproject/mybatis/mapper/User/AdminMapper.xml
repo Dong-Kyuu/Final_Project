@@ -37,40 +37,12 @@
         FROM user u
         JOIN user_departments d ON u.department_id = d.department_id
         JOIN user_positions p ON u.position_id = p.position_id
-        <where>
-            <if test="params.user_is_approved != null">
-                u.user_is_approved = #{params.user_is_approved}
-            </if>
-            <if test="params.user_name != null and params.user_name != ''">
-                AND MATCH(u.user_name) AGAINST(#{params.user_name} IN NATURAL LANGUAGE MODE)
-            </if>
-            <if test="params.department_id != null and params.department_id != -1">
-                AND u.department_id = #{params.department_id}
-            </if>
-            <if test="params.position_id != null">
-                AND u.position_id = #{params.position_id}
-            </if>
-            <if test="params.user_status != null">
-                AND u.user_status = #{params.user_status}
-            </if>
-            <if test="params.startDate != null">
-                AND u.user_num IN (
-                SELECT ua.user_num
-                FROM user_attendance ua
-                WHERE ua.check_in_time >= #{params.startDate}
-                )
-            </if>
-            <if test="params.endDate != null">
-                <![CDATA[
-            AND u.user_num IN (
-                SELECT ua.user_num
-                FROM user_attendance ua
-                WHERE ua.check_out_time <= #{params.endDate}
-            )
-            ]]>
-            </if>
-        </where>
-        ORDER BY u.user_created_at DESC, u.user_num;
+       <where>
+           <if test="department_id != -1 " >
+             d.department_id =#{department_id}
+           </if>
+       </where>
+        ORDER BY u.user_created_at DESC, u.user_num
     </select>
 
 </mapper>
