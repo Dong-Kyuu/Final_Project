@@ -26,15 +26,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<User> getUsersFilter(Map<String, Object> params) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        if (params.get("startDate") != null) {
-            params.put("startDate", LocalDateTime.parse(params.get("startDate") + " 00:00:00", formatter));
-        }
-        if (params.get("endDate") != null) {
-            params.put("endDate", LocalDateTime.parse(params.get("endDate") + " 23:59:59", formatter));
-        }
-        return adminMapper.getUsersFilter(params);
+    public List<User> getUsersFilter(int department_id) {
+        return adminMapper.getUsersFilter(department_id);
     }
 }
 

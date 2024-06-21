@@ -94,6 +94,23 @@
             </div>
         </li>
 
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#general-pages" aria-expanded="false"
+               aria-controls="general-pages">
+                <span class="menu-title">전자 결재</span>
+                <i class="menu-arrow"></i>
+                <i class="mdi mdi-medical-bag menu-icon"></i>
+            </a>
+            <div class="collapse" id="general-pages">
+                <ul class="nav flex-column sub-menu">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/admin/sign}"> 결재 현황</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/admin/approvalupdateLeave}"> 양식 작성 </a></li>
+                    <li class="nav-item"><a class="nav-link" href="pages/samples/register.html"> 결재 리스트 </a></li>
+                    <li class="nav-item"><a class="nav-link" href="pages/samples/error-404.html"> 보관함</a></li>
+                </ul>
+            </div>
+        </li>
+
         <li class="nav-item" th:if="${#authorization.expression('hasRole(''ROLE_MASTER'')')}">
             <a class="nav-link" data-bs-toggle="collapse" href="#admin-pages" aria-expanded="false"
                aria-controls="admin-pages">
@@ -106,6 +123,7 @@
                     <li class="nav-item"><a class="nav-link" th:href="@{/admin/attendance/list}">근태 관리</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/admin/users}">직원 정보 관리</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/user/register_allow}">신규 등록 사원</a></li>
+
                 </ul>
             </div>
         </li>
@@ -124,8 +142,7 @@
                 </div>
                 <div class="collapse" id="myProject">
                     <ul class="nav flex-column sub-menu project-menu">
-                        <li class="nav-item"><a class="nav-link" th:href="@{/table/freelist}">자유게시판</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/annboard/announceList}">공지게시판</a></li>
+                        <li class="nav-item"><a class="nav-link"></a></li>
                     </ul>
                 </div>
                 <button class="btn btn-block btn-lg btn-gradient-primary mt-4 createProject">+ Add a project</button>

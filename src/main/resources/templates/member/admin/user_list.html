@@ -139,11 +139,24 @@
     $(document).ready(function () {
         var csrfToken = $("meta[name='_csrf']").attr("content");
         var csrfHeader = $("meta[name='_csrf_header']").attr("content");
-        var startDate = $('#startDate').val();
-        var endDate = $('#endDate').val();
 
-        function loadUserData(startDate, endDate, departmentId) {
-            var url = '/admin/filterUsers?departmentId=' + departmentId + '&startDate=' + startDate + '&endDate=' + endDate;
+        $('#filterButton').on('click', function () {
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+            var departmentId = $('#filterMenuButton').data('department-id');
+            loadUserData(startDate, endDate, departmentId);
+        });
+
+        $('.filter-option').on('click', function (e) {
+            e.preventDefault();
+            var departmentId = $(this).data('department-id');
+            var filterText = $(this).text();
+            $('#filterMenuButton').text(filterText).css('color', 'black').data('department-id', departmentId);
+            loadUserData( departmentId);
+        });
+
+        function loadUserData(departmentId) {
+            var url = '/admin/filterUsers?departmentId=' + departmentId ;
 
             $.ajax({
                 url: url,
@@ -161,7 +174,7 @@
             });
         }
 
-        loadUserData(startDate, endDate, -1);
+        loadUserData( -1);
 
         var requestTable = $('#admin_user_table').DataTable({
             responsive: true,
@@ -206,19 +219,7 @@
             lengthMenu: [10, 25, 35, 50, {label: '전체', value: -1}]
         });
 
-        $('#filterButton').on('click', function () {
-            var startDate = $('#startDate').val();
-            var endDate = $('#endDate').val();
-            var departmentId = $('#filterMenuButton').data('department-id');
-            loadUserData(startDate, endDate, departmentId);
-        });
 
-        $('.filter-option').on('click', function (e) {
-            e.preventDefault();
-            var departmentId = $(this).data('department-id');
-            var filterText = $(this).text();
-            $('#filterMenuButton').text(filterText).css('color', 'black').data('department-id', departmentId);
-        });
     });
 
 </script>

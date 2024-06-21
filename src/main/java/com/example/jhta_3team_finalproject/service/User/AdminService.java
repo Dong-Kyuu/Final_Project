@@ -9,6 +9,6 @@ public interface AdminService {
 
     void updateUserInfo(User user);
 
-    List<User> getUsersFilter(Map<String, Object> params);
+    List<User> getUsersFilter(int departmentId);
 
 }

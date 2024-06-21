@@ -45,34 +45,34 @@
                 </div>
 
                 <div class="row">
-                <div class="col-md-4 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                            <form>
-                                <h4 class="card-title">오늘 일정</h4>
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th class="text">등록자</th>
-                                        <th class="text">구분</th>
-                                        <th class="text">남은일수</th>
-                                        <th class="text">제목</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each = "a : ${list}">
-                                        <td class="text" th:text="${a.username}" ></td>
-                                        <td class="text" th:text="${a.type}"></td>
-                                        <td class="text" th:text="${a.id}+일"></td>
-                                        <td class="text" th:text="${a.title}"></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                </nav>
-                            </form>
+                    <div class="col-md-4 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <form>
+                                    <h4 class="card-title">오늘 일정</h4>
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th class="text">제목</th>
+                                            <th class="text">등록자</th>
+                                            <th class="text">남은일수</th>
+<!--                                            <th class="text">구분</th>-->
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each = "a : ${list}">
+                                            <td class="text" th:text="${a.title}"></td>
+                                            <td class="text" th:text="${a.username}" ></td>
+                                            <td class="text" th:text="${a.id}+일"></td>
+<!--                                            <td class="text" th:text="${a.type}"></td>-->
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    </nav>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
 
 
                     <div class="col-md-8 grid-margin stretch-card">
@@ -80,108 +80,106 @@
                             <div class="card-body">
                                 <form class="forms-sample">
                                     <h3 id="calendarDate"></h3>
-                                    <iframe id="calendarFrame" style="width: 780px; height: 580px;" th:src="@{/cal/mycalendar}"></iframe>
+                                    <iframe id="calendarFrame" style="width: 550px; height: 480px;" th:src="@{/cal/mycalendar}"></iframe>
                                 </form>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+
+
 
                     <div class="content-wrapper">
-
                         <div class="row">
                             <div class="col-lg-6 grid-margin stretch-card">
                                 <div class="card">
                                     <div class="card-body">
                                         <h4 class="card-title">월별 매출</h4>
-                                        <canvas id="areaChart" style="height:250px"></canvas>
+                                        <canvas id="monthlyIncomeSalesChart" style="height:250px"></canvas>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-6 grid-margin stretch-card">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h4 class="card-title">대륙별 판매량</h4>
-                                        <canvas id="barChart" style="height:230px"></canvas>
+                                        <h4 class="card-title">월별 예약수</h4>
+                                        <canvas id="monthlySalesChart" style="height:250px"></canvas>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- 공지사항 페이지 -->
 
+                    <div class="col-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>공지사항</h4>
+                                <iframe id="announceFrame" style="width: 870px; height: 200px;" th:src="@{/dashAnnounceList}"></iframe>
+                                `                        </div>
+                        </div>
+                    </div>
 
-
-                <!-- 공지사항 페이지 -->
-
-                        <div class="col-12 grid-margin stretch-card">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4>공지사항</h4>
-                                    <iframe id="announceFrame" style="width: 1270px; height: 1000px;" th:src="@{/annboard/announceList}"></iframe>
-        `                        </div>
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body" id="depart">
+                                <h4 class="card-title">결제진행사항</h4>
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <iframe id="tripFrame" style="width: 870px;height: 300px " th:src="@{/dashDepartment}"></iframe>
+                                    </thead>
+                                </table>
                             </div>
                         </div>
-
-                        <div class="col-lg-12 grid-margin stretch-card">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">결제진행사항</h4>
-                                    <table class="table table-bordered">
-                                        <thead>
-                                        <iframe id="tripFrame" style="width: 1270px; height: 350px;" th:src="@{/tripDepartment}"></iframe>
-                                        </thead>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                </div>
+                <!--    main-panel    -->
+            </div>
+            <!--  container-fluid page-body-wrapper  -->
         </div>
-<!--    main-panel    -->
     </div>
-<!--  container-fluid page-body-wrapper  -->
 </div>
-<!-- container-scroller -->
-<script th:src="@{/assets/vendors/js/vendor.bundle.base.js}"></script>
-<!-- endinject -->
-<!-- Plugin js for this page -->
-<!-- End plugin js for this page -->
-<!-- inject:js -->
-<script th:src="@{/assets/js/off-canvas.js}"></script>
-<script th:src="@{/assets/js/hoverable-collapse.js}"></script>
-<script th:src="@{/assets/js/misc.js}"></script>
-<script th:src="@{/js/calendar/main_dashboard.js}"></script>
-<script th:src="@{../../assets/vendors/chart.js/Chart.min.js}"></script>
-<script th:src="@{../../js/dashboard/chart.js}"></script>
-
-            <script>
-                // $(document).ready(function() {
-                var $iframe = $('#calendarFrame');
-                    $iframe.on('load', function () {
-                        var $iframeDoc = $iframe.contents();
-                        $iframeDoc.find('.fc-header-toolbar').css("display", "none");
-                        $iframeDoc.find('.panel.panel-default').css("display", "none");
-                    });
-                // });
-
-
-                var date = `${new Date().getFullYear()}년${new Date().getMonth() + 1}월${new Date().getDate()}일`;
-                $("#calendarDate").html(date);
+        <!-- container-scroller -->
+        <script th:src="@{/assets/vendors/js/vendor.bundle.base.js}"></script>
+        <!-- endinject -->
+        <!-- Plugin js for this page -->
+        <!-- End plugin js for this page -->
+        <!-- inject:js -->
+        <script th:src="@{/assets/js/off-canvas.js}"></script>
+        <script th:src="@{/assets/js/hoverable-collapse.js}"></script>
+        <script th:src="@{/assets/js/misc.js}"></script>
+        <script th:src="@{/js/calendar/main_dashboard.js}"></script>
+        <script th:src="@{../../assets/vendors/chart.js/Chart.min.js}"></script>
+        <script th:src="@{../../js/dashboard/chart.js}"></script>
+        <script th:src="@{../../js/dashboard/dashtriplist.js}"></script>
+        <script>
+            // $(document).ready(function() {
+            var $iframe = $('#calendarFrame');
+            $iframe.on('load', function () {
+                var $iframeDoc = $iframe.contents();
+                $iframeDoc.find('.fc-header-toolbar').css("display", "none");
+                $iframeDoc.find('.panel.panel-default').css("display", "none");
+            });
+            // });
 
 
-                var $announceFrame = $('#announceFrame');
-                $announceFrame.on('load', function () {
-                    var $iframeDoc = $announceFrame.contents();
-                    $iframeDoc.find('.container-scroller nav').css("display", "none");
-                    $iframeDoc.find('.panel.panel-default').css("display", "none");
-                });
+            var date = `${new Date().getFullYear()}년${new Date().getMonth() + 1}월${new Date().getDate()}일`;
+            $("#calendarDate").html(date);
 
 
-            </script>
-<th:block th:replace="~{chat/chatDrag :: chatDragJS}"></th:block>
-<!-- endinject -->
-<!-- Custom js for this page -->
-<!-- End custom js for this page -->
-<!--<th:block th:replace="~{chat/chatDrag :: chatDragJS}"></th:block>-->
+            var $announceFrame = $('#announceFrame');
+            $announceFrame.on('load', function () {
+                var $iframeDoc = $announceFrame.contents();
+                $iframeDoc.find('.container-scroller nav').css("display", "none");
+                $iframeDoc.find('.panel.panel-default').css("display", "none");
+            });
+
+
+        </script>
+
+        <!-- endinject -->
+        <!-- Custom js for this page -->
+        <!-- End custom js for this page -->
+        <!--<th:block th:replace="~{chat/chatDrag :: chatDragJS}"></th:block>-->
 </body>
 </html>
