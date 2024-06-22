@@ -57,9 +57,9 @@ public class RedisService {
     private List<ChatMessage> getChatMessageList(long num, String key, String timeStamp) {
         if (redisChatUtils.isKeyExists(key)) {
             log.info("RedisGet");
-            Set<ChatMessage> chatMessageSet = redisChatUtils.getSets(key);
-            List<ChatMessage> chatMessageList = new ArrayList<>(chatMessageSet);
-            chatMessageList.sort(Comparator.comparing(ChatMessage::getMessageNum));
+            List<ChatMessage> chatMessageList = redisChatUtils.getSets(key);
+            //List<ChatMessage> chatMessageList = new ArrayList<>(chatMessageSet);
+            //chatMessageList.sort(Comparator.comparing(ChatMessage::getMessageNum));
             return chatMessageList;
         } else {
             log.info("RdbGet");
