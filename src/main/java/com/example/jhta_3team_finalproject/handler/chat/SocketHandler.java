@@ -160,6 +160,7 @@ public class SocketHandler extends TextWebSocketHandler {
     public void sendEmergencyMessage(ChatMessage chatMessage) {
         JSONObject obj = new JSONObject(); // JSON데이터를 JSONObject로 파싱한다.
         obj.put("type", "message");
+        obj.put("messageNum", chatMessage.getMessageNum());
         obj.put("roomNumber", chatMessage.getChatRoomNum());
         obj.put("msg", chatMessage.getMessageContent());
         obj.put("sessionId", chatMessage.getSenderId());
@@ -299,6 +300,7 @@ public class SocketHandler extends TextWebSocketHandler {
             try {
                 JSONObject obj = new JSONObject();
                 obj.put("type", "imgurl");
+                obj.put("messageNum", chatMessage.getMessageNum());
                 obj.put("sessionId", chatMessage.getSenderId());
                 obj.put("fileUrl", imageurl);
                 obj.put("fileOriginName", chatMessage.getFileOriginName());
@@ -364,6 +366,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
         // 포문으로 연속 메시지를 보낸다. list 크기 만큼 돌린다.
         for (int i = 0; i < chatMessageList.size(); i++) {
+            long messageNum = chatMessageList.get(i).getMessageNum();
             String content = chatMessageList.get(i).getMessageContent();
             String senderId = chatMessageList.get(i).getSenderId(); // 2024-06-08, 현재는 아이디 -> 나중에 이름으로 가져올 예정
             String fileUrl = chatMessageList.get(i).getFileUrl();
@@ -378,6 +381,7 @@ public class SocketHandler extends TextWebSocketHandler {
             log.info(session.getId());
             log.info("{}", session);
             obj.put("type", "getId");
+            obj.put("messageNum", messageNum);
             //obj.put(session.getId(),session); // 활성화하면 새로고침 시 소켓이 종료되면서 같은 세션 값을 가지고 있던 obj들이 제거되었었음.
             obj.put("sessionId", senderId); // 유저 아이디임. // 위를 활성화하면 세션과 관련된 obj들이 제거되면서 이 컬럼과 js 조건문이 만나는 조건에서 의도치 않은 결과가 나왔었음.
             obj.put("msg", content);

@@ -382,4 +382,12 @@
     <update id="initChatRoomVisitTime">
         UPDATE chat_participate SET chat_visit_time = NOW() WHERE chat_room_num = #{chatRoomNum} AND chat_user_id = #{chatUserId}
     </update>
+
+    <!-- 2024-06-23, 메시지 당 안 읽은 멤버의 수 관리 테이블 -->
+    <!--    unread_user 테이블 생성 -->
+    <!--    CREATE TABLE unread_user(-->
+    <!--    message_num BIGINT NOT NULL,-->
+    <!--    user_id VARCHAR(50) NOT NULL,-->
+    <!--    CONSTRAINT FK_UNREAD_USER_MESSAGE_ID FOREIGN KEY(message_num)-->
+    <!--    REFERENCES chat_message(message_num));-->
 </mapper>

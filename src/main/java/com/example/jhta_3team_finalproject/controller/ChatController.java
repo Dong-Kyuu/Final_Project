@@ -40,6 +40,9 @@ public class ChatController {
         return "chat/chat";
     }
 
+    @RequestMapping(value = "react")
+    public String chatReact() {return "chat/testReact";}
+
     @RequestMapping(value = "chatUserProfile")
     public @ResponseBody User chatUserProfile(@RequestParam(value = "chatUserId") String chatUserId) {
         // 사원 리스트를 불러옵니다.

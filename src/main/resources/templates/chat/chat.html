@@ -36,6 +36,11 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <!-- 2024-06-16, 이모티콘 박스 추가 -->
         <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@3.0.3/dist/index.min.js"></script>
+        <!-- 2024-06-23, React 및 ReactDOM 로드 -->
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <!-- 2024-06-03, Babel Standalone 로드 (JSX를 변환하기 위해) -->
+        <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
 
         <!-- CSRF Token -->
         <meta name="_csrf" th:content="${_csrf.token}">
@@ -43,7 +48,6 @@
     </head>
 
     <body>
-    <!--<button id="opener">채팅하기</button>-->
 
     <div>
         <th:block th:with="pinfo=${#authentication.principal}">
@@ -145,6 +149,9 @@
                                 <div class="profile-setting">
                                     <div class="touch-y">
                                         <div class="information">
+                                            <!-- React 컴포넌트가 렌더링될 위치 -->
+                                            <div id="react-root"></div>
+
                                             <div class="public">
                                                 <p>
                                                     프로필
@@ -496,6 +503,24 @@
                 }
             });
 
+            /**
+             * 2024-06-23, 메시지의 안 읽은 사람 수 업데이트
+             */
+            eventSource.addEventListener('chatReadCountUpdate', function (event) {
+                if (event.data != '') {
+                    if (!sseStatus) {
+                        // 기존의 h2 요소들을 찾아서 업데이트
+                        const chatReadCounts = document.querySelectorAll('strong[id^="readcount-targets-"]');
+                        chatReadCounts.forEach((element, index) => {
+                            const num = parseInt(element.id.split('-')[2]);
+                            if (num === messageData.messageNum) {
+                                element.innerText = messageData.readCount;
+                            }
+                        });
+                    }
+                }
+            });
+
             let isChatRoom = false;
             var distX = 0, distY = 0;
             var viewportX, viewportY;
@@ -610,7 +635,7 @@
                                 }
                                 output += "         </span>";
                                 output += "         <span>";
-                                output += "             <strong class='my-chat-readcount'> " + d.readCount + "&nbsp;</strong> " + getTime(d.sendTime);
+                                output += "             <strong id='readcount-targets-" + d.messageNum + "' class='my-chat-readcount'> " + d.readCount + "&nbsp;</strong> " + getTime(d.sendTime);
                                 output += "         </span>";
                                 output += "    </div>";
                                 output += "</li>";
@@ -627,7 +652,7 @@
                                     output += url;
                                 }
                                 output += "        <span>";
-                                output += "            <strong class='chat-readcount'>" + d.readCount + "&nbsp;</strong>" + getTime(d.sendTime);
+                                output += "            <strong id='readcount-targets-" + d.messageNum + "' class='chat-readcount'>" + d.readCount + "&nbsp;</strong>" + getTime(d.sendTime);
                                 output += "        </span>";
                                 output += "    </div>";
                                 output += "</li>";
@@ -1013,7 +1038,7 @@
                                         }
                                         output += "         </span>";
                                         output += "         <span>";
-                                        output += "             <strong class='my-chat-readcount'> " + d.readCount + "&nbsp;</strong> " + getTime(d.sendTime);
+                                        output += "             <strong id='readcount-targets-" + d.messageNum + "' class='my-chat-readcount'> " + d.readCount + "&nbsp;</strong> " + getTime(d.sendTime);
                                         output += "         </span>";
                                         output += "    </div>";
                                         output += "</li>";
@@ -1032,7 +1057,7 @@
                                             output += url;
                                         }
                                         output += "        <span>";
-                                        output += "            <strong class='chat-readcount'>" + d.readCount + "&nbsp;</strong>" + getTime(d.sendTime);
+                                        output += "            <strong id='readcount-targets-" + d.messageNum + "' class='chat-readcount'>" + d.readCount + "&nbsp;</strong>" + getTime(d.sendTime);
                                         output += "        </span>";
                                         output += "    </div>";
                                         output += "</li>";
@@ -1052,7 +1077,7 @@
                                     }
                                     output += "         </span>";
                                     output += "         <span>";
-                                    output += "             <strong class='my-chat-readcount'> " + d.readCount + "&nbsp;</strong> " + getTime(d.sendTime);
+                                    output += "             <strong id='readcount-targets-" + d.messageNum + "' class='my-chat-readcount'> " + d.readCount + "&nbsp;</strong> " + getTime(d.sendTime);
                                     output += "         </span>";
                                     output += "    </div>";
                                     output += "</li>";
@@ -1075,7 +1100,7 @@
                                         output += url;
                                     }
                                     output += "        <span>";
-                                    output += "            <strong class='chat-readcount'>" + d.readCount + "&nbsp;</strong>" + getTime(d.sendTime);
+                                    output += "            <strong id='readcount-targets-" + d.messageNum + "' class='chat-readcount'>" + d.readCount + "&nbsp;</strong>" + getTime(d.sendTime);
                                     output += "        </span>";
                                     output += "    </div>";
                                     output += "</li>";
@@ -1099,7 +1124,7 @@
                                     }
                                     output += "         </span>";
                                     output += "         <span>";
-                                    output += "             <strong class='my-chat-readcount'> " + d.readCount + "&nbsp;</strong> " + getTime(d.sendTime);
+                                    output += "             <strong id='readcount-targets-" + d.messageNum + "' class='my-chat-readcount'> " + d.readCount + "&nbsp;</strong> " + getTime(d.sendTime);
                                     output += "         </span>";
                                     output += "    </div>";
                                     output += "</li>";
@@ -1122,7 +1147,7 @@
                                         output += url;
                                     }
                                     output += "        <span>";
-                                    output += "            <strong class='chat-readcount'>" + d.readCount + "&nbsp;</strong>" + getTime(d.sendTime);
+                                    output += "            <strong id='readcount-targets-" + d.messageNum + "' class='chat-readcount'>" + d.readCount + "&nbsp;</strong>" + getTime(d.sendTime);
                                     output += "        </span>";
                                     output += "    </div>";
                                     output += "</li>";
@@ -2073,7 +2098,7 @@
                                 }
                                 output += "         </span>";
                                 output += "         <span>";
-                                output += "             <strong class='my-chat-readcount'> " + d.readCount + "&nbsp;</strong> " + getTime(d.sendTime);
+                                output += "             <strong id='readcount-targets-" + d.messageNum + "' class='my-chat-readcount'> " + d.readCount + "&nbsp;</strong> " + getTime(d.sendTime);
                                 output += "         </span>";
                                 output += "    </div>";
                                 output += "</li>";
@@ -2090,7 +2115,7 @@
                                     output += url;
                                 }
                                 output += "        <span>";
-                                output += "            <strong class='chat-readcount'>" + d.readCount + "&nbsp;</strong>" + getTime(d.sendTime);
+                                output += "            <strong id='readcount-targets-" + d.messageNum + "' class='chat-readcount'>" + d.readCount + "&nbsp;</strong>" + getTime(d.sendTime);
                                 output += "        </span>";
                                 output += "    </div>";
                                 output += "</li>";
@@ -2163,7 +2188,69 @@
             $("#chat-sticky-banner-btn").on('click', function () {
                 $("#chat-sticky-banner").fadeOut(300);
             });
+
+
         });
     </script>
+
+    <!-- React 컴포넌트 정의 -->
+<!--    <script type="text/babel">-->
+<!--        function UnreadMessagesCounter() {-->
+<!--            const [unreadCount, setUnreadCount] = React.useState(0);-->
+
+<!--            // 웹소켓 연결 및 메시지 수신 시 처리-->
+<!--            React.useEffect(() => {-->
+<!--                const ws = new WebSocket(`ws://${window.location.host}/chatting/146&admin&multi`);-->
+
+<!--                ws.onopen = () => {-->
+<!--                    console.log("WebSocket 연결 성공");-->
+<!--                    // 여기서 필요하다면 웹소켓 연결 시 추가적인 로직 수행 가능-->
+<!--                };-->
+
+<!--                ws.onmessage = (event) => {-->
+<!--                    console.log("서버에서 메시지 받음:", event.data);-->
+<!--                    // 메시지를 받으면 안 읽은 메시지 수를 업데이트-->
+<!--                    setUnreadCount(prevCount => prevCount + 1);-->
+<!--                };-->
+
+<!--                ws.onclose = () => {-->
+<!--                    console.log("WebSocket 연결 종료");-->
+<!--                };-->
+
+<!--                ws.onerror = (error) => {-->
+<!--                    console.error("WebSocket 에러 발생:", error);-->
+<!--                };-->
+
+<!--                // 컴포넌트 언마운트 시 웹소켓 연결 해제-->
+<!--                return () => {-->
+<!--                    ws.close();-->
+<!--                };-->
+<!--            }, []);-->
+
+<!--            // 메시지 읽음 처리 함수-->
+<!--            const markMessagesAsRead = (messageIds) => {-->
+<!--                // 여기서 메시지 읽음 처리 로직을 수행할 수 있음-->
+<!--                console.log("Messages marked as read:", messageIds);-->
+<!--                // 읽은 메시지 수를 초기화할 수도 있음 (예시로 0으로 설정)-->
+<!--                setUnreadCount(0);-->
+<!--            };-->
+
+<!--            // 안 읽은 메시지 수 표시-->
+<!--            return (-->
+<!--                <div>-->
+<!--                    <p>안 읽은 메시지 수: {unreadCount}</p>-->
+<!--                    <button>-->
+<!--                        메시지 읽음 처리-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--            );-->
+<!--        }-->
+
+<!--        // ReactDOM.render를 사용하여 React 컴포넌트를 렌더링-->
+<!--        ReactDOM.render(-->
+<!--            <UnreadMessagesCounter />,-->
+<!--            document.getElementById('react-root')-->
+<!--        );-->
+<!--    </script>-->
     </body>
 </html>
