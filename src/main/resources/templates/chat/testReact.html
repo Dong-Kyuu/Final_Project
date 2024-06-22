@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>Unread Targets Counter with React</title>
+</head>
+<body>
+
+<h2 id="unread-targets-500">1</h2>
+<h2 id="unread-targets-2000">2</h2>
+<h2 id="unread-targets-2778">3</h2>
+<h2 id="unread-targets-3000">4</h2>
+<h2 id="unread-targets-4000">5</h2>
+
+<div id="react-root"></div>
+
+<script type="text/babel">
+    // 리액트 컴포넌트 정의
+    function UnreadTargetsCounter() {
+        const [unreadCounts, setUnreadCounts] = React.useState(0); // 초기값 설정
+
+        // 웹소켓 연결 및 메시지 수신 처리
+        React.useEffect(() => {
+            const ws = new WebSocket(`ws://${window.location.host}/chatting/146&admin&multi`);
+
+            ws.onopen = () => {
+                console.log("WebSocket 연결 성공");
+            };
+
+            ws.onmessage = (event) => {
+                console.log("서버에서 메시지 받음:", event.data);
+                const messageData = JSON.parse(event.data);
+
+                // 새로운 메시지 정보를 unreadCounts 배열에 업데이트
+                setUnreadCounts([
+                    messageData.readCount
+                ]);
+
+                // 기존의 h2 요소들을 찾아서 업데이트
+                const chatReadCounts = document.querySelectorAll('h2[id^="unread-targets-"]');
+                chatReadCounts.forEach((element, index) => {
+                    const num = parseInt(element.id.split('-')[2]);
+                    if (num === messageData.messageNum) {
+                        element.innerText = messageData.readCount;
+                    }
+                });
+            };
+
+            ws.onclose = () => {
+                console.log("WebSocket 연결 종료");
+            };
+
+            ws.onerror = (error) => {
+                console.error("WebSocket 에러 발생:", error);
+            };
+
+            return () => {
+                ws.close();
+            };
+        }, []); // 빈 배열을 넣어 한 번만 연결하도록 설정
+
+        const markMessagesAsRead = () => {
+            // 메시지 읽음 처리 로직
+            console.log("Messages marked as read");
+            // 여기서 필요에 따라 초기화 로직 추가
+        };
+
+        // JSX로 리액트 컴포넌트 반환
+        return (
+            <div>
+            </div>
+        );
+    }
+
+    // 리액트 DOM 렌더링
+    ReactDOM.render(
+        <UnreadTargetsCounter />,
+        document.getElementById('react-root')
+    );
+</script>
+</body>
+</html>
