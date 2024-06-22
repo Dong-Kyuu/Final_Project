@@ -56,13 +56,11 @@ public class RedisService {
      */
     private List<ChatMessage> getChatMessageList(long num, String key, String timeStamp) {
         if (redisChatUtils.isKeyExists(key)) {
-            log.info("RedisGet");
-            List<ChatMessage> chatMessageList = redisChatUtils.getList(key);
-            //List<ChatMessage> chatMessageList = new ArrayList<>(chatMessageSet);
+            log.info("Redis - 1일 데이터");
             //chatMessageList.sort(Comparator.comparing(ChatMessage::getMessageNum));
-            return chatMessageList;
+            return redisChatUtils.getList(key);
         } else {
-            log.info("RdbGet");
+            log.info("RDB - 1일 데이터");
             ChatMessage chatMessage = new ChatMessage();
             chatMessage.setChatRoomNum(num);
             chatMessage.setTimeStamp(timeStamp);
