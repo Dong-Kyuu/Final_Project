@@ -592,15 +592,13 @@
                                 profileImage += "        </span>"
                             }
 
-                            if (d.chatRoomNum === 0) {
-                                if (d.timeStamp != null) {
-                                    output = "";
-                                    output += "<h5 class='chat-timestamp-dash'>";
-                                    output += "    <span class='chat-timestamp-content'>";
-                                    output += "        &nbsp;&nbsp;" + getDayStr(d.timeStamp) + "&nbsp;&nbsp;";
-                                    output += "    </span>";
-                                    output += "</h5>";
-                                }
+                            if (d.type != null) {
+                                output = "";
+                                output += "<h5 class='chat-timestamp-dash'>";
+                                output += "    <span class='chat-timestamp-content'>";
+                                output += "        &nbsp;&nbsp;" + getDayStr(d.timeStamp) + "&nbsp;&nbsp;";
+                                output += "    </span>";
+                                output += "</h5>";
                             } else if (d.senderId === $("#chat_user_id").val()) {
                                 output = "";
                                 output += "<li class='sent'>";
@@ -2057,15 +2055,13 @@
                                 profileImage += "        </span>"
                             }
 
-                            if (d.chatRoomNum === 0) {
-                                if (d.timeStamp != null) {
+                            if (d.type != null) {
                                     output = "";
                                     output += "<h5 class='chat-timestamp-dash'>";
                                     output += "    <span class='chat-timestamp-content'>";
                                     output += "        &nbsp;&nbsp;" + getDayStr(d.timeStamp) + "&nbsp;&nbsp;";
                                     output += "    </span>";
                                     output += "</h5>";
-                                }
                             } else if (d.senderId === $("#chat_user_id").val()) {
                                 output = "";
                                 output += "<li class='sent'>";
