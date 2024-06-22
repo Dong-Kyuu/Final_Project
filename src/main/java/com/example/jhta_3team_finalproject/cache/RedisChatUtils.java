@@ -19,12 +19,11 @@ public class RedisChatUtils {
         redisTemplate.expire(key, expiredTime, TimeUnit.DAYS);
     }
 
-    public void setAddSets(String key, ChatMessage value) {
+    public void setAddList(String key, ChatMessage value) {
         redisTemplate.opsForList().rightPush(key, value);
     }
 
-    public List<ChatMessage> getSets(String key) {
-        //return redisTemplate.opsForSet().members(key);
+    public List<ChatMessage> getList(String key) {
         return redisTemplate.opsForList().range(key, 0, -1);
     }
 
@@ -32,10 +31,9 @@ public class RedisChatUtils {
         return redisTemplate.hasKey(key);
     }
 
-    public void setUpdateSets(String key, ChatMessage oldValue, ChatMessage newValue) {
-
-        //redisTemplate.opsForSet().remove(key, oldValue);
-        //redisTemplate.opsForSet().add(key, newValue);
+    public void setUpdateList(String key, ChatMessage newValue) {
+        redisTemplate.opsForList().rightPop(key);
+        redisTemplate.opsForList().rightPush(key, newValue);
     }
 
     public void setData(String key, ChatMessage value, Long expiredTime){

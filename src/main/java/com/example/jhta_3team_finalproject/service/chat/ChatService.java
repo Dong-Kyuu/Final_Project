@@ -52,7 +52,7 @@ public class ChatService {
             String redisKey = roomKey + ":" + dateKey; // 방번호:날짜
             Long expiredTime = 1L; // 만료 시간 1주일 부여
 
-            redisChatUtils.setAddSets(redisKey, chatMessage); // 키, 값
+            redisChatUtils.setAddList(redisKey, chatMessage); // 키, 값
             redisChatUtils.setExpired(redisKey, expiredTime);
         }
         return chatMessage; // 마지막 메시지를 반환
@@ -100,7 +100,7 @@ public class ChatService {
             String redisKey = roomKey + ":" + dateKey; // 방번호:날짜
             Long expiredTime = 1L; // 만료 시간 1주일 부여
 
-            redisChatUtils.setUpdateSets(redisKey, oldChatMessage, newChatMessage); // 키, old value, new value
+            redisChatUtils.setUpdateList(redisKey, newChatMessage); // 키, new value
             redisChatUtils.setExpired(redisKey, expiredTime);
 
             chatMessage = dao.lastMessage();

@@ -57,7 +57,7 @@ public class RedisService {
     private List<ChatMessage> getChatMessageList(long num, String key, String timeStamp) {
         if (redisChatUtils.isKeyExists(key)) {
             log.info("RedisGet");
-            List<ChatMessage> chatMessageList = redisChatUtils.getSets(key);
+            List<ChatMessage> chatMessageList = redisChatUtils.getList(key);
             //List<ChatMessage> chatMessageList = new ArrayList<>(chatMessageSet);
             //chatMessageList.sort(Comparator.comparing(ChatMessage::getMessageNum));
             return chatMessageList;
@@ -73,7 +73,7 @@ public class RedisService {
                     String dateKey = simpleDateFormat.format(chatMsg.getSendTime());
                     String redisKey = roomKey + ":" + dateKey; // 방번호:날짜
                     Long expiredTime = 1L; // 만료 시간 1주일 부여
-                    redisChatUtils.setAddSets(redisKey, chatMsg); // 키, 값
+                    redisChatUtils.setAddList(redisKey, chatMsg); // 키, 값
                     redisChatUtils.setExpired(redisKey, expiredTime);
                 });
             }
