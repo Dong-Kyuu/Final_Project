@@ -33,7 +33,7 @@
     <select id="searchChatMessages" resultType="chatMessage">
         WITH MessageData AS (
             SELECT
-                DATE(send_time) AS time_stamp,
+                DATE(cm.send_time) AS time_stamp,
                 cm.message_num,
                 cm.sender_id,
                 cm.chat_room_num,
@@ -41,33 +41,44 @@
                 cm.file_url,
                 cm.file_origin_name,
                 cm.read_count,
-                cm.send_time,
+                cm.send_time AS message_send_time,
                 u.user_id,
                 u.user_name,
                 u.user_profile_picture
             FROM chat_message cm
-                     JOIN user u ON cm.sender_id = u.user_id
+            JOIN user u ON cm.sender_id = u.user_id
             WHERE cm.chat_room_num = #{chatRoomNum}
-              AND MATCH(cm.message_content) AGAINST(#{messageContent} IN BOOLEAN MODE)
-        )
+            AND MATCH(cm.message_content) AGAINST(#{messageContent} IN BOOLEAN MODE))
         SELECT
-            DATE(send_time) AS time_stamp,
+            time_stamp,
             NULL AS message_num,
             NULL AS sender_id,
-            cm.chat_room_num,
+            chat_room_num,
             NULL AS message_content,
             NULL AS file_url,
             NULL AS file_origin_name,
             NULL AS read_count,
-            cm.send_time AS send_time,
+            MIN(message_send_time) AS send_time,
             NULL AS user_id,
             NULL AS user_name,
             NULL AS user_profile_picture
-        FROM chat_message cm
-        WHERE chat_room_num = #{chatRoomNum}
-        AND MATCH(cm.message_content) AGAINST(#{messageContent} IN BOOLEAN MODE)
+        FROM MessageData
+        GROUP BY time_stamp
         UNION ALL
-        SELECT * FROM MessageData
+        SELECT
+            time_stamp,
+            message_num,
+            sender_id,
+            chat_room_num,
+            message_content,
+            file_url,
+            file_origin_name,
+            read_count,
+            message_send_time AS send_time,
+            user_id,
+            user_name,
+            user_profile_picture
+        FROM MessageData
         ORDER BY time_stamp, send_time ASC;
     </select>
 
