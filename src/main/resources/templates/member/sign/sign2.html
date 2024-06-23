@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>기안하기 </title>
+    <link rel="stylesheet" th:href="@{/assets/vendors/mdi/css/materialdesignicons.min.css}">
+    <link rel="stylesheet" th:href="@{/assets/vendors/css/vendor.bundle.base.css}">
+    <link rel="stylesheet" th:href="@{/css/user/userinfo.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+    <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
+    <style>
+        .signTitle {
+            height: 60px; /* 높이 줄임 */
+            width: 30px;
+            border: 1px solid #dedede;
+            text-align: center;
+            vertical-align: middle;
+            /* 텍스트 가운데 정렬을 위해 패딩 추가   padding-top: 20px;*/
+        }
+
+        .signPath {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center; /* 요소 수직 정렬 */
+        }
+
+        .signArea {
+            display: inline-block;
+            border: 1px solid #dedede;
+            text-align: center;
+            height: 60px; /* 높이 줄임 */
+            width: 100px;
+            vertical-align: top;
+            margin: 0 2px; /* 간격 줄임 */
+        }
+
+        .signAreaCenter {
+            border-top: 1px solid #dedede;
+            border-bottom: 1px solid #dedede;
+            height: 30px; /* 높이 줄임 */
+            width: 100%;
+            padding-top: 5px; /* 패딩 줄임 */
+        }
+
+        .signAreaBottom {
+            height: 15px; /* 높이 줄임 */
+        }
+
+        .signAreaTop {
+            height: 15px; /* 높이 줄임 */
+        }
+
+        .form-container {
+            padding: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 5px; /* 폼 그룹 간 간격 줄임 */
+        }
+
+        .btn.btn-inverse-success {
+            width: 120px; /* 버튼 가로 폭 줄임 */
+            height: 40px; /* 버튼 높이 지정 */
+        }
+
+        .card-body-padding {
+            padding: 10px; /* 카드 내부 패딩 조정 */
+        }
+    </style>
+</head>
+<body>
+<div class="container-scroller">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
+    <div class="container-fluid page-body-wrapper">
+        <div></div>
+        <th:block th:replace="~{HSF/_sidebar :: sidebar}"></th:block>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h4 class="page-title">기안하기</h4>
+                </div>
+
+                <div id="wrapper">
+                    <div class="col-lg-10 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-body-padding">
+                                    <div class="card">
+                                        <div class="row">
+                                            <div class="col-lg-6"></div>
+                                            <div class="col-lg-2">
+                                                <button class="btn btn-inverse-success btn-fw"
+                                                        onclick="fn_tempSubmit()">임시저장
+                                                </button>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <button class="btn btn-inverse-success btn-fw"
+                                                        onclick="fn_formSubmit()">결재상신
+                                                </button>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <button class="btn btn-inverse-success btn-fw" onclick="fn_signPath()">
+                                                    결재경로
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 11px">
+                                        <div id="signPath" class="signPath">
+                                            <div class="signArea"> <!---th:if="${signlist.sstype != '1'}"-->
+                                                <div class="signAreaTop"></div>  <!---th:text="${signlist.userpos}"-->
+                                                <div class="signAreaCenter">
+                                                    <!--                                                    <div> &lt;!&ndash;th:switch="${signlist.ssresult}"&ndash;&gt;-->
+                                                    <!--                                                        <div>승인</div> &lt;!&ndash;th:case="'1'"&ndash;&gt;-->
+                                                    <!--                                                        <div>반려</div>  &lt;!&ndash;th:case="'2'"&ndash;&gt;-->
+                                                    <!--                                                        <div></div>    &lt;!&ndash;th:case="*"&ndash;&gt;-->
+                                                    <!--                                                    </div>-->
+                                                </div>
+                                                <div class="signAreaBottom"></div>
+                                            </div>
+                                            <div class="signTitle">결재</div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 11px">
+                                        <div id="signPath4Agree" class="signPath">
+                                            <div class="signArea">
+                                                <div class="signAreaTop"></div>
+                                                <div class="signAreaCenter">
+                                                    <!--                                                    <div>-->
+                                                    <!--                                                        <div>결재</div>-->
+                                                    <!--                                                        <div>반려</div>-->
+                                                    <!--                                                        <div></div>-->
+                                                    <!--                                                    </div>-->
+                                                </div>
+                                                <div class="signAreaBottom"></div>
+                                            </div>
+                                            <div class="signTitle">합의</div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 11px">
+                                        <form id="form1" name="form1" class="form-container">
+                                            <input type="hidden">
+                                            <div class="panel panel-default">
+                                                <div class="panel-body">
+                                                    <div class="row form-group">
+                                                        <div class="row form-group">
+                                                            <label class="col-sm-1 col-form-label">제목</label>
+                                                            <div class="col-lg-8">
+                                                                <input type="text" class="form-control" id="doctitle"
+                                                                       name="doctitle" maxlength="50" placeholder="제목을 입력해주세요."/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group">
+                                                            <label class="col-lg-1">내용</label>
+                                                            <div class="col-lg-11">
+                                                                <textarea class="form-control" id="doccontents"
+                                                                          name="doccontents" placeholder="내용을 입력해주세요"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/jquery-3.7.1.js}"></script>
+<script th:src="@{/assets/vendors/js/vendor.bundle.base.js}"></script>
+<script th:src="@{/assets/js/off-canvas.js}"></script>
+<script th:src="@{/assets/js/hoverable-collapse.js}"></script>
+<script th:src="@{/assets/js/misc.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+</body>
+</html>
