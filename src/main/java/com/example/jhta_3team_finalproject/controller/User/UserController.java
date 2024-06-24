@@ -9,6 +9,7 @@ import com.example.jhta_3team_finalproject.service.User.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -74,7 +76,8 @@ public class UserController {
 
 
     @RequestMapping(value = "/join", method = RequestMethod.GET)
-    public String join() {
+    public String join(Model model) {
+        model.addAttribute("user", new User());
         return "member/register";
     }
 
@@ -86,17 +89,27 @@ public class UserController {
 
     //회원가입
     @PostMapping(value = "/joinProcess")
-    public String joinProcess(User user, Model model, RedirectAttributes rattr, HttpServletRequest request) {
+    public String joinProcess(@Valid User user, Model model, BindingResult result, RedirectAttributes rattr, HttpServletRequest request) {
+        if (result.hasErrors()) {
+            return "member/register";
+        }
 //        log.info("User: " + user.toString());
-        user.setUserPassword(passwordEncoder.encode(user.getPassword()));
+       // user.setUserPassword(passwordEncoder.encode(user.getPassword()));
 //        log.info(user.getPassword());
-        int result = userservice.join(user);
 
-        if (result == JOIN_SUCCESS) {
+
+        // 비밀번호와 비밀번호 확인이 일치하는지 확인
+        if (!user.getUserPassword().equals(user.getConfirmPassword())) {
+            result.rejectValue("confirmPassword", "error.confirmPassword", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            return "member/register";
+        }
+
+        int joinResult  = userservice.join(user);
+
+        if (joinResult  == JOIN_SUCCESS) {
             MailVO vo = new MailVO();
             vo.setTo(user.getUserEmail());
             sendMail.sendMail(vo);
-            log.info(sendMail + "확인");
 
             // 승인 대기 상태로 설정
             user.setUserIsApproved(0);

@@ -28,11 +28,7 @@
         WHERE u.user_num = #{userNum}
     </select>
 
-    <insert id="join">
-        insert into user
-        (user_num, user_id, user_password, user_name, user_email, user_phone_number, user_gender)
-        values (#{userNum}, #{userId}, #{userPassword}, #{userName}, #{userEmail}, #{userPhoneNumber}, #{userGender})
-    </insert>
+
 
     <update id="userupdate">
         UPDATE user
@@ -43,6 +39,12 @@
             user_profile_picture = #{userProfilePicture}
         WHERE user_num = #{userNum}
     </update>
+
+    <insert id="join">
+        insert into user
+        (user_num, user_id, user_password, user_name, user_email, user_phone_number, user_gender)
+        values (#{userNum}, #{userId}, #{userPassword}, #{userName}, #{userEmail}, #{userPhoneNumber}, #{userGender})
+    </insert>
 
     <!-- 사용자 정보 추가 -->
     <insert id="insert">
