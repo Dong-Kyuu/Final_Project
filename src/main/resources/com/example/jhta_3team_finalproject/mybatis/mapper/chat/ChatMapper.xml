@@ -383,6 +383,13 @@
         UPDATE chat_participate SET chat_visit_time = NOW() WHERE chat_room_num = #{chatRoomNum} AND chat_user_id = #{chatUserId}
     </update>
 
+    <!-- 2024-06-24, 긴급 공지 시 모든 부서 채팅방의 방번호를 가져옴 -->
+    <select id="getDeptChatRoomNum" resultType="chatRoom">
+        SELECT *
+        FROM chat_room
+        WHERE room_type = '부서'
+    </select>
+
     <!-- 2024-06-23, 메시지 당 안 읽은 멤버의 수 관리 테이블 -->
     <!--    unread_user 테이블 생성 -->
     <!--    CREATE TABLE unread_user(-->

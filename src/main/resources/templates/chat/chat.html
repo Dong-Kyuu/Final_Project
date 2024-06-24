@@ -242,7 +242,7 @@
                         <div class="flex items-center">
                             <div class="md:mb-0 md:me-4">
                                 <h2 class="mb-1 text-base font-semibold text-gray-900 dark:text-white"><i class="material-icons" style="font-size: 16px;">campaign</i>긴급공지</h2>
-                                <p class="flex items-center text-sm font-normal text-gray-500 dark:text-gray-400">긴급공지 내용입니다.</p>
+                                <p id="chat-emergency-banner-content" class="flex items-center text-sm font-normal text-gray-500 dark:text-gray-400">긴급공지 내용입니다.</p>
                             </div>
                         </div>
                         <div id="chat-sticky-banner-btn"  class="flex items-center">
@@ -829,7 +829,6 @@
                 $('.view-message').addClass("active");
                 $(".user-search-box").css("display", "none");
                 $(".chat-menu-container-mgr").css("display", "none");
-                $("#chat-sticky-banner").fadeIn(500);
                 //$("#chat-sticky-banner").css("display", "flex");
                 $(".app-detail").css("display", "none");
             }
@@ -1106,6 +1105,56 @@
                                     output += "</li>";
 
                                     $("#chat-message-list").append(output);
+                                    setTimeout(function () {
+                                        $(document).find(".goto").removeClass("goto");
+                                        messageScrollFixChat();
+                                    }, 50);
+                                }
+                            } else if (d.type === "emergency") { // 나의 메시지
+                                if (d.sessionId === $("#chat_user_id").val()) {
+                                    output = "";
+                                    output += "<li class='sent goto'>";
+                                    output += "    <div>";
+                                    output += "         <span class='my-chat'>";
+                                    output += d.msg;
+                                    if (d.fileUrl != null) {
+                                        output += url;
+                                    }
+                                    output += "         </span>";
+                                    output += "         <span>";
+                                    output += "             <strong id='readcount-targets-" + d.messageNum + "' class='my-chat-readcount'> " + d.readCount + "&nbsp;</strong> " + getTime(d.sendTime);
+                                    output += "         </span>";
+                                    output += "    </div>";
+                                    output += "</li>";
+
+                                    $("#chat-message-list").append(output);
+                                    $("#chat-emergency-banner-content").html(d.msg);
+                                    $("#chat-sticky-banner").fadeIn(500);
+                                    setTimeout(function () {
+                                        $(document).find(".goto").removeClass("goto");
+                                        messageScrollFixChat();
+                                    }, 50);
+                                } else {
+                                    output = "";
+                                    output += "<li class='recive goto'>";
+                                    output += "    <div class='avatar-container'>";
+                                    output += profileImage;
+                                    output += "    </div>"
+                                    output += "    <p class='chat-nickname'>" + d.userName + "</p>";
+                                    output += "    <div class='chat-content'>";
+                                    output += d.msg;
+                                    if (d.fileUrl != null) {
+                                        output += url;
+                                    }
+                                    output += "        <span>";
+                                    output += "            <strong id='readcount-targets-" + d.messageNum + "' class='chat-readcount'>" + d.readCount + "&nbsp;</strong>" + getTime(d.sendTime);
+                                    output += "        </span>";
+                                    output += "    </div>";
+                                    output += "</li>";
+
+                                    $("#chat-message-list").append(output);
+                                    $("#chat-emergency-banner-content").html(d.msg);
+                                    $("#chat-sticky-banner").fadeIn(500);
                                     setTimeout(function () {
                                         $(document).find(".goto").removeClass("goto");
                                         messageScrollFixChat();
@@ -1752,7 +1801,6 @@
                         var $chatNavProfileName = $('.nav-profile-h1');
                         var $chatNavProfilePicture = $('.nav-profile-image');
 
-
                         $chatProfilePicture.empty();
                         $chatProfilePicture.html(img);
                         $chatProfileName.html(rdata.username);
@@ -2189,68 +2237,7 @@
                 $("#chat-sticky-banner").fadeOut(300);
             });
 
-
         });
     </script>
-
-    <!-- React 컴포넌트 정의 -->
-<!--    <script type="text/babel">-->
-<!--        function UnreadMessagesCounter() {-->
-<!--            const [unreadCount, setUnreadCount] = React.useState(0);-->
-
-<!--            // 웹소켓 연결 및 메시지 수신 시 처리-->
-<!--            React.useEffect(() => {-->
-<!--                const ws = new WebSocket(`ws://${window.location.host}/chatting/146&admin&multi`);-->
-
-<!--                ws.onopen = () => {-->
-<!--                    console.log("WebSocket 연결 성공");-->
-<!--                    // 여기서 필요하다면 웹소켓 연결 시 추가적인 로직 수행 가능-->
-<!--                };-->
-
-<!--                ws.onmessage = (event) => {-->
-<!--                    console.log("서버에서 메시지 받음:", event.data);-->
-<!--                    // 메시지를 받으면 안 읽은 메시지 수를 업데이트-->
-<!--                    setUnreadCount(prevCount => prevCount + 1);-->
-<!--                };-->
-
-<!--                ws.onclose = () => {-->
-<!--                    console.log("WebSocket 연결 종료");-->
-<!--                };-->
-
-<!--                ws.onerror = (error) => {-->
-<!--                    console.error("WebSocket 에러 발생:", error);-->
-<!--                };-->
-
-<!--                // 컴포넌트 언마운트 시 웹소켓 연결 해제-->
-<!--                return () => {-->
-<!--                    ws.close();-->
-<!--                };-->
-<!--            }, []);-->
-
-<!--            // 메시지 읽음 처리 함수-->
-<!--            const markMessagesAsRead = (messageIds) => {-->
-<!--                // 여기서 메시지 읽음 처리 로직을 수행할 수 있음-->
-<!--                console.log("Messages marked as read:", messageIds);-->
-<!--                // 읽은 메시지 수를 초기화할 수도 있음 (예시로 0으로 설정)-->
-<!--                setUnreadCount(0);-->
-<!--            };-->
-
-<!--            // 안 읽은 메시지 수 표시-->
-<!--            return (-->
-<!--                <div>-->
-<!--                    <p>안 읽은 메시지 수: {unreadCount}</p>-->
-<!--                    <button>-->
-<!--                        메시지 읽음 처리-->
-<!--                    </button>-->
-<!--                </div>-->
-<!--            );-->
-<!--        }-->
-
-<!--        // ReactDOM.render를 사용하여 React 컴포넌트를 렌더링-->
-<!--        ReactDOM.render(-->
-<!--            <UnreadMessagesCounter />,-->
-<!--            document.getElementById('react-root')-->
-<!--        );-->
-<!--    </script>-->
     </body>
 </html>

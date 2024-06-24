@@ -159,14 +159,14 @@ public class SocketHandler extends TextWebSocketHandler {
 
     public void sendEmergencyMessage(ChatMessage chatMessage) {
         JSONObject obj = new JSONObject(); // JSON데이터를 JSONObject로 파싱한다.
-        obj.put("type", "message");
+        obj.put("type", "emergency");
         obj.put("messageNum", chatMessage.getMessageNum());
         obj.put("roomNumber", chatMessage.getChatRoomNum());
         obj.put("msg", chatMessage.getMessageContent());
         obj.put("sessionId", chatMessage.getSenderId());
 
-        obj.put("readCount", chatMessage.getReadCount());
-        //obj.put("sendTime", chatMessage.getSendTime().getTime());
+        obj.put("readCount", 1);
+        obj.put("sendTime", chatMessage.getSendTime().getTime());
         obj.put("userName", chatMessage.getUsername());
         obj.put("userProfileImage", chatMessage.getUserProfilePicture());
 
