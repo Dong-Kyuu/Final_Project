@@ -60,9 +60,9 @@ public class InqCommentController {
     }
 
     @PostMapping(value = "/delete")
-    public int CommentDelete(int num) {
+    public int CommentDelete(int commNum) {
         log.info("답변 삭제");
-        return inqCommentService.commentsDelete(num);
+        return inqCommentService.commentsDelete(commNum);
     }
 
 }

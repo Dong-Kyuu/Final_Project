@@ -4,10 +4,10 @@ package com.example.jhta_3team_finalproject.controller;
 import com.example.jhta_3team_finalproject.domain.inquery.InqueryBoard;
 import com.example.jhta_3team_finalproject.service.customer.InqCommentService;
 import com.example.jhta_3team_finalproject.service.customer.InqueryService;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -23,8 +23,10 @@ import java.util.*;
 
 @Controller
 @RequestMapping(value = "/inquery")
+@Slf4j
 public class InqueryController {
-//    @Value("${my.savefolder}")
+
+//    @Value("${inquery.savefolder}")
 //    private String saveFolder;
 
     //private static final Logger log = LoggerFactory.getLogger(InqueryController.class);
@@ -37,6 +39,11 @@ public class InqueryController {
     public InqueryController(InqueryService inqueryService, InqCommentService inqCommentService) {
         this.inqueryService = inqueryService;
         this.inqCommentService = inqCommentService;
+    }
+
+    @RequestMapping(value = "/faq")
+    public String view() {
+        return "customer/inquery-faq-page";
     }
 
     @RequestMapping(value = "/list")
@@ -66,7 +73,7 @@ public class InqueryController {
         //long diffTime = afterTime - beforeTime;
         //log.info("실행 시간(ms): " + diffTime);
 
-        mv.setViewName("customer/inqueryList");
+        mv.setViewName("customer/inquery-list-page");
         mv.addObject("page", page);
         mv.addObject("maxpage", maxpage);
         mv.addObject("startpage", startpage);
@@ -82,7 +89,7 @@ public class InqueryController {
     @RequestMapping(value = "/write") // /board/write
     // @RequestMapping(value="/write", method=RequestMethod.GET)
     public String board_write() {
-        return "customer/inqueryWrite";
+        return "customer/inquery-write-page";
     }
 
     /*
@@ -99,16 +106,15 @@ public class InqueryController {
         if (!uploadfile.isEmpty()) {
             String fileName = uploadfile.getOriginalFilename();//원래 파일명
             inqueryBoard.setInqOriginal(fileName);// 원래 파일명 저장
-            //String saveFolder =	request.getSession().getServletContext().getRealPath("resources")
-            //		+ "/upload";
-//            String fileDBName = fileDBName(fileName, saveFolder);
-//            log.info("fileDBName = " + fileDBName);
+            String saveFolder =	request.getSession().getServletContext().getRealPath("resources")  + "/upload";
+            String fileDBName = fileDBName(fileName, saveFolder);
+            log.info("fileDBName = " + fileDBName);
 //
 //            // transferTo(File path) : 업로드한 파일을 매개변수의 경로에 저장합니다.
-//            uploadfile.transferTo(new File(saveFolder + fileDBName));
+            uploadfile.transferTo(new File(saveFolder + fileDBName));
 //            log.info("transferTo path = " + saveFolder + fileDBName);
             // 바뀐 파일명으로 저장
-//            inqueryBoard.setInqFile(fileDBName);
+            inqueryBoard.setInqFile(fileDBName);
         }
 
         inqueryService.insertBoard(inqueryBoard); // 저장메서드 호출
@@ -217,7 +223,7 @@ public class InqueryController {
         } else {
             //log.info("상세보기 성공");
             int count = inqCommentService.getListCount(num);
-            mv.setViewName("customer/inqueryView");
+            mv.setViewName("customer/inquery-view-page");
             mv.addObject("count", count);
             mv.addObject("boarddata", inqueryBoard);
         }
@@ -240,7 +246,7 @@ public class InqueryController {
             // ModelAndView 객체에 저장합니다.
             mv.addObject("boarddata", boarddata);
             // 글 수정 폼 페이지로 이동하기 위해 경로를 설정합니다.
-            mv.setViewName("customer/inqueryModify");
+            mv.setViewName("customer/inquery-modify-page");
         }
         return mv;
     }
@@ -272,7 +278,7 @@ public class InqueryController {
         }
 
         MultipartFile uploadfile = boarddata.getUploadfile();
-        //String saveFolder = request.getSession().getServletContext().getRealPath("resources") + "/upload";
+        String saveFolder = request.getSession().getServletContext().getRealPath("resources") + "/upload";
 
         if (check != null && !check.equals("")) { // 기존 파일 그대로 사용하는 경우입니다.
             //log.info("기존 파일 그대로 사용합니다.");
@@ -290,13 +296,14 @@ public class InqueryController {
                 String fileName = uploadfile.getOriginalFilename(); // 원래 파일명
                 boarddata.setInqOriginal(fileName);
 
-//                String fileDBName = fileDBName(fileName, saveFolder);
-//                log.info("fileDBName = " + fileDBName);
-//                // transferTo(File Path) : 업로드한 파일을 매개변수의 경로에 저장합니다.
-//                uploadfile.transferTo(new File(saveFolder + fileDBName));
-//                log.info("transferTo path = " + saveFolder + fileDBName);
-//                // 바뀐 파일명으로 저장
-//                boarddata.setInqFile(fileDBName);
+                String fileDBName = fileDBName(fileName, saveFolder);
+                //log.info("fileDBName = " + fileDBName);
+                // transferTo(File Path) : 업로드한 파일을 매개변수의 경로에 저장합니다.
+                uploadfile.transferTo(new File(saveFolder + fileDBName));
+                //log.info("transferTo path = " + saveFolder + fileDBName);
+                // 바뀐 파일명으로 저장
+                boarddata.setInqFile(fileDBName);
+
             } else { // 기존 파일이 없는데 파일 선택하지 않은 경우 또는 기존 파일이 있었는데 삭제한 경우
                 //log.info("선택 파일 없습니다.");
                 // <input type="hidden" name="BOARD_FILE" value="${boarddata.BOARD_FILE}">
@@ -361,32 +368,32 @@ public class InqueryController {
         }
     }
 
-//    @ResponseBody
-//    @PostMapping("/down")
-//    public byte[] BoardFileDown(String filename,
-//                                HttpServletRequest request,
-//                                String original,
-//                                HttpServletResponse response) throws Exception {
-//
-//        //String savePath = "resources/upload";
-//        // 서블릿의 실행 환경 정보를 담고 있는 객체를 리턴합니다.
-//        //ServletContext context = request.getSession().getServletContext();
-//        //String sDownloadPath = context.getRealPath(savePath);
-//        //String sFilePath = sDownloadPath + filename;
-//        //수정
-//        String sFilePath = saveFolder + filename;
-//
-//        File file = new File(sFilePath);
-//
-//        byte[] bytes = FileCopyUtils.copyToByteArray(file); // 유틸을 통해 byte array로 쉽게 생성 가능
-//
-//        String sEncoding = new String(original.getBytes("utf-8"), "ISO-8859-1");
-//
-//        // Content-Disposition: attachment: 브라우저는 해당 content를 처리하지 않고, 다운로드하게 됩니다.
-//        response.setHeader("Content-Disposition", "attachment;filename=" + sEncoding);
-//
-//        response.setContentLength(bytes.length);
-//
-//        return bytes;
-//    }
+    @ResponseBody
+    @PostMapping("/down")
+    public byte[] BoardFileDown(String filename,
+                                HttpServletRequest request,
+                                String original,
+                                HttpServletResponse response) throws Exception {
+
+        String savePath = "resources/upload";
+        // 서블릿의 실행 환경 정보를 담고 있는 객체를 리턴합니다.
+        ServletContext context = request.getSession().getServletContext();
+        String sDownloadPath = context.getRealPath(savePath);
+        String sFilePath = sDownloadPath + filename;
+        //수정
+        //String sFilePath = saveFolder + filename;
+
+        File file = new File(sFilePath);
+
+        byte[] bytes = FileCopyUtils.copyToByteArray(file); // 유틸을 통해 byte array로 쉽게 생성 가능
+
+        String sEncoding = new String(original.getBytes("utf-8"), "ISO-8859-1");
+
+        // Content-Disposition: attachment: 브라우저는 해당 content를 처리하지 않고, 다운로드하게 됩니다.
+        response.setHeader("Content-Disposition", "attachment;filename=" + sEncoding);
+
+        response.setContentLength(bytes.length);
+
+        return bytes;
+    }
 }

@@ -42,7 +42,7 @@
     </update>
 
     <delete id="commentsDelete">
-        delete inquery_comment where comm_num = #{commNum}
+        delete from inquery_comment where comm_num = #{commNum}
     </delete>
 
     <update id="commentReplyUpdate">

@@ -1,167 +1,179 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <title>1대1 문의 글 작성</title>
-    <!-- Header Section Begin -->
-    <th:block th:replace="~{customer/header :: headerFragment}"/>
-    <!-- Header Section End -->
-    <!-- 게시판 기본 -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <script th:src="@{/js/jquery-3.7.1.js}"></script>
-    <script
-            src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script th:src="@{/js/customer/writeform.js?v=1.10}"></script>
+<th:block th:fragment="write">
+    <head>
+        <title>1대1 문의 글 작성</title>
+        <!-- Header Section Begin -->
+        <!--    <th:block th:replace="~{customer/header :: headerFragment}"/>-->
+        <!-- Header Section End -->
+        <!-- 게시판 기본 -->
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+        <script th:src="@{/js/jquery-3.7.1.js}"></script>
+        <script
+                src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+        <script
+                src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script th:src="@{/js/customer/writeform.js?v=1.10}"></script>
+
+        <!-- 2024-04-02 Rich Text Editor basic 구현 -->
+        <link rel="stylesheet"
+              th:href="@{/css/customer/rte_theme_default.css}"/>
+        <script type="text/javascript"
+                th:src="@{/js/customer/rte.js}"></script>
+        <script type="text/javascript"
+                th:src="@{/js/customer/all_plugins.js}"></script>
+    </head>
+    <body>
+    <!-- 2024-04-02 Rich Text Editor basic UI 추가 -->
+    <style>
+        #div_edit_title {
+            margin: auto;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            margin: 0px;
+        }
+
+        #upfile {
+            display: none
+        }
+
+        .header-write {
+            width: 100%; /* 헤더 요소의 너비를 화면 전체로 설정 */
+            text-align: center; /* 헤더 내의 텍스트를 가운데 정렬 */
+            /* 아래의 코드는 자식 요소들을 중앙 정렬하기 위한 Flexbox 스타일링 */
+            display: flex;
+            /* justify-content: center; */
+        }
+
+        nav {
+            width: 100%; /* 100%의 폭을 차지하되, 내용이 최대 너비보다 작을 때는 내용에 맞게 크기 조정 */
+        }
+
+        .ul {
+            list-style: none; /* 목록 스타일 제거 */
+            padding: 0; /* 패딩 제거 */
+        }
+
+        .li {
+            display: inline; /* 항목을 인라인으로 표시하여 가로로 배열 */
+            margin: 0; /* 여백 제거 */
+        }
+
+        #upfile {
+            display: none;
+        }
+
+        #attach {
+            width: 20px;
+        }
+
+        a {
+            color: black;
+        }
+
+        ul {
+            margin-bottom: 0;
+        }
+    </style>
+
+    <div class="container">
+        <div class="row row-cols-1">
+            <div class="col">
+                <div id="div_edit_title" style="margin-bottom: 5%; margin-top: 5%;">
+                    <h3 style="margin-bottom: 2%">1대1 문의</h3>
+                    <ul>
+                        <li style="font-size: 0.7rem;"><h6>문의 답변은 최대 3일까지 소요될 수 있습니다.</h6></li>
+                        <li style="font-size: 0.7rem;"><h6>비밀글로 작성된 문의는 관리자와 작성자 이외에는 열람할 수 없습니다.</h6></li>
+                        <li style="font-size: 0.7rem;"><h6>작성한 글은 마이페이지에서 작성한 글 목록에서 확인하실 수 있습니다.</h6></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col">
+                <form th:action="@{/inquery/add}" method="post" enctype="multipart/form-data" name="boardform">
+
+                    <div id="div_edit_title" class="form-group">
+                        <!-- <label for="inq_name">글쓴이</label> -->
+                        <!--<input name="inq_name" id="board_name" th:value="${member_id}" readOnly
+                            type="hidden" class="form-control" placeholder="">-->
+                        <input name="inqName" id="board_name" th:value="${#authentication.name}" readOnly
+                               type="hidden" class="form-control" placeholder=""/>
+                    </div>
+
+                    <div id="div_edit_title">
+                        <header class="header-write">
+                            <table style="width: 100%;">
+                                <tr style="width: 100%;">
+                                    <td style="width: 7%; display: inline-block;">
+                                        <div>
+                                            <select class="form-select form-control" name="inqTag" id="board_tag">
+                                                <option value="일반">일반</option>
+                                                <option value="탈퇴">탈퇴</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td style="width: 78%; display: inline-block; text-align: left;">
+                                        <div>
+                                            <input class="form-control" style="width: 50%;" name="inqSubject"
+                                                   id="board_subject" type="text"
+                                                   maxlength="100" placeholder="문의 글 제목을 작성해주세요">
+                                        </div>
+                                    </td>
+                                    <td style="width: 8%; display: inline-block;">
+                                        <div>
+                                            <input type="checkbox" id="checkpass">
+                                            <span style="color: skyblue;">비밀글</span>
+                                        </div>
+                                    </td>
+                                    <td style="width: 7%; display: inline-block;">
+                                        <div>
+                                            <button class="btn btn-primary"
+                                                    style="background-color: #4f97e5; border: 0px;"
+                                                    type="submit">등록
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </header>
+                    </div>
+
+                    <div id="div_edit_title">
+		            <textarea class="board_content" name="inqContent" id="board_editor"
+                            placeholder="문의하실 내용을 작성해주세요"></textarea>
+                    </div>
+
+                    <div id="div_edit_title" class="form-group">
+                        <label> 파일 첨부 <img
+                                th:src="@{/image/customer/attach.png}"
+                                alt="파일첨부" id="attach">
+                            <input type="file" id="upfile" name="uploadfile">
+                        </label> <span id="filevalue"></span>
+                    </div>
+
+                    <div id="div_edit_title" class="form-group">
+                        <!-- <label for="inq_pass">비밀번호</label>  -->
+                        <input name="inqPass" id="board_pass" style="display: none;"
+                               type="password" maxlength="30" class="form-control" placeholder="비밀번호를 입력해주세요">
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
 
     <!-- 2024-04-02 Rich Text Editor basic 구현 -->
-    <link rel="stylesheet"
-          th:href="@{/css/customer/rte_theme_default.css}"/>
-    <script type="text/javascript"
-            th:src="@{/js/customer/rte.js}"></script>
-    <script type="text/javascript"
-            th:src="@{/js/customer/all_plugins.js}"></script>
-</head>
-<body>
-<!-- 2024-04-02 Rich Text Editor basic UI 추가 -->
-<style>
-    #div_edit_title {
-        width: 65% !important;
-        margin: auto;
-        display: block;
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-
-    .form-control {
-        margin: 0px;
-    }
-
-    #upfile {
-        display: none
-    }
-
-    .header-write {
-        width: 100%; /* 헤더 요소의 너비를 화면 전체로 설정 */
-        text-align: center; /* 헤더 내의 텍스트를 가운데 정렬 */
-        /* 아래의 코드는 자식 요소들을 중앙 정렬하기 위한 Flexbox 스타일링 */
-        display: flex;
-        /* justify-content: center; */
-    }
-
-    nav {
-        width: 100%; /* 100%의 폭을 차지하되, 내용이 최대 너비보다 작을 때는 내용에 맞게 크기 조정 */
-    }
-
-    .ul {
-        list-style: none; /* 목록 스타일 제거 */
-        padding: 0; /* 패딩 제거 */
-    }
-
-    .li {
-        display: inline; /* 항목을 인라인으로 표시하여 가로로 배열 */
-        margin: 0; /* 여백 제거 */
-    }
-
-    #upfile {
-        display: none;
-    }
-
-    #attach {
-        width: 20px;
-    }
-
-    a {
-        color: black;
-    }
-
-    ul {
-        margin-bottom: 0;
-    }
-</style>
-<div id="div_edit_title" style="margin-bottom: 5%; margin-top: 5%;">
-    <h3 style="margin-bottom: 2%">1대1 문의</h3>
-    <ul>
-        <li style="font-size: 0.7rem;"><h6>문의 답변은 최대 3일까지 소요될 수 있습니다.</h6></li>
-        <li style="font-size: 0.7rem;"><h6>비밀글로 작성된 문의는 관리자와 작성자 이외에는 열람할 수 없습니다.</h6></li>
-        <li style="font-size: 0.7rem;"><h6>작성한 글은 마이페이지에서 작성한 글 목록에서 확인하실 수 있습니다.</h6></li>
-    </ul>
-</div>
-<form th:action="@{/inquery/add}" method="post" enctype="multipart/form-data" name="boardform">
-
-    <div id="div_edit_title" class="form-group">
-        <!-- <label for="inq_name">글쓴이</label> -->
-        <!--<input name="inq_name" id="board_name" th:value="${member_id}" readOnly
-            type="hidden" class="form-control" placeholder="">-->
-        <input name="inqName" id="board_name" th:value="${#authentication.name}" readOnly
-               type="hidden" class="form-control" placeholder=""/>
-    </div>
-
-    <div id="div_edit_title">
-        <header class="header-write">
-            <table style="width: 100%;">
-                <tr style="width: 100%;">
-                    <td style="width: 7%; display: inline-block;">
-                        <div>
-                            <select class="form-select form-control" name="inqTag" id="board_tag">
-                                <option value="일반">일반</option>
-                                <option value="탈퇴">탈퇴</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td style="width: 78%; display: inline-block; text-align: left;">
-                        <div>
-                            <input class="form-control" style="width: 50%;" name="inqSubject"
-                                   id="board_subject" type="text"
-                                   maxlength="100" placeholder="문의 글 제목을 작성해주세요">
-                        </div>
-                    </td>
-                    <td style="width: 8%; display: inline-block;">
-                        <div>
-                            <input type="checkbox" id="checkpass">
-                            <span style="color: skyblue;">비밀글</span>
-                        </div>
-                    </td>
-                    <td style="width: 7%; display: inline-block;">
-                        <div>
-                            <button class="btn btn-primary" style="background-color: #4f97e5; border: 0px;"
-                                    type="submit">등록
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </header>
-    </div>
-
-    <div id="div_edit_title">
-		<textarea class="board_content" name="inqContent" id="board_editor"
-                  placeholder="문의하실 내용을 작성해주세요"></textarea>
-    </div>
-
-    <div id="div_edit_title" class="form-group">
-        <label> 파일 첨부 <img
-                th:src="@{/image/customer/attach.png}"
-                alt="파일첨부" id="attach">
-            <input type="file" id="upfile" name="uploadfile">
-        </label> <span id="filevalue"></span>
-    </div>
-
-    <div id="div_edit_title" class="form-group">
-        <!-- <label for="inq_pass">비밀번호</label>  -->
-        <input name="inqPass" id="board_pass" style="display: none;"
-               type="password" maxlength="30" class="form-control" placeholder="비밀번호를 입력해주세요">
-    </div>
-</form>
-
-<!-- 2024-04-02 Rich Text Editor basic 구현 -->
-<script>
-    var editor1cfg = {};
-    editor1cfg.toolbar = "basic";
-    var board_editor = new RichTextEditor("#board_editor", editor1cfg);
-    board_editor.focus();
-</script>
-</body>
+    <script>
+        var editor1cfg = {};
+        editor1cfg.toolbar = "basic";
+        var board_editor = new RichTextEditor("#board_editor", editor1cfg);
+        board_editor.focus();
+    </script>
+    </body>
 </html>
