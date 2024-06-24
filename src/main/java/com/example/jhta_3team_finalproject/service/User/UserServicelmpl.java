@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -65,14 +66,19 @@ public class UserServicelmpl implements UserService {
     }
 
     @Override
+    @Transactional
     public int join(User user) {
-        return userMapper.join(user);
+        try {
+        user.setUserPassword(passwordEncoder.encode(user.getPassword()));
+        userMapper.insert(user);
+            return JOIN_SUCCESS;
+        } catch (Exception e) {
+            log.error("회원가입 실패: ", e);
+            return JOIN_FAIL;
+        }
     }
 
-//    @Override
-//    public User user_info(User user) {
-//        return userMapper.userupdate(user);
-//    }
+
 
     //회원 정보 수정
     @Override
@@ -91,7 +97,7 @@ public class UserServicelmpl implements UserService {
         } else {
             // 사용자가 새로운 프로필 사진을 업로드하지 않은 경우, 기존의 프로필 사진 URL을 유지
             // 이전에 S3에 업로드한 URL을 가져와서 설정
-            User existingUser = userMapper.getEmployee(user.getUserNum()); // 사용자 정보 불러오기
+            User existingUser = userMapper.getEmployee(user.getUserNum());
             if (existingUser != null) {
                 user.setUserProfilePicture(existingUser.getUserProfilePicture()); // 기존 프로필 사진 URL 설정
             }
