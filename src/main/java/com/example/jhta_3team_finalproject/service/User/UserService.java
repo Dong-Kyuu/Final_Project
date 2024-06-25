@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface UserService {
+    int JOIN_SUCCESS = 1;
+    int JOIN_FAIL = 0;
 
     int insert(User user);
 
