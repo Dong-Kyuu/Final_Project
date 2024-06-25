@@ -74,39 +74,37 @@ public class UserController {
         return mv;
     }
 
-
-    @RequestMapping(value = "/join", method = RequestMethod.GET)
-    public String join(Model model) {
-        model.addAttribute("user", new User());
-        return "member/register";
-    }
-
     //신입사원이 로그인 한 경우 해당 페이지 이동
     @RequestMapping(value = "/newbie", method = RequestMethod.GET)
     public String newbie() {
         return "member/newbie";
     }
 
+    @GetMapping(value = "/join")
+    public String join(Model model) {
+        model.addAttribute("user", new User());
+        return "member/register";
+    }
+
     //회원가입
+
     @PostMapping(value = "/joinProcess")
-    public String joinProcess(@Valid User user, Model model, BindingResult result, RedirectAttributes rattr, HttpServletRequest request) {
+    public String joinProcess( @Valid User user, BindingResult result, Model model,  RedirectAttributes rattr, HttpServletRequest request) {
         if (result.hasErrors()) {
+            model.addAttribute("user", user);
+           System.out.println("에러");
             return "member/register";
         }
-//        log.info("User: " + user.toString());
-       // user.setUserPassword(passwordEncoder.encode(user.getPassword()));
-//        log.info(user.getPassword());
-
 
         // 비밀번호와 비밀번호 확인이 일치하는지 확인
         if (!user.getUserPassword().equals(user.getConfirmPassword())) {
             result.rejectValue("confirmPassword", "error.confirmPassword", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            model.addAttribute("user", user);
             return "member/register";
         }
+        int joinResult = userservice.join(user);
 
-        int joinResult  = userservice.join(user);
-
-        if (joinResult  == JOIN_SUCCESS) {
+        if (joinResult == JOIN_SUCCESS) {
             MailVO vo = new MailVO();
             vo.setTo(user.getUserEmail());
             sendMail.sendMail(vo);
