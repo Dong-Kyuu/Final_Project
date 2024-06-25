@@ -33,4 +33,9 @@
         FROM board_upfiles
         WHERE announ_board_num = #{boardNum}
     </select>
+
+    <insert id="insertProjectFile">
+        INSERT INTO board_upfiles(project_num, project_peed_num, upfiles_original_file_name, upfiles_file_name, upfiles_upload_date)
+        VALUES (#{projectNum}, #{projectPeedNum}, #{upfilesOriginalFileName}, #{upfilesFileName}, NOW())
+    </insert>
 </mapper>

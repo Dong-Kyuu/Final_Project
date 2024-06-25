@@ -1,12 +1,16 @@
 package com.example.jhta_3team_finalproject.controller;
 
 import com.example.jhta_3team_finalproject.domain.Board.AnnounceBoard;
+import com.example.jhta_3team_finalproject.domain.Board.BoardComment;
 import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
 import com.example.jhta_3team_finalproject.domain.Project.Project;
+import com.example.jhta_3team_finalproject.domain.Project.ProjectComment;
 import com.example.jhta_3team_finalproject.domain.Project.ProjectMember;
+import com.example.jhta_3team_finalproject.domain.Project.ProjectPeed;
 import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.service.Notification.SseService;
 import com.example.jhta_3team_finalproject.service.Project.ProjectService;
+import com.example.jhta_3team_finalproject.service.S3.S3Service;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +35,13 @@ public class ProjectController {
 
     private ProjectService projectService;
     private SseService sseService;
+    private S3Service s3Service;
 
     @Autowired
-    public ProjectController(ProjectService projectService, SseService sseService) {
+    public ProjectController(ProjectService projectService, SseService sseService, S3Service s3Service) {
         this.projectService = projectService;
         this.sseService = sseService;
+        this.s3Service = s3Service;
     }
 
     @GetMapping("/createproject")
@@ -125,6 +131,12 @@ public class ProjectController {
         Project project = projectService.getProject(projectNum);
         List<ProjectMember> members = projectService.getProjectMember(projectNum);
         List<String> department =  projectService.getProjectDepartment(projectNum, loginuser.getUserNum());
+        List<ProjectPeed> projectPeeds = projectService.getProjectPeed(projectNum);
+
+        for (ProjectPeed projectPeed : projectPeeds) {
+            List<ProjectComment> comments = projectService.getPeedComment(projectPeed.getProjectPeedNum(), projectPeed.getProjectNum());
+            projectPeed.setComments(comments);
+        }
 
         if (project == null) {
             logger.info("상세보기 실패");
@@ -139,6 +151,7 @@ public class ProjectController {
             mv.addObject("project", project);
             mv.addObject("members", members);
             mv.addObject("department", department);
+            mv.addObject("projectPeeds", projectPeeds);
 
         }
         return mv;
@@ -155,6 +168,59 @@ public class ProjectController {
         response.put("members", members);
 
         return response;
+    }
+
+    // 작성 글 DB 등록
+    @PostMapping("/addPeed")
+    public String add(ProjectPeed projectPeed,
+                      @RequestParam("uploadfile[]") MultipartFile[] uploadfiles)
+            throws Exception {
+
+        if (projectPeed.getProjectPeedStartPeriod() != null && projectPeed.getProjectPeedStartPeriod().isEmpty()) {
+            projectPeed.setProjectPeedStartPeriod(null);
+        }
+        if (projectPeed.getProjectPeedEndPeriod() != null && projectPeed.getProjectPeedEndPeriod().isEmpty()) {
+            projectPeed.setProjectPeedEndPeriod(null);
+        }
+        // Board 객체를 먼저 저장하고, BOARD_NUM을 받아옵니다.
+        projectService.insertPeed(projectPeed); // Board 객체 저장
+        int ProjectPeedNum = projectPeed.getProjectPeedNum(); // 저장된 BOARD_NUM 가져오기
+
+        List<BoardUpfiles> files = new ArrayList<>();
+
+        for (MultipartFile uploadfile : uploadfiles) {
+            if (!uploadfile.isEmpty()) {
+
+                String fileUrl = s3Service.uploadFile(uploadfile);
+                logger.info("Uploaded file URL: " + fileUrl);
+
+                BoardUpfiles file = new BoardUpfiles();
+                file.setUpfilesOriginalFileName(uploadfile.getOriginalFilename());
+                file.setUpfilesFileName(fileUrl); // S3 URL로 설정
+                files.add(file);
+            }
+        }
+
+        logger.info("프로젝트 피드 넘버 = " + ProjectPeedNum);
+
+        projectService.insertFile(projectPeed.getProjectNum(), ProjectPeedNum, files); // 저장메서드 호출
+
+        return "redirect:mainProject?projectNum="+projectPeed.getProjectNum();
+
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/commentAdd")
+    public int CommentAdd(ProjectComment projectComment, int peedWriter) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginuser = (User)authentication.getPrincipal();
+
+        sseService.sendNotification(peedWriter, loginuser.getUserNum(), loginuser.getUsername(),
+                "http://localhost:9000/project/mainProject?projectNum=" + projectComment.getProjectNum() + "#" + projectComment.getProjectPeedNum(),
+                "No." + projectComment.getProjectPeedNum() + "피드에 댓글을 남겼어요.");
+
+        return projectService.commentsInsert(projectComment);
     }
 
     @GetMapping("/t")

@@ -101,4 +101,46 @@
         FROM user
         WHERE user_num = #{loginNum}
     </select>
+
+    <insert id="insertPeed" useGeneratedKeys="true" keyProperty="projectPeedNum">
+        INSERT INTO project_peed
+        (project_num, project_member_num, project_peed_title, project_peed_content,
+         project_peed_type, project_peed_start_period, project_peed_end_period, project_peed_charge,
+         project_peed_priority, project_peed_regdate, project_peed_disclosure)
+        VALUES
+        (#{projectNum}, #{projectMemberNum}, #{projectPeedTitle}, #{projectPeedContent},
+         #{projectPeedType}, #{projectPeedStartPeriod}, #{projectPeedEndPeriod}, #{projectPeedCharge},
+         #{projectPeedPriority}, NOW(), #{projectPeedDisclosure})
+    </insert>
+
+    <select id="getProjectPeed" resultType="ProjectPeed">
+        SELECT pp.*, u.user_profile_picture AS writerProfile, d.department_name AS writerDepartment,
+               u.user_name AS writerName, p.position_name AS writerPosition, uc.user_name AS chargerName,
+               pc.position_name AS chargerPosition
+        FROM project_peed AS pp
+                 LEFT JOIN user u ON pp.project_member_num = u.user_num
+                 LEFT JOIN user_positions p ON u.position_id = p.position_id
+                 LEFT JOIN user_departments d ON u.department_id = d.department_id
+                 LEFT JOIN user uc ON pp.project_peed_charge = uc.user_num
+                 LEFT JOIN user_positions pc ON uc.position_id = pc.position_id
+        WHERE pp.project_num = #{projectNum}
+        ORDER BY pp.project_peed_regdate asc
+    </select>
+
+    <insert id="insertComment">
+        insert into project_comment(project_num, project_peed_num, project_member_num, project_comment_content)
+        values(#{projectNum}, #{projectPeedNum}, #{projectMemberNum}, #{projectCommentContent})
+    </insert>
+
+    <select id="getPeedComment">
+        SELECT pc.*, u.user_profile_picture AS commWriterProfile, d.department_name AS commWriterDepartment,
+               u.user_name AS commWriter, p.position_name AS commWriterPosition
+        FROM project_comment AS pc
+                 LEFT JOIN user u ON pc.project_member_num = u.user_num
+                 LEFT JOIN user_positions p ON u.position_id = p.position_id
+                 LEFT JOIN user_departments d ON u.department_id = d.department_id
+        WHERE pc.project_num = #{projectNum}
+        AND   pc.project_peed_num = #{projectPeedNum}
+        ORDER BY pc.project_comment_regdate asc
+    </select>
 </mapper>
