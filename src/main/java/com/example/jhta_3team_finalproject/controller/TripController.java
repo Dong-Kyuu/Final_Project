@@ -7,6 +7,7 @@ import com.example.jhta_3team_finalproject.service.Notification.SseService;
 import com.example.jhta_3team_finalproject.service.TourPackage.*;
 import com.example.jhta_3team_finalproject.domain.TourPackage.*;
 import com.example.jhta_3team_finalproject.service.User.UserService;
+import com.example.jhta_3team_finalproject.util.CookieService;
 import com.example.jhta_3team_finalproject.util.PagingUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -38,12 +39,9 @@ public class TripController {
 
     private final CustomerService customerService;
     private final PasswordEncoder passwordEncoder;
-
     private static final int UPDATE_SUCCESS = 1;
     private static final int JOIN_SUCCESS = 1;
     private final tripSendMail tripSendMail;
-
-
     private final TripService tripService;
     private final OptionService optionService;
     private final CartService cartService;
@@ -78,7 +76,6 @@ public class TripController {
         //principal.getName():로그인 한 아이디 값을 알 수 있어요
         logger.info("저장됭 아이디:" + userPrincipal.getName());
             mv.setViewName("redirect:trip/mainPage");
-       // mv.setViewName("redirect:/board/list");??어디로 가는거지
     } else {
         mv.setViewName("tourpackage/trip_login");
 
@@ -95,7 +92,6 @@ public class TripController {
     public String join() {
         return "tourpackage/trip_join";
     }
-
 
     @RequestMapping(value = "/joinProcess", method = RequestMethod.POST)
     public String joinProcess(Customer customer , Model model, RedirectAttributes rattr, HttpServletRequest request) {
@@ -189,12 +185,12 @@ public class TripController {
         int customerNo = customer != null ? customer.getCustomerNo() : 0;
 
         // customerNo 이용하여 필요한 작업 수행
-        String cookieValue = getCookieValue(request);// 쿠키 내용을 갖고오는 메서드
+        String cookieValue = CookieService.getCookieValue(request,"cart");// 쿠키 내용을 갖고오는 메서드
 
         DeleteCartCookie(cookieValue,customerNo,response);
 
         if(customerNo==ANONYMOUS_CUSTOMER_NO) {
-            deleteCookie(response, "cart");
+            CookieService.deleteCookie(response, "cart");
             System.out.println("삭제");
             cartService.deleteCart("0");//비로그인회원에게 제공되는 cartNo="0"
         }
@@ -204,8 +200,8 @@ public class TripController {
         int startRow = (page - 1) * limit + 1;
         int endRow = startRow + limit - 1;
 
-        int listcount = this.getListcount(category,keyword);
-        List<Trip> triplist = this.getTriplist(category,keyword,startRow,endRow,sort);
+        int listcount = tripService.getListcount(category,keyword);
+        List<Trip> triplist = tripService.getTriplist(category,keyword,startRow,endRow,sort);
 
         //페이징 처리
         PagingUtil.Paging pageService = new PagingUtil.Paging(page,limit,listcount);
@@ -229,29 +225,21 @@ public class TripController {
 
         // 세션에서 "customer" 값을 가져옴
         HttpSession session = request.getSession(false);
-        Customer customer = (Customer) session.getAttribute("customer");
 
-        if (customer != null) {
-            // customer 정보가 있는 경우 추가 작업 수행
-            System.out.println("로그인된 사용자: " + customer.getCustomerId());
-        } else {
-            // customer 정보가 없는 경우
-            System.out.println("로그인된 사용자가 없습니다.");
-        }
+        Customer customer = customerService.getcustomerBySession(session);
+
         model.addAttribute("customer",customer);
 
         int customerNo = customer != null ? customer.getCustomerNo() : 0;
 
-        System.out.println("customerNo ="+customerNo);
-
         // customerNo 이용하여 필요한 작업 수행
-        String cookieValue = getCookieValue(request);// 쿠키 내용을 갖고오는 메서드
+        String cookieValue = CookieService.getCookieValue(request,"cart");// 쿠키 내용을 갖고오는 메서드
 
         DeleteCartCookie(cookieValue,customerNo,response);
 
         if(customerNo==ANONYMOUS_CUSTOMER_NO) {
             System.out.println("삭제");
-            deleteCookie(response, "cart");
+            CookieService.deleteCookie(response, "cart");
             cartService.deleteCart("0");//비로그인회원에게 제공되는 cartNo="0"
         }
         // -----------------------------------------
@@ -263,12 +251,10 @@ public class TripController {
         }
 
         String optionIds = tripService.getOptionIds(num);
-        System.out.println("==> optionIds = "+optionIds);
         String[] optionId = optionIds.split("-");
         List<TripOption> options = new ArrayList<TripOption>();
 
         for (String s : optionId) {
-            System.out.println("==> optionId="+s);
             // 해당 상품의 옵션 정보 가져오기
             TripOption option = optionService.getOptionsByOptionId(s);
             if (option != null) {
@@ -312,35 +298,22 @@ public class TripController {
         // 지워버리게 해야
         // 3. 쿠키는 있는데 num은 없는경우 =>이건 그냥 조회하는거임 => 원래 쿠키만 보여주면 됨
         // 4. 쿠키도 있고 (쿼리매개변수)num도 있는 경우 => 추가 하려는 거임 =>num도 받아와서 cookie랑 비교해서 집어넣어줘야함
-        System.out.println("======TripCart Mapping Processing======");
-
-        System.out.println("num="+num);
-        System.out.println("selectedOptions="+selectedOptions);
-
+        System.out.println("======TripCart Processing======");
         // ---------------------
         // 우선 카트를 생성 만약 카트가 이미 있다면 생성 x 카트는 아이디와 동일
 
         // 1.아이디 세션에서 불러오기
         // 세션에서 "customer" 값을 가져옴
         HttpSession session = request.getSession(false);
-        Customer customer = (Customer) session.getAttribute("customer");
 
-        if (customer != null) {
-            // customer 정보가 있는 경우 추가 작업 수행
-            System.out.println("로그인된 사용자: " + customer.getCustomerId());
-        } else {
-            // customer 정보가 없는 경우
-            System.out.println("로그인된 사용자가 없습니다.");
-        }
+        Customer customer = customerService.getcustomerBySession(session);
+
         model.addAttribute("customer",customer);
 
         int customerNo = customer != null ? customer.getCustomerNo() : 0;
 
-        System.out.println("customerId = "+customerNo);
-
         // 2.카트의 존재여부 확인
         int cartcheck = cartService.isId(String.valueOf(customerNo));// cart비었음:0 cart있음:1
-        System.out.println("cartcheck = " + cartcheck);
 
         /*
         if(customerNo==ANONYMOUS_CUSTOMER_NO ||cartcheck==0){
@@ -349,12 +322,10 @@ public class TripController {
         }
 */
         // 3. 쿠키 존재 여부 확인
-        String cookieValue = getCookieValue(request);// 쿠키 내용을 갖고오는 메서드
-        System.out.println("cookieValue = " + cookieValue);
+        String cookieValue = CookieService.getCookieValue(request,"cart");// 쿠키 내용을 갖고오는 메서드
 
         // 4. 주소로 불려오는 num 를 확인
         String check = request.getParameter("num");
-        System.out.println("check = " + check);
 
         // ---------------------
         if (cartcheck==0 && cookieValue == null && check != null) {
@@ -409,11 +380,9 @@ public class TripController {
         Cart cart;
         cartService.insertCart(memberId, String.valueOf(num), total_price, selectedOptions);
         cart = cartService.getDetail(memberId);
-        String cartString = serializeCart(cart);
+        String cartString = CookieService.serializeCartCookie(cart);
 
-        Cookie cartCookie = new Cookie("cart", cartString);
-        cartCookie.setMaxAge(24 * 60 * 60);
-        response.addCookie(cartCookie);
+        CookieService.setCookie(response,"cart",cartString);
 
         modelAttribute(model,trip,cart,total_price,product_Num,options);
     }
@@ -421,34 +390,34 @@ public class TripController {
     private void handleAddToCartWithExistingCookie(Model model, HttpServletResponse response,
                                                    String memberId, String cookieValue, String selectedOptions) {
         System.out.println("selectedOptions = " + selectedOptions);
-        String cartNoValue = getValueBetweenEquals(cookieValue, "cartNo");
-        String tripNoValue = getValueBetweenEquals(cookieValue, "tripNo");
-        String optionIdsValue = getValueBetweenEquals(cookieValue, "optionIds");
+        String cartNoValue = CookieService.getValueBetweenEquals(cookieValue, "cartNo");
+        String tripNoValue = CookieService.getValueBetweenEquals(cookieValue, "tripNo");
+        String optionIdsValue = CookieService.getValueBetweenEquals(cookieValue, "optionIds");
         String newOptionIds = "";
         System.out.println("Values =>"+cartNoValue+","+tripNoValue+","+selectedOptions);
 
         if (selectedOptions != null && !selectedOptions.isEmpty()) {
             System.out.println("======selectedOption Processing======");
-            newOptionIds = mergeOptionIds(optionIdsValue, selectedOptions);
+            newOptionIds = optionService.mergeOptionIds(optionIdsValue, selectedOptions);
             String updatedCookieValue = cookieValue.replaceAll("optionIds=[^&]*", "optionIds=" + newOptionIds);
-            updateCookie(response, updatedCookieValue);
+            CookieService.setCookie(response, updatedCookieValue,"cart");
         }
 
-        processCartDetails(model, memberId, tripNoValue, selectedOptions, cartNoValue, response);
+        processCartDetails(model, memberId, tripNoValue, selectedOptions, cartNoValue);
     }
 
     private void handleViewCartWithCookie(Model model, String cookieValue) {
-        String cartNoValue = getValueBetweenEquals(cookieValue, "cartNo");
-        String tripNoValue = getValueBetweenEquals(cookieValue, "tripNo");
-        String optionIdsValue = getValueBetweenEquals(cookieValue, "optionIds");
-        processCartDetails(model, null, tripNoValue, optionIdsValue, cartNoValue, null);
+        String cartNoValue = CookieService.getValueBetweenEquals(cookieValue, "cartNo");
+        String tripNoValue = CookieService.getValueBetweenEquals(cookieValue, "tripNo");
+        String optionIdsValue = CookieService.getValueBetweenEquals(cookieValue, "optionIds");
+        processCartDetails(model, null, tripNoValue, optionIdsValue, cartNoValue);
     }
 
     private void handleViewCartWithoutCookie(Model model, String memberId) {
         Cart cart = cartService.getDetail(memberId);
         String tripNoValue = cart.getTripNo();
         String optionIdsValue = cart.getOptionIds();
-        processCartDetails(model, memberId, tripNoValue, optionIdsValue, memberId, null);
+        processCartDetails(model, memberId, tripNoValue, optionIdsValue, memberId);
     }
 
     private void handleAddNewItems(Model model, String selectedOptions, int customerNo){
@@ -456,13 +425,87 @@ public class TripController {
 
         String OriginalOptions = cart.getOptionIds();
 
-        String NewOptionIds= mergeOptionIds(OriginalOptions,selectedOptions);
+        String NewOptionIds= optionService.mergeOptionIds(OriginalOptions,selectedOptions);
         System.out.println(NewOptionIds);
 
-        processCartDetails(model, String.valueOf(customerNo), cart.getTripNo(), NewOptionIds, String.valueOf(customerNo), null);
+        processCartDetails(model, String.valueOf(customerNo), cart.getTripNo(), NewOptionIds, String.valueOf(customerNo));
 
     }
     //---------------------------------------------
+    //카트 수정본
+    @GetMapping("/Cart2")
+    public String tripCart2(@RequestParam(name = "num", required = false) Integer num,
+                           @RequestParam(name="selectedOptions", required = false) String selectedOptions,
+                           HttpServletRequest request, HttpServletResponse response,Model model) throws ServletException, IOException {
+
+
+        System.out.println("======TripCart Processing======");
+
+        // 1.아이디 세션에서 불러오기
+        // 세션에서 "customer" 값을 가져옴
+        HttpSession session = request.getSession(false);
+
+        Customer customer = customerService.getcustomerBySession(session);
+
+        model.addAttribute("customer",customer);
+
+        int customerNo = customer != null ? customer.getCustomerNo() : 0;
+
+        // 2.카트의 존재여부 확인--> 해야할듯 --> 대신 카트에서는 아무런 역할도 하지않음
+        //단지 만약 쿠키가 없는 상태라면 카트 또한 customerNo랑 비교해서 카트를 지워주고 시작해야할듯
+        //카트가 없다면 빈카트를 만들어줘야하나??
+        int cartcheck = cartService.isId(String.valueOf(customerNo));// cart비었음:0 cart있음:1
+        if(cartcheck==0){
+            cartService.insertCart(String.valueOf(customerNo),null,0,null);
+        }
+
+        // 3. 쿠키 존재 여부 확인
+        //쿠키가 존재한다면 쿠키 내용을 보여준다,  존재하지않는다면 빈화면을 보여줄것
+        //쿠키가 존재하는 경우
+        //1. detail에서 상품을 구매한경우
+        //2. 상품을 이미 구매한 상태에서 로그아웃을 하고 다시 로그인 후 상품을 확인하는 경우(아이디 확인 필요)
+        //쿠키가 존재하지않는 경우
+        //아무것도 추가하지않은 상태에서 장바구니를 통해 직접 들어온 경우
+
+        boolean isCookie = CookieService.isCookiePresent(request,"cart");
+        String cookieValue;
+
+        if(isCookie){//만약 카트가 존재한다면 업데이트(현재로선 무조건 존재)
+            cookieValue = CookieService.getCookieValue(request,"cart");// 쿠키 내용을 가져옴
+         // String cartNoValue = CookieService.getValueBetweenEquals(cookieValue, "cartNo");//받아올 필요없지 않나
+            String tripNoValue = CookieService.getValueBetweenEquals(cookieValue, "tripNo");
+            String optionIdsValue = CookieService.getValueBetweenEquals(cookieValue, "optionIds");
+
+            int total_price = 0;
+            int product_Num = 0;
+            List<TripOption> options=null;
+
+            if(optionIdsValue!=null) {
+                options = optionService.getOptions(optionIdsValue);
+                for (TripOption option : options) {
+                    total_price += option.getOptionPrice();
+                    product_Num++;
+                }
+            }
+
+            model.addAttribute("trip",tripNoValue);
+            model.addAttribute("options",options);
+            model.addAttribute("total_price",total_price);
+            model.addAttribute("product_Num",product_Num);
+        }
+
+
+        // 4. 주소로 불려오는 num 를 확인
+        String check = request.getParameter("num");
+
+        return "tourpackage/Trip_cart";
+    }
+
+    //---------------------------------------------
+
+
+
+
 
     @GetMapping("/Purchase")
     public String tripPurchase(HttpServletRequest request, HttpServletResponse response,Model model,@RequestParam(name = "loginNum", required = false) Integer loginNum) {
@@ -478,14 +521,11 @@ public class TripController {
         } else {
             // customer 정보가 없는 경우
             System.out.println("로그인된 사용자가 없습니다.");
-         //   customer = customerService.findByCustomerX("customerNo","rlatks15");//임시
         }
 
         model.addAttribute("customer",customer);
 
         int customerNo = customer != null ? customer.getCustomerNo() : ANONYMOUS_CUSTOMER_NO;
-        System.out.println("customerNo = " + customerNo);
-
         System.out.println("customerNo = " + customerNo);
 
         Cart cart = cartService.getDetail(String.valueOf(customerNo));
@@ -496,7 +536,7 @@ public class TripController {
 
         String optionIds = cart.getOptionIds();
 
-        List<TripOption> options = getOptions(optionIds);
+        List<TripOption> options = optionService.getOptions(optionIds);
         model.addAttribute("options",options);
 
         return "tourpackage/Trip_Purchase";
@@ -504,7 +544,7 @@ public class TripController {
 
     @GetMapping("/PurchaseSuccess")
     public String purchaseSuccess(HttpServletResponse cookieresponse) {
-        deleteCookie(cookieresponse, "cart");
+        CookieService.deleteCookie(cookieresponse, "cart");
 
         return"tourpackage/PurchaseSuccess";
     }
@@ -520,9 +560,6 @@ public class TripController {
         return ResponseEntity.ok("Customer information updated successfully");
     }
 
-
-
-
         @PostMapping("/cartDelete")
     public ResponseEntity<Map<String, String>> cartDelete(@RequestParam(name = "identifier") String identifier,
     @RequestParam(name = "itemType") String itemType,
@@ -531,13 +568,7 @@ public class TripController {
     HttpServletRequest request, HttpServletResponse response,
     Model model) throws IOException {
         System.out.println("======Cart Delete Processing======");
-        System.out.println("identifier="+identifier);
-        System.out.println("itemType="+itemType);
-        System.out.println("cartNo="+cartNo);
-        System.out.println("cartTotal="+cartTotal);
 
-        String updatedOptionIds = "";
-                
         TripOption tripOption = new TripOption();
 
         Cart cart =cartService.getDetail(cartNo);
@@ -551,17 +582,14 @@ public class TripController {
         if ("trip".equals(itemType)) {
             // tripNo를 삭제하는 DAO 호출
             cartService.deleteTripNo(cartNo);
-            System.out.println("trip 삭제: " + identifier);
         } else if ("option".equals(itemType)) {
             // optionId을 삭제하는 DAO 호출
             String optionIds = cartService.getOptionIds(cartNo);
-            updatedOptionIds = removeOptionId(optionIds,identifier);
+            String updatedOptionIds = optionService.removeOptionId(optionIds,identifier);
 
             String updatedCartTotal = String.valueOf(priceTotal - optionPrice);
-            System.out.println("updatedCartTotal="+updatedCartTotal);
 
             cartService.deleteOption(updatedOptionIds, cartNo, updatedCartTotal);
-            System.out.println("option 삭제: " + identifier);
         } else {
             // 유효하지 않은 itemType에 대한 오류 처리
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -570,80 +598,23 @@ public class TripController {
 
         cart = cartService.getDetail(cartNo);
 
-        String cookieValue = getCookieValue(request); // 쿠키 내용을 갖고오는 메서드
-        String newCookie = serializeCart(cart);
-        setCookie(response, newCookie); // 쿠키 내용을 변경하는 메서드
+        String cookieValue = CookieService.getCookieValue(request,"cart"); // 쿠키 내용을 갖고오는 메서드
+        String newCookie = CookieService.serializeCartCookie(cart);
+        CookieService.setCookie(response, newCookie,"cart"); // 쿠키 내용을 변경하는 메서드
 
         if (cart.getTripNo() == null && cart.getOptionIds() == null) {
             cartService.deleteCart(cartNo);
             System.out.println("카트 완전삭제");
             // 쿠키를 완전히 삭제
-            deleteCookie(response, "cart");
+            CookieService.deleteCookie(response, "cart");
         }
 
-        String newURL = cookieToURL(newCookie);
+        String newURL = CookieService.CartcookieToURL(newCookie);
 
         Map<String, String> responseMap = new HashMap<>();
         responseMap.put("newURL", newURL);
 
-
-
         return  ResponseEntity.ok(responseMap);
-    }
-
-    private String cookieToURL(String cookieValue) {
-        System.out.println("cookieToURL cookieValue=" + cookieValue);
-
-        String num = null;
-        String selectedOptions = null;
-
-        String[] parts = cookieValue.split("&");
-        for (String part : parts) {
-            String[] keyValue = part.split("=");
-            if (keyValue.length == 2) {
-                String key = keyValue[0];
-                String value = keyValue[1];
-
-                if ("tripNo".equals(key)) {
-                    num = value.isEmpty() ? null : value;
-                } else if ("optionIds".equals(key)) {
-                    selectedOptions = value.isEmpty() ? null : value;
-                }
-            }
-        }
-
-        StringBuilder result = new StringBuilder("Cart?");
-        if (selectedOptions != null && !selectedOptions.equals("null")) {
-            result.append("selectedOptions=").append(selectedOptions);
-        }
-        if (num != null && !num.equals("null")) {
-            if (selectedOptions != null) {
-                result.append("&");
-            }
-            result.append("num=").append(num);
-        }
-
-        String newURL = result.toString();
-        System.out.println("result===> " + newURL);
-
-        return newURL;
-    }
-
-    private String removeOptionId(String optionIds, String optionId) {    // optionIds에서 optionId를 제거하는 메서드
-        String[] optionIdArray = optionIds.split("-");
-        StringBuilder sb = new StringBuilder();
-
-        for (String id : optionIdArray) {
-            if (!id.equals(optionId)) {
-                sb.append(id).append("-");
-            }
-        }
-
-        if (sb.length() > 0) {
-            sb.deleteCharAt(sb.length() - 1); // 마지막의 "-"를 삭제합니다.
-        }
-
-        return sb.toString();
     }
 
     @GetMapping("/tripRegister")
@@ -675,34 +646,9 @@ public class TripController {
                               @RequestParam(name ="img[]", required = false) MultipartFile[] images,
                               @AuthenticationPrincipal User userDetails,
                               Model model, RedirectAttributes redirectAttributes) throws IOException {
-        System.out.println("====== Received Parameters ======");
-        System.out.println("======addMainTrip tripName=" + tripName);
-        System.out.println("======addMainTrip tripPrice=" + tripPrice);
-        System.out.println("======addMainTrip tripMaxStock=" + tripMaxStock);
-        System.out.println("======addMainTrip expireDate=" + expireDate);
-        System.out.println("======addMainTrip category=" + category);
-        System.out.println("======addMainTrip optionIds=" + optionIds);
-
-        /*업어도 될듯?
-        if (images != null && images.length > 0) {
-            for (int i = 0; i < images.length; i++) {
-                MultipartFile image = images[i];
-                System.out.println("======addMainTrip image[" + i + "] name=" + image.getOriginalFilename());
-            }
-        } else {
-            System.out.println("======addMainTrip No images uploaded");
-        }
-        */
 
             // Trip 객체 생성 및 저장
-            Trip trip = new Trip();
-            trip.setTripName(tripName);
-            trip.setTripPrice(tripPrice != null ? tripPrice : 0);
-            trip.setTripMaxStock(tripMaxStock != null ? tripMaxStock : 0);
-            trip.setTripDate(tripDate.toString());
-            trip.setExpireDate(expireDate.toString());
-            trip.setTripCategory(category);
-            trip.setOptionIds(optionIds);
+            Trip trip = tripService.setTripForRegAndUpdate(tripName,tripPrice,tripMaxStock,tripDate,expireDate,category,optionIds);
 
         try {
             tripService.saveTrip(trip, images);
@@ -744,15 +690,8 @@ public class TripController {
         //option 넘버 만들기
         String optionId = optionService.generateOptionId(cityNo);
 
-        TripOption option = new TripOption();
-        option.setOptionId(optionId);
-        option.setOptionName(optionName);
-        option.setOptionPrice(optionPrice);
-        option.setOptionMaxStock(optionMaxStock);
-        option.setOptionDate(optionDate.toString());
-        option.setCityNo(cityNo);
+        TripOption option = optionService.setTripForRegAndUpdate(optionId,optionName,optionPrice,optionMaxStock,optionDate,cityNo);
 
-        System.out.println("optionmaxstock="+option.getOptionMaxStock());
         try {
             optionService.saveOption(option,images);
             redirectAttributes.addFlashAttribute("message", "저장되었습니다");
@@ -772,8 +711,8 @@ public class TripController {
         Trip trip = tripService.getDetail(num);
         TripFile tripFile = tripService.getTripFileByNo(String.valueOf(trip.getFileId()));
         String currentoption = trip.getOptionIds();
-        System.out.println(currentoption);
-        List<TripOption> currentoptions = (this).getOptions(currentoption);
+
+        List<TripOption> currentoptions = optionService.getOptions(currentoption);
         StringBuilder currentoptionsName= new StringBuilder();
         for(TripOption option : currentoptions){
             String optionName=option.getOptionName();
@@ -782,7 +721,7 @@ public class TripController {
                 currentoptionsName.append(optionName).append("-");
             }
         }
-        if (currentoptionsName.length() > 0) {
+        if (!currentoptionsName.isEmpty()) {
             currentoptionsName.setLength(currentoptionsName.length() - 1);
         }
 
@@ -807,17 +746,8 @@ public class TripController {
                               @AuthenticationPrincipal User userDetails,
                               Model model, RedirectAttributes redirectAttributes) throws IOException {
 
-        System.out.println("tripName="+tripName);
-        System.out.println("tripNo="+num);
         // Trip 객체 생성 및 저장
-        Trip trip = tripService.getDetail(num);
-        trip.setTripName(tripName);
-        trip.setTripPrice(tripPrice != null ? tripPrice : 0);
-        trip.setTripMaxStock(tripMaxStock != null ? tripMaxStock : 0);
-        trip.setTripDate(tripDate.toString());
-        trip.setExpireDate(expireDate.toString());
-        trip.setTripCategory(category);
-        trip.setOptionIds(optionIds);
+        Trip trip = tripService.setTripForRegAndUpdate(tripName,tripPrice,tripMaxStock,tripDate,expireDate,category,optionIds);
 
         try {
             tripService.updateTrip(trip, images);
@@ -841,11 +771,12 @@ public class TripController {
             HttpServletRequest request,HttpServletResponse response,
             Model model) {
 
+
         int startRow = (page - 1) * limit + 1;
         int endRow = startRow + limit - 1;
 
-        int listcount = this.getListcount(category,keyword);
-        List<Trip> triplist = this.getTriplist(category,keyword,startRow,endRow,sort);
+        int listcount = tripService.getListcount(category,keyword);
+        List<Trip> triplist = tripService.getTriplist(category,keyword,startRow,endRow,sort);
 
         PagingUtil.Paging pageService = new PagingUtil.Paging(page,limit,listcount);
 
@@ -915,11 +846,11 @@ public class TripController {
     @PostMapping("/approvePurchase")
     public String approvePurchase(@RequestParam("tripNo") int tripNo,@RequestParam("purchaseId") int id,@RequestParam("buyerNo") String buyerNo, RedirectAttributes redirectAttributes) {
 
-        Customer customer =null;
+        Customer customer;
         customer = customerService.findByCustomerX("customerNo",buyerNo);
         String name = customer.getCustomerNameKor();
 
-        Trip trip =new Trip();
+        Trip trip;
         trip = tripService.getDetail(tripNo);
 
         //예약확정 시 trip의 stock증가
@@ -957,11 +888,10 @@ public class TripController {
         customer = customerService.findByCustomerX("customerNo",buyerNo);
         String name = customer.getCustomerNameKor();
 
-        Trip trip =new Trip();
+        Trip trip;
         trip = tripService.getDetail(tripNo);
 
         //예약거절 시 trip의 stock감소
-        int maxstock = trip.getTripMaxStock();
         int stock = trip.getTripStock();
 
         String message="";
@@ -1017,7 +947,7 @@ public class TripController {
         model.addAttribute("travelleader",travelleader);
 
         //가이드 존재시 가이드 이름 가져오기
-        User user = new User();
+        User user;
         int TLNo = trip.getTravelleaderNo();
         String userName = "트래블리더";
         if(TLNo!=0){
@@ -1058,8 +988,8 @@ public class TripController {
         int startRow = (page - 1) * limit + 1;
         int endRow = startRow + limit - 1;
 
-        int listcount = this.getListcount(category,keyword);
-        List<Trip> triplist = this.getTriplist(category,keyword,startRow,endRow,sort);
+        int listcount = tripService.getListcount(category,keyword);
+        List<Trip> triplist = tripService.getTriplist(category,keyword,startRow,endRow,sort);
 
         PagingUtil.Paging pageService = new PagingUtil.Paging(page,limit,listcount);
 
@@ -1130,21 +1060,6 @@ public class TripController {
         return "tourdepartment/Tour_Sales";
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //------------------------------
     //model.addAttribute
     public void modelAttribute(Model model,Trip trip,Cart cart,int total_price,int product_Num,List<TripOption> options) {
@@ -1156,123 +1071,27 @@ public class TripController {
         model.addAttribute("options", options);
         System.out.println("cart.cartNo="+cart.getCartNo());
     };
-    //쿠키 메서드
 
-    private String serializeCart(Cart cart) {
-        String cartString = "cartNo=" + cart.getCartNo() + "&tripNo=" + cart.getTripNo() + "&optionIds=" + cart.getOptionIds();
-        System.out.println("쿠키 = " + cartString);
-        return cartString;
-    }
 
-    // 쿠키 내용을 변경하는 메서드
-    public void setCookie(HttpServletResponse response, String newCookie) {
-        Cookie cookie = new Cookie("cart", newCookie);
-        cookie.setMaxAge(24 * 60 * 60); // Set cookie expiry to 1 day
-        response.addCookie(cookie);
-        System.out.println("쿠키 변경 완료"+newCookie);
-    }
 
-    public static String getValueBetweenEquals(String cookieValue, String key) {
-        // 입력 문자열을 "&"을 기준으로 나누기
-        String[] pairs = cookieValue.split("&");
-
-        // 각각의 키-값 쌍에서 주어진 키를 찾기
-        for (String pair : pairs) {
-            String[] keyValue = pair.split("=");
-            if (keyValue.length == 2 && keyValue[0].equals(key)) {
-                return keyValue[1];
-            }
-        }
-        // 해당 키가 없으면 null 리턴
-        return null;
-    }
-
-    // 쿠키 존재 여부를 확인하는 메서드
-    public String getCookieValue(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("cart")) {
-                    System.out.println("쿠키내용 ==> " + cookie.getValue());
-                    return cookie.getValue();
-                }
-            }
-        }
-        // 쿠키가 없는 경우
-        return null;
-    }
-
-    // 쿠키 삭제 메서드
-    public void deleteCookie(HttpServletResponse response, String cookieName) {
-        Cookie cookie = new Cookie(cookieName, "");
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
-    }
-
-    //쿠키 업데이트 메서드
-    public void updateCookie(HttpServletResponse response,String CookieValue){
-        Cookie updatedCookie = new Cookie("cart", CookieValue);
-        updatedCookie.setMaxAge(24 * 60 * 60);
-        response.addCookie(updatedCookie);
-    }
-    //------------------------------
-    //------------------------------
-    private List<TripOption> getOptions(String optionIds) {
-        List<TripOption> options = new ArrayList<>();
-        String[] optionIdArray = optionIds.split("-");
-        for (String optionId : optionIdArray) {
-            TripOption option = optionService.getOptionsByOptionId(optionId);
-            if (option != null) {
-                options.add(option);
-            }
-        }
-        return options;
-    }
-
-    private String mergeOptionIds(String existingOptionIds, String newOptionIds) {
-        if (existingOptionIds == null || existingOptionIds.equals("null")) {
-            return newOptionIds;
-        }
-        String[] existingOptions = existingOptionIds.split("-");
-        String[] newOptions = newOptionIds.split("-");
-
-        StringBuilder mergedOptions = new StringBuilder(existingOptionIds);
-        for (String newOption : newOptions) {
-            boolean exists = false;
-            for (String existingOption : existingOptions) {
-                if (newOption.equals(existingOption)) {
-                    exists = true;
-                    break;
-                }
-            }
-            if (!exists) {
-                mergedOptions.append("-").append(newOption);
-            }
-        }
-        return mergedOptions.toString();
-    }
-
-    private void processCartDetails(Model model, String memberId, String tripNoValue, String optionIdsValue, String cartNoValue, HttpServletResponse response) {
+    private void processCartDetails(Model model, String memberId, String tripNoValue, String optionIdsValue, String cartNoValue) {
        System.out.println("======processCartDetails Processing======");
 
         int total_price = 0;
         int product_Num = 0;
 
-        Trip trip = null;
+        Trip trip;
         Cart cart;
         List<TripOption> options=null;
-        if (!tripNoValue.equals("null")) {
-            trip = tripService.getDetail(Integer.parseInt(tripNoValue));
-            System.out.println("tripNoValue is not null");
-        }
 
-//        Trip trip = tripNoValue != null ? tripService.getDetail(Integer.parseInt(tripNoValue)) : null;
+        trip = tripNoValue != null ? tripService.getDetail(Integer.parseInt(tripNoValue)) : null;
+
         if (trip != null) {
             total_price += trip.getTripPrice();
             product_Num++;
 
             if (optionIdsValue != null) {
-                options = getOptions(optionIdsValue);
+                options = optionService.getOptions(optionIdsValue);
                 for (TripOption option : options) {
                     total_price += option.getOptionPrice();
                     product_Num++;
@@ -1290,42 +1109,14 @@ public class TripController {
     }
 
 //---------
-    private int getListcount(String category,String keyword){
-        if (isValidString(category)) {
-            return tripService.getCategoryListCount(category);
-        } else if (isValidString(keyword)) {
-            return tripService.getKeywordListCount(keyword);
-        } else {
-            return tripService.getListCount();
-        }
-    }
-
-    private List<Trip> getTriplist(String category,String keyword,int startRow,int endRow,String sort){
-        if (isValidString(category)) {
-            return tripService.getCategoryTripList(startRow, endRow,category, sort);
-        } else if (isValidString(keyword)) {
-            return tripService.getTripListByKeyword(startRow, endRow,keyword,  sort);
-        } else {
-            return tripService.getTripList(startRow, endRow, sort);
-        }
-    }
-
-    private boolean isValidString(String str) {
-        return str != null && !str.isEmpty() && !Objects.equals(str, "null");
-    }
-//--------------
-
     private void DeleteCartCookie(String cookieValue, int customerNo, HttpServletResponse response) {
         if(cookieValue!=null) {
-            String cartNoValue = getValueBetweenEquals(cookieValue, "cartNo");
+            String cartNoValue = CookieService.getValueBetweenEquals(cookieValue, "cartNo");
             if(!cartNoValue.equals(String.valueOf(customerNo))) {//쿠키의 cartNo와 mem_id비교
-                deleteCookie(response, "cart");
-                System.out.println("<카트 쿠키 삭제>");
+                CookieService.deleteCookie(response, "cart");
             }
         }
     }
-
-    //------------------------------
 
     public List<Purchase> getPurchaseListWithoutStatus(String status1,String status2){
         //purchase 정보 불러오기

@@ -16,4 +16,6 @@ public interface UpfilesMapper {
     void insertAnnounceFile(BoardUpfiles file);
 
     List<BoardUpfiles> getFilesbyAnnBoardNum(int num);
+
+    void insertProjectFile(BoardUpfiles file);
 }

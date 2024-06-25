@@ -1,9 +1,13 @@
 package com.example.jhta_3team_finalproject.service.Project;
 
+import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
 import com.example.jhta_3team_finalproject.domain.Project.Project;
+import com.example.jhta_3team_finalproject.domain.Project.ProjectComment;
 import com.example.jhta_3team_finalproject.domain.Project.ProjectMember;
+import com.example.jhta_3team_finalproject.domain.Project.ProjectPeed;
 import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.mybatis.mapper.Project.ProjectMapper;
+import com.example.jhta_3team_finalproject.mybatis.mapper.Table.UpfilesMapper;
 import com.example.jhta_3team_finalproject.mybatis.mapper.User.AttendenceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +19,13 @@ import java.util.List;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectMapper projectMapper;
+    private final UpfilesMapper upfilesMapper;
 
 
     @Autowired
-    public ProjectServiceImpl(ProjectMapper projectMapper) {
+    public ProjectServiceImpl(ProjectMapper projectMapper, UpfilesMapper upfilesMapper) {
         this.projectMapper = projectMapper;
+        this.upfilesMapper = upfilesMapper;
     }
 
     @Override
@@ -97,5 +103,34 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectMember MasterMember(int loginNum) {
         return projectMapper.masterMember(loginNum);
+    }
+
+    @Override
+    public void insertPeed(ProjectPeed projectPeed) {
+        projectMapper.insertPeed(projectPeed);
+    }
+
+    @Override
+    public void insertFile(int projectNum, int projectPeedNum, List<BoardUpfiles> files) {
+        for (BoardUpfiles file : files) {
+            file.setProjectNum(projectNum);
+            file.setProjectPeedNum(projectPeedNum);
+            upfilesMapper.insertProjectFile(file);
+        }
+    }
+
+    @Override
+    public List<ProjectPeed> getProjectPeed(int projectNum) {
+        return projectMapper.getProjectPeed(projectNum);
+    }
+
+    @Override
+    public int commentsInsert(ProjectComment projectComment) {
+        return projectMapper.insertComment(projectComment);
+    }
+
+    @Override
+    public List<ProjectComment> getPeedComment(int projectPeedNum, int projectNum) {
+        return projectMapper.getPeedComment(projectPeedNum, projectNum);
     }
 }
