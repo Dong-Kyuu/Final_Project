@@ -55,8 +55,7 @@ public class RedisService {
      * false, 키가 없다면 레디스에 올려준 후 해당 List 는 바로 return
      */
     private List<ChatMessage> getChatMessageList(long num, String key, String timeStamp) {
-        //if (redisChatUtils.isKeyExists(key)) {
-        if (false) {
+        if (redisChatUtils.isKeyExists(key)) {
             log.info("Redis - 1일 데이터");
             //chatMessageList.sort(Comparator.comparing(ChatMessage::getMessageNum));
             return redisChatUtils.getList(key);

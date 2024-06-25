@@ -41,7 +41,9 @@ public class ChatController {
     }
 
     @RequestMapping(value = "react")
-    public String chatReact() {return "chat/testReact";}
+    public String chatReact() {
+        return "chat/testReact";
+    }
 
     @RequestMapping(value = "chatUserProfile")
     public @ResponseBody User chatUserProfile(@RequestParam(value = "chatUserId") String chatUserId) {
