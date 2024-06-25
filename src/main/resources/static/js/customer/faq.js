@@ -8,11 +8,11 @@ $(document).ready(function () {
     })
 
     $(".inquery-move").click(function () {
-        location.href = 'InqueryList.inq'
+        location.href = '/inquery/list'
     });
 
     $(".chatbot-move").click(function () {
-        location.href = 'InqueryChatBot.inq'
+        location.href = ''
     });
 
     $(".pill").click(function () {

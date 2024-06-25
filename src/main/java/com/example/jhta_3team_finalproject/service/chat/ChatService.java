@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -51,7 +52,7 @@ public class ChatService {
             String redisKey = roomKey + ":" + dateKey; // 방번호:날짜
             Long expiredTime = 1L; // 만료 시간 1주일 부여
 
-            redisChatUtils.setAddSets(redisKey, chatMessage); // 키, 값
+            redisChatUtils.setAddList(redisKey, chatMessage); // 키, 값
             redisChatUtils.setExpired(redisKey, expiredTime);
         }
         return chatMessage; // 마지막 메시지를 반환
@@ -60,19 +61,24 @@ public class ChatService {
     /**
      * 2024-06-18, 1일 데이터 가져오기
      */
-    public List<ChatMessage> getChatMessages(ChatMessage chatMessage) {
-        String[] dateStr = chatMessage.getTimeStamp().split("-");
-        int year = Integer.parseInt(dateStr[0]);
-        int month = Integer.parseInt(dateStr[1]);
-        int day = Integer.parseInt(dateStr[2]);
+    public List<ChatMessage> getChatMessages(ChatMessage chatMessage) throws Exception {
 
-        // 주어진 날짜를 LocalDate 객체로 생성
-        LocalDate givenDate = LocalDate.of(year, month, day);
-        // 하루를 뺀 날짜 계산
-        LocalDate previousDate = givenDate.minusDays(1);
-        // 하루 뺀 날짜를 다시 계산하여 1일 이전 데이터를 가져오기
-        chatMessage.setTimeStamp(previousDate.toString());
-        return dao.redisSearchMessages(chatMessage);
+        /**
+         * 2024-06-23, 마지막 타임스탬프 전까지 중 가장 마지막 날짜를 구함
+         */
+        chatMessage.setTimeStamp(dao.getLastDay(chatMessage).getTimeStamp());
+
+        List<ChatMessage> temp = dao.redisSearchMessages(chatMessage);
+        List<ChatMessage> list = new ArrayList<>();
+
+        temp.forEach(chatMsg -> {
+            if(chatMsg.getUserId() == null && chatMsg.getUsername() == null) {
+                chatMsg.setType(ChatMessage.MessageType.TIMESTAMP);
+            }
+            list.add(chatMsg);
+        });
+
+        return list;
     }
 
     public ChatMessage updateMsgImageUrl(ChatMessage chatMessage) throws Exception {
@@ -94,7 +100,7 @@ public class ChatService {
             String redisKey = roomKey + ":" + dateKey; // 방번호:날짜
             Long expiredTime = 1L; // 만료 시간 1주일 부여
 
-            redisChatUtils.setUpdateSets(redisKey, oldChatMessage, newChatMessage); // 키, old value, new value
+            redisChatUtils.setUpdateList(redisKey, newChatMessage); // 키, new value
             redisChatUtils.setExpired(redisKey, expiredTime);
 
             chatMessage = dao.lastMessage();
@@ -165,7 +171,17 @@ public class ChatService {
         /**
          * 2024-06-18, 채팅 기록 검색
          */
-        return dao.searchChatMessages(chatMessage);
+        List<ChatMessage> temp = dao.searchChatMessages(chatMessage);
+        List<ChatMessage> list = new ArrayList<>();
+
+        temp.forEach(chatMsg -> {
+            if(chatMsg.getUserId() == null && chatMsg.getUsername() == null) {
+                chatMsg.setType(ChatMessage.MessageType.TIMESTAMP);
+            }
+            list.add(chatMsg);
+        });
+
+        return list;
     }
 
     public List<ChatParticipate> searchRoom(ChatRoom chatRoom) throws Exception {

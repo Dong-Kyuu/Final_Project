@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<th:block th:fragment="view">
 <!-- Header Section Begin -->
-<th:block th:replace="~{customer/header :: headerFragment}"/>
+<!--<th:block th:replace="~{customer/header :: headerFragment}"/>-->
 <!-- Header Section End -->
 <head>
     <meta charset="UTF-8">
@@ -127,7 +128,7 @@
         </tr>
 
         <tr>
-            <td colspan="2" class="center">
+            <td colspan="2" class="center" style="text-align: center;">
                 <th:block sec:authorize-expr="isAuthenticated()">
                     <th:block th:with="pinfo=${#authentication.principal}">
                         <th:block th:if="${boarddata.inqName == pinfo.username or pinfo.username == 'admin'}">
@@ -250,8 +251,10 @@
 
     <input type="hidden" name="num" th:value="${param.num}"
            id="comment_board_num">
-    <input type="hidden" name="comment_id" th:value="${#authentication.name}"
+    <th:block th:with="pinfo=${#authentication.principal}">
+    <input type="hidden" name="comment_id" th:value="${pinfo.userId}"
            id="comment_id">
+    </th:block>
     <div class="comment-area">
         <div class="comment-head">
             <h3 class="comment-count">
@@ -269,8 +272,10 @@
         </ul>
         <div class="comment-write">
             <div class="comment-write-area">
-                <b class="comment-write-area-name" th:text="${#authentication.name}"><!--${id}--></b> <span
-                    class="comment-write-area-count">0/200</span>
+                <th:block th:with="pinfo=${#authentication.principal}">
+                <b class="comment-write-area-name" th:text="${pinfo.userId}"><!--${id}--></b>
+                </th:block>
+                <span class="comment-write-area-count">0/200</span>
                 <textarea placeholder="답변을 남겨보세요" rows="1"
                           class="comment-write-area-text" maxLength="200"></textarea>
 

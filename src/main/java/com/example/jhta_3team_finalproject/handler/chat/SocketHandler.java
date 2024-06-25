@@ -58,11 +58,8 @@ public class SocketHandler extends TextWebSocketHandler {
     @Autowired
     ChatSseService chatSseService;
 
-    @Value("${temp.chat.savefolder}")
-    String FILE_UPLOAD_PATH;
-
     List<HashMap<String, Object>> rls = new ArrayList<>(); // 웹소켓 세션을 담아둘 리스트 ---roomListSessions
-
+    String FILE_UPLOAD_PATH;
     private String S3Bucket = "mybucketchatupload"; // Bucket 이름 aws img test
     static int fileUploadIdx = 0;
     static String fileUploadSession = "";
@@ -136,7 +133,48 @@ public class SocketHandler extends TextWebSocketHandler {
         if (rls.size() > 0) {
             for (int i = 0; i < rls.size(); i++) {
                 String roomNumber = (String) rls.get(i).get("roomNumber"); // 세션리스트의 저장된 방번호를 가져와서
-                if (roomNumber.equals(roomNum)) { // 같은값의 방이 존재한다면
+                if (roomNumber.equals(roomNum)) { // 같은 값의 방이 존재한다면
+                    temp = rls.get(i); // 해당 방번호의 세션리스트의 존재하는 모든 object값을 가져온다.
+                    break;
+                }
+            }
+
+            // 해당 방의 세션들만 찾아서 메시지를 발송해준다.
+            for (String k : temp.keySet()) {
+                if (k.equals("roomNumber")) { // 다만 방번호일 경우에는 건너뛴다.
+                    continue;
+                }
+
+                WebSocketSession wss = (WebSocketSession) temp.get(k);
+                if (wss != null) {
+                    try {
+                        wss.sendMessage(new TextMessage(obj.toJSONString()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public void sendEmergencyMessage(ChatMessage chatMessage) {
+        JSONObject obj = new JSONObject(); // JSON데이터를 JSONObject로 파싱한다.
+        obj.put("type", "emergency");
+        obj.put("messageNum", chatMessage.getMessageNum());
+        obj.put("roomNumber", chatMessage.getChatRoomNum());
+        obj.put("msg", chatMessage.getMessageContent());
+        obj.put("sessionId", chatMessage.getSenderId());
+
+        obj.put("readCount", 1);
+        obj.put("sendTime", chatMessage.getSendTime().getTime());
+        obj.put("userName", chatMessage.getUsername());
+        obj.put("userProfileImage", chatMessage.getUserProfilePicture());
+
+        HashMap<String, Object> temp = new HashMap<String, Object>();
+        if (rls.size() > 0) {
+            for (int i = 0; i < rls.size(); i++) {
+                String roomNumber = (String) rls.get(i).get("roomNumber"); // 세션리스트의 저장된 방번호를 가져와서
+                if (roomNumber.equals(String.valueOf(chatMessage.getChatRoomNum()))) { // 같은 값의 방이 존재한다면
                     temp = rls.get(i); // 해당 방번호의 세션리스트의 존재하는 모든 object값을 가져온다.
                     break;
                 }
@@ -167,11 +205,10 @@ public class SocketHandler extends TextWebSocketHandler {
     public void handleBinaryMessage(WebSocketSession session, BinaryMessage message) { // 바이너리 메시지 발송
         //바이너리 메시지 발송
         ByteBuffer byteBuffer = message.getPayload(); // (3)
-        String fileName = "file.jpg";
+        final String TEMP_UPLOAD_DIR_PATH = "/home";
+        final String FILENAME = "file.jpg";
 
-        log.info("{} - FILE_UPLOAD_PATH", FILE_UPLOAD_PATH);
-
-        File dir = new File("/home");
+        File dir = new File(TEMP_UPLOAD_DIR_PATH);
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -185,7 +222,7 @@ public class SocketHandler extends TextWebSocketHandler {
             e.printStackTrace();
         }
 
-        File file = new File(FILE_UPLOAD_PATH, fileName); // (6) 파일을 새로 생성해준다
+        File file = new File(FILE_UPLOAD_PATH, FILENAME); // (6) 파일을 새로 생성해준다
 
         FileOutputStream fileOutputStream = null;
         FileChannel fileChannel = null;
@@ -263,6 +300,7 @@ public class SocketHandler extends TextWebSocketHandler {
             try {
                 JSONObject obj = new JSONObject();
                 obj.put("type", "imgurl");
+                obj.put("messageNum", chatMessage.getMessageNum());
                 obj.put("sessionId", chatMessage.getSenderId());
                 obj.put("fileUrl", imageurl);
                 obj.put("fileOriginName", chatMessage.getFileOriginName());
@@ -328,6 +366,7 @@ public class SocketHandler extends TextWebSocketHandler {
 
         // 포문으로 연속 메시지를 보낸다. list 크기 만큼 돌린다.
         for (int i = 0; i < chatMessageList.size(); i++) {
+            long messageNum = chatMessageList.get(i).getMessageNum();
             String content = chatMessageList.get(i).getMessageContent();
             String senderId = chatMessageList.get(i).getSenderId(); // 2024-06-08, 현재는 아이디 -> 나중에 이름으로 가져올 예정
             String fileUrl = chatMessageList.get(i).getFileUrl();
@@ -342,6 +381,7 @@ public class SocketHandler extends TextWebSocketHandler {
             log.info(session.getId());
             log.info("{}", session);
             obj.put("type", "getId");
+            obj.put("messageNum", messageNum);
             //obj.put(session.getId(),session); // 활성화하면 새로고침 시 소켓이 종료되면서 같은 세션 값을 가지고 있던 obj들이 제거되었었음.
             obj.put("sessionId", senderId); // 유저 아이디임. // 위를 활성화하면 세션과 관련된 obj들이 제거되면서 이 컬럼과 js 조건문이 만나는 조건에서 의도치 않은 결과가 나왔었음.
             obj.put("msg", content);

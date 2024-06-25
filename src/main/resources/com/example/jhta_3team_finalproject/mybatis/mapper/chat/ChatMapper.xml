@@ -22,6 +22,7 @@
     </select>
 
     <!-- 2024-06-17, Full Text Index 를 통한 채팅 기록 검색 -->
+    <!-- 2024-06-23, 타임스탬프 수정 -->
     <!--    설정 정보 (parser ngram - (한글 - 2글자 이상부터) (영어 - 3글자 이상부터) (특수문자 - Global 설정 필요)) -->
     <!--    ALTER TABLE chat_message DROP INDEX FULLTEXT_MESSAGE_CONTENT;-->
     <!--    ALTER TABLE chat_message ADD FULLTEXT INDEX FULLTEXT_MESSAGE_CONTENT (message_content) WITH PARSER ngram;-->
@@ -30,59 +31,65 @@
     <!--    show profiles;-->
     <!--    show profile for query '번호';-->
     <select id="searchChatMessages" resultType="chatMessage">
-        WITH TimestampRow AS (
-            SELECT DISTINCT
-                DATE(send_time) as time_stamp,
-                NULL as message_num,
-                cm.sender_id as sender_id,
-                NULL as chat_room_num,
-                NULL as message_content,
-                NULL as file_url,
-                NULL as file_origin_name,
-                NULL as read_count,
-                cm.send_time  as send_time,
-                NULL as user_id,
-                NULL as user_name,
-                NULL as user_profile_picture
-            FROM chat_message cm
-            WHERE chat_room_num = #{chatRoomNum}
-            AND MATCH(cm.message_content) AGAINST(#{messageContent} IN BOOLEAN MODE)
-            LIMIT 1
-        ),
-        MessageData AS (
+        WITH MessageData AS (
             SELECT
-            DATE(send_time) as time_stamp,
-            cm.message_num,
-            cm.sender_id,
-            cm.chat_room_num,
-            cm.message_content,
-            cm.file_url,
-            cm.file_origin_name,
-            cm.read_count,
-            cm.send_time,
-            u.user_id,
-            u.user_name,
-            u.user_profile_picture
+                DATE(cm.send_time) AS time_stamp,
+                cm.message_num,
+                cm.sender_id,
+                cm.chat_room_num,
+                cm.message_content,
+                cm.file_url,
+                cm.file_origin_name,
+                cm.read_count,
+                cm.send_time AS message_send_time,
+                u.user_id,
+                u.user_name,
+                u.user_profile_picture
             FROM chat_message cm
             JOIN user u ON cm.sender_id = u.user_id
             WHERE cm.chat_room_num = #{chatRoomNum}
-            AND MATCH(cm.message_content) AGAINST(#{messageContent} IN BOOLEAN MODE)
-        )
-        SELECT * FROM TimestampRow
+            AND MATCH(cm.message_content) AGAINST(#{messageContent} IN BOOLEAN MODE))
+        SELECT
+            time_stamp,
+            NULL AS message_num,
+            NULL AS sender_id,
+            chat_room_num,
+            NULL AS message_content,
+            NULL AS file_url,
+            NULL AS file_origin_name,
+            NULL AS read_count,
+            MIN(message_send_time) AS send_time,
+            NULL AS user_id,
+            NULL AS user_name,
+            NULL AS user_profile_picture
+        FROM MessageData
+        GROUP BY time_stamp
         UNION ALL
-        SELECT * FROM MessageData
-        ORDER BY time_stamp, message_num ASC;
+        SELECT
+            time_stamp,
+            message_num,
+            sender_id,
+            chat_room_num,
+            message_content,
+            file_url,
+            file_origin_name,
+            read_count,
+            message_send_time AS send_time,
+            user_id,
+            user_name,
+            user_profile_picture
+        FROM MessageData
+        ORDER BY time_stamp, send_time ASC;
     </select>
 
     <!-- 채팅방의 채팅 기록 1일씩 가져오기 -->
-    <!-- 2024-06-05, ROLLUP을 통한 타임 스탬프 구현-->
     <select id="redisSearchMessages" resultType="chatMessage">
         WITH TimestampRow AS (
             SELECT DISTINCT
                 DATE(send_time) as time_stamp,
                 NULL as message_num,
                 cm.sender_id as sender_id,
-                NULL as chat_room_num,
+                cm.chat_room_num as chat_room_num,
                 NULL as message_content,
                 NULL as file_url,
                 NULL as file_origin_name,
@@ -119,6 +126,14 @@
         UNION ALL
         SELECT * FROM MessageData
         ORDER BY time_stamp, message_num ASC;
+    </select>
+
+    <!-- 2024-06-23, 마지막으로 본 채팅 메시지의 전날부터 가장 가까운 마지막 날을 검색한다 -->
+    <select id="getLastDay">
+        SELECT MAX(DATE_FORMAT(cm.send_time, '%Y-%m-%d')) as time_stamp
+        FROM chat_message cm
+        WHERE cm.chat_room_num = #{chatRoomNum}
+        AND DATE_FORMAT(cm.send_time, '%Y-%m-%d') <![CDATA[<]]> #{timeStamp};
     </select>
 
     <!-- 2024-06-04, 채팅 메시지에서 파일을 업로드할 경우, 해당 내용의 URL을 S3 버킷의 URL로 업데이트-->
@@ -367,4 +382,19 @@
     <update id="initChatRoomVisitTime">
         UPDATE chat_participate SET chat_visit_time = NOW() WHERE chat_room_num = #{chatRoomNum} AND chat_user_id = #{chatUserId}
     </update>
+
+    <!-- 2024-06-24, 긴급 공지 시 모든 부서 채팅방의 방번호를 가져옴 -->
+    <select id="getDeptChatRoomNum" resultType="chatRoom">
+        SELECT *
+        FROM chat_room
+        WHERE room_type = '부서'
+    </select>
+
+    <!-- 2024-06-23, 메시지 당 안 읽은 멤버의 수 관리 테이블 -->
+    <!--    unread_user 테이블 생성 -->
+    <!--    CREATE TABLE unread_user(-->
+    <!--    message_num BIGINT NOT NULL,-->
+    <!--    user_id VARCHAR(50) NOT NULL,-->
+    <!--    CONSTRAINT FK_UNREAD_USER_MESSAGE_ID FOREIGN KEY(message_num)-->
+    <!--    REFERENCES chat_message(message_num));-->
 </mapper>

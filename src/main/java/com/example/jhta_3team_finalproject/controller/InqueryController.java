@@ -4,10 +4,10 @@ package com.example.jhta_3team_finalproject.controller;
 import com.example.jhta_3team_finalproject.domain.inquery.InqueryBoard;
 import com.example.jhta_3team_finalproject.service.customer.InqCommentService;
 import com.example.jhta_3team_finalproject.service.customer.InqueryService;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -23,11 +23,13 @@ import java.util.*;
 
 @Controller
 @RequestMapping(value = "/inquery")
+@Slf4j
 public class InqueryController {
-//    @Value("${my.savefolder}")
+
+//    @Value("${inquery.savefolder}")
 //    private String saveFolder;
 
-    private static final Logger log = LoggerFactory.getLogger(InqueryController.class);
+    //private static final Logger log = LoggerFactory.getLogger(InqueryController.class);
 
     private InqueryService inqueryService;
 
@@ -39,10 +41,15 @@ public class InqueryController {
         this.inqCommentService = inqCommentService;
     }
 
+    @RequestMapping(value = "/faq")
+    public String view() {
+        return "customer/inquery-faq-page";
+    }
+
     @RequestMapping(value = "/list")
     public ModelAndView boardList(@RequestParam(value = "page", defaultValue = "1") int page, ModelAndView mv) {
 
-        log.info("1대1문의 리스트");
+        //log.info("1대1문의 리스트");
 
         int limit = 10; // 한 화면에 출력할 로우 갯수
 
@@ -60,13 +67,13 @@ public class InqueryController {
         if (endpage > maxpage)
             endpage = maxpage;
 
-        long beforeTime = System.currentTimeMillis();
+        //long beforeTime = System.currentTimeMillis();
         List<InqueryBoard> boardlist = inqueryService.getBoardList(page, limit); // 리스트를 받아옴
-        long afterTime = System.currentTimeMillis();
-        long diffTime = afterTime - beforeTime;
-        log.info("실행 시간(ms): " + diffTime);
+        //long afterTime = System.currentTimeMillis();
+        //long diffTime = afterTime - beforeTime;
+        //log.info("실행 시간(ms): " + diffTime);
 
-        mv.setViewName("customer/inqueryList");
+        mv.setViewName("customer/inquery-list-page");
         mv.addObject("page", page);
         mv.addObject("maxpage", maxpage);
         mv.addObject("startpage", startpage);
@@ -82,7 +89,7 @@ public class InqueryController {
     @RequestMapping(value = "/write") // /board/write
     // @RequestMapping(value="/write", method=RequestMethod.GET)
     public String board_write() {
-        return "customer/inqueryWrite";
+        return "customer/inquery-write-page";
     }
 
     /*
@@ -99,20 +106,19 @@ public class InqueryController {
         if (!uploadfile.isEmpty()) {
             String fileName = uploadfile.getOriginalFilename();//원래 파일명
             inqueryBoard.setInqOriginal(fileName);// 원래 파일명 저장
-            //String saveFolder =	request.getSession().getServletContext().getRealPath("resources")
-            //		+ "/upload";
-//            String fileDBName = fileDBName(fileName, saveFolder);
-//            log.info("fileDBName = " + fileDBName);
+            String saveFolder =	request.getSession().getServletContext().getRealPath("resources")  + "/upload";
+            String fileDBName = fileDBName(fileName, saveFolder);
+            log.info("fileDBName = " + fileDBName);
 //
 //            // transferTo(File path) : 업로드한 파일을 매개변수의 경로에 저장합니다.
-//            uploadfile.transferTo(new File(saveFolder + fileDBName));
+            uploadfile.transferTo(new File(saveFolder + fileDBName));
 //            log.info("transferTo path = " + saveFolder + fileDBName);
             // 바뀐 파일명으로 저장
-//            inqueryBoard.setInqFile(fileDBName);
+            inqueryBoard.setInqFile(fileDBName);
         }
 
         inqueryService.insertBoard(inqueryBoard); // 저장메서드 호출
-        log.info(inqueryBoard.toString());//selectKey로 정의한 BOARD_NUM 값 확인해 봅니다.
+        //log.info(inqueryBoard.toString());//selectKey로 정의한 BOARD_NUM 값 확인해 봅니다.
         return "redirect:list";
     }
 
@@ -124,7 +130,7 @@ public class InqueryController {
         int date = c.get(Calendar.DATE); // 오늘 일 구합니다.
 
         String homedir = saveFolder + "/" + year + "-" + month + "-" + date;
-        log.info(homedir);
+        //log.info(homedir);
         File path1 = new File(homedir);
         if (!(path1.exists())) {
             path1.mkdirs(); // 새로운 폴더를 생성
@@ -140,21 +146,21 @@ public class InqueryController {
         // indexOf가 처음 발견되는 문자열에 대한 index를 반환하는 반면,
         // lastIndexOf는 마지막으로 발견되는 문자열의 index를 반환합니다.
         // (파일명에 점에 여러개 있을 경우 맨 마지막에 발견되는 문자열의 위치를 리턴합니다.)
-        log.info("index = " + index);
+        //log.info("index = " + index);
 
         String fileExtension = fileName.substring(index + 1);
-        log.info("fileExtension = " + fileExtension);
+        //log.info("fileExtension = " + fileExtension);
         /**** 확장자 구하기 끝 ****/
 
         // 새로운 파일명
         String refileName = "bbs" + year + month + date + random + "." + fileExtension;
-        log.info("refileName = " + refileName);
+        //log.info("refileName = " + refileName);
 
         // 오라클 디비에 저장될 파일 명
         //String fileDBName = "/" + year + "-" + month + "-" + date + "/" + refileName;
         String fileDBName = File.separator + year + "-" + month + "-" + date
                 + File.separator + refileName;
-        log.info("fileDBName" + fileDBName);
+        //log.info("fileDBName" + fileDBName);
         return fileDBName;
     }
 
@@ -202,7 +208,7 @@ public class InqueryController {
          * 2. 수정 후 이곳으로 이동하는 경우 조회수는 증가하지 않도록 합니다.
          * 3. myhome4/board/list에서 제목을 클릭한 경우 조회수가 증가하도록 합니다.
          * */
-        log.info("referer:" + beforeURL);
+        //log.info("referer:" + beforeURL);
         if (beforeURL != null && beforeURL.endsWith("list")) {
             inqueryService.setReadCountUpdate(num);
         }
@@ -210,14 +216,14 @@ public class InqueryController {
         InqueryBoard inqueryBoard = inqueryService.getDetail(num);
         // board = null; // error 페이지 이동 확인하고자 임의로 지정합니다.
         if (inqueryBoard == null) {
-            log.info("상세보기 실패");
+            //log.info("상세보기 실패");
             mv.setViewName("error/error");
             mv.addObject("url", request.getRequestURL());
             mv.addObject("message", "상세보기 실패입니다.");
         } else {
-            log.info("상세보기 성공");
+            //log.info("상세보기 성공");
             int count = inqCommentService.getListCount(num);
-            mv.setViewName("customer/inqueryView");
+            mv.setViewName("customer/inquery-view-page");
             mv.addObject("count", count);
             mv.addObject("boarddata", inqueryBoard);
         }
@@ -230,17 +236,17 @@ public class InqueryController {
 
         // 글 내용 불러오기 실패한 경우입니다.
         if (boarddata == null) {
-            log.info("수정보기 실패");
+            //log.info("수정보기 실패");
             mv.setViewName("error/error");
             mv.addObject("url", request.getRequestURL());
             mv.addObject("message", "수정보기 실패입니다.");
         } else {
-            log.info("(수정)상세보기 성공");
+            //log.info("(수정)상세보기 성공");
             // 수정 폼 페이지로 이동할 때 원문 글 내용을 보여주기 때문에 boarddata 객체를
             // ModelAndView 객체에 저장합니다.
             mv.addObject("boarddata", boarddata);
             // 글 수정 폼 페이지로 이동하기 위해 경로를 설정합니다.
-            mv.setViewName("customer/inqueryModify");
+            mv.setViewName("customer/inquery-modify-page");
         }
         return mv;
     }
@@ -265,17 +271,17 @@ public class InqueryController {
 
         // 비밀번호가 다른 경우
         if (usercheck == false) {
-            log.info("패스 인증 실패");
+            //log.info("패스 인증 실패");
             rattr.addFlashAttribute("result", "passFail");
             rattr.addAttribute("num", boarddata.getInqNum());
             return "redirect:modifyView";
         }
 
         MultipartFile uploadfile = boarddata.getUploadfile();
-        //String saveFolder = request.getSession().getServletContext().getRealPath("resources") + "/upload";
+        String saveFolder = request.getSession().getServletContext().getRealPath("resources") + "/upload";
 
         if (check != null && !check.equals("")) { // 기존 파일 그대로 사용하는 경우입니다.
-            log.info("기존 파일 그대로 사용합니다.");
+            //log.info("기존 파일 그대로 사용합니다.");
             boarddata.setInqOriginal(check);
             // <input type="hidden" name="BOARD_FILE" value="${boarddata.BOARD_FILE}">
             // 위 문장 때문에 board.setBOARD_FILE() 값은 자동 저장됩니다.
@@ -285,20 +291,21 @@ public class InqueryController {
             // <input type="file" id="upfile" name="uploadfile"> 엘리먼트가 존재하지 않아
             // private MultipartFile uploadfile; 에서 uploadfile은 null 입니다.
             if (uploadfile != null && !uploadfile.isEmpty()) {
-                log.info("파일 변경되었습니다.");
+                //log.info("파일 변경되었습니다.");
 
                 String fileName = uploadfile.getOriginalFilename(); // 원래 파일명
                 boarddata.setInqOriginal(fileName);
 
-//                String fileDBName = fileDBName(fileName, saveFolder);
-//                log.info("fileDBName = " + fileDBName);
-//                // transferTo(File Path) : 업로드한 파일을 매개변수의 경로에 저장합니다.
-//                uploadfile.transferTo(new File(saveFolder + fileDBName));
-//                log.info("transferTo path = " + saveFolder + fileDBName);
-//                // 바뀐 파일명으로 저장
-//                boarddata.setInqFile(fileDBName);
+                String fileDBName = fileDBName(fileName, saveFolder);
+                //log.info("fileDBName = " + fileDBName);
+                // transferTo(File Path) : 업로드한 파일을 매개변수의 경로에 저장합니다.
+                uploadfile.transferTo(new File(saveFolder + fileDBName));
+                //log.info("transferTo path = " + saveFolder + fileDBName);
+                // 바뀐 파일명으로 저장
+                boarddata.setInqFile(fileDBName);
+
             } else { // 기존 파일이 없는데 파일 선택하지 않은 경우 또는 기존 파일이 있었는데 삭제한 경우
-                log.info("선택 파일 없습니다.");
+                //log.info("선택 파일 없습니다.");
                 // <input type="hidden" name="BOARD_FILE" value="${boarddata.BOARD_FILE}">
                 // 위 태그에 값이 있다면 ""로 값을 변경합니다.
                 boarddata.setInqFile(""); // ""로 초기화 합니다.
@@ -310,12 +317,12 @@ public class InqueryController {
         int result = inqueryService.boardModify(boarddata);
 
         if (result == 0) { // 수정에 실패한 경우
-            log.info("게시판 수정 실패");
+            //log.info("게시판 수정 실패");
             mv.addAttribute("url", request.getRequestURL());
             mv.addAttribute("message", "게시판 수정 실패");
             url = "error/error";
         } else { // 수정 성공의 경우
-            log.info("게시판 수정 완료");
+            //log.info("게시판 수정 완료");
             // 수정한 글 내용을 보여주기 위해 글 내용 보기 - 보기 페이지로 이동하기 위해 경로를 설정합니다.
             url = "redirect:detail";
             rattr.addAttribute("num", boarddata.getInqNum());
@@ -349,44 +356,44 @@ public class InqueryController {
 
         // 삭제 처리 실패한 경우
         if (result == 0) {
-            log.info("게시판 삭제 실패");
+            //log.info("게시판 삭제 실패");
             mv.addAttribute("url", request.getRequestURL());
             mv.addAttribute("message", "삭제 실패");
             return "error/error";
         } else {
             // 삭제 처리 성공한 경우 - 글 목록 보기 요청을 전송하는 부분입니다.
-            log.info("게시판 삭제 성공");
+            //log.info("게시판 삭제 성공");
             rattr.addFlashAttribute("result", "deleteSuccess");
             return "redirect:list";
         }
     }
 
-//    @ResponseBody
-//    @PostMapping("/down")
-//    public byte[] BoardFileDown(String filename,
-//                                HttpServletRequest request,
-//                                String original,
-//                                HttpServletResponse response) throws Exception {
-//
-//        //String savePath = "resources/upload";
-//        // 서블릿의 실행 환경 정보를 담고 있는 객체를 리턴합니다.
-//        //ServletContext context = request.getSession().getServletContext();
-//        //String sDownloadPath = context.getRealPath(savePath);
-//        //String sFilePath = sDownloadPath + filename;
-//        //수정
-//        String sFilePath = saveFolder + filename;
-//
-//        File file = new File(sFilePath);
-//
-//        byte[] bytes = FileCopyUtils.copyToByteArray(file); // 유틸을 통해 byte array로 쉽게 생성 가능
-//
-//        String sEncoding = new String(original.getBytes("utf-8"), "ISO-8859-1");
-//
-//        // Content-Disposition: attachment: 브라우저는 해당 content를 처리하지 않고, 다운로드하게 됩니다.
-//        response.setHeader("Content-Disposition", "attachment;filename=" + sEncoding);
-//
-//        response.setContentLength(bytes.length);
-//
-//        return bytes;
-//    }
+    @ResponseBody
+    @PostMapping("/down")
+    public byte[] BoardFileDown(String filename,
+                                HttpServletRequest request,
+                                String original,
+                                HttpServletResponse response) throws Exception {
+
+        String savePath = "resources/upload";
+        // 서블릿의 실행 환경 정보를 담고 있는 객체를 리턴합니다.
+        ServletContext context = request.getSession().getServletContext();
+        String sDownloadPath = context.getRealPath(savePath);
+        String sFilePath = sDownloadPath + filename;
+        //수정
+        //String sFilePath = saveFolder + filename;
+
+        File file = new File(sFilePath);
+
+        byte[] bytes = FileCopyUtils.copyToByteArray(file); // 유틸을 통해 byte array로 쉽게 생성 가능
+
+        String sEncoding = new String(original.getBytes("utf-8"), "ISO-8859-1");
+
+        // Content-Disposition: attachment: 브라우저는 해당 content를 처리하지 않고, 다운로드하게 됩니다.
+        response.setHeader("Content-Disposition", "attachment;filename=" + sEncoding);
+
+        response.setContentLength(bytes.length);
+
+        return bytes;
+    }
 }

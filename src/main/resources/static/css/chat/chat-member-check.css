@@ -88,7 +88,7 @@
             position: absolute;
             right: 1px;
             top: 3px;
-            z-index: 200;
+            /*z-index: 200;*/
             background-color: var(--connection-status);
             border-radius: 50%;
             height: 14px;

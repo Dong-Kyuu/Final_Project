@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="chatbotFragment">
 <head>
     <meta charset="utf-8">
-    <th:block th:fragment="chatbotFragment"/>
+
     <title>Chatbot</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Google Fonts Link For Icons -->
@@ -12,8 +12,8 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0"/>
 
-    <link rel="stylesheet" th:href="@{/css/customer/chatbot.css?v=1.9}">
-    <script th:src="@{/js/customer/chatbot.js?v=1.9}" defer></script>
+    <link rel="stylesheet" th:href="@{/css/customer/chatbot.css}">
+    <script th:src="@{/js/customer/chatbot.js}" defer></script>
 </head>
 <body>
 <button class="chatbot-toggler">
