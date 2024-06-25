@@ -1,11 +1,10 @@
 package com.example.jhta_3team_finalproject.domain.User;
 
-import jakarta.validation.constraints.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,9 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Getter
-@Setter
-@ToString
+@Data
 @Slf4j
 public class User implements UserDetails {
     private int userNum;
@@ -74,23 +71,22 @@ public class User implements UserDetails {
         return roles;
     }
 
-
     @Override
     public String getUsername() {
+        return this.userId;
+    }
+
+    public String getUserName() {
         return userName;
     }
-
-
-    public int getDepartmentId() {
-        return departmentId;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
-
 
     @Override
     public String getPassword() {
         return this.getUserPassword();
     }
-
 
     @Override
     public boolean isAccountNonExpired() {
@@ -115,6 +111,7 @@ public class User implements UserDetails {
     public void setDepartment(String department) {
         this.departmentName = department;
     }
+    public int getDepartmentId() {return departmentId;}
 
 
 }
