@@ -21,18 +21,6 @@ public class RedisController {
     private final RedisTemplate<String, String> redisTemplate;
     private final RedisService redisService;
 
-    @RequestMapping("/redisTest")
-    public ResponseEntity<?> addRedisKey() {
-        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set("test-key-2", "test-value-2");
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-    @RequestMapping("/redisTest/{key}")
-    public ResponseEntity<?> getRedisKey(@PathVariable String key) {
-        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        String value = valueOperations.get(key);
-        return new ResponseEntity<>(value, HttpStatus.OK);
-    }
     @RequestMapping("/redisTest/chatMessage")
     public ResponseEntity<?> getRedisChatMessage(ChatMessage chatMessage) {
         List<ChatMessage> list = redisService.getRedisChatMessage(chatMessage);
