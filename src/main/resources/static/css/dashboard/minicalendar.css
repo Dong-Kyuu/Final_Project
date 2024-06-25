@@ -40,3 +40,13 @@ div.content-wrapper{
 .page-header {
     margin: 13px 0 1.9rem 0;
 }
+
+.dept-black-lev3 {
+    border-left: none;
+    border-bottom: none !important;
+    background: no-repeat !important;
+}
+
+.dept-black {
+    border-left: none !important;
+}

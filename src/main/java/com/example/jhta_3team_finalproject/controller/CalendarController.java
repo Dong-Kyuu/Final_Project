@@ -69,10 +69,11 @@ public class CalendarController {
 
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
-    public int delete(int cal_id) {
+    public int delete(int cal_id, @AuthenticationPrincipal User user) {
 
+        String user_name = user.getUsername();
 
-        return cs.delete(cal_id);
+        return cs.delete(cal_id,user_name);
     }
 
     

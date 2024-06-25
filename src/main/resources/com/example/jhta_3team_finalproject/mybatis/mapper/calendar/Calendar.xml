@@ -29,8 +29,8 @@
     <delete id="delete">
         delete
         from calendar
-        where cal_id = #{id}
+        where cal_id = #{cal_id}
+        and user_name= #{user_name}
     </delete>
-
 
 </mapper>
