@@ -4,7 +4,7 @@
 var editEvent = function (event, element, view) {
 
     $('#deleteEvent').data('id', event._id); //클릭한 이벤트 ID
-
+    $('#deleteEvent').data('user_name', event.username);
     $('.popover.fade.top').remove();
     $(element).popover("hide");
 
@@ -104,11 +104,11 @@ var editEvent = function (event, element, view) {
 
 // 삭제버튼
 $('#deleteEvent').on('click', function () {
-    
-    $('#deleteEvent').unbind();
+
     console.log( "delete="+$(this).data('id'));
-    $("#calendar").fullCalendar('removeEvents', $(this).data('id'));
-    eventModal.modal('hide');
+    $this = $(this)
+    //$("#calendar").fullCalendar('removeEvents', $(this).data('id'));
+
     //삭제시
     $.ajax({
         type: "get",
@@ -117,7 +117,13 @@ $('#deleteEvent').on('click', function () {
             cal_id: $(this).data('id')
         },
         success: function (response) {
-            alert('삭제되었습니다.');
+            if(response == 1){
+            $("#calendar").fullCalendar('removeEvents', $this.data('id'));
+            alert('삭제되었습니다.');}
+            else{
+                alert('작성자만 삭제가 가능합니다.');
+            }
+            eventModal.modal('hide');
         }
     });
 

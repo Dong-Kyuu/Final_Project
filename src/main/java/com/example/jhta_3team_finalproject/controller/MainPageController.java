@@ -5,6 +5,7 @@ import com.example.jhta_3team_finalproject.domain.TourPackage.Purchase;
 import com.example.jhta_3team_finalproject.domain.TourPackage.Trip;
 import com.example.jhta_3team_finalproject.domain.TourPackage.TripOption;
 import com.example.jhta_3team_finalproject.domain.User.User;
+import com.example.jhta_3team_finalproject.domain.User.UserAuth;
 import com.example.jhta_3team_finalproject.domain.calendar.Calendar;
 import com.example.jhta_3team_finalproject.domain.dashboard.DashAnnounceBoard;
 import com.example.jhta_3team_finalproject.service.TourPackage.PurchaseService;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -59,7 +61,7 @@ public class MainPageController {
     }
 
     @GetMapping("/dashboard")
-    public String dashboard(@AuthenticationPrincipal User userDetails, Model model) {
+    public ModelAndView dashboard(@AuthenticationPrincipal User userDetails, ModelAndView mv) {
         User dbuser = userservice.departmentPositionInfo(userDetails.getDepartmentId(), userDetails.getPositionId());
 
         userDetails.setDepartmentName(dbuser.getDepartmentName());
@@ -72,12 +74,20 @@ public class MainPageController {
 
         //캘린더 당일 일정 가져오기
         List<Calendar> list = dashBoardCalendarService.select();
-        //캘린더-list
-        model.addAttribute("list", list);
+        //로그인 후 부서값 가져오기
+        Authentication authentication2 = SecurityContextHolder.getContext().getAuthentication();
+        User loginuser = (User)authentication2.getPrincipal();
+        //캘린더당일리스트 중 부서가 같은 일정만
+        for(int a =0;a<list.size();a++) {
+            if (list.get(a).getType().equals(loginuser.getDepartmentName())){
+                mv.addObject("calenderlist", list);
+                logger.info("test");
+            }
 
+        }
+        mv.setViewName("dashboard/dashboard-page");
 
-
-        return "dashboard/dashboard-page";
+        return mv;
     }
 
     // 리스트 가져오기

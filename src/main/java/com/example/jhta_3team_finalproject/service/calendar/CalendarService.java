@@ -13,5 +13,5 @@ public interface CalendarService {
 
     int resize(Calendar calendar);
 
-    int delete(int cal_id);
+    int delete(int cal_id,String user_name);
 }

@@ -42,7 +42,7 @@ public class CalendarServiceImpl implements CalendarService{
     }
 
     @Override
-    public int delete(int cal_id) {
-        return dao.delete(cal_id);
+    public int delete(int cal_id, String user_name) {
+        return dao.delete(cal_id,user_name);
     }
 }

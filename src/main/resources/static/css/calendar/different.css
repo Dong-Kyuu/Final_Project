@@ -174,8 +174,13 @@ html{
 .container{
     padding: 0px;
 }
+label.checkbox-inline{
+    width: 170px;
+}
 
-
+#fc-prev-button.fc-button.fc-state-default.fc-corner-left.fc-corner-right{
+    linear-gradient(to right, #e7ebf0, #868e96);
+}
 
 
 
