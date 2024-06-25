@@ -121,163 +121,149 @@
                     </div>
                 </div>
 
-                <div class="col-7 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body" style="padding-top:30px; padding-bottom: 15px;">
+                <th:block th:if="${#lists.size(projectPeeds) > 0}">
+                    <th:block th:each = "projectPeed, iterStat:${projectPeeds}">
 
-                            <div style="height: 30px; align-items:center; margin-bottom:15px; height: 60px; border-bottom:1px black solid">
-                                <img th:src="${#authentication.principal.userProfilePicture}" alt="image" style="width:30px; height:30px; border-radius: 18px; float: left; margin-top:3px; margin-right: 20px;">
-                                <div>
-                                    <span class="card-title" style="font-weight: bold; font-size:14px;">
-                                        관리자3
-                                    </span>
+                        <th:block th:if ="${projectPeed.projectPeedDisclosure==1
+                                          or (projectPeed.projectPeedDisclosure == 2 and #authentication.principal.getUserNum() == projectPeed.projectMemberNum)
+                                          or (projectPeed.projectPeedDisclosure == 3 and (#authentication.principal.getUserNum() == projectPeed.projectMemberNum
+                                                                                       or #authentication.principal.getUserNum() == projectPeed.projectPeedCharge))}">
+                            <div class="col-7 grid-margin stretch-card" th:id="${projectPeed.projectPeedNum}">
+                                <div class="card">
+                                    <div class="card-body" style="padding-top:30px; padding-bottom: 15px;">
+                                        <input type="hidden" class="peedNum" th:value="${projectPeed.projectPeedNum}">
+                                        <input type="hidden" class="peedWriter" th:value="${projectPeed.projectMemberNum}">
+                                        <div style="height: 30px; align-items:center; margin-bottom:15px; height: 60px; border-bottom:1px black solid">
+                                            <img th:src="${projectPeed.writerProfile}" alt="image" style="width:30px; height:30px; border-radius: 18px; float: left; margin-top:3px; margin-right: 20px;">
+                                            <th:block th:if="${projectPeed.projectPeedDisclosure==1}">
+                                                <i class="mdi mdi-account-multiple" style="float:right"></i>
+                                            </th:block>
+                                            <th:block th:if="${projectPeed.projectPeedDisclosure==2}">
+                                                <i class="mdi mdi-account" style="float:right"></i>
+                                            </th:block>
+                                            <th:block th:if="${projectPeed.projectPeedDisclosure==3}">
+                                                <i class="mdi mdi-account-star" style="float:right"></i>
+                                            </th:block>
+                                            <i class="mdi mdi-dots-vertical" style="float:right"></i>
+
+                                            <div>
+                                                <span class="card-title" style="font-weight: bold; font-size:14px;">
+                                                    [[${projectPeed.writerName}]]
+                                                </span>
+                                            </div>
+                                            <p class="card-description" style="font-size:11px; margin-bottom: 5px;">
+                                                [[${projectPeed.writerDepartment}]]
+                                                <code style="font-size:11px">[[${projectPeed.writerPosition}]]</code>
+                                            </p>
+                                        </div>
+
+                                        <div class="work-title" style="display:block">
+                                            <div style="font-weight: bold; font-size:20px; padding:8px 0px">[[${projectPeed.projectPeedTitle}]]</div>
+                                        </div>
+                                        <hr style="margin-top:10px">
+
+                                        <div class="btn-flex">
+                                            <button type="button" class="btn btn-inverse-primary btn-fw workBtn typeBtnV type-R" th:classappend="${projectPeed.projectPeedType == 1} ? 'active' : ''">요청</button>
+                                            <button type="button" class="btn btn-inverse-success btn-fw workBtn typeBtnV type-Pr" th:classappend="${projectPeed.projectPeedType == 2} ? 'active' : ''">진행</button>
+                                            <button type="button" class="btn btn-inverse-info btn-fw workBtn typeBtnV type-P" th:classappend="${projectPeed.projectPeedType == 3} ? 'active' : ''">피드백</button>
+                                            <button type="button" class="btn btn-inverse-warning btn-fw workBtn typeBtnV type-S" th:classappend="${projectPeed.projectPeedType == 4} ? 'active' : ''">완료</button>
+                                            <button type="button" class="btn btn-inverse-danger btn-fw workBtn typeBtnV type-D" th:classappend="${projectPeed.projectPeedType == 5} ? 'active' : ''">보류</button>
+                                        </div>
+                                        <hr>
+
+                                        <th:block th:if="${projectPeed.projectPeedCharge} != 0">
+                                            <div>
+                                                <div class="chargeShel" style="display: flex">
+                                                    <input type="hidden" class="chargerNum" th:value="${projectPeed.projectPeedCharge}">
+                                                    담당자 : <div class="chargeOut" style="margin-left:15px; font-weight: normal"> [[${projectPeed.chargerName}]] <code> [[${projectPeed.chargerPosition}]] </code></div>
+                                                </div>
+                                            </div>
+                                        </th:block>
+
+                                        <th:block th:if="${projectPeed.projectPeedPriority} != 0">
+                                            <div class=""style="margin-top:14px; font-size:15px; font-weight: bold; display: flex; align-items: center">
+                                                <th:block th:if="${projectPeed.projectPeedPriority} == 1">
+                                                    <span class="prioVal prio1">낮음</span>
+                                                </th:block>
+                                                <th:block th:if="${projectPeed.projectPeedPriority} == 2">
+                                                    <span class="prioVal prio2">보통</span>
+                                                </th:block>
+                                                <th:block th:if="${projectPeed.projectPeedPriority} == 3">
+                                                    <span class="prioVal prio3">⚠️ 높음</span>
+                                                </th:block>
+                                                <th:block th:if="${projectPeed.projectPeedPriority} == 4">
+                                                    <span class="prioVal prio4">🚨 긴급</span>
+                                                </th:block>
+                                            </div>
+                                        </th:block>
+
+                                        <th:block th:if="${projectPeed.projectPeedStartPeriod} != null">
+                                            <div class="periodArea">
+                                                <div class="col-sm-5">
+                                                    <label for="startDate" style="font-weight: bold">Start Date:</label>
+                                                    <input type="date" class="form-control" name="projectStartPeriod" id="startDate" th:value="${#strings.substring(projectPeed.projectPeedStartPeriod, 0, 10)}"/>
+                                                </div>
+                                                <th:block th:if="${projectPeed.projectPeedEndPeriod} != null">
+                                                    <div class="col-sm-5 endDate">
+                                                        <label for="endDate" style="font-weight: bold">End Date (Optional):</label>
+                                                        <input type="date" class="form-control" name="projectEndPeriod" id="endDate" th:value="${#strings.substring(projectPeed.projectPeedEndPeriod, 0, 10)}"/>
+                                                    </div>
+                                                </th:block>
+                                            </div>
+                                            <p id="dateError" style="color:red; display:none;">프로젝트 시작 날짜는 끝나는 날짜보다 늦을 수 없습니다.</p>
+                                        </th:block>
+            <!--                            <div style="margin-top:14px; font-size:15px; font-weight: bold; display: flex; align-items: center">-->
+            <!--                                <i class="mdi mdi-flag-outline" style="font-size:18px;"></i> <code style="color:red"></code>-->
+            <!--                            </div>-->
+                                        <hr style="margin-top:13px">
+
+                                        <div class="workcontent">
+                                            [[${projectPeed.projectPeedContent}]]
+                                            <br>
+                                        </div>
+                                        <div class="content-icon" style="margin-top:15px; display: flex; justify-content: space-between; height: 25px; align-items: center" >
+                                            <div>
+                                            <i class="mdi mdi-checkbox-blank-outline" style="font-size:18px; margin-top:15px;"></i> Check
+                                            </div>
+                                                <div style="color:dimgray; font-size:14px;">댓글 [[${#lists.size(projectPeed.comments)}]]</div>
+                                        </div>
+                                        <hr>
+                                        <div class="comment-area">
+                                            <th:block th:each="comment : ${projectPeed.comments}">
+                                                <div class="comment-box" style="margin-bottom:20px;">
+                                                    <div style="height: 25px;">
+                                                        <img th:src="${comment.commWriterProfile}" alt="image" style="width:25px!important; height:25px; border-radius: 12.5px; float: left; margin: 5px 15px 0px 0px;">
+                                                        <i class="mdi mdi-dots-vertical" style="float: right; font-size: 25px; margin-top:3px;"></i>
+                                                        <div style="height:40px; padding-top:0px;">
+                                                        <span class="card-title" style="font-width: bold; font-size:12px">
+                                                            [[${comment.commWriter}]]
+                                                        </span>
+                                                            <p class="card-description" style="font-size:10px">
+                                                                [[${comment.commWriterDepartment}]] <code style="font-size:10px"> [[${comment.commWriterPosition}]] </code> <code style="font-size:10px; color:dimgray">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[[${comment.projectCommentRegdate}]]</code>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="comm-contentbox" style="margin-left:45px; margin-top:8px; font-size:15px">
+                                                        <br>
+                                                        [[${comment.projectCommentContent}]]
+                                                        <br>
+                                                    </div>
+                                                </div>
+                                            </th:block>
+                                        </div>
+                                        <div class="comment-input" style="margin-top:20px; display: flex ">
+                                            <img th:src="${#authentication.principal.userProfilePicture}" alt="image" style="width:30px; height:30px; border-radius: 18px; float: left; margin-right: 20px;">
+                                            <input type="text" class="createContent contentInput" placeholder="댓글을 입력하세요.">
+                                            <button type="button" class="btn btn-inverse-success btn-icon commentBtn" style="margin-left:10px" th:data-peednum="${projectPeed.projectPeedNum}">
+                                                <i class="mdi mdi-send"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <p class="card-description" style="font-size:11px; margin-bottom: 5px;">
-                                    인사부
-                                    <code style="font-size:11px">사원</code>
-                                </p>
                             </div>
-
-                            <div class="work-title" style="display:block">
-                                <div style="font-weight: bold; font-size:20px; padding:8px 0px">파리 여행지 추천 리스트 자료제출</div>
-                            </div>
-                            <hr style="margin-top:10px">
-
-                            <div class="btn-flex">
-                                <button type="button" class="btn btn-inverse-primary btn-fw workBtn type-R type-R.active">요청</button>
-                                <button type="button" class="btn btn-inverse-success btn-fw workBtn">진행</button>
-                                <button type="button" class="btn btn-inverse-danger btn-fw workBtn">피드백</button>
-                                <button type="button" class="btn btn-inverse-warning btn-fw workBtn"  style="background-color: #fed713; color:white;">완료</button>
-                                <button type="button" class="btn btn-inverse-info btn-fw workBtn">보류</button>
-                            </div>
-                            <hr>
-
-                            <div>
-                                <div class="chargeShel" style="display: flex">
-                                    담당자 : <div class="chargeOut" style="margin-left:15px; font-weight: normal">백부장 <code> 부장 </code></div>
-                                </div>
-
-                            </div>
-
-                            <div class="periodArea">
-                                <div class="col-sm-5">
-                                    <label for="startDate">Start Date:</label>
-                                    <input type="date" class="form-control" name="projectStartPeriod" id="startDate" required/>
-                                </div>
-                                <div class="col-sm-5 endDate">
-                                    <label for="endDate">End Date (Optional):</label>
-                                    <input type="date" class="form-control" name="projectEndPeriod" id="endDate"/>
-                                </div>
-                            </div>
-                            <p id="dateError" style="color:red; display:none;">프로젝트 시작 날짜는 끝나는 날짜보다 늦을 수 없습니다.</p>
-
-<!--                            <div style="margin-top:14px; font-size:15px; font-weight: bold; display: flex; align-items: center">-->
-<!--                                <i class="mdi mdi-flag-outline" style="font-size:18px;"></i> <code style="color:red"></code>-->
-<!--                            </div>-->
-                            <hr style="margin-top:13px">
-
-                            <div class="workcontent">
-                                3차 테스트 완료했습니다
-                                <br>
-                            </div>
-                            <div class="content-icon" style="margin-top:15px; display: flex; justify-content: space-between; height: 25px; align-items: center" >
-                                <div>
-                                <i class="mdi mdi-checkbox-blank-outline" style="font-size:18px; margin-top:15px;"></i>
-                                </div>
-                                    <div style="color:dimgray; font-size:14px;">댓글 0</div>
-                            </div>
-
-                            <div class="comment-input" style="margin-top:20px; display: flex ">
-                                <img th:src="${#authentication.principal.userProfilePicture}" alt="image" style="width:30px; height:30px; border-radius: 18px; float: left; margin-right: 20px;">
-                                <input type="text" class="createContent" placeholder="댓글을 입력하세요.">
-                                <button type="button" class="btn btn-inverse-success btn-icon uploadBtn" style="margin-left:10px">
-                                    <i class="mdi mdi-send"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="col-7 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body" style="padding-top:30px; padding-bottom: 15px;">
-
-                            <div style="height: 30px; align-items:center; margin-bottom:15px; height: 60px; border-bottom:1px black solid">
-                                <img th:src="${#authentication.principal.userProfilePicture}" alt="image" style="width:30px; height:30px; border-radius: 18px; float: left; margin-top:3px; margin-right: 20px;">
-                                <div>
-                                    <span class="card-title" style="font-weight: bold; font-size:14px;">
-                                        주선경
-                                    </span>
-                                </div>
-                                <p class="card-description" style="font-size:11px; margin-bottom: 5px;">
-                                    임원
-                                    <code style="font-size:11px">대표</code>
-                                </p>
-                            </div>
-
-                            <div class="work-title" style="display:block">
-                                <div style="font-weight: bold; font-size:20px; padding:8px 0px">파리 여행지 추천 리스트 자료제출</div>
-                            </div>
-                            <hr style="margin-top:10px">
-
-                            <div class="btn-flex">
-                                <button type="button" class="btn btn-inverse-primary btn-fw workBtn type-R type-R.active" style="background-color:#b66dff; color:white;">요청</button>
-                                <button type="button" class="btn btn-inverse-success btn-fw workBtn">진행</button>
-                                <button type="button" class="btn btn-inverse-danger btn-fw workBtn">피드백</button>
-                                <button type="button" class="btn btn-inverse-warning btn-fw workBtn">완료</button>
-                                <button type="button" class="btn btn-inverse-info btn-fw workBtn">보류</button>
-                            </div>
-                            <hr>
-
-                            <div>
-                                <div class="chargeShel" style="display: flex">
-                                    담당자 : <div class="chargeOut" style="margin-left:15px; font-weight: normal">김동규 <code> 부장 </code></div>
-                                </div>
-
-                            </div>
-
-                            <div class="periodArea">
-                                <div class="col-sm-5">
-                                    <label for="startDate">Start Date:</label>
-                                    <input type="date" class="form-control" name="projectStartPeriod" id="startDate" required/>
-                                </div>
-                                <div class="col-sm-5 endDate">
-                                    <label for="endDate">End Date (Optional):</label>
-                                    <input type="date" class="form-control" name="projectEndPeriod" id="endDate"/>
-                                </div>
-                            </div>
-                            <p id="dateError" style="color:red; display:none;">프로젝트 시작 날짜는 끝나는 날짜보다 늦을 수 없습니다.</p>
-
-                            <div style="margin-top:14px; font-size:15px; font-weight: bold; display: flex; align-items: center">
-                                <i class="mdi mdi-flag-outline" style="font-size:18px;"></i> <code style="color:red">긴급</code>
-                            </div>
-                            <hr style="margin-top:13px">
-
-                            <div class="workcontent">
-                                업무내용
-                                <br>
-                            </div>
-                            <div class="content-icon" style="margin-top:15px; display: flex; justify-content: space-between; height: 25px; align-items: center" >
-                                <div>
-                                    <i class="mdi mdi-checkbox-blank-outline" style="font-size:18px; margin-top:15px;"></i>
-                                </div>
-                                <div style="color:dimgray; font-size:14px;">댓글 0</div>
-                            </div>
-
-                            <div class="comment-input" style="margin-top:20px; display: flex ">
-                                <img th:src="${#authentication.principal.userProfilePicture}" alt="image" style="width:30px; height:30px; border-radius: 18px; float: left; margin-right: 20px;">
-                                <input type="text" class="createContent" placeholder="댓글을 입력하세요.">
-                                <button type="button" class="btn btn-inverse-success btn-icon uploadBtn" style="margin-left:10px">
-                                    <i class="mdi mdi-send"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
+                        </th:block>
+                    </th:block>
+                </th:block>
             </div>
         </div>
     </div>
@@ -288,8 +274,11 @@
         <div class="create-Work">
             <p class="modal-head">New Work!</p>
         </div>
-        <form class="forms-sample" action="add" method="post" enctype="multipart/form-data" id="writeForm">
+        <form class="projectForm" action="addPeed" method="post" enctype="multipart/form-data" id="projectForm">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input type="hidden" name="projectMemberNum" th:value="${#authentication.principal.userNum}">
+            <input type="hidden" name="projectNum" th:value="${project.projectNum}">
+
             <ul class="work-modal-item" style="margin-bottom:0px; margin-top:12px; border-top:1px solid #ddd">
 
                 <li><i class="mdi mdi-lead-pencil"></i>&nbsp;&nbsp;글</li>
@@ -309,7 +298,7 @@
                 <button type="button" class="btn btn-inverse-info btn-fw workBtn typeBtn type-P">피드백</button>
                 <button type="button" class="btn btn-inverse-warning btn-fw workBtn typeBtn type-S">완료</button>
                 <button type="button" class="btn btn-inverse-danger btn-fw workBtn typeBtn type-D">보류</button>
-                <input type="hidden" name="projectPeedType" id="peedtype">
+                <input type="hidden" name="projectPeedType" id="peedtype" value="0">
             </div>
             <hr>
             <div style="font-weight: bold; margin-bottom:12px;">
@@ -317,49 +306,58 @@
             </div>
             <div>
                 <div class="chargeShel" style="display: flex; align-items: center">
-                    <div class="charger">담당자 </div><div class="putcharge" style="margin-left:20px; color:palevioletred"></div>
-                    <input type="text" placeholder="담당자를 추가하세요." class="chargeIn" name="projectPeedCharge">
+                    <div class="charger">담당자 </div><div class="putcharge" id="putcharge" style="margin-left:20px; color:palevioletred"></div>
+                    <input type="text" placeholder="담당자를 추가하세요." class="chargeIn">
+                    <input type="hidden" class="chargerNum" name="projectPeedCharge" value="0">
                 </div>
+            </div>
 
+            <div style="margin-top:14px; font-size:15px; font-weight: bold; display: flex; align-items: center">
+                <i class="mdi mdi-flag-outline" style="font-size:18px;"></i> 우선순위
+                <input type="radio" name="projectPeedPriority" value="4" class="priority"><span class="prioVal prio4">🚨 긴급</span>
+                <input type="radio" name="projectPeedPriority" value="3" class="priority"><span class="prioVal prio3">⚠️ 높음</span>
+                <input type="radio" name="projectPeedPriority" value="2" class="priority"><span class="prioVal prio2">보통</span>
+                <input type="radio" name="projectPeedPriority" value="1" class="priority"><span class="prioVal prio1">낮음</span>
             </div>
 
             <div class="periodArea">
                 <div class="col-sm-5">
-                    <label for="startDate">Start Date:</label>
+                    <label for="startDate" style="font-weight: bold">Start Date:</label>
                     <input type="date" class="form-control" name="projectPeedStartPeriod" id="startDate"/>
                 </div>
                 <div class="col-sm-5 endDate">
-                    <label for="endDate">End Date (Optional):</label>
+                    <label for="endDate" style="font-weight: bold">End Date (Optional):</label>
                     <input type="date" class="form-control" name="projectPeedEndPeriod" id="endDate"/>
                 </div>
             </div>
             <p id="dateError" style="color:red; display:none;">프로젝트 시작 날짜는 끝나는 날짜보다 늦을 수 없습니다.</p>
 
-            <div style="margin-top:14px; font-size:15px; font-weight: bold; display: flex; align-items: center">
-                <i class="mdi mdi-flag-outline" style="font-size:18px;"></i> 우선순위
-            </div>
+
             <hr style="margin-top:13px">
 
-            <textarea class="workcontent" rows="10" placeholder="내용을 입력하세요!" style="width:100%; overflow: auto;"></textarea>
+            <textarea class="workcontent" rows="14" placeholder="내용을 입력하세요!" name="projectPeedContent" style="width:100%; overflow: auto;"></textarea>
+            <div class="upfileview"></div>
             <hr>
 
             <div class="last-btngroup">
                 <div class="btn-group" style="width:70px;">
                     <button type="button"
-                            class="btn btn-secondary btn-fw workBtn"
+                            class="btn btn-secondary btn-fw workBtn selectDisclosure"
                             data-bs-toggle="dropdown">전체보기
                     </button>
                     <div class="dropdown-menu scope" style="width:60px !important;">
                         <a class="dropdown-item scope">전체보기</a>
                         <a class="dropdown-item scope">나만보기</a>
-                        <a class="dropdown-item scope">프로젝트 관리자만</a>
+                        <a class="dropdown-item scope">담당자만</a>
                     </div>
+                    <input type="hidden" name="projectPeedDisclosure" value="1" id="peedDisclosure">
                 </div>
                 <div>
                     <button type="button" class="btn btn-success btn-icon uploadBtn">
                         <i class="mdi mdi-upload"></i>
                     </button>
-                    <button type="button" class="btn btn-danger btn-fw workBtn">등록</button>
+                    <input type="file" id="upfile" name="uploadfile[]" style="display:none" multiple>
+                    <button type="submit" class="btn btn-danger btn-fw workBtn workSubmit">등록</button>
                 </div>
             </div>
         </form>

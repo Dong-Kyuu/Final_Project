@@ -120,10 +120,14 @@ body {
     padding: 20px;
     border: 1px solid #888;
     min-width: 400px;
-    max-width : 560px;
+    width:600px;
+    max-width : 800px;
     width: 50% !important;
-    height : 80%;
+    top : auto;
+    min-height : 760px;
     max-height : 900px;
+    overflow: auto;
+
 
 }
 
@@ -297,4 +301,56 @@ body {
 .chargeitem:hover {
     background: #e4e4e4;
     cursor : pointer;
+}
+
+.priority {
+    margin-left:10px;
+
+}
+
+.prioVal{
+    margin-left:5px;
+}
+
+.prio1 {
+    color : green;
+}
+
+.prio2 {
+    color : blue;
+}
+
+.prio3 {
+    color : #ffed00;
+}
+
+.prio4 {
+    color : red;
+}
+
+.upfilename {
+    margin-left:10px;
+    margin-bottom:10px;
+}
+
+.upfileview {
+    width:50%
+}
+.deleteUpfile {
+    float:right;
+
+}
+
+.cancelBtn {
+    margin-left:10px;
+}
+
+.commentBtn {
+    width:35px !important;
+    height: 35px !important;
+}
+
+.comment-area {
+    max-height: 600px;
+    overflow: auto;
 }
