@@ -224,7 +224,7 @@
         // Add optionId to the hidden input field
         var currentOptionIds = optionIdField.value;
         if (currentOptionIds !== '') {
-            currentOptionIds += ',';
+            currentOptionIds += '-';
         }
         currentOptionIds += optionId;
         optionIdField.value = currentOptionIds;
@@ -238,12 +238,12 @@
         optionDiv.remove();
 
         // Update the hidden input field
-        var currentOptionIds = optionIdField.value.split(',');
+        var currentOptionIds = optionIdField.value.split('-');
         var index = currentOptionIds.indexOf(optionId);
         if (index > -1) {
             currentOptionIds.splice(index, 1);
         }
-        optionIdField.value = currentOptionIds.join(',');
+        optionIdField.value = currentOptionIds.join('-');
     }
 
 </script>

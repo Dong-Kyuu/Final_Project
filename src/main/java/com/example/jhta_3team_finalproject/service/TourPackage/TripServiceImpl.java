@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -50,13 +51,14 @@ public class TripServiceImpl implements TripService{
     }
 
     @Override
-    public int getListCount() {
-        return tripMapper.getListCount();
-    }
-
-    @Override
-    public int getCategoryListCount(String category) {
-        return tripMapper.getCategoryListCount(category);
+    public int getListcount(String category,String keyword){
+        if (isValidString(category)) {
+            return tripMapper.getCategoryListCount(category);
+        } else if (isValidString(keyword)) {
+            return tripMapper.getKeywordListCount(keyword);
+        } else {
+            return tripMapper.getListCount();
+        }
     }
 
     @Override
@@ -79,18 +81,14 @@ public class TripServiceImpl implements TripService{
     }
 
     @Override
-    public List<Trip> getTripList(int startRow, int endRow, String sort) {
-        return tripMapper.getTripList(startRow, endRow, sort);
-    }
-
-    @Override
-    public List<Trip> getCategoryTripList(int startRow, int endRow, String category,String sort) {
-        return tripMapper.getCategoryTripList(startRow, endRow, category, sort);
-    }
-
-    @Override
-    public List<Trip> getTripListByKeyword(int startRow, int endRow, String keyword, String sort) {
-        return tripMapper.getTripListByKeyword(startRow, endRow, keyword,sort);
+    public List<Trip> getTriplist(String category,String keyword,int startRow,int endRow,String sort){
+        if (isValidString(category)) {
+            return tripMapper.getCategoryTripList(startRow, endRow,category, sort);
+        } else if (isValidString(keyword)) {
+            return tripMapper.getTripListByKeyword(startRow, endRow,keyword,  sort);
+        } else {
+            return tripMapper.getTripList(startRow, endRow, sort);
+        }
     }
     //-------------------
 
@@ -109,10 +107,6 @@ public class TripServiceImpl implements TripService{
         return tripMapper.getOptionIds(num);
     }
 
-    @Override
-    public int getKeywordListCount(String keyword) {
-        return tripMapper.getKeywordListCount(keyword);
-    }
 
     @Override
     public void saveTrip(Trip trip,MultipartFile[] images) throws IOException {
@@ -296,4 +290,20 @@ public class TripServiceImpl implements TripService{
         }
     }
 
+    @Override
+    public Trip setTripForRegAndUpdate(String tripName, Integer tripPrice, Integer tripMaxStock, LocalDate tripDate, LocalDate expireDate, String category, String optionIds) {
+        Trip trip= new Trip();
+        trip.setTripName(tripName);
+        trip.setTripPrice(tripPrice != null ? tripPrice : 0);
+        trip.setTripMaxStock(tripMaxStock != null ? tripMaxStock : 0);
+        trip.setTripDate(tripDate.toString());
+        trip.setExpireDate(expireDate.toString());
+        trip.setTripCategory(category);
+        trip.setOptionIds(optionIds);
+        return trip;
+    }
+
+    private boolean isValidString(String str) {
+        return str != null && !str.isEmpty() && !Objects.equals(str, "null");
+    }
 }
