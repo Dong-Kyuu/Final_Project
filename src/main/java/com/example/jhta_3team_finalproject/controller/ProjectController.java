@@ -216,11 +216,72 @@ public class ProjectController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User loginuser = (User)authentication.getPrincipal();
 
-        sseService.sendNotification(peedWriter, loginuser.getUserNum(), loginuser.getUsername(),
-                "http://localhost:9000/project/mainProject?projectNum=" + projectComment.getProjectNum() + "#" + projectComment.getProjectPeedNum(),
-                "No." + projectComment.getProjectPeedNum() + "피드에 댓글을 남겼어요.");
-
+        if(loginuser.getUserNum() != peedWriter) {
+            sseService.sendNotification(peedWriter, loginuser.getUserNum(), loginuser.getUsername(),
+                    "http://localhost:9000/project/mainProject?projectNum=" + projectComment.getProjectNum() + "#" + projectComment.getProjectPeedNum(),
+                    "No." + projectComment.getProjectPeedNum() + "피드에 댓글을 남겼어요.");
+        }
         return projectService.commentsInsert(projectComment);
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/changeType")
+    public Map<String, Object> changeType(int type, int peedNum,
+                          int projectNum, int loginNum) {
+
+        Map<String, Object> response = new HashMap<>();
+        int Writer;
+        int Charger;
+        int result = 0;
+        String option = "상태";
+        ProjectPeed projectPeed = new ProjectPeed();
+        projectPeed = projectService.getOneProjectPeed(peedNum, projectNum);
+        Writer = projectPeed.getProjectMemberNum();
+        Charger = projectPeed.getProjectPeedCharge();
+
+        if(loginNum == Writer || loginNum == Charger) {
+            result = projectService.changeType(type, peedNum, projectNum);
+        }
+
+        response.put("result", result);
+        response.put("peedNum", peedNum);
+        response.put("projectNum", projectNum);
+        response.put("type", type);
+        response.put("option", option);
+
+        return response;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/optionComment")
+    public Map<String, Object> optionComment(int loginNum, int peedNum, int projectNum,
+                                             String option, int type) {
+
+        Map<String, Object> response = new HashMap<>();
+        String Comment = "피드의 " + option + "를 " + type + "으로 변경했습니다."; // 예시
+        if(option.equals("상태")) {
+            if(type == 0) {
+                Comment = "피드의 [" + option + "]를 초기화했습니다.";
+            } else if(type == 1) {
+                Comment = "피드의 [" + option + "]를 '요청'으로 변경했습니다.";
+            } else if(type == 2) {
+                Comment = "피드의 [" + option + "]를 '진행'으로 변경했습니다.";
+            } else if(type == 3) {
+                Comment = "피드의 [" + option + "]를 '피드백'으로 변경했습니다.";
+            } else if(type == 4) {
+                Comment = "피드의 [" + option + "]를 '완료'로 변경했습니다.";
+            } else if(type == 5) {
+                Comment = "피드의 [" + option + "]를 '보류'로 변경했습니다.";
+            }
+        }
+
+        int[] resultAndCommentNum = projectService.optionComment(Comment, loginNum, peedNum, projectNum);
+        ProjectComment projectComment = projectService.getInsertComment(resultAndCommentNum[1]);
+
+        response.put("result", resultAndCommentNum[0]);
+        response.put("comment", projectComment);
+
+        return response;
     }
 
     @GetMapping("/t")
