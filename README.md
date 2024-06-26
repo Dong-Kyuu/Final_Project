@@ -13,30 +13,29 @@
 - [💡 서비스 배경 및 목표](#💡-서비스-배경-및-목표)
 - [🛠️ 기술 스택](#🛠️-기술-스택)
 - [🗺️ 서버 구조](#🗺️-서버-구조)
-- [🗂️ 패키지 구조](#🗂️-패키지-구조)
 - [🔥 기술적 개선 및 고려](#🔥-기술적-개선-및-고려)
 
 ---
 
 ## 💡 서비스 배경 및 목표
 
-IT 취업 시장의 기준이 점점 높아지고 있으며, 이러한 흐름 속에서 실무적인 역량이 더욱 중요해지고 있습니다.</br>
-신뢰할 수 있는 현업자의 직,간접적 경험 공유에 대한 필요성과 수요를 확인했습니다.
+사내 IT 인프라가 많이 보급되고 있으며, 이러한 흐름 속에서 업무의 생산성을 증대시키는 것이 더욱 중요해지고 있습니다.</br>
+신뢰할 수 있는 실시간 업무 협업 플랫폼에 대한 필요성과 수요를 확인했습니다.
 
-Anchor 서비스의 목표는 다음과 같습니다.<br>
+MBTI 서비스의 목표는 다음과 같습니다.<br>
 
-- 목표 1. 재직중 혹은 재직했던 회사의 이메일 인증을 통해 신뢰성 있는 멘토를 만날 수 있도록 합니다.</br>
-- 목표 2. 실시간 알림, 정산과 같은 기능을 통해 서비스 이용에 대한 사용자 편의성을 확보합니다.</br>
-- 목표 3. 원활한 서비스 운영을 위한 기술적 요소를 적용하고 개선합니다. (ex. DB 이중화)
+- 목표 1. 실시간 업무 공유 및 협업을 원하는 기업과 팀을 위해 설계된 웹사이트를 구현합니다.</br>
+- 목표 2. 실시간 알림, 채팅과 같은 기능을 통해 서비스 이용에 대한 사용자 편의성을 확보합니다.</br>
+- 목표 3. 원활한 서비스 운영을 위한 기술적 요소를 적용하고 개선합니다. (ex. Redis 캐싱)
 
 ## 🛠️ 기술 스택
 
-| 분류       | 기술명                                                                        |
+| 분류       | 기술명                                                                   |
 |----------|----------------------------------------------------------------------------|
-| BackEnd  | Java, Spring (Boot, Security, JPA), QueryDsl, Junit, Mockito, Redis, MySql |
+| BackEnd  | Java, Spring (Boot, Security), Junit, Redis, MySql                         |
 | FrontEnd | HTML, Javascript, Thymeleaf                                                |
-| DevOps   | nGrinder, Jmeter, EC2, RDS, S3, CodeDeploy, GithubAction                   |
-| Tools    | IntelliJ, Gradle, Maven                                                    |
+| DevOps   | nGrinder, Scouter, EC2, RDS, S3, Docker, Jenkins                           |   
+| Tools    | IntelliJ, Gradle                                                           |
 
 ## 🗺️ 서버 구조
 
@@ -45,26 +44,6 @@ Anchor 서비스의 목표는 다음과 같습니다.<br>
 ## 💾 DB 구조
 
 ![DB구조](https://github.com/zilyun/Final_Project/assets/40315922/61cb8933-8e20-41c8-b8bd-9c60da76f08f)
-
-## 🗂️ 패키지 구조
-
-```
-- com.anchor
-    - domain
-        - api
-            - controller
-              - request
-            - service
-              - response
-        - domain
-            - (Entity, Type Object)
-            - repository
-    - global
-        - config
-        - exception
-        - util
-        - (...)
-```
 
 ## 🔥 기술적 개선 및 고려
 
@@ -76,7 +55,7 @@ Anchor 서비스의 목표는 다음과 같습니다.<br>
         - 결과 및 추가사항
 ```
 
-### 홈페이지 조회 성능 개선 [[적용 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/domain/mentoring/api/service/MentoringService.java#L281-L292) / [설정 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/config/CacheConfig.java#L19C1-L39C4)]
+### 문의 리스트 조회 성능 개선 [[적용 코드]()]
 
 - `Caffeine Cache`를 도입해 10개의 인기 멘토링과 태그 조회 시 캐싱 처리
 
@@ -118,12 +97,10 @@ Anchor 서비스의 목표는 다음과 같습니다.<br>
       <img src="readme/image/async/mail_log_2.png">
   </details>
 
-### 멘토링 검색 정확도, 정밀도 개선 [[적용 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/domain/mentoring/domain/repository/custom/QMentoringRepositoryImpl.java#L190C1-L223C2) / [설정 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/config/CustomFunctionContributor.java#L9C1-L21C2)]
+### 채팅 기록 검색 정확도, 정밀도 개선 [[적용 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/domain/mentoring/domain/repository/custom/QMentoringRepositoryImpl.java#L190C1-L223C2) / [설정 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/config/CustomFunctionContributor.java#L9C1-L21C2)]
 
 - `Full Text Index(ngram parser)`를 적용해 키워드가 일치하는 정도를 수치화
     - like + wildcard 검색 대비 정확하고 정밀한 검색 결과 반환
-- `ngram_token_size` 옵션 값을 3(default)에서 2로 조정
-    - 2글자 이상부터 검색 가능하도록 변경
 
 ### DB에 대한 부하 분산 [[설정 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/db/DataSourceConfig.java#L28C1-L125C2) / [구성 패키지](https://github.com/Team-RecruTe/Anchor-Service/tree/develop/src/main/java/com/anchor/global/db)]
 
