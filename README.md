@@ -128,51 +128,65 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
 
 ### 채팅창 이동
 
-| <img src="https://github.com/zilyun/Final_Project/assets/40315922/4c1781d0-5ff2-4755-9952-1fd364f3e7a8" width="700" height="600"/> |
+<img src="" width="900" height="600"/> 
+![01 채팅방 이동](https://github.com/zilyun/Final_Project/assets/40315922/aed93ddb-57e9-415e-aeaa-647ba733f74c)
+
 
 ### 사원 목록 & 사원 검색
 
-| <img src="https://github.com/zilyun/Final_Project/assets/40315922/62967f7b-ed93-41c8-b9fd-352f94d2632d" width="350" height="600"/> |
+<img src="" width="350" height="600"/> 
+![02 사원목록](https://github.com/zilyun/Final_Project/assets/40315922/242ab80e-93b9-443f-8604-71941adbafaa)
+
 
 ### 채팅방 목록
 
-| <img src="https://github.com/zilyun/Final_Project/assets/40315922/aa36eaff-8c1f-44e2-ac89-e81757ddade6" width="350" height="600"/> | <img src="https://github.com/zilyun/Final_Project/assets/40315922/d346d955-59aa-4af6-b3b5-ea2960888e8a" width="350" height="600"/> |
+<img src="" width="350" height="600"/> <img src="" width="350" height="600"/>
+![03 채팅방목록-01](https://github.com/zilyun/Final_Project/assets/40315922/18d3ffb5-d682-403f-83be-b6b76bd6dbea)
+![03 채팅방목록-02](https://github.com/zilyun/Final_Project/assets/40315922/0c898cc9-a210-4058-a477-9cc9be49d84d)
+
+
 
 ### 채팅방 생성 - 1대1 채팅방
 
-| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+<img src="" width="350" height="600"/>  <img src="" width="350" height="600"/> 
+![04 1대1 채팅방-01](https://github.com/zilyun/Final_Project/assets/40315922/c8380227-4445-4257-bbe2-bf68659226a0)
+![04 1대1 채팅방-02](https://github.com/zilyun/Final_Project/assets/40315922/8cc33c01-ef52-4611-a284-dd7a2417dbd5)
+
 
 ### 채팅방 생성 - 그룹 채팅방
 
-| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+<img src="" width="350" height="600"/>  <img src="" width="350" height="600"/> 
+![05 그룹채팅방-01](https://github.com/zilyun/Final_Project/assets/40315922/b043aff7-2f5e-4b70-be43-40d75c21d65e)
+![05 그룹채팅방-02](https://github.com/zilyun/Final_Project/assets/40315922/7f31c4c9-f264-4344-8585-c4eb1350b1da)
+
 
 ### 채팅방 - 이모티콘
 
-| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+<img src="" width="350" height="600"/>  <img src="" width="350" height="600"/> 
 
 ### 채팅방 - 파일전송
 
-| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+<img src="" width="350" height="600"/>  <img src="" width="350" height="600"/> 
 
 ### 채팅방 - 긴급공지
 
-| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+<img src="" width="350" height="600"/>  <img src="" width="350" height="600"/> 
 
 ### 채팅 기록 검색
 
-| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+<img src="" width="350" height="600"/>  <img src="" width="350" height="600"/> 
 
 ### 채팅 1일 데이터 불러오기
 
-| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+<img src="" width="350" height="600"/>  <img src="" width="350" height="600"/> 
 
 ### 채팅방 메뉴 
 
-| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+<img src="" width="350" height="600"/>  <img src="" width="350" height="600"/> 
 
 ### 채팅 인원 추가 & 삭제
 
-| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+<img src="" width="350" height="600"/>  <img src="" width="350" height="600"/> 
 
 ## 시연영상 🎥 
 - [시연 영상 - 채팅](https://www.youtube.com/watch?v=6PVh-9BGTZ0)
