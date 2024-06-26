@@ -55,7 +55,29 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
         - 결과 및 추가사항
 ```
 
-### 멘토 이메일 발송 응답속도 개선 [[적용 코드]() / [설정 코드]()]
+### 채팅방 조회 성능 개선 [[적용 코드]() / [설정 코드]()]
+
+- `Redis`를 도입해 채팅방 입장 시 캐싱 처리
+
+  <details>
+  <summary>채팅방 조회에 대한 부하테스트 결과, 캐싱 미적용 대비 약 3.5배의 TPS 성능 향상</summary>
+  <div>
+      <h4>[Ngrinder]</h4>
+      <span>Cache 미적용</span>
+      <img src="https://github.com/zilyun/Final_Project/assets/40315922/b2da3659-9498-4caa-b082-dbf88e68dbbe">
+      <span>Cache 적용</span>
+      <img src="https://github.com/zilyun/Final_Project/assets/40315922/bc27e31a-37c9-452d-903a-9cee8b56e53e">
+  </div>
+  <div>
+      <h4>[Scouter]</h4>
+      <span>Cache 미적용</span>
+      <img src="https://github.com/zilyun/Final_Project/assets/40315922/ebd08602-df42-4936-89be-8767645791e1">
+      <span>Cache 적용</span>
+      <img src="https://github.com/zilyun/Final_Project/assets/40315922/d1d6c828-c932-4c78-910c-56b78430ab72">
+  </div>
+  </details>
+
+### 긴급공지 대용량 메시지 발송 응답속도 개선 [[적용 코드]() / [설정 코드]()]
 
 - 멀티 스레딩을 이용한 `@Async 비동기` 처리
   <details>
@@ -73,7 +95,7 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
       <img src="readme/image/async/mail_log_2.png">
   </details>
 
-### 실시간 알림 기능 구현 [[적용 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/domain/notification/api/service/NotificationService.java#L40C1-L109C4) / [구성 패키지](https://github.com/Team-RecruTe/Anchor-Service/tree/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/redis/message)]
+### 실시간 알림 기능 구현 [[적용 코드]() / [구성 패키지]()]
 
 - 네트워크 자원을 고려해 `Server Sent Event` 스펙으로 클라이언트에게 실시간 알림 전송
     - 웹 페이지 체류시간을 고려해 SSE Timeout 값을 60s로 지정
@@ -105,76 +127,11 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
   </div>
   </details>
 
-### 멘토링 신청자 수 동시성 제어 [[적용 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/redis/lock/RedisLockFacade.java#L20C1-L41C4) / [구성 패키지](https://github.com/Team-RecruTe/Anchor-Service/tree/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/redis/lock)]
-
-- 서버 분산을 고려해 `Facade 패턴`과 `Redis Lock`을 이용해 동시성 제어 구현
-    - pub/sub을 이용해 Lock 획득을 시도하는 RedissonClient를 통해 CPU 낭비 방지
-
-### 멘토링 신청시간 중복선택 방지 [[적용코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/redis/lock/RedisLockFacade.java#L43C1-L61C4) / [구성패키지](https://github.com/Team-RecruTe/Anchor-Service/tree/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/redis/lock)]
-
-- 서버 분산을 고려해 `Facade 패턴`과 `Redis Lock`을 이용해 동시성 제어 구현
-    - pub/sub을 이용해 Lock 획득을 시도하는 RedissonClient를 통해 CPU 낭비 방지
-- 신청시간 잠금 이후 서버를 이탈하는 로직으로 락 소유권에 대한 추적이 어려울 것이라 판단, [Key,Value] 타입의 데이터로 신청시간 잠금 진행
-    - 커서 기반 검색명령어 `scan`을 사용해 Redis 서버의 작업을 중단시키지 않도록 구현
-
-
-### 이미지 파일의 효율적인 관리 [[적용 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/valid/CustomValidatorRegistry.java#L13C1-L44C2) / [구성 패키지](https://github.com/Team-RecruTe/Anchor-Service/tree/develop/src/main/java/com/anchor/global/valid)]
-
-- `@ValidFile` 커스텀 어노테이션을 통해 빈 이미지 파일 요청에 대한 검증 처리
-    - ConstraintValidator 클래스를 구현해 Custom Validator 직접 정의
-- [이미지 요청 시 파일당 10MB 용량 제한](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/resources/application.yml#L22C1-L25C29)
-
-### 로그 메세지 최적화 [[설정 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/develop/src/main/resources/log4j2/log4j2.yml)]
-
-- 속도가 빠른 `AsyncLogger` 옵션을 제공하는 Log4j2 라이브러리를 도입해 로깅 처리
-    - Appender: console-appender와 rolling-file-appender 적용
-    - Logger: rolling-file-appender에 대해서 AsyncLogger 부분 적용
-
-### 정산프로세스 및 멘토링 완료 자동화 [[적용코드1](https://github.com/Team-RecruTe/Anchor-Service/blob/f4bb891e3ac535e991525b07b98eb2f89ddcf167/src/main/java/com/anchor/domain/mentoring/api/service/MentoringScheduler.java#L19C1-L27C4) / [적용코드2](https://github.com/Team-RecruTe/Anchor-Service/blob/f4bb891e3ac535e991525b07b98eb2f89ddcf167/src/main/java/com/anchor/domain/payment/api/service/PayupScheduler.java#L18C1-L21C4)]
-
-- 트래픽이 적은 시간을 고려해 `@Scheduled`를 이용해 정산 및 멘토링 완료 스케줄링 구현
-    - 매월 1일 새벽 3시에 정산 스케줄링 동작
-    - 매일 새벽 2시 일주일이 지난 멘토링 자동 완료 스케줄링 동작
-
-### 병렬처리를 통한 작업시간 개선[[적용코드](https://github.com/Team-RecruTe/Anchor-Service/blob/085d35a338599f374cc3a3d6bab54ab4bb0b54ac/src/main/java/com/anchor/domain/payment/api/service/PayupService.java#L53)]
-
-- `ParallelStream`을 적용해 병렬처리로 정산프로세스 작업시간 개선
-  <details>
-  <summary>테스트 결과, 순차처리 대비 작업시간 90% 개선</summary>
-      <img src="readme/image/stream/stream_elapsed_time.png">
-      <img src="readme/image/stream/parallel_stream_elapsed_time.png">
-  </details>
-- `ParallelStream`간 **Thread DeadLock** 방지를 위해 커스텀 `ForkJoinPool` 설정
-
 ### CI/CD 환경 구축 [[설정 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/develop/.github/workflows/cicd.yml)]
 
 - `Github Actions`, `AWS CodeDeploy`, `S3`를 이용해 테스트-빌드-배포 자동화
     - 빌드 서버는 Github Runner 서버 사용
 
-### 회원 정보 관리 포인트 최소화 [[구성 패키지](https://github.com/Team-RecruTe/Anchor-Service/tree/develop/src/main/java/com/anchor/global/auth)]
 
-- `OAuth 2.0 & OpenID Connect`를 이용해 Naver, Google 인증 기능 구현
-    - 인증 회원의 정보는 Redis 분산 세션에 SessionUser 객체를 저장
 
-### RestClient 추가 설정 및 에러핸들링[[적용코드](https://github.com/Team-RecruTe/Anchor-Service/blob/f4bb891e3ac535e991525b07b98eb2f89ddcf167/src/main/java/com/anchor/global/util/PaymentClient.java#L125C1-L136C4) / [설정코드](https://github.com/Team-RecruTe/Anchor-Service/blob/f4bb891e3ac535e991525b07b98eb2f89ddcf167/src/main/java/com/anchor/global/config/RestClientConfig.java#L19)]
 
-- Connection Pool 설정으로 외부 API 호출시 멀티 스레딩 및 가용 스레드 수 제한
-- Timeout 설정으로 가용 스레드 확보
-- `exchange`메서드를 사용해 응답코드 별 에러 핸들링
-- `@Retryable`으로 재시도 로직 추가
-- 추가 고려사항. API 서버 장애로 인한 에러 발생시 서킷브레이커 패턴 도입 필요
-
-### 예외 정의 및 예외발생 로그 관심사 분리[[구성패키지](https://github.com/Team-RecruTe/Anchor-Service/tree/develop/src/main/java/com/anchor/global/exception) / [설정코드](https://github.com/Team-RecruTe/Anchor-Service/blob/f4bb891e3ac535e991525b07b98eb2f89ddcf167/src/main/java/com/anchor/global/log/ExceptionLoggingAspect.java#L14C1-L18C1)]
-
-- 어플리케이션에서 발생하는 예외를 새로 정의해 비즈니스 로직에서 발생하는 예외 가독성 향상
-- 예외 추상화를 통한 에러 핸들링 유연성 확보
-- AOP를 통한 예외 발생 로깅 코드 재사용성 증가
-
-### Insert 쿼리 성능 개선
-
-- `JPQL Bulk Insert`를 적용
-  <details>
-  <summary>1만건의 데이터 삽입에 대해, Insert 쿼리 대비 약 60%의 성능 개선</summary>
-      <img src="readme/image/insert/image.png">
-      <img src="readme/image/insert/image-1.png">
-  </details>
