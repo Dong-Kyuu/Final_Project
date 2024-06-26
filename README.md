@@ -32,7 +32,7 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
 
 | 분류       | 기술명                                                                   |
 |----------|----------------------------------------------------------------------------|
-| BackEnd  | Java, Spring (Boot, Security), Junit, Redis, MySql                         |
+| BackEnd  | Java, Spring (Boot, Security), Junit, Redis, MySql, rabbitMQ               |
 | FrontEnd | HTML, Javascript, Thymeleaf                                                |
 | DevOps   | nGrinder, Scouter, EC2, RDS, S3, Docker, Jenkins                           |   
 | Tools    | IntelliJ, Gradle                                                           |
@@ -55,27 +55,18 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
         - 결과 및 추가사항
 ```
 
-### 문의 리스트 조회 성능 개선 [[적용 코드]()]
+### 문의 리스트 조회 성능 개선 [[적용 코드]() / [결과](https://velog.io/@ziru/26.%EB%B0%B1%EC%97%94%EB%93%9C-%EA%B0%9C%EB%B0%9C%EC%9E%90-%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0-%EC%B4%88%EC%84%9D-%EB%8B%A4%EC%A7%80%EA%B8%B0)]
 
-- `Caffeine Cache`를 도입해 10개의 인기 멘토링과 태그 조회 시 캐싱 처리
+- `Caffeine Cache`를 도입해 문의 리스트를 조회 시 캐싱 처리
 
   <details>
-  <summary>홈페이지 조회에 대한 부하테스트 결과, 캐싱 미적용 대비 약 80%의 TPS 성능 향상</summary>
+  <summary>문의 리스트 조회에 대한 부하테스트 결과, 캐싱 미적용 대비 약 2배의 TPS 성능 향상</summary>
   <div>
       <h4>[Ngrinder]</h4>
       <span>Cache 미적용</span>
-      <img src="readme/image/cache/ngrinder_nocache.png">
+      ![미적용](https://github.com/zilyun/Final_Project/assets/40315922/4c713b8a-6f0e-41a8-9eff-048813461577)
       <span>Cache 적용</span>
-      <img src="readme/image/cache/ngrinder_cache.png">
-  </div>
-  <div>
-      <h4>[Jmeter]</h4>
-      <span>Cache 미적용</span>
-      <img src="readme/image/cache/jmeter_nocache_1.png">
-      <img src="readme/image/cache/jmeter_nocache_2.png">
-      <span>Cache 적용</span>
-      <img src="readme/image/cache/jmeter_cache_1.png">
-      <img src="readme/image/cache/jmeter_cache_2.png">
+      ![적용](https://github.com/zilyun/Final_Project/assets/40315922/3893c591-8fab-48e5-baed-519efe1ffd3e)
   </div>
   </details>
 
