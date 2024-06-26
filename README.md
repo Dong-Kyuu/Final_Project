@@ -6,7 +6,7 @@
 
 ---
 
-
+![MBTI](https://github.com/zilyun/Final_Project/assets/40315922/e5f6b111-d665-4fa6-8680-5ff5408f0a13)
 
 ---
 
