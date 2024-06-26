@@ -126,9 +126,9 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
 
 ## 기능 살펴보기 📗 
 
-### 채팅창 이동
+<!-- ### 채팅창 이동 -->
 
-<img src="https://github.com/zilyun/Final_Project/assets/40315922/aed93ddb-57e9-415e-aeaa-647ba733f74c" width="1000" height="600"/> 
+<!-- <img src="https://github.com/zilyun/Final_Project/assets/40315922/aed93ddb-57e9-415e-aeaa-647ba733f74c" width="1000" height="600"/> -->
 
 ### 사원 목록 & 사원 검색
 
