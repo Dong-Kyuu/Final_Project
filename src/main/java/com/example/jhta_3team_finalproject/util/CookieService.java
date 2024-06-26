@@ -21,7 +21,8 @@ public class CookieService {
     }
 
     public static String serializeCartCookie(Cart cart) {
-        String cartString = "cartNo=" + cart.getCartNo() + "&tripNo=" + cart.getTripNo() + "&optionIds=" + cart.getOptionIds();
+        //String cartString = "cartNo=" + cart.getCartNo() + "&tripNo=" + cart.getTripNo() + "&optionIds=" + cart.getOptionIds();
+        String cartString ="tripNo=" + cart.getTripNo() + "&optionIds=" + cart.getOptionIds();
         System.out.println("쿠키 = " + cartString);
         return cartString;
     }
@@ -30,6 +31,7 @@ public class CookieService {
     public static void setCookie(HttpServletResponse response, String cookieName,String newCookie) {
         Cookie cookie = new Cookie(cookieName, newCookie);
         cookie.setMaxAge(24 * 60 * 60); // Set cookie expiry to 1 day
+        cookie.setPath("/");
         response.addCookie(cookie);
     }
 
@@ -50,11 +52,16 @@ public class CookieService {
 
     // 쿠키 삭제 메서드
     public static void deleteCookie(HttpServletResponse response, String cookieName) {
+
+        System.out.println(cookieName);
         Cookie cookie = new Cookie(cookieName, "");
+
         cookie.setMaxAge(0);
         cookie.setPath("/");
         response.addCookie(cookie);
     }
+
+
 
     public static String getValueBetweenEquals(String cookieValue, String key) {
         // 입력 문자열을 "&"을 기준으로 나누기
@@ -72,35 +79,22 @@ public class CookieService {
     }
 
     public static String CartcookieToURL(String cookieValue) {
-        System.out.println("cookieToURL cookieValue=" + cookieValue);
-
-        String num = null;
-        String selectedOptions = null;
-
-        String[] parts = cookieValue.split("&");
-        for (String part : parts) {
-            String[] keyValue = part.split("=");
-            if (keyValue.length == 2) {
-                String key = keyValue[0];
-                String value = keyValue[1];
-
-                if ("tripNo".equals(key)) {
-                    num = value.isEmpty() ? null : value;
-                } else if ("optionIds".equals(key)) {
-                    selectedOptions = value.isEmpty() ? null : value;
-                }
-            }
-        }
 
         StringBuilder result = new StringBuilder("Cart?");
-        if (selectedOptions != null && !selectedOptions.equals("null")) {
-            result.append("selectedOptions=").append(selectedOptions);
-        }
-        if (num != null && !num.equals("null")) {
-            if (selectedOptions != null) {
-                result.append("&");
+
+        if(cookieValue!=null){
+            String num = getValueBetweenEquals(cookieValue, "tripNo");
+            String selectedOptions = getValueBetweenEquals(cookieValue, "optionIds");
+
+            if (selectedOptions != null && !selectedOptions.equals("null")) {
+                result.append("selectedOptions=").append(selectedOptions);
             }
-            result.append("num=").append(num);
+            if (num != null && !num.equals("null")) {
+                if (selectedOptions != null) {
+                    result.append("&");
+                }
+                result.append("num=").append(num);
+            }
         }
 
         String newURL = result.toString();
@@ -108,4 +102,6 @@ public class CookieService {
 
         return newURL;
     }
+
+
 }
