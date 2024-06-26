@@ -47,9 +47,6 @@ public class AttendanceManagementController {
                                             @RequestParam(value = "startDate", required = false) String startDateStr,
                                             @RequestParam(value = "endDate", required = false) String endDateStr,
                                             @RequestParam(value = "filter", defaultValue = "-1") int filter) {
-
-        System.out.println("Received startDate: " + startDateStr);
-        System.out.println("Received endDate: " + endDateStr);
         List<Map<String, Object>> attendanceList = attendanceService.getMonthlyAttendancesForAll(startDateStr, endDateStr, filter);
         List<Response> list = new ArrayList<>();
         for (int i = 0; i < attendanceList.size(); i++) {
