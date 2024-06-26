@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpSession;
 public interface CustomerService {
     int join(Customer customer);
 
-    int getcustomerId(String id);
+    int isCustomerId(String id);
 
     void update(Customer customer);
 

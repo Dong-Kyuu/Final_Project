@@ -34,8 +34,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public int getcustomerId(String id) {
-        Customer remember = customerMapper.getcustomerId(id);
+    public int isCustomerId(String id) {
+        Customer remember = customerMapper.isCustomerId(id);
         return (remember == null) ? -1 : 1;// -1는 아이디가 존재하지 않는 경우
         // 1은 아이디가 존재하는 경우
     }

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.jhta_3team_finalproject.service.payment.KakaoErrorService;
 
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -49,6 +48,7 @@ public class PaymentController {
 
         String paid_amount = paymentData.get("paid_amount");
         String imp_uid = paymentData.get("imp_uid");
+        //String imp_uid ="error";
 
         Map<String, Object> response = new HashMap<>();
         try {
@@ -83,12 +83,15 @@ public class PaymentController {
                     // 서비스 로직 수행, 예: 주문 상태 업데이트
                     value=true;
                     msg="결제가 완료되었습니다.";
+                    System.out.println("결제 완료되었습니다");
 
                 } else {
                     msg="결제 금액이 일치하지 않습니다.";
+                    System.out.println("결제 금액이 일치하지 않습니다.");
                 }
             } else {
                 msg="결제 정보를 확인할 수 없습니다.";
+                System.out.println("결제 정보를 확인할 수 없습니다.");
             }
 
             response.put("success",value);
@@ -96,6 +99,8 @@ public class PaymentController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            System.out.println("Error Handler Start");
+
             e.printStackTrace();
             int errorCode = extractErrorCode(e);
             String errorMessage = kakaoErrorService.handleError(errorCode);
@@ -103,8 +108,27 @@ public class PaymentController {
 
             int retry;
 
+            System.out.println("Error Code "+errorCode);
+
             switch (errorCode) {
+
+                case -1:
+
+                    System.out.println("Case 1");
+                    retry = retryPayment(paid_amount);
+                    if (retry == 1) {
+                        response.put("success", true);
+                        response.put("message", "결제가 성공적으로 완료되었습니다.");
+                        return ResponseEntity.ok(response);
+                    }else{
+                        value=false;
+                        msg="결제 인증 실패, 최대 재시도 횟수 초과.";
+                    }
+                    break;
+
                 case -701: // 결제인증이 완료되지 않았는데 결제승인 API를 호출한 경우
+
+                    System.out.println("Case 701");
 
                     retry = retryPayment(paid_amount);
                     if (retry == 1) {
@@ -118,6 +142,9 @@ public class PaymentController {
                     break;
 
                 case -708: // 잘못된 PG토큰 처리
+
+                    System.out.println("Case 708");
+
                     value=false;
                     response.put("message", "잘못된 PG 토큰입니다. 다시 시도해 주세요.");
 
@@ -136,6 +163,8 @@ public class PaymentController {
 
                 case -780: // 결제승인 실패
 
+                    System.out.println("Case 780");
+
                     retry = retryPayment(paid_amount);
                     if (retry == 1) {
                         response.put("success", true);
@@ -149,6 +178,8 @@ public class PaymentController {
 
                 case -702: // 이미 결제 완료된 TID로 다시 결제승인 API를 호출한 경우
                     // 이미 처리된 결제인지 확인
+                    System.out.println("Case 702");
+
                     boolean isAlreadyProcessed = checkIfPaymentAlreadyProcessed(imp_uid);
 
                     if (isAlreadyProcessed) {
@@ -174,6 +205,9 @@ public class PaymentController {
                     break;
 
                 case -781: // 결제 취소 실패
+
+                    System.out.println("Case 781");
+
                     value=false;
                     msg="결제 취소에 실패했습니다.";
 
@@ -234,6 +268,7 @@ public class PaymentController {
 
         for (int i = 0; i < 3; i++) {
             try {
+                System.out.println(i+"차 재시도");
                 // 결제 재시도
                 IamportResponse<Payment> retryResponse = iamportConfig.getIamportClient().paymentByImpUid(paid_amount);
                 if (retryResponse != null && retryResponse.getResponse() != null) {
