@@ -60,7 +60,7 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
 - `Redis`를 도입해 채팅방 입장 시 캐싱 처리
 
   <details>
-  <summary>채팅방 조회에 대한 부하테스트 결과, 캐싱 미적용 대비 약 3.5배의 TPS 성능 향상</summary>
+  <summary>부하테스트 결과, 캐싱 미적용 대비 약 3.5배의 TPS 성능 향상</summary>
   <div>
       <h4>[Ngrinder]</h4>
       <span>Cache 미적용</span>
@@ -77,39 +77,35 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
   </div>
   </details>
 
-### 긴급공지 대용량 메시지 발송 응답속도 개선 [[적용 코드]() / [설정 코드]()]
+### 메시지 대규모 트래픽 발송 응답속도 개선 [[적용 코드]() / [설정 코드]()]
 
-- 멀티 스레딩을 이용한 `@Async 비동기` 처리
+- `RabbitMQ`를 도입하여 대규모 메시지를 효율적으로 처리
   <details>
-  <summary>테스트 결과, 클라이언트 기준 응답시간을 약 3s에서 100ms로 단축</summary>
-      <h4>[비동기 처리 전]</h4>
-      <img src="readme/image/async/sync_rt.png">
-      <img src="readme/image/async/async_rt.png">
-      <h4>[비동기 처리 후]</h4>
-      <img width="388" alt="다운로드" src="https://github.com/Team-RecruTe/Anchor-Service/assets/58262954/9c9eba96-11d0-4d0d-9a62-09bf1f744b74">
+  <summary>RabbitMQ의 메시지 브로커로 메시지를 비동기 처리하여 대규모 트래픽을 처리</summary>
+      <h4>[RabbitMQ]</h4>
+      <img src="https://github.com/zilyun/Final_Project/assets/40315922/13a2cfdf-acae-4fc3-b1b8-5c2e5eaac56d">
   </details>
 
 ### 채팅방 실시간 알림 기능 구현 [[적용 코드]() / [구성 패키지]()]
 
 - 네트워크 자원을 고려해 `Server Sent Event` 스펙으로 클라이언트에게 채팅방 실시간 알림 전송
-    - 채팅 메시지 생성, 채팅방(멀티,1대1) 만들기, 채팅방 나가기 기능 사용 시 `Server Sent Event` 로 채팅방 업데이트 실시간 알림
+    - 채팅 메시지 생성, 채팅방(멀티,1대1) 만들기, 채팅방 나가기 기능 사용 시 업데이트 실시간 알림
 
 ### 채팅 기록 검색 정확도, 정밀도 개선 [[적용 코드]()]
 
 - `Full Text Index(ngram parser)`를 적용해 키워드가 일치하는 정도를 수치화
     - like + wildcard 검색 대비 정확하고 정밀한 검색 결과 반환
 
-### S3 저장소 내 불필요한 이미지 삭제 자동화 [[적용 코드]()]
+### S3 저장소 파일 업로드 / 다운로드 [[적용 코드]() / [구성 패키지]()]
 
-- 트래픽이 적은 시간을 고려해 `@Scheduled`를 이용해 이미지 삭제를 요청하는 스케줄링 구현
-    - 매일 새벽 3시에 이미지 삭제 요청 스케줄링 동작
+- 채팅 기능에서 파일 업로드 시 `S3` 저장소 사용
 
 ### 문의 리스트 조회 성능 개선 [[적용 코드]() / [결과](https://velog.io/@ziru/26.%EB%B0%B1%EC%97%94%EB%93%9C-%EA%B0%9C%EB%B0%9C%EC%9E%90-%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0-%EC%B4%88%EC%84%9D-%EB%8B%A4%EC%A7%80%EA%B8%B0)]
 
 - `Caffeine Cache`를 도입해 문의 리스트를 조회 시 캐싱 처리
 
   <details>
-  <summary>문의 리스트 조회에 대한 부하테스트 결과, 캐싱 미적용 대비 약 2배의 TPS 성능 향상</summary>
+  <summary>부하테스트 결과, 캐싱 미적용 대비 약 2배의 TPS 성능 향상</summary>
   <div>
       <h4>[Ngrinder]</h4>
       <span>Cache 미적용</span><br>
@@ -119,7 +115,7 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
   </div>
   </details>
 
-### CI/CD 환경 구축 [[설정 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/develop/.github/workflows/cicd.yml)]
+### CI/CD 환경 구축 [[설정 코드]()]
 
 - `Jenkins`, `Docker`, `Amazon EC2, S3, RDS`를 이용해 테스트-빌드-배포 자동화
     - 빌드 서버는 Amanzon EC2 서버 사용
