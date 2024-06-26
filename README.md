@@ -128,37 +128,23 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
 
 ### 채팅창 이동
 
-<img src="" width="900" height="600"/> 
-![01 채팅방 이동](https://github.com/zilyun/Final_Project/assets/40315922/aed93ddb-57e9-415e-aeaa-647ba733f74c)
-
+<img src="https://github.com/zilyun/Final_Project/assets/40315922/aed93ddb-57e9-415e-aeaa-647ba733f74c" width="900" height="600"/> 
 
 ### 사원 목록 & 사원 검색
 
-<img src="" width="350" height="600"/> 
-![02 사원목록](https://github.com/zilyun/Final_Project/assets/40315922/242ab80e-93b9-443f-8604-71941adbafaa)
-
+<img src="https://github.com/zilyun/Final_Project/assets/40315922/242ab80e-93b9-443f-8604-71941adbafaa" width="350" height="600"/> 
 
 ### 채팅방 목록
 
-<img src="" width="350" height="600"/> <img src="" width="350" height="600"/>
-![03 채팅방목록-01](https://github.com/zilyun/Final_Project/assets/40315922/18d3ffb5-d682-403f-83be-b6b76bd6dbea)
-![03 채팅방목록-02](https://github.com/zilyun/Final_Project/assets/40315922/0c898cc9-a210-4058-a477-9cc9be49d84d)
-
-
+<img src="https://github.com/zilyun/Final_Project/assets/40315922/18d3ffb5-d682-403f-83be-b6b76bd6dbea" width="350" height="600"/> <img src="https://github.com/zilyun/Final_Project/assets/40315922/0c898cc9-a210-4058-a477-9cc9be49d84d" width="350" height="600"/>
 
 ### 채팅방 생성 - 1대1 채팅방
 
-<img src="" width="350" height="600"/>  <img src="" width="350" height="600"/> 
-![04 1대1 채팅방-01](https://github.com/zilyun/Final_Project/assets/40315922/c8380227-4445-4257-bbe2-bf68659226a0)
-![04 1대1 채팅방-02](https://github.com/zilyun/Final_Project/assets/40315922/8cc33c01-ef52-4611-a284-dd7a2417dbd5)
-
+<img src="https://github.com/zilyun/Final_Project/assets/40315922/c8380227-4445-4257-bbe2-bf68659226a0" width="350" height="600"/>  <img src="https://github.com/zilyun/Final_Project/assets/40315922/8cc33c01-ef52-4611-a284-dd7a2417dbd5" width="350" height="600"/> 
 
 ### 채팅방 생성 - 그룹 채팅방
 
-<img src="" width="350" height="600"/>  <img src="" width="350" height="600"/> 
-![05 그룹채팅방-01](https://github.com/zilyun/Final_Project/assets/40315922/b043aff7-2f5e-4b70-be43-40d75c21d65e)
-![05 그룹채팅방-02](https://github.com/zilyun/Final_Project/assets/40315922/7f31c4c9-f264-4344-8585-c4eb1350b1da)
-
+<img src="https://github.com/zilyun/Final_Project/assets/40315922/b043aff7-2f5e-4b70-be43-40d75c21d65e" width="350" height="600"/>  <img src="https://github.com/zilyun/Final_Project/assets/40315922/7f31c4c9-f264-4344-8585-c4eb1350b1da" width="350" height="600"/> 
 
 ### 채팅방 - 이모티콘
 
