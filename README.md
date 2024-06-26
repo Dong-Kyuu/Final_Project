@@ -14,7 +14,8 @@
 - [🛠️ 기술 스택](#🛠️-기술-스택)
 - [🗺️ 서버 구조](#🗺️-서버-구조)
 - [🔥 기술적 개선 및 고려](#🔥-기술적-개선-및-고려)
-
+- [📗 기능 살펴보기](#📗-기능-살펴보기)
+- [🎥 시연영상](#🎥-시연영상)
 ---
 
 ## 💡 서비스 배경 및 목표
@@ -123,3 +124,57 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
 
 
 
+## 기능 살펴보기 📗 
+
+### 채팅창 이동
+
+| <img src="https://github.com/zilyun/Final_Project/assets/40315922/4c1781d0-5ff2-4755-9952-1fd364f3e7a8" width="700" height="600"/> |
+
+### 사원 목록 & 사원 검색
+
+| <img src="https://github.com/zilyun/Final_Project/assets/40315922/62967f7b-ed93-41c8-b9fd-352f94d2632d" width="350" height="600"/> |
+
+### 채팅방 목록
+
+| <img src="https://github.com/zilyun/Final_Project/assets/40315922/aa36eaff-8c1f-44e2-ac89-e81757ddade6" width="350" height="600"/> | <img src="https://github.com/zilyun/Final_Project/assets/40315922/d346d955-59aa-4af6-b3b5-ea2960888e8a" width="350" height="600"/> |
+
+### 채팅방 생성 - 1대1 채팅방
+
+| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+
+### 채팅방 생성 - 그룹 채팅방
+
+| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+
+### 채팅방 - 이모티콘
+
+| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+
+### 채팅방 - 파일전송
+
+| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+
+### 채팅방 - 긴급공지
+
+| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+
+### 채팅 기록 검색
+
+| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+
+### 채팅 1일 데이터 불러오기
+
+| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+
+### 채팅방 메뉴 
+
+| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+
+### 채팅 인원 추가 & 삭제
+
+| <img src="" width="350" height="600"/> | <img src="" width="350" height="600"/> |
+
+## 시연영상 🎥 
+- [시연 영상 - 채팅](https://www.youtube.com/watch?v=6PVh-9BGTZ0)
+- [시연 영상 - 문의](https://www.youtube.com/watch?v=kz-Ty1NQr24)
+- [시연 영상 - 성능테스트](https://www.youtube.com/watch?v=Ut8ohkSXVN4)
