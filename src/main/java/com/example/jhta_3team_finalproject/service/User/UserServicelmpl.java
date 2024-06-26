@@ -35,7 +35,6 @@ public class UserServicelmpl implements UserService {
         this.amazonS3Client = amazonS3Client;
     }
 
-
     @Override
     public int insert(User user) {
         return userMapper.insert(user);
@@ -78,14 +77,11 @@ public class UserServicelmpl implements UserService {
         }
     }
 
-
-
     //회원 정보 수정
     @Override
     public User getUserInfo(int userNum) {
         return userMapper.getEmployee(userNum);
     }
-
 
     @Override
     public boolean updateUser(User user, MultipartFile uploadfile) throws IOException {
@@ -102,7 +98,6 @@ public class UserServicelmpl implements UserService {
                 user.setUserProfilePicture(existingUser.getUserProfilePicture()); // 기존 프로필 사진 URL 설정
             }
         }
-
         // 사용자 정보를 업데이트하고 업데이트 결과를 반환
         int result = userMapper.userupdate(user);
         return result == 1;
@@ -118,12 +113,10 @@ public class UserServicelmpl implements UserService {
         return userMapper.getEmployee(userNum);
     }
 
-
     @Override
     public void checkIn(int userNum) {
         LocalDateTime dateTime = LocalDateTime.now();
         attendenceMapper.CheckIn(userNum, dateTime);
-
     }
 
     @Override
@@ -166,37 +159,18 @@ public class UserServicelmpl implements UserService {
 
     //신규사원 요청 처리
     @Override
-    public List<Map<String, Object>> getUsersFilter(int userIsApproved) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("user_is_approved", userIsApproved);
-        List<Map<String, Object>> users = userMapper.getUsersFilter(params);
-
-        for (Map<String, Object> user : users) {
-            Boolean approvalStatus = (Boolean) user.get("user_is_approved");
-            user.put("user_is_approved", convertApprovalStatus(approvalStatus));
-        }
-
-        return users;
+    public List<Map<String, Object>> getUsersFilter() {
+        return userMapper.getUsersFilter();
     }
-
-    private int convertApprovalStatus(Boolean userIsApproved) {
-        if (userIsApproved == null) {
-            return 0; // 대기중
-        }
-        return userIsApproved ? 1 : 2; // true -> 1 (승인됨), false -> 2 (거절됨)
-    }
-
 
     @Override
     public void saveUser(User user) {
         userMapper.join(user);
     }
 
-
     @Override
-    public void approveUser(int userNum) {
-        userMapper.approveUser(userNum);
-
+    public void approveUser(int userNum,int departmentId, int positionId) {
+        userMapper.approveUserWithDepartmentAndPosition(userNum,departmentId,positionId);
     }
 
     @Override
@@ -204,21 +178,6 @@ public class UserServicelmpl implements UserService {
         userMapper.rejectUser(userNum);
     }
 
-
-//    @Override
-//    public List<User> getAllRequests() {
-//        return userMapper.findAllRequests();
-//    }
-//
-//    @Override
-//    public List<User> getApprovedRequests() {
-//        return userMapper.getApprovedRequests();
-//    }
-//
-//    @Override
-//    public List<User> getRejectedRequests() {
-//        return userMapper.getRejectedRequests();
-//    }
 
     @Override
     public Attendence getTodayAttendance(int userNum) {

@@ -29,7 +29,6 @@
     </select>
 
 
-
     <update id="userupdate">
         UPDATE user
         SET user_name            = #{userName},
@@ -39,12 +38,6 @@
             user_profile_picture = #{userProfilePicture}
         WHERE user_num = #{userNum}
     </update>
-
-    <insert id="join">
-        insert into user
-        (user_num, user_id, user_password, user_name, user_email, user_phone_number, user_gender)
-        values (#{userNum}, #{userId}, #{userPassword}, #{userName}, #{userEmail}, #{userPhoneNumber}, #{userGender})
-    </insert>
 
     <!-- 사용자 정보 추가 -->
     <insert id="insert">
@@ -60,7 +53,7 @@
     </select>
 
     <!-- 사용자 승인 및 부서, 직책 설정 -->
-    <update id="approveUserWithDepartmentAndPosition" parameterType="User">
+    <update id="approveUserWithDepartmentAndPosition" parameterType="map">
         UPDATE user
         SET user_is_approved = 1,
             department_id    = #{departmentId},
@@ -73,15 +66,16 @@
                                    WHEN #{positionId} = 4 THEN 'ROLE_SUB_MASTER'-- 이사
                                    WHEN #{positionId} = 5 THEN 'ROLE_MASTER' -- 대표
                                    ELSE 'ROLE_NEWBIE' -- 기본값
-                END,
-            user_department  = #{userDepartment}
+                END
         WHERE user_num = #{userNum}
     </update>
 
     <!-- 사용자 승인 -->
     <update id="approveUser">
         UPDATE user
-        SET user_is_approved = 1
+        SET user_is_approved = 1 ,
+            department_id    = #{departmentId},
+            position_id      = #{positionId}
         WHERE user_num = #{userNum}
     </update>
 
@@ -92,42 +86,20 @@
         WHERE user_num = #{userNum}
     </update>
 
-    <!-- 모든 신규 사원 정보( 요청)-->
-    <select id="findAllRequests" parameterType="map">
-        SELECT *
-        FROM user
-    </select>
-
-    <!-- 승인된 요청들 -->
-    <select id="getApprovedRequests" resultType="User">
-        SELECT *
-        FROM user
-        WHERE user_is_approved = 1
-    </select>
-
-    <!-- 거절된 요청들 -->
-    <select id="getRejectedRequests" resultType="User">
-        SELECT *
-        FROM user
-        WHERE user_is_approved = 2
-    </select>
-
-    <select id="getUsersFilter" parameterType="map">
+    <select id="getUsersFilter" resultType="map">
         select u.user_num,
-        u.user_name,
-        u.user_created_at,
-        u.user_is_approved,
-        d.department_name,
-        p.position_name
+               u.user_name,
+               u.user_email,
+               u.user_phone_number,
+               u.user_created_at,
+               cast(u.user_is_approved as signed) as user_is_approved,
+               d.department_name,
+               p.position_name
         from user u
-        join user_departments d on u.department_id = d.department_id
-        join user_positions p on u.position_id = p.position_id
-        <where>
-            <if test="params.user_is_approved != -1">
-                u.user_is_approved = #{params.user_is_approved}
-            </if>
-        </where>
-        ORDER BY u.user_num;
+                 join user_departments d on u.department_id = d.department_id
+                 join user_positions p on u.position_id = p.position_id
+        where u.user_is_approved != 1
+        ORDER BY user_is_approved ASC ,u.user_num desc ;
     </select>
 
     <!-- 부서와 직급에 해당하는 인물넘버 검색-->

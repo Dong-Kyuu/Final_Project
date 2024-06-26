@@ -15,12 +15,8 @@ public class Response {
     private String user_name;
     private String department_name;
     private String position_name;
-
     private LocalDateTime check_in_time;
-
-
     private LocalDateTime check_out_time;
-
     private Time work_time;
 
     public void from(Map<String, Object> data) {

@@ -18,7 +18,6 @@ public interface UserMapper {
 
     public User getUserId(String id);
 
-
     User departmentPositionInfo(int department_id, int position_id);
 
     public int join(User user);
@@ -35,10 +34,9 @@ public interface UserMapper {
 
     //신규사원 요청 처리
 
-    List<Map<String, Object>> getUsersFilter(@Param("params") Map<String, Object> params); //신입사원 모든 요청
+    List<Map<String, Object>> getUsersFilter(); //신입사원 모든 요청
 
-
-    void approveUser(int userNum); //사용자 승인
+    void approveUserWithDepartmentAndPosition(int userNum,int departmentId,int positionId); //사용자 승인
 
     void rejectUser(int userNum); //사용자 거절
 

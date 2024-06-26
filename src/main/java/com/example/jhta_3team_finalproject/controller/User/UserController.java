@@ -63,22 +63,13 @@ public class UserController {
             Principal userPrincipal
     ) {
         if (readCookie != null) {
-//            log.info("저장된 아이디:" + userPrincipal.getName());
             mv.setViewName("redirect:/user/login");
         } else {
             mv.setViewName("member/login");
             mv.addObject("fail", session.getAttribute("fail"));
             session.removeAttribute("fail");
         }
-//        log.info("login 페이지");
         return mv;
-    }
-
-
-    @RequestMapping(value = "/join", method = RequestMethod.GET)
-    public String join(Model model) {
-        model.addAttribute("user", new User());
-        return "member/register";
     }
 
     //신입사원이 로그인 한 경우 해당 페이지 이동
@@ -87,26 +78,30 @@ public class UserController {
         return "member/newbie";
     }
 
+    @GetMapping(value = "/join")
+    public String join(Model model) {
+        model.addAttribute("user", new User());
+        return "member/register";
+    }
+
     //회원가입
+
     @PostMapping(value = "/joinProcess")
-    public String joinProcess(@Valid User user, Model model, BindingResult result, RedirectAttributes rattr, HttpServletRequest request) {
+    public String joinProcess(@Valid User user, BindingResult result, Model model, RedirectAttributes rattr, HttpServletRequest request) {
         if (result.hasErrors()) {
+            model.addAttribute("user", user);
+            System.out.println("에러");
             return "member/register";
         }
-//        log.info("User: " + user.toString());
-       // user.setUserPassword(passwordEncoder.encode(user.getPassword()));
-//        log.info(user.getPassword());
-
-
         // 비밀번호와 비밀번호 확인이 일치하는지 확인
         if (!user.getUserPassword().equals(user.getConfirmPassword())) {
             result.rejectValue("confirmPassword", "error.confirmPassword", "비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+            model.addAttribute("user", user);
             return "member/register";
         }
+        int joinResult = userservice.join(user);
 
-        int joinResult  = userservice.join(user);
-
-        if (joinResult  == JOIN_SUCCESS) {
+        if (joinResult == JOIN_SUCCESS) {
             MailVO vo = new MailVO();
             vo.setTo(user.getUserEmail());
             sendMail.sendMail(vo);
@@ -129,20 +124,22 @@ public class UserController {
         return "member/register_allow";
     }
 
-    // 승인 대기 중인 사용자 요청 조회
+    // 승인 사용자 요청 조회
     @GetMapping("/register_requests")
     @ResponseBody
-    public List<Map<String, Object>> getRegisterRequests(@RequestParam(value = "filter", defaultValue = "-1") int filter) {
-        return userservice.getUsersFilter(filter);
+    public List<Map<String, Object>> getRegisterRequests() {
+        return userservice.getUsersFilter();
     }
-
 
     // 사용자 승인
     @PostMapping("/approve/{userNum}")
     @ResponseBody
-    public Map<String, String> approveUser(@PathVariable int userNum, @AuthenticationPrincipal User userDetails) {
-        userservice.approveUser(userNum);
-
+    public Map<String, String> approveUser(@PathVariable int userNum,
+                                           @RequestParam int departmentId,
+                                           @RequestParam int positionId,
+                                           @AuthenticationPrincipal User userDetails) {
+        userservice.approveUser(userNum,departmentId,positionId);
+        log.info(userNum + "userNum");
 
         // 알림 보낼 데이터 가져오기 (예: 승인한 사람의 이름, 해당 링크 등)
         User user = userservice.getUserInfo(userNum); // 승인된 사용자 정보
@@ -153,7 +150,7 @@ public class UserController {
         // 알림 전송
         sseService.sendNotification(user.getUserNum(), userDetails.getUserNum(), approverName, notificationLink, notificationMessage);
 
-        return Map.of("status", "success", "message", "승인 완료");
+        return Map.of("status", "success", "message", "승인 완료, 사원의 정보가 저장되었습니다.");
 
     }
 
@@ -162,7 +159,7 @@ public class UserController {
     @ResponseBody
     public Map<String, String> rejectUser(@PathVariable int userNum) {
         userservice.rejectUser(userNum);
-        return Map.of("status", "success", "message", "거절 완료");
+        return Map.of("status", "success", "message", "거절 완료되었습니다.");
     }
 
 
@@ -211,14 +208,14 @@ public class UserController {
                                 @RequestParam("profilePictureFile") MultipartFile uploadfile,
                                 Principal principal) throws IOException {
 
-        log.info("업데이트 전에 User 정보: " + user);
         boolean isUpdated = userservice.updateUser(user, uploadfile);
 
-        if (isUpdated) {
-            // 사용자 정보 업데이트
+        if (isUpdated) { // 사용자 정보 업데이트
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication instanceof UsernamePasswordAuthenticationToken) {
+
                 User updatedUser = userservice.getUserInfo(user.getUserNum()); // 업데이트된 사용자 정보 가져오기
+
                 UsernamePasswordAuthenticationToken newAuthentication =
                         new UsernamePasswordAuthenticationToken(updatedUser, authentication.getCredentials(), authentication.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(newAuthentication);
@@ -266,10 +263,8 @@ public class UserController {
     // 사원 출퇴근 시간 기록
     @PostMapping("/attendance")
     @ResponseBody
-    public Map<String, Object> recordAttendance(String action, Principal principal, Model model, @AuthenticationPrincipal User userDetails) {
-        log.info("출퇴근 입력");
+    public Map<String, Object> recordAttendance(String action, @AuthenticationPrincipal User userDetails) {
         int userNum = userDetails.getUserNum();
-
         Attendence attendence = userservice.recordAttendance(userNum, action);
 
         Map<String, Object> response = new HashMap<>();
@@ -283,9 +278,7 @@ public class UserController {
     @ResponseBody
     public Map<String, Object> getTodayAttendance(@AuthenticationPrincipal User userDetails) {
         int userNum = userDetails.getUserNum();
-
         Attendence attendance = userservice.getTodayAttendance(userNum);
-
         Map<String, Object> response = new HashMap<>();
 
         if (attendance == null) {
@@ -300,12 +293,9 @@ public class UserController {
                 response.put("status", "1"); //출근만 디비에 들어간 경우 1번
                 response.put("checkInTime", attendance.getCheckInTime());
             }
-
         }
         return response;
     }
-
-
 }
 
 
