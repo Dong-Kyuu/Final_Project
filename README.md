@@ -55,7 +55,7 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
         - 결과 및 추가사항
 ```
 
-### 채팅방 조회 성능 개선 [[적용 코드]() / [설정 코드]()]
+### 채팅방 조회 성능 개선 [[적용 코드]() / [설정 코드]() / [결과](https://velog.io/@ziru/28.Redis-%EC%84%B1%EB%8A%A5-%ED%85%8C%EC%8A%A4%ED%8A%B8)]
 
 - `Redis`를 도입해 채팅방 입장 시 캐싱 처리
 
@@ -88,19 +88,11 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
       <h4>[비동기 처리 후]</h4>
       <img width="388" alt="다운로드" src="https://github.com/Team-RecruTe/Anchor-Service/assets/58262954/9c9eba96-11d0-4d0d-9a62-09bf1f744b74">
   </details>
-- 비동기 작업 스레드의 로깅을 위해 `@Around`를 적용
-  <details>
-  <summary>테스트 결과, 비동기 작업에 대한 로그 확인</summary>
-      <img src="readme/image/async/mail_log_1.png">
-      <img src="readme/image/async/mail_log_2.png">
-  </details>
 
-### 실시간 알림 기능 구현 [[적용 코드]() / [구성 패키지]()]
+### 채팅방 실시간 알림 기능 구현 [[적용 코드]() / [구성 패키지]()]
 
-- 네트워크 자원을 고려해 `Server Sent Event` 스펙으로 클라이언트에게 실시간 알림 전송
-    - 웹 페이지 체류시간을 고려해 SSE Timeout 값을 60s로 지정
-- 서버 분산을 고려해 `Redis Pub/Sub`을 이용해 실시간 알림 이벤트 발행 및 수신 처리
-    - 이벤트 발행자와 수신자가 연결된 서버가 다르더라도 알림 수신 가능
+- 네트워크 자원을 고려해 `Server Sent Event` 스펙으로 클라이언트에게 채팅방 실시간 알림 전송
+    - 채팅 메시지 생성, 채팅방(멀티,1대1) 만들기, 채팅방 나가기 기능 사용 시 `Server Sent Event` 로 채팅방 업데이트 실시간 알림
 
 ### 채팅 기록 검색 정확도, 정밀도 개선 [[적용 코드]()]
 
@@ -129,8 +121,8 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
 
 ### CI/CD 환경 구축 [[설정 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/develop/.github/workflows/cicd.yml)]
 
-- `Github Actions`, `AWS CodeDeploy`, `S3`를 이용해 테스트-빌드-배포 자동화
-    - 빌드 서버는 Github Runner 서버 사용
+- `Jenkins`, `Docker`, `Amazon EC2, S3, RDS`를 이용해 테스트-빌드-배포 자동화
+    - 빌드 서버는 Amanzon EC2 서버 사용
 
 
 
