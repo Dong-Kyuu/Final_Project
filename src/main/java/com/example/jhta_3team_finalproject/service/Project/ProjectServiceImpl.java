@@ -1,5 +1,6 @@
 package com.example.jhta_3team_finalproject.service.Project;
 
+import com.example.jhta_3team_finalproject.controller.ProjectController;
 import com.example.jhta_3team_finalproject.domain.Board.BoardUpfiles;
 import com.example.jhta_3team_finalproject.domain.Project.Project;
 import com.example.jhta_3team_finalproject.domain.Project.ProjectComment;
@@ -9,6 +10,8 @@ import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.mybatis.mapper.Project.ProjectMapper;
 import com.example.jhta_3team_finalproject.mybatis.mapper.Table.UpfilesMapper;
 import com.example.jhta_3team_finalproject.mybatis.mapper.User.AttendenceMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +20,8 @@ import java.util.List;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
 
     private final ProjectMapper projectMapper;
     private final UpfilesMapper upfilesMapper;
@@ -132,5 +137,36 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<ProjectComment> getPeedComment(int projectPeedNum, int projectNum) {
         return projectMapper.getPeedComment(projectPeedNum, projectNum);
+    }
+
+    @Override
+    public int changeType(int type, int peedNum, int projectNum) {
+        return projectMapper.changeType(type, peedNum, projectNum);
+    }
+
+    @Override
+    public ProjectPeed getOneProjectPeed(int peedNum, int projectNum) {
+         return projectMapper.getOneProjectPeed(peedNum, projectNum);
+    }
+
+    @Override
+    public int[] optionComment(String comment, int loginNum, int peedNum, int projectNum) {
+        ProjectComment projectComment = new ProjectComment();
+        projectComment.setProjectNum(projectNum);
+        projectComment.setProjectPeedNum(peedNum);
+        projectComment.setProjectMemberNum(loginNum);
+        projectComment.setProjectCommentContent(comment);
+
+        int result = projectMapper.insertComment(projectComment);
+        int projectCommentNum = projectComment.getProjectCommentNum();
+        logger.info(projectCommentNum+"방금 생선된 댓글 번호");
+        int[] resultAndProjectCommentNum= {result, projectCommentNum};
+
+        return resultAndProjectCommentNum;
+    }
+
+    @Override
+    public ProjectComment getInsertComment(int commentNum) {
+        return projectMapper.getInsertComment(commentNum);
     }
 }
