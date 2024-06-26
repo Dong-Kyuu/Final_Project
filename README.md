@@ -63,12 +63,14 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
   <summary>문의 리스트 조회에 대한 부하테스트 결과, 캐싱 미적용 대비 약 2배의 TPS 성능 향상</summary>
   <div>
       <h4>[Ngrinder]</h4>
-      <span>Cache 미적용</span>
-      ![미적용](https://github.com/zilyun/Final_Project/assets/40315922/4c713b8a-6f0e-41a8-9eff-048813461577)
-      <span>Cache 적용</span>
-      ![적용](https://github.com/zilyun/Final_Project/assets/40315922/3893c591-8fab-48e5-baed-519efe1ffd3e)
+      <span>Cache 미적용</span><br>
+      <img alt="미적용" src="https://github.com/zilyun/Final_Project/assets/40315922/4c713b8a-6f0e-41a8-9eff-048813461577"><br>
+      <span>Cache 적용</span><br>
+      <img alt="적용" src="https://github.com/zilyun/Final_Project/assets/40315922/3893c591-8fab-48e5-baed-519efe1ffd3e">
   </div>
   </details>
+
+  
 
 ### 멘토 이메일 발송 응답속도 개선 [[적용 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/mail/AsyncMailSender.java#L25C1-L37C4) / [설정 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/cfe5d2ff253192c0d2cbe4a01d12be677f6ca6f5/src/main/java/com/anchor/global/config/AsyncConfig.java#L22C1-L32C4)]
 
