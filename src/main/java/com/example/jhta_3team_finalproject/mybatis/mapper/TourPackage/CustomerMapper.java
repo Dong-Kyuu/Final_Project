@@ -5,7 +5,7 @@ import com.example.jhta_3team_finalproject.domain.TourPackage.Customer;
 public interface CustomerMapper {
     int join(Customer customer);
 
-    Customer getcustomerId(String id);
+    Customer isCustomerId(String id);
 
     Customer findByCustomerId(String customerId);
 

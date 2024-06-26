@@ -40,7 +40,7 @@ public class RedisService {
             String key = num + ":" + timeStamp;
             List<ChatMessage> oneDayList = getChatMessageList(num, key, timeStamp);
             oneDayList.forEach(chatMsg -> {
-                if(chatMsg.getMessageNum() == 0 && !chatMsg.getTimeStamp().isEmpty()) {
+                if(chatMsg.getUserId() == null && chatMsg.getUsername() == null) {
                     chatMsg.setType(ChatMessage.MessageType.TIMESTAMP);
                 }
                 oneWeekTotalList.add(chatMsg);
@@ -56,13 +56,11 @@ public class RedisService {
      */
     private List<ChatMessage> getChatMessageList(long num, String key, String timeStamp) {
         if (redisChatUtils.isKeyExists(key)) {
-            log.info("RedisGet");
-            Set<ChatMessage> chatMessageSet = redisChatUtils.getSets(key);
-            List<ChatMessage> chatMessageList = new ArrayList<>(chatMessageSet);
-            chatMessageList.sort(Comparator.comparing(ChatMessage::getMessageNum));
-            return chatMessageList;
+            log.info("Redis - 1일 데이터");
+            //chatMessageList.sort(Comparator.comparing(ChatMessage::getMessageNum));
+            return redisChatUtils.getList(key);
         } else {
-            log.info("RdbGet");
+            log.info("RDB - 1일 데이터");
             ChatMessage chatMessage = new ChatMessage();
             chatMessage.setChatRoomNum(num);
             chatMessage.setTimeStamp(timeStamp);
@@ -73,7 +71,7 @@ public class RedisService {
                     String dateKey = simpleDateFormat.format(chatMsg.getSendTime());
                     String redisKey = roomKey + ":" + dateKey; // 방번호:날짜
                     Long expiredTime = 1L; // 만료 시간 1주일 부여
-                    redisChatUtils.setAddSets(redisKey, chatMsg); // 키, 값
+                    redisChatUtils.setAddList(redisKey, chatMsg); // 키, 값
                     redisChatUtils.setExpired(redisKey, expiredTime);
                 });
             }

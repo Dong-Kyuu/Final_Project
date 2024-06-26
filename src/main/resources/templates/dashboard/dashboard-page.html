@@ -8,19 +8,10 @@
     <!-- plugins:css -->
     <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
-    <!-- endinject -->
-    <!-- Plugin css for this page -->
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
-    <!-- endinject -->
-    <!-- Layout styles -->
     <link rel="stylesheet" href="../../assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../../assets/images/favicon.ico"/>
-
     <link rel="stylesheet" th:href="@{/css/dashboard/minicalendar.css}"/>
-
-
 </head>
 <body>
 <div class="container-scroller">
@@ -60,12 +51,14 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each = "a : ${list}">
+                                        <th:block th:each = "a, iterStat:${calenderlist}">
+                                        <tr>
                                             <td class="text" th:text="${a.title}"></td>
                                             <td class="text" th:text="${a.username}" ></td>
                                             <td class="text" th:text="${a.id}+일"></td>
 <!--                                            <td class="text" th:text="${a.type}"></td>-->
                                         </tr>
+                                        </th:block>
                                         </tbody>
                                     </table>
                                     </nav>
@@ -85,8 +78,6 @@
                             </div>
                         </div>
                     </div>
-
-
 
                     <div class="content-wrapper">
                         <div class="row">
@@ -116,14 +107,14 @@
                             <div class="card-body">
                                 <h4>공지사항</h4>
                                 <iframe id="announceFrame" style="width: 870px; height: 200px;" th:src="@{/dashAnnounceList}"></iframe>
-                                `                        </div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-lg-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body" id="depart">
-                                <h4 class="card-title">결제진행사항</h4>
+                                <h4 class="card-title">결재사항</h4>
                                 <table class="table table-bordered">
                                     <thead>
                                     <iframe id="tripFrame" style="width: 870px;height: 300px " th:src="@{/dashDepartment}"></iframe>
@@ -148,38 +139,35 @@
         <script th:src="@{/assets/js/off-canvas.js}"></script>
         <script th:src="@{/assets/js/hoverable-collapse.js}"></script>
         <script th:src="@{/assets/js/misc.js}"></script>
-        <script th:src="@{/js/calendar/main_dashboard.js}"></script>
+        <script th:src="@{/js/calendar/main.js}"></script>
         <script th:src="@{../../assets/vendors/chart.js/Chart.min.js}"></script>
         <script th:src="@{../../js/dashboard/chart.js}"></script>
         <script th:src="@{../../js/dashboard/dashtriplist.js}"></script>
         <script>
-            // $(document).ready(function() {
             var $iframe = $('#calendarFrame');
             $iframe.on('load', function () {
                 var $iframeDoc = $iframe.contents();
                 $iframeDoc.find('.fc-header-toolbar').css("display", "none");
                 $iframeDoc.find('.panel.panel-default').css("display", "none");
-            });
-            // });
 
+            });
+            // $(document).ready(function() {
+            //     if($('')){
+            //
+            //     }
+            // });
 
             var date = `${new Date().getFullYear()}년${new Date().getMonth() + 1}월${new Date().getDate()}일`;
             $("#calendarDate").html(date);
 
-
-            var $announceFrame = $('#announceFrame');
-            $announceFrame.on('load', function () {
-                var $iframeDoc = $announceFrame.contents();
-                $iframeDoc.find('.container-scroller nav').css("display", "none");
-                $iframeDoc.find('.panel.panel-default').css("display", "none");
+            var $iframe = $('#announceFrame');
+            $iframe.on('load', function () {
+                var $iframeAn = $iframe.contents();
+                $iframe.find('.dept-black-lev3').css("border-bottom", "none");
+                $iframe.find('.dept-black-lev3').css("background", "none");
             });
-
 
         </script>
 
-        <!-- endinject -->
-        <!-- Custom js for this page -->
-        <!-- End custom js for this page -->
-        <!--<th:block th:replace="~{chat/chatDrag :: chatDragJS}"></th:block>-->
 </body>
 </html>

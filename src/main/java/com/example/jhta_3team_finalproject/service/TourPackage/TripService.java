@@ -6,28 +6,19 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 
 public interface TripService {
 
-    public int getListCount();
 
-    public int getCategoryListCount(String category);
 
     public Trip getDetail(int num);
 
     public TripFile getTripFileByNo(String fileNo);
 
     public String getOptionIds(int num);
-
-    int getKeywordListCount(String keyword);
-
-    List<Trip> getTripList(@Param("startRow") int startRow, @Param("endRow") int endRow, @Param("sort") String sort);
-
-    List<Trip> getCategoryTripList(@Param("startRow") int startRow, @Param("endRow") int endRow, @Param("category") String category, @Param("sort") String sort);
-
-    List<Trip> getTripListByKeyword(@Param("startRow") int startRow, @Param("endRow") int endRow, String keyword, String sort);
 
     List<Trip> getAllTrip();
 
@@ -45,4 +36,9 @@ public interface TripService {
 
     boolean updateTripStock(int tripNo, int stock);
 
+    Trip setTripForRegAndUpdate(String tripName, Integer tripPrice, Integer tripMaxStock, LocalDate tripDate, LocalDate expireDate, String category, String optionIds);
+
+    int getListcount(String category, String keyword);
+
+    List<Trip> getTriplist(String category, String keyword, int startRow, int endRow, String sort);
 }

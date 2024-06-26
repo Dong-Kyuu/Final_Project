@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -18,21 +19,21 @@ public class RedisChatUtils {
         redisTemplate.expire(key, expiredTime, TimeUnit.DAYS);
     }
 
-    public void setAddSets(String key, ChatMessage value) {
-        redisTemplate.opsForSet().add(key, value);
+    public void setAddList(String key, ChatMessage value) {
+        redisTemplate.opsForList().rightPush(key, value);
     }
 
-    public Set<ChatMessage> getSets(String key) {
-        return redisTemplate.opsForSet().members(key);
+    public List<ChatMessage> getList(String key) {
+        return redisTemplate.opsForList().range(key, 0, -1);
     }
 
     public boolean isKeyExists(String key) {
         return redisTemplate.hasKey(key);
     }
 
-    public void setUpdateSets(String key, ChatMessage oldValue, ChatMessage newValue) {
-        redisTemplate.opsForSet().remove(key, oldValue);
-        redisTemplate.opsForSet().add(key, newValue);
+    public void setUpdateList(String key, ChatMessage newValue) {
+        redisTemplate.opsForList().rightPop(key);
+        redisTemplate.opsForList().rightPush(key, newValue);
     }
 
     public void setData(String key, ChatMessage value, Long expiredTime){

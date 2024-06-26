@@ -5,6 +5,7 @@ import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.mybatis.mapper.TourPackage.CustomerMapper;
 import com.example.jhta_3team_finalproject.mybatis.mapper.User.UserMapper;
 import com.example.jhta_3team_finalproject.service.User.UserServicelmpl;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public int getcustomerId(String id) {
-        Customer remember = customerMapper.getcustomerId(id);
+    public int isCustomerId(String id) {
+        Customer remember = customerMapper.isCustomerId(id);
         return (remember == null) ? -1 : 1;// -1는 아이디가 존재하지 않는 경우
         // 1은 아이디가 존재하는 경우
     }
@@ -49,6 +50,20 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return null;
 
+    }
+
+    @Override
+    public Customer getcustomerBySession(HttpSession session) {
+        Customer customer = (Customer) session.getAttribute("customer");
+
+        if (customer != null) {
+            // customer 정보가 있는 경우 추가 작업 수행
+            System.out.println("로그인된 사용자: " + customer.getCustomerId());
+        } else {
+            // customer 정보가 없는 경우
+            System.out.println("로그인된 사용자가 없습니다.");
+        }
+        return customer;
     }
 
     @Override

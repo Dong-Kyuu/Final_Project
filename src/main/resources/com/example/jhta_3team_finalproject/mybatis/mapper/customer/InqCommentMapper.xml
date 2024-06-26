@@ -28,7 +28,7 @@
         select comm_num, inquery_comment.comm_id, comm_content, reg_date,
         comm_re_level, comm_re_sequence, comm_re_referer
         from inquery_comment join user
-        on inquery_comment.comm_id = user.id
+        on inquery_comment.comm_id = user.user_id
         <where>
             comm_board_num = #{commBoardNum}
         </where>
@@ -42,7 +42,7 @@
     </update>
 
     <delete id="commentsDelete">
-        delete inquery_comment where comm_num = #{commNum}
+        delete from inquery_comment where comm_num = #{commNum}
     </delete>
 
     <update id="commentReplyUpdate">

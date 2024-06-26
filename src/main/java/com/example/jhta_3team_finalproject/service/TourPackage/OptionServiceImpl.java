@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -109,4 +110,70 @@ public class OptionServiceImpl implements OptionService {
 
     }
 
+    @Override
+    public TripOption setTripForRegAndUpdate(String optionId,String optionName, Integer optionPrice, Integer optionMaxStock, LocalDate optionDate, String cityNo) {
+        TripOption option = new TripOption();
+        option.setOptionId(optionId);
+        option.setOptionName(optionName);
+        option.setOptionPrice(optionPrice);
+        option.setOptionMaxStock(optionMaxStock);
+        option.setOptionDate(optionDate.toString());
+        option.setCityNo(cityNo);
+        return option;
+    }
+
+    @Override
+    public List<TripOption> getOptions(String optionIds) {
+        List<TripOption> options = new ArrayList<>();
+        String[] optionIdArray = optionIds.split("-");
+        for (String optionId : optionIdArray) {
+            TripOption option = optionMapper.getOptionsByOptionId(optionId);
+            if (option != null) {
+                options.add(option);
+            }
+        }
+        return options;
+    }
+
+    @Override
+    public String mergeOptionIds(String existingOptionIds, String newOptionIds) {
+        if (existingOptionIds == null || existingOptionIds.equals("null")) {
+            return newOptionIds;
+        }
+        String[] existingOptions = existingOptionIds.split("-");
+        String[] newOptions = newOptionIds.split("-");
+
+        StringBuilder mergedOptions = new StringBuilder(existingOptionIds);
+        for (String newOption : newOptions) {
+            boolean exists = false;
+            for (String existingOption : existingOptions) {
+                if (newOption.equals(existingOption)) {
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                mergedOptions.append("-").append(newOption);
+            }
+        }
+        return mergedOptions.toString();
+    }
+
+    @Override
+    public String removeOptionId(String optionIds, String optionId) {    // optionIds에서 optionId를 제거하는 메서드
+        String[] optionIdArray = optionIds.split("-");
+        StringBuilder sb = new StringBuilder();
+
+        for (String id : optionIdArray) {
+            if (!id.equals(optionId)) {
+                sb.append(id).append("-");
+            }
+        }
+
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1); // 마지막의 "-"를 삭제합니다.
+        }
+
+        return sb.toString();
+    }
 }
