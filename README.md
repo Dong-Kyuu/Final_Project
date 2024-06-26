@@ -148,15 +148,18 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
 
 ### 채팅방 - 이모티콘
 
-<img src="" width="350" height="600"/>  <img src="" width="350" height="600"/> 
+<img src="https://github.com/zilyun/Final_Project/assets/40315922/d752bd4b-edf7-45e9-afd4-6045b80db570" width="350" height="600"/>
+![06 이모티콘]()
+
 
 ### 채팅방 - 파일전송
 
-<img src="" width="350" height="600"/>  <img src="" width="350" height="600"/> 
+<img src="" width="350" height="600"/>
 
 ### 채팅방 - 긴급공지
 
 <img src="" width="350" height="600"/>  <img src="" width="350" height="600"/> 
+<img src="" width="350" height="600"/> 
 
 ### 채팅 기록 검색
 
@@ -164,7 +167,7 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
 
 ### 채팅 1일 데이터 불러오기
 
-<img src="" width="350" height="600"/>  <img src="" width="350" height="600"/> 
+<img src="" width="350" height="600"/> 
 
 ### 채팅방 메뉴 
 
