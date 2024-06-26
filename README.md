@@ -55,24 +55,7 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
         - 결과 및 추가사항
 ```
 
-### 문의 리스트 조회 성능 개선 [[적용 코드]() / [결과](https://velog.io/@ziru/26.%EB%B0%B1%EC%97%94%EB%93%9C-%EA%B0%9C%EB%B0%9C%EC%9E%90-%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0-%EC%B4%88%EC%84%9D-%EB%8B%A4%EC%A7%80%EA%B8%B0)]
-
-- `Caffeine Cache`를 도입해 문의 리스트를 조회 시 캐싱 처리
-
-  <details>
-  <summary>문의 리스트 조회에 대한 부하테스트 결과, 캐싱 미적용 대비 약 2배의 TPS 성능 향상</summary>
-  <div>
-      <h4>[Ngrinder]</h4>
-      <span>Cache 미적용</span><br>
-      <img alt="미적용" src="https://github.com/zilyun/Final_Project/assets/40315922/4c713b8a-6f0e-41a8-9eff-048813461577"><br>
-      <span>Cache 적용</span><br>
-      <img alt="적용" src="https://github.com/zilyun/Final_Project/assets/40315922/3893c591-8fab-48e5-baed-519efe1ffd3e">
-  </div>
-  </details>
-
-  
-
-### 멘토 이메일 발송 응답속도 개선 [[적용 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/mail/AsyncMailSender.java#L25C1-L37C4) / [설정 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/cfe5d2ff253192c0d2cbe4a01d12be677f6ca6f5/src/main/java/com/anchor/global/config/AsyncConfig.java#L22C1-L32C4)]
+### 멘토 이메일 발송 응답속도 개선 [[적용 코드]() / [설정 코드]()]
 
 - 멀티 스레딩을 이용한 `@Async 비동기` 처리
   <details>
@@ -90,37 +73,37 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
       <img src="readme/image/async/mail_log_2.png">
   </details>
 
-### 채팅 기록 검색 정확도, 정밀도 개선 [[적용 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/domain/mentoring/domain/repository/custom/QMentoringRepositoryImpl.java#L190C1-L223C2) / [설정 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/config/CustomFunctionContributor.java#L9C1-L21C2)]
-
-- `Full Text Index(ngram parser)`를 적용해 키워드가 일치하는 정도를 수치화
-    - like + wildcard 검색 대비 정확하고 정밀한 검색 결과 반환
-
-### DB에 대한 부하 분산 [[설정 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/db/DataSourceConfig.java#L28C1-L125C2) / [구성 패키지](https://github.com/Team-RecruTe/Anchor-Service/tree/develop/src/main/java/com/anchor/global/db)]
-
-- 로컬/배포 환경에서 `DB 서버 이중화` 구성
-
-    - 로컬 환경: MySQL DB 이중화 (Binary Log 기반)
-    - 배포 환경: Aurora DB 이중화 (Page 기반)
-
-- Master-Slave DB 간의 `Write/Read 쿼리 분산` 적용
-
-    - 옵션1. @Transactional의 readOnly 속성을 이용한 쿼리 분산
-    - 옵션2. @RouteDataSource의 dataSourceType 속성을 이용한 쿼리 분산
-    - (@Transactional: 스프링 어노테이션 / @RouteDataSource: 커스텀 어노테이션)
-
-- 추가 고려사항. 고가용성 확보를 위해서 Master DB 장애에 대한 대비책 필요
-
-### Fetch Join / Pagination 동시 수행 시 메모리 누수 개선 [[적용 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/domain/mentoring/domain/repository/custom/QMentoringRepositoryImpl.java#L62C1-L92C1)]
-
-- Fetch Join과 Pagination을 동시에 수행하던 단일 쿼리를 `이중 쿼리`로 분리
-    - Fetch Join과 Pagination을 별도로 수행해 메모리 누수 문제 해결
-
 ### 실시간 알림 기능 구현 [[적용 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/domain/notification/api/service/NotificationService.java#L40C1-L109C4) / [구성 패키지](https://github.com/Team-RecruTe/Anchor-Service/tree/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/redis/message)]
 
 - 네트워크 자원을 고려해 `Server Sent Event` 스펙으로 클라이언트에게 실시간 알림 전송
     - 웹 페이지 체류시간을 고려해 SSE Timeout 값을 60s로 지정
 - 서버 분산을 고려해 `Redis Pub/Sub`을 이용해 실시간 알림 이벤트 발행 및 수신 처리
     - 이벤트 발행자와 수신자가 연결된 서버가 다르더라도 알림 수신 가능
+
+### 채팅 기록 검색 정확도, 정밀도 개선 [[적용 코드]()]
+
+- `Full Text Index(ngram parser)`를 적용해 키워드가 일치하는 정도를 수치화
+    - like + wildcard 검색 대비 정확하고 정밀한 검색 결과 반환
+
+### S3 저장소 내 불필요한 이미지 삭제 자동화 [[적용 코드]()]
+
+- 트래픽이 적은 시간을 고려해 `@Scheduled`를 이용해 이미지 삭제를 요청하는 스케줄링 구현
+    - 매일 새벽 3시에 이미지 삭제 요청 스케줄링 동작
+
+### 문의 리스트 조회 성능 개선 [[적용 코드]() / [결과](https://velog.io/@ziru/26.%EB%B0%B1%EC%97%94%EB%93%9C-%EA%B0%9C%EB%B0%9C%EC%9E%90-%EC%84%B1%EB%8A%A5-%EA%B0%9C%EC%84%A0-%EC%B4%88%EC%84%9D-%EB%8B%A4%EC%A7%80%EA%B8%B0)]
+
+- `Caffeine Cache`를 도입해 문의 리스트를 조회 시 캐싱 처리
+
+  <details>
+  <summary>문의 리스트 조회에 대한 부하테스트 결과, 캐싱 미적용 대비 약 2배의 TPS 성능 향상</summary>
+  <div>
+      <h4>[Ngrinder]</h4>
+      <span>Cache 미적용</span><br>
+      <img alt="미적용" src="https://github.com/zilyun/Final_Project/assets/40315922/4c713b8a-6f0e-41a8-9eff-048813461577"><br>
+      <span>Cache 적용</span><br>
+      <img alt="적용" src="https://github.com/zilyun/Final_Project/assets/40315922/3893c591-8fab-48e5-baed-519efe1ffd3e">
+  </div>
+  </details>
 
 ### 멘토링 신청자 수 동시성 제어 [[적용 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/redis/lock/RedisLockFacade.java#L20C1-L41C4) / [구성 패키지](https://github.com/Team-RecruTe/Anchor-Service/tree/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/redis/lock)]
 
@@ -134,10 +117,6 @@ MBTI 서비스의 목표는 다음과 같습니다.<br>
 - 신청시간 잠금 이후 서버를 이탈하는 로직으로 락 소유권에 대한 추적이 어려울 것이라 판단, [Key,Value] 타입의 데이터로 신청시간 잠금 진행
     - 커서 기반 검색명령어 `scan`을 사용해 Redis 서버의 작업을 중단시키지 않도록 구현
 
-### S3 저장소 내 불필요한 이미지 삭제 자동화 [[적용 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/domain/image/api/service/ImageService.java#L33C3-L40C4)]
-
-- 트래픽이 적은 시간을 고려해 `@Scheduled`를 이용해 이미지 삭제를 요청하는 스케줄링 구현
-    - 매일 새벽 3시에 이미지 삭제 요청 스케줄링 동작
 
 ### 이미지 파일의 효율적인 관리 [[적용 코드](https://github.com/Team-RecruTe/Anchor-Service/blob/fe37c7b7a98d0511150b2ba4dd09574adfb07e82/src/main/java/com/anchor/global/valid/CustomValidatorRegistry.java#L13C1-L44C2) / [구성 패키지](https://github.com/Team-RecruTe/Anchor-Service/tree/develop/src/main/java/com/anchor/global/valid)]
 
