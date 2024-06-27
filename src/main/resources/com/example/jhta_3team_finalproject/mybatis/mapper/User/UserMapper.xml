@@ -34,7 +34,6 @@
         SET user_name            = #{userName},
             user_email           = #{userEmail},
             user_phone_number    = #{userPhoneNumber},
-            user_gender          = #{userGender},
             user_profile_picture = #{userProfilePicture}
         WHERE user_num = #{userNum}
     </update>

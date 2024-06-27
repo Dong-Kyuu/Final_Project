@@ -52,4 +52,10 @@ public interface ProjectMapper {
     ProjectPeed getOneProjectPeed(int peedNum, int projectNum);
 
     ProjectComment getInsertComment(int commentNum);
+
+    int addCheck(int loginNum, int peedNum, int projectNum);
+
+    int getCheckedPeed(int userNum, int projectPeedNum);
+
+    int deleteCheck(int loginNum, int peedNum, int projectNum);
 }

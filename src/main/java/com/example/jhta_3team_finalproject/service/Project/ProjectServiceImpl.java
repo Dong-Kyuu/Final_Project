@@ -169,4 +169,19 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectComment getInsertComment(int commentNum) {
         return projectMapper.getInsertComment(commentNum);
     }
+
+    @Override
+    public int addCheck(int loginNum, int peedNum, int projectNum) {
+        return projectMapper.addCheck(loginNum, peedNum, projectNum);
+    }
+
+    @Override
+    public int getCheckedPeed(int userNum, int projectPeedNum) {
+        return projectMapper.getCheckedPeed(userNum, projectPeedNum);
+    }
+
+    @Override
+    public int deleteCheck(int loginNum, int peedNum, int projectNum) {
+        return projectMapper.deleteCheck(loginNum, peedNum, projectNum);
+    }
 }
