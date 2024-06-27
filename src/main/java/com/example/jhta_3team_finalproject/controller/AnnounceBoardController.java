@@ -62,8 +62,6 @@ public class AnnounceBoardController {
                                   @RequestParam(value = "targetDepartment", defaultValue = "") String targetDepartment,
                                   ModelAndView mv) {
 
-
-
         int limit = 10; // 한 화면에 출력할 로우 갯수
         int listcount = AnnounceBoardService.getListCount(index, searchWord, targetDepartment); // 총 리스트 수를 받아온다.
         logger.info("listcount:" + listcount);

@@ -184,4 +184,15 @@ public class ProjectServiceImpl implements ProjectService {
     public int deleteCheck(int loginNum, int peedNum, int projectNum) {
         return projectMapper.deleteCheck(loginNum, peedNum, projectNum);
     }
+
+    @Override
+    public List<ProjectMember> getCheckedMember(int peedNum, int projectNum) {
+        return projectMapper.getCheckedMember(peedNum, projectNum);
+    }
+
+    @Override
+    public List<ProjectMember> getUnCheckedMember(int peedNum, int projectNum) {
+        return projectMapper.getUnCheckedMember(peedNum, projectNum);
+    }
+
 }

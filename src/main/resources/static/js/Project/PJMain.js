@@ -350,7 +350,8 @@ $(function () {
                     xhr.setRequestHeader(header, token);
                 },
                 success: function(response) {
-                    console.log(response.result)
+                    console.log(response.result);
+                    fetchDataAndRenderChartPJ(header, token, peedNum, projectNum);
                 },
                 error: function(error) {
                     console.error('Error:', error);
@@ -373,15 +374,54 @@ $(function () {
                     xhr.setRequestHeader(header, token);
                 },
                 success: function(response) {
-                        console.log(response.result)
+                        console.log(response.result);
+                    fetchDataAndRenderChartPJ(header, token, peedNum, projectNum);
                 },
                 error: function(error) {
                     console.error('Error:', error);
                 }
             });
         }
-
     })
+let re=0;
+    $('.content-icon').on('click', '.checkcheck', function () {
+        var peedNum = $(this).closest('.card-body').find('.peedNum').val();
+        var projectNum = $('.projectNum').val();
+        var dis = $(this)
+        $('.partList').remove();
+        $('.chart-board').empty();
+        $('.chart-board').append('<h4 class="card-title chart-title">확인 현황</h4>\n' +
+            '                                <canvas id="doughnutChart" style="height:300px"></canvas>').promise().done(function() {
+            // fetchDataAndRenderChartPJ 함수 호출
+            fetchDataAndRenderChartPJ(header, token, peedNum, projectNum);
+        }).promise().done(function(){
+            if(re==0) {
+                $("#checkGraph").hide();
+            }
+            re++
+            $('.partListItem').empty();
+
+            var offset = dis.offset();
+            $("#checkGraph").css({
+                top: offset.top + dis.outerHeight() + 10 + 'px',
+                left: offset.left
+            }).slideToggle();
+        })
+        $('.checkGraph').css('width', '500px')
+        // $('#doughnutChart').css('width', '400px')
+    })
+
+    // 모달 닫기
+    $(".close").click(function(){
+        $("#myModal").css("display", "none");
+    });
+
+    // 모달을 클릭했을 때 닫기
+    $(window).click(function(event){
+        if ($(event.target).is("#myModal")) {
+            $("#myModal").css("display", "none");
+        }
+    });
 });
 
 function openModal() {
