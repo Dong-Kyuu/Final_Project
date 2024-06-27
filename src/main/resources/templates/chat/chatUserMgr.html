@@ -72,7 +72,7 @@
                            class="border border-sky-100 rounded p-2 pl-10 placeholder-gray-300 outline-none hover:border-sky-200 focus:border-sky-200 focus:bg-sky-50 focus:bg-opacity-25"/>
                 </div>
 
-                <input type="hidden" name="chatSessionId" th:value="${chatUserId}"/>
+                <input type="hidden" name="chatUserId" th:value="${chatUserId}"/>
                 <input type="hidden" name="chatRoomNum" th:value="${chatRoomNum}"/>
 
                 <!-- Member List -->
@@ -177,12 +177,9 @@
                 return false;
             }
 
-            //console.log($('input[name=chatSessionId]').val());
-            //console.log($('input[name=chatRoomNum]').val());
-
             var msg = {
                 chatRoomNum: $('input[name=chatRoomNum]').val(),
-                sessionId: $('input[name=chatSessionId]').val(),
+                chatUserId: $('input[name=chatUserId]').val(),
                 chatInviteUserList: $("#selectedUserList").text()
             };
 
@@ -207,12 +204,9 @@
                 return false;
             }
 
-            //console.log($('input[name=chatSessionId]').val());
-            //console.log($('input[name=chatRoomNum]').val());
-
             var msg = {
                 chatRoomNum: $('input[name=chatRoomNum]').val(),
-                sessionId: $('input[name=chatSessionId]').val(),
+                ChatUserId: $('input[name=chatUserId]').val(),
                 chatExitUserList: $("#selectedUserList").text()
             };
 
@@ -251,13 +245,13 @@
          * 2024-06-12, 채팅방 정보 가져오기 (채팅방 이름, 인원 수, 유저리스트)
          */
         function initChatRoomInfo(chatRoomNum) {
-            //console.log($('input[name=chatSessionId]').val());
+
             $.ajax({
                 type: "post",
                 url: "/chat/getChatRoomInfo",
                 data: {
                     "chatRoomNum": chatRoomNum,
-                    "chatUserId": $('input[name=chatSessionId]').val()
+                    "chatUserId": $('input[name=chatUserId]').val()
                 },
                 dataType: "json",
                 beforeSend: function (xhr) {

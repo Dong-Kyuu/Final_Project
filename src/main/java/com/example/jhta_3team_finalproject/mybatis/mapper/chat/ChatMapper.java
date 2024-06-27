@@ -22,8 +22,6 @@ public interface ChatMapper {
 
     public int addChatParticipate(ChatParticipate chatParticipate);
 
-    public List<ChatParticipate> searchRoom(ChatRoom chatRoom);
-
     public List<ChatParticipate> searchRoomUser(ChatRoom chatRoom);
 
     public ChatParticipate searchLastRoomUser(ChatRoom chatRoom);

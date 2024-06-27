@@ -10,12 +10,10 @@ import java.util.Date;
 @Setter
 @Getter
 public class ChatRoom {
-
     private long chatRoomNum;
-    private String chatSessionId;
+    private String chatManagerId;
     private String roomName;
     private Date roomCreateDate;
     private String roomType;
     private String chatInviteUserList;
-    private String chatExitRoomList;
 }

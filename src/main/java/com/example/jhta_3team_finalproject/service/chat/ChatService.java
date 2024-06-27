@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Transactional
@@ -69,14 +70,11 @@ public class ChatService {
         chatMessage.setTimeStamp(dao.getLastDay(chatMessage).getTimeStamp());
 
         List<ChatMessage> temp = dao.redisSearchMessages(chatMessage);
-        List<ChatMessage> list = new ArrayList<>();
-
-        temp.forEach(chatMsg -> {
-            if(chatMsg.getUserId() == null && chatMsg.getUsername() == null) {
+        List<ChatMessage> list = temp.stream().peek(chatMsg -> {
+            if (chatMsg.getUserId() == null && chatMsg.getUsername() == null) {
                 chatMsg.setType(ChatMessage.MessageType.TIMESTAMP);
             }
-            list.add(chatMsg);
-        });
+        }).collect(Collectors.toList());
 
         return list;
     }
@@ -131,7 +129,7 @@ public class ChatService {
          * 2024-06-10, 자신의 정보도 채팅방 참여 테이블에 등록
          */
         chatParticipate.setChatRoomNum(chatRoom.getChatRoomNum());
-        chatParticipate.setChatUserId(chatRoom.getChatSessionId());
+        chatParticipate.setChatUserId(chatRoom.getChatManagerId());
         dao.addChatParticipate(chatParticipate);
 
         /**
@@ -172,20 +170,13 @@ public class ChatService {
          * 2024-06-18, 채팅 기록 검색
          */
         List<ChatMessage> temp = dao.searchChatMessages(chatMessage);
-        List<ChatMessage> list = new ArrayList<>();
-
-        temp.forEach(chatMsg -> {
-            if(chatMsg.getUserId() == null && chatMsg.getUsername() == null) {
+        List<ChatMessage> list = temp.stream().peek(chatMsg -> {
+            if (chatMsg.getUserId() == null && chatMsg.getUsername() == null) {
                 chatMsg.setType(ChatMessage.MessageType.TIMESTAMP);
             }
-            list.add(chatMsg);
-        });
+        }).collect(Collectors.toList());
 
         return list;
-    }
-
-    public List<ChatParticipate> searchRoom(ChatRoom chatRoom) throws Exception {
-        return dao.searchRoom(chatRoom);
     }
 
     public List<ChatParticipate> searchRoomUser(ChatRoom chatRoom) throws Exception {
@@ -223,11 +214,11 @@ public class ChatService {
         return dao.getChatRoomCanInviteUserList(chatRoom);
     }
 
-    public long addChatParticipate(ChatParticipate chatParticipate, String chatInviteUserList) {
+    public long addChatParticipate(ChatParticipate chatParticipate) {
         /**
          * 2024-06-13, 초대한 유저들을 참가 테이블에 추가
          */
-        String[] chatInviteUserArray = chatInviteUserList.split(",");
+        String[] chatInviteUserArray = chatParticipate.getChatInviteUserList().split(",");
         for(String inviteUserId : chatInviteUserArray) {
             chatParticipate.setChatUserId(inviteUserId);
             dao.addChatParticipate(chatParticipate);
@@ -235,8 +226,8 @@ public class ChatService {
         return chatParticipate.getChatRoomNum();
     }
 
-    public long participateExitChatRoom(ChatParticipate chatParticipate, String chatExitUserList) {
-        String[] chatExitUserArray = chatExitUserList.split(",");
+    public long participateExitChatRoom(ChatParticipate chatParticipate) {
+        String[] chatExitUserArray = chatParticipate.getChatExitUserList().split(",");
 
         for(String exitUser : chatExitUserArray) {
             chatParticipate.setChatRoomNum(chatParticipate.getChatRoomNum());
@@ -266,7 +257,7 @@ public class ChatService {
             roomName += ", " + user.getUsername();
             ChatRoom chatRoom = new ChatRoom();
             chatRoom.setRoomName(roomName);
-            chatRoom.setChatSessionId(chatUserId);
+            chatRoom.setChatManagerId(chatUserId);
             result = dao.createp2pChatRoom(chatRoom);
 
             /**

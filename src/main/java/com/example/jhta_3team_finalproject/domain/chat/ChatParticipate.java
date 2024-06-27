@@ -36,4 +36,11 @@ public class ChatParticipate {
      * 2024-06-17, 안 읽은 메시지 수
      */
     private int unreadMessageCount;
+
+    /**
+     * 2024-06-27, 나갈려고 하는 방 목록, 추방할 유저 목록, 초대할 유저 목록
+     */
+    private String chatExitRoomList;
+    private String chatExitUserList;
+    private String chatInviteUserList;
 }

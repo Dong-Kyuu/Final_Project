@@ -1840,7 +1840,7 @@
                         xhr.setRequestHeader(header, token);
                     },
                     success: function (rdata) {
-                        //console.log(rdata);
+                        console.log(rdata);
                         //$(".touch-friend").show();
                         $(".touch-employee").empty();
                         let output = '';
@@ -1863,13 +1863,13 @@
                             if (this.userChatStatusMsg === null) { // 2024-06-02, chatStatusMsg로 변경 예정
                                 output += "        <div class='mes-col1 chat-friend-list-col1' style='margin-top: 18px;'>";
                                 output += "            <div class='sender-name'>";
-                                output += "                " + this.departmentName + " - " + this.username;
+                                output += "                " + this.departmentName + " - " + this.userName;
                                 output += "            </div>";
                                 output += "        </div>";
                             } else {
                                 output += "        <div class='mes-col1 chat-friend-list-col1'>";
                                 output += "            <div class='sender-name'>";
-                                output += "                " + this.departmentName + " - " + this.username;
+                                output += "                " + this.departmentName + " - " + this.userName;
                                 output += "            </div>";
                                 output += "            <div class='mes-preview'>";
                                 output += "                " + this.userChatStatusMsg;
@@ -1894,7 +1894,7 @@
                     type: "post",
                     url: "/chat/userChatRoomList",
                     data: {
-                        "chatUserId": $("#chat_user_id").val()
+                        "chatManagerId": $("#chat_user_id").val()
                     },
                     dataType: "json",
                     beforeSend: function (xhr) {

@@ -11,10 +11,10 @@
 
     <!-- 2024-06-08, 채팅 메시지 추가 후 마지막 메시지의 정보를 다시 가져와야 함. -->
     <select id="lastMessage" parameterType="chatMessage">
-        select cm.*,
-               u.user_id as user_id,
-               u.user_name as user_name,
-               u.user_profile_picture as user_profile_picture
+        SELECT cm.*,
+               u.user_id AS user_id,
+               u.user_name AS user_name,
+               u.user_profile_picture AS user_profile_picture
         FROM chat_message cm
         JOIN user u
         ON cm.sender_id = u.user_id
@@ -150,15 +150,20 @@
 
     <!-- 2024-06-07, URL이 업데이트된 경우 redis에 새로운 메시지를 적용합니다. -->
     <select id="searchNewMessage" resultType="chatMessage">
-        SELECT *
-        FROM chat_message
+        SELECT cm.*,
+               u.user_id AS user_id,
+               u.user_name AS user_name,
+               u.user_profile_picture as user_profile_picture
+        FROM chat_message cm
+        JOIN user u
+        ON cm.sender_id = u.user_id
         WHERE message_num = #{messageNum}
     </select>
 
     <!-- 2024-06-10, 채팅방 만들기 -->
     <insert id="createChatRoom" parameterType="chatRoom">
-        INSERT INTO chat_room(chat_room_num, room_name, chat_session_id, room_create_date, room_type)
-        VALUES (NULL, #{roomName}, #{chatSessionId}, NOW(), #{roomType})
+        INSERT INTO chat_room(chat_room_num, room_name, chat_manager_id, room_create_date, room_type)
+        VALUES (NULL, #{roomName}, #{chatManagerId}, NOW(), #{roomType})
     </insert>
 
     <!-- 2024-06-10, 마지막으로 생성된 채팅방 번호를 가져와서 참여 관계를 나타내는 테이블에서 사용 -->
@@ -223,7 +228,7 @@
         SELECT chat_user_id as user_id
         FROM chat_participate
         WHERE chat_room_num = #{chatRoomNum}
-        AND chat_user_id not in (#{chatSessionId})
+        AND chat_user_id not in (#{chatManagerId})
     </select>
 
     <!-- 2024-06-12, 해당 방에 참가 인원이 없는 경우 해당 방을 삭제 -->
@@ -271,7 +276,7 @@
                     SELECT chat_visit_time
                     FROM chat_participate
                     WHERE chat_room_num = cp.chat_room_num
-                      AND chat_user_id =  #{chatSessionId}
+                      AND chat_user_id =  #{chatManagerId}
                 ) AND NOW() AND chat_room_num = cp.chat_room_num) AS unread_message_count,
                GREATEST(IFNULL(cm.send_time, cr.room_create_date), cr.room_create_date) AS last_send_time
         FROM chat_participate cp
@@ -288,7 +293,7 @@
             FROM chat_room
         ) cr
         ON cp.chat_room_num = cr.chat_room_num
-        WHERE chat_user_id = #{chatSessionId}
+        WHERE chat_user_id = #{chatManagerId}
         ORDER BY last_send_time DESC
     </select>
 
@@ -302,7 +307,7 @@
                     SELECT chat_visit_time
                     FROM chat_participate
                     WHERE chat_room_num = cp.chat_room_num
-                    AND chat_user_id =  #{chatSessionId}
+                    AND chat_user_id =  #{chatManagerId}
                 ) AND NOW() AND chat_room_num = cp.chat_room_num) as unread_message_count,
                GREATEST(IFNULL(cm.send_time, cr.room_create_date), cr.room_create_date) AS last_send_time
         FROM chat_participate cp
@@ -319,7 +324,7 @@
             FROM chat_room
         ) cr
         ON cp.chat_room_num = cr.chat_room_num
-        WHERE chat_user_id = #{chatSessionId}
+        WHERE chat_user_id = #{chatManagerId}
         AND cp.chat_room_num = (SELECT MAX(chat_room_num) FROM chat_room)
         ORDER BY last_send_time DESC
     </select>
@@ -332,13 +337,6 @@
             user_id = #{userId}
         </where>
     </update>
-
-    <!-- 방목록 가져오기 - 관리자용 -->
-    <select id="searchRoom" resultType="chatRoom">
-        SELECT *
-        FROM chat_room
-        ORDER BY chat_room_num DESC
-    </select>
 
     <!-- 2024-06-13, 채팅방 클릭 시 해당 채팅방 정보 가져오기 -->
     <select id="getChatRoomInfo">

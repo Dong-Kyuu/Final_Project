@@ -112,7 +112,7 @@ public class SocketHandler extends TextWebSocketHandler {
         if(chatMessage != null) {
             ChatRoom chatRoom = new ChatRoom();
             chatRoom.setChatRoomNum(Long.valueOf(roomNum));
-            chatRoom.setChatSessionId(chatUserId);
+            chatRoom.setChatManagerId(chatUserId);
             List<User> users = chatService.chatRoomParticipateList(chatRoom);
 
             /**

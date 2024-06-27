@@ -74,7 +74,7 @@ public class RabbitMQService {
         if(chatMessage != null) {
             ChatRoom chatRoom = new ChatRoom();
             chatRoom.setChatRoomNum(Long.valueOf(chatMessage.getChatRoomNum()));
-            chatRoom.setChatSessionId(chatMessage.getSenderId());
+            chatRoom.setChatManagerId(chatMessage.getSenderId());
             List<User> users = chatService.chatRoomParticipateList(chatRoom);
 
             /**
