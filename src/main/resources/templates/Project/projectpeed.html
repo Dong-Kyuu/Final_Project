@@ -63,7 +63,7 @@
                                 <img th:src="${#authentication.principal.userProfilePicture}" alt="image" style="width:30px; height:30px; border-radius: 18px; float: left; margin-top:3px; margin-right: 20px;">
                                 <div>
                                     <span class="card-title" style="font-weight: bold; font-size:14px;">
-                                        [[${#authentication.principal.username}]]
+                                        [[${#authentication.principal.userName}]]
                                     </span>
                                 </div>
                                 <p class="card-description" style="font-size:11px; margin-bottom: 5px;">
@@ -224,7 +224,12 @@
                                         </div>
                                         <div class="content-icon" style="margin-top:15px; display: flex; justify-content: space-between; height: 25px; align-items: center" >
                                             <div>
-                                            <i class="mdi mdi-checkbox-blank-outline" style="font-size:18px; margin-top:15px;"></i> Check
+                                                <th:block th:if="${projectPeed.checked == 1}">
+                                                    <i class="mdi mdi-checkbox-marked-outline checkBtn uncheck" style="font-size:18px; margin-top:15px;"></i> Check
+                                                </th:block>
+                                                <th:block th:if="${projectPeed.checked != 1}">
+                                                    <i class="mdi mdi-checkbox-blank-outline checkBtn" style="font-size:18px; margin-top:15px;"></i> Check
+                                                </th:block>
                                             </div>
                                                 <div style="color:dimgray; font-size:14px;">댓글 [[${#lists.size(projectPeed.comments)}]]</div>
                                         </div>

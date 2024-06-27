@@ -45,7 +45,7 @@
                 </div>
                 <!-- 로그인한 유저 정보 -->
                 <th:block>
-                    <input type="hidden" id="loginname" th:value="${#authentication.principal.username}">
+                    <input type="hidden" id="loginname" th:value="${#authentication.principal.userName}">
                     <input type="hidden" id="loginNum" th:value="${#authentication.principal.userNum}">
                     <input type="hidden" id="loginprofile" th:value="${#authentication.principal.userProfilePicture}">
                     <input type="hidden" id="loginDPM" th:value="${#authentication.principal.departmentId}">

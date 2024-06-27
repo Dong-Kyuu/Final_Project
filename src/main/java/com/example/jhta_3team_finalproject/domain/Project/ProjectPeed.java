@@ -34,6 +34,7 @@ public class ProjectPeed {
     private String chargerPosition;
 
     private List<ProjectComment> comments;
+    private int checked;
 
     public Date getProjectPeedStartPeriodDate() {
         return projectPeedStartPeriod == null ? null : new Date(projectPeedStartPeriod);

@@ -34,7 +34,6 @@
         SET user_name            = #{userName},
             user_email           = #{userEmail},
             user_phone_number    = #{userPhoneNumber},
-            user_gender          = #{userGender},
             user_profile_picture = #{userProfilePicture}
         WHERE user_num = #{userNum}
     </update>
@@ -67,15 +66,6 @@
                                    WHEN #{positionId} = 5 THEN 'ROLE_MASTER' -- 대표
                                    ELSE 'ROLE_NEWBIE' -- 기본값
                 END
-        WHERE user_num = #{userNum}
-    </update>
-
-    <!-- 사용자 승인 -->
-    <update id="approveUser">
-        UPDATE user
-        SET user_is_approved = 1 ,
-            department_id    = #{departmentId},
-            position_id      = #{positionId}
         WHERE user_num = #{userNum}
     </update>
 
@@ -122,4 +112,11 @@
         FROM user
         WHERE user_num = #{userNo}
     </select>
+
+    <update id="projectMemberUpdate">
+        UPDATE project_member
+        SET project_member_name = #{userName},
+            project_member_profile = #{userProfilePicture}
+        WHERE project_member_num = #{userNum}
+    </update>
 </mapper>
