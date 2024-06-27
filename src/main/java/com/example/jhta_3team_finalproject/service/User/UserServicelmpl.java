@@ -68,8 +68,8 @@ public class UserServicelmpl implements UserService {
     @Transactional
     public int join(User user) {
         try {
-        user.setUserPassword(passwordEncoder.encode(user.getPassword()));
-        userMapper.insert(user);
+            user.setUserPassword(passwordEncoder.encode(user.getPassword()));
+            userMapper.insert(user);
             return JOIN_SUCCESS;
         } catch (Exception e) {
             log.error("회원가입 실패: ", e);
