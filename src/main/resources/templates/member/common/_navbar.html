@@ -41,7 +41,7 @@
                         <span class="availability-status online"></span>
                     </div>
                     <div class="nav-profile-text">
-                        <p class="mb-1 text-black" th:text="${#authentication.principal.username}"></p>
+                        <p class="mb-1 text-black" th:text="${#authentication.principal.userName}"></p>
                     </div>
                 </a>
                 <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
@@ -69,11 +69,10 @@
                         <h6 class="p-3 mb-0">Notifications <span class="deleteNotifi">알림 모두 지우기</span></h6>
                         <div class="dropdown-divider notify-tr"></div>
 
-
-
                     <!-- 여기에 notifyForm 추가해야함! -->
                     <div class="dropdown-divider"></div>
                     <h6 class="p-3 mb-0 text-center">See all notifications</h6>
+                </div>
                 </div>
             </li>
             <li class="nav-item nav-logout d-none d-lg-block">
@@ -81,12 +80,12 @@
                     <i class="mdi mdi-power" th:href="@{/user/logout}"></i>
                 </a>
             </li>
-
         </ul>
         <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
                 data-toggle="offcanvas">
             <span class="mdi mdi-menu"></span>
         </button>
+
     </div>
 </nav>
 </body>

@@ -46,4 +46,10 @@ public interface ProjectMapper {
     int insertComment(ProjectComment projectComment);
 
     List<ProjectComment> getPeedComment(int projectPeedNum, int projectNum);
+
+    int changeType(int type, int peedNum, int projectNum);
+
+    ProjectPeed getOneProjectPeed(int peedNum, int projectNum);
+
+    ProjectComment getInsertComment(int commentNum);
 }

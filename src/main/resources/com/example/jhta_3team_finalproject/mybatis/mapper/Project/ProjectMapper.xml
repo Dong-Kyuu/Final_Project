@@ -124,10 +124,10 @@
                  LEFT JOIN user uc ON pp.project_peed_charge = uc.user_num
                  LEFT JOIN user_positions pc ON uc.position_id = pc.position_id
         WHERE pp.project_num = #{projectNum}
-        ORDER BY pp.project_peed_regdate asc
+        ORDER BY pp.project_peed_regdate desc
     </select>
 
-    <insert id="insertComment">
+    <insert id="insertComment" useGeneratedKeys="true" keyProperty="projectCommentNum">
         insert into project_comment(project_num, project_peed_num, project_member_num, project_comment_content)
         values(#{projectNum}, #{projectPeedNum}, #{projectMemberNum}, #{projectCommentContent})
     </insert>
@@ -141,6 +141,30 @@
                  LEFT JOIN user_departments d ON u.department_id = d.department_id
         WHERE pc.project_num = #{projectNum}
         AND   pc.project_peed_num = #{projectPeedNum}
-        ORDER BY pc.project_comment_regdate asc
+        ORDER BY pc.project_comment_regdate desc
+    </select>
+
+    <update id="changeType">
+        UPDATE project_peed
+        SET project_peed_type = #{type}
+        WHERE project_num = #{projectNum}
+        AND   project_peed_num = #{peedNum}
+    </update>
+
+    <select id="getOneProjectPeed">
+        SELECT *
+        FROM project_peed
+        WHERE project_num = #{projectNum}
+        AND project_peed_num = #{peedNum}
+    </select>
+
+    <select id="getInsertComment">
+        SELECT pc.*, u.user_profile_picture AS commWriterProfile, d.department_name AS commWriterDepartment,
+               u.user_name AS commWriter, p.position_name AS commWriterPosition
+        FROM project_comment AS pc
+                 LEFT JOIN user u ON pc.project_member_num = u.user_num
+                 LEFT JOIN user_positions p ON u.position_id = p.position_id
+                 LEFT JOIN user_departments d ON u.department_id = d.department_id
+        WHERE pc.project_comment_num = #{commentNum}
     </select>
 </mapper>

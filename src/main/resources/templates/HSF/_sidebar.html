@@ -19,7 +19,7 @@
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
                     <!--                    TODO: 이거 있으면 페이지 안불러와짐 고쳐야 함-->
-                    <span class="font-weight-bold mb-2" th:text="${#authentication.principal.username}"></span>
+                    <span class="font-weight-bold mb-2" th:text="${#authentication.principal.userName}"></span>
                     <span class="text-secondary text-small"
                           th:text="${#authentication.principal.departmentName}"></span>
                     <span class="text-secondary text-small" th:text="${#authentication.principal.positionName}"></span>
