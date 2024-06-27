@@ -107,9 +107,6 @@ public class UserController {
             vo.setTo(user.getUserEmail());
             sendMail.sendMail(vo);
 
-            // 승인 대기 상태로 설정
-            user.setUserIsApproved(0);
-
             rattr.addFlashAttribute("result", "joinSuccess");
             return "redirect:/user/login";
         } else {
