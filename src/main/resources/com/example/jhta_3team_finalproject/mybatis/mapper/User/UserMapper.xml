@@ -70,15 +70,6 @@
         WHERE user_num = #{userNum}
     </update>
 
-    <!-- 사용자 승인 -->
-    <update id="approveUser">
-        UPDATE user
-        SET user_is_approved = 1 ,
-            department_id    = #{departmentId},
-            position_id      = #{positionId}
-        WHERE user_num = #{userNum}
-    </update>
-
     <!-- 사용자 거절 -->
     <update id="rejectUser">
         UPDATE user
@@ -122,4 +113,11 @@
         FROM user
         WHERE user_num = #{userNo}
     </select>
+
+    <update id="projectMemberUpdate">
+        UPDATE project_member
+        SET project_member_name = #{userName},
+            project_member_profile = #{userProfilePicture}
+        WHERE project_member_num = #{userNum}
+    </update>
 </mapper>

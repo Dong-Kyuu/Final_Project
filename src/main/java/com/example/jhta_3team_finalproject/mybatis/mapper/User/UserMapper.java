@@ -45,4 +45,6 @@ public interface UserMapper {
     List<User> getEmployeeListByDepartment(int departmentId);
 
     User getUserByUserNo(int userNo);
+
+    void projectMemberUpdate(int userNum, String userProfilePicture, String userName);
 }
