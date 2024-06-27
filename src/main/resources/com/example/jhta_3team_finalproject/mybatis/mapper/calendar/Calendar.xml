@@ -7,6 +7,11 @@
         select cal_id as _id, cal_title as title, cal_description as description, cal_start as start, cal_end as end,
         cal_type as type, cal_background_color as backgroundColor, cal_text_color as textColor, cal_all_day as allDay, user_name as username
         from calendar
+        <if test="url == 'dashboard' ">
+        where cal_type = (select department_name
+                            from user_departments
+                            where department_id = #{department_id})
+        </if>
     </select>
     
     <insert id="insert" >

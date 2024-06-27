@@ -105,10 +105,20 @@ var calendar = $('#calendar').fullCalendar({
    *  일정 받아옴 
    * ************** */
   events: function (start, end, timezone, callback) {
+      // var $iframe = $('#calendarframe');
+      // $iframe.on('load', function () {
+      // var $iframeDoc = $iframe.contents();
+      // url = $iframeDoc.find('#url').html();
+      // console.log($($iframeDoc).html());
+      // console.log(url);
+      // });
+      console.log($("#url").val());
     $.ajax({
       type: "get",
-      url: "getjson",
+      url: "/cal/getjson",
+        async: false,
       data: {
+          title : $('title').text()
         // 화면이 바뀌면 Date 객체인 start, end 가 들어옴
         //startDate : moment(start).format('YYYY-MM-DD'),
         //endDate   : moment(end).format('YYYY-MM-DD')

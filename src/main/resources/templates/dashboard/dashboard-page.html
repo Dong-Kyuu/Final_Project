@@ -12,13 +12,23 @@
     <!-- End layout styles -->
     <link rel="shortcut icon" href="../../assets/images/favicon.ico"/>
     <link rel="stylesheet" th:href="@{/css/dashboard/minicalendar.css}"/>
+    <link rel="stylesheet" th:href="@{/css/calendar/fullcalendar.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/calendar/bootstrap.min.css}">
+    <link rel="stylesheet" th:href='@{/css/calendar/select2.min.css}'/>
+    <link rel="stylesheet" th:href='@{/css/calendar/bootstrap-datetimepicker.min.css}'/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" th:href="@{/css/calendar/main.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard/minicalendar.css}"/>
+
 </head>
 <body>
+
 <div class="container-scroller">
     <!-- partial:../../partials/_navbar.html -->
     <th:block th:replace="~{HSF/_navbar :: navbar}"></th:block>
     <!-- partial -->
-    <div class="container-fluid page-body-wrapper">
+    <div class="container-fluid page-body-wrapper" id="side">
         <!-- partial:../../partials/_sidebar.html -->
         <th:block th:replace="~{HSF/_sidebar :: sidebar}"></th:block>
         <!-- partial -->
@@ -55,7 +65,7 @@
                                         <tr>
                                             <td class="text" th:text="${a.title}"></td>
                                             <td class="text" th:text="${a.username}" ></td>
-                                            <td class="text" th:text="${a.id}+일"></td>
+                                            <td class="text" th:text="D-+${a.id}"></td>
 <!--                                            <td class="text" th:text="${a.type}"></td>-->
                                         </tr>
                                         </th:block>
@@ -70,10 +80,47 @@
 
                     <div class="col-md-8 grid-margin stretch-card">
                         <div class="card">
-                            <div class="card-body">
+                            <div class="card-body" id="caldar">
                                 <form class="forms-sample">
                                     <h3 id="calendarDate"></h3>
-                                    <iframe id="calendarFrame" style="width: 550px; height: 480px;" th:src="@{/cal/mycalendar}"></iframe>
+<!--                                    <iframe id="calendarFrame" style="width: 600px; height: 450px;" th:src="@{/cal/mycalendar}"></iframe>-->
+                                    <div id="wrapper">
+                                        <div id="loading"></div>
+                                        <div id="calendar"></div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">필터</h3>
+                                        </div>
+
+                                        <div class="panel-body">
+                                            <div class="col-lg-6">
+                                                <label for="calendar_view">등록자별</label>
+                                                <div class="input-group" id="names">
+                                                    <label class="checkbox-inline">
+                                                        <input class='filter' type="checkbox" value="관리자"
+                                                               checked>관리자</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <label for="calendar_view">구분별</label>
+                                                <div class="input-group">
+                                                    <select class="filter" id="type_filter" multiple="multiple">
+                                                        <option value="신입사원">신입사원</option>
+                                                        <option value="인사부">인사부</option>
+                                                        <option value="관리부">관리부</option>
+                                                        <option value="홍보부">홍보부</option>
+                                                        <option value="지원부">지원부</option>
+                                                        <option value="영업부">영업부</option>
+                                                        <option value="임원">임원</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -101,12 +148,11 @@
                     </div>
 
                     <!-- 공지사항 페이지 -->
-
                     <div class="col-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
                                 <h4>공지사항</h4>
-                                <iframe id="announceFrame" style="width: 870px; height: 200px;" th:src="@{/dashAnnounceList}"></iframe>
+                                <iframe id="announceFrame" style="width: 900px; height: 200px;" th:src="@{/dashAnnounceList}"></iframe>
                             </div>
                         </div>
                     </div>
@@ -117,7 +163,7 @@
                                 <h4 class="card-title">결재사항</h4>
                                 <table class="table table-bordered">
                                     <thead>
-                                    <iframe id="tripFrame" style="width: 870px;height: 300px " th:src="@{/dashDepartment}"></iframe>
+                                        <iframe id="tripFrame" style="width: 900px;height: 250px " th:src="@{/dashDepartment}"></iframe>
                                     </thead>
                                 </table>
                             </div>
@@ -143,31 +189,42 @@
         <script th:src="@{../../assets/vendors/chart.js/Chart.min.js}"></script>
         <script th:src="@{../../js/dashboard/chart.js}"></script>
         <script th:src="@{../../js/dashboard/dashtriplist.js}"></script>
-        <script>
-            var $iframe = $('#calendarFrame');
-            $iframe.on('load', function () {
-                var $iframeDoc = $iframe.contents();
-                $iframeDoc.find('.fc-header-toolbar').css("display", "none");
-                $iframeDoc.find('.panel.panel-default').css("display", "none");
+<input type="hidden" id="url" th:value="${url}">
+<script th:src="@{/js/calendar/jquery.min.js}"></script>
+<script th:src="@{/js/calendar/bootstrap.min.js}"></script>
+<script th:src="@{/js/calendar/moment.min.js}"></script>
+<script th:src="@{/js/calendar/fullcalendar.min.js}"></script>
+<script th:src="@{/js/calendar/ko.js}"></script>
+<script th:src="@{/js/calendar/select2.min.js}"></script>
+<script th:src="@{/js/calendar/bootstrap-datetimepicker.min.js}"></script>
+<script th:src="@{/js/calendar/main.js}"></script>
+<script th:src="@{/js/calendar/addEvent.js}"></script>
+<script th:src="@{/js/calendar/editEvent.js}"></script>
+<script th:src="@{/js/calendar/etcSetting.js}"></script>
 
-            });
-            // $(document).ready(function() {
-            //     if($('')){
+        <script>
+            // var $iframe = $('#calendarFrame');
+            // $iframe.on('load', function () {
+            //     var $iframeDoc = $iframe.contents();
+            //     $iframeDoc.find('.fc-header-toolbar').css("display", "none");
+            //     // $iframeDoc.find('.panel.panel-default').css("display", "none");
             //
-            //     }
+            //     position = $(".text-secondary").first.text()
+            //     console.log(position);
+            //     $iframeDoc.find('select.filter').val(position)
+            //     $iframeDoc.find('select.filter').trigger('change')
+            //     $('#calendar').fullCalendar('rerenderEvents');
+            //
             // });
 
             var date = `${new Date().getFullYear()}년${new Date().getMonth() + 1}월${new Date().getDate()}일`;
             $("#calendarDate").html(date);
 
-            var $iframe = $('#announceFrame');
-            $iframe.on('load', function () {
-                var $iframeAn = $iframe.contents();
-                $iframe.find('.dept-black-lev3').css("border-bottom", "none");
-                $iframe.find('.dept-black-lev3').css("background", "none");
-            });
-
+            // $('#announceFrame').on('load', function(){
+            //    var $iframeAnn = $('#announceFrame').contents();
+            //    $iframeAnn.find('.dept-black-lev3').css("border-bottom","none");
+            //    $iframeAnn.find('.dept-black-lev3').css("background","none");
+            // });
         </script>
-
 </body>
 </html>

@@ -5,6 +5,8 @@ import com.example.jhta_3team_finalproject.domain.calendar.Calendar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.jhta_3team_finalproject.mybatis.mapper.calendar.CalendarMapper;
+
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -19,9 +21,9 @@ public class CalendarServiceImpl implements CalendarService{
 
 
     @Override
-    public List<Calendar> getlist() {
+    public List<Calendar> getlist(HashMap<String,Object> map) {
 
-        return dao.getlist();
+        return dao.getlist(map);
     }
 
 

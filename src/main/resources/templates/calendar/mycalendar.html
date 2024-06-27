@@ -172,6 +172,7 @@
     <!-- /.filter panel -->
 </div>
 <!-- /.container -->
+<input type="hidden" id="url" th:value="${url}">
 <script th:src="@{/js/calendar/jquery.min.js}"></script>
 <script th:src="@{/js/calendar/bootstrap.min.js}"></script>
 <script th:src="@{/js/calendar/moment.min.js}"></script>
@@ -183,14 +184,13 @@
 <script th:src="@{/js/calendar/addEvent.js}"></script>
 <script th:src="@{/js/calendar/editEvent.js}"></script>
 <script th:src="@{/js/calendar/etcSetting.js}"></script>
+
 </body>
 <script>
     var $iframe = $('#calendarframe');
     $iframe.on('load', function () {
         var $iframeDoc = $iframe.contents();
-
         $iframeDoc.find('button').css("btn btn-gradient-dark btn-fw");
-
 
     });
 </script>

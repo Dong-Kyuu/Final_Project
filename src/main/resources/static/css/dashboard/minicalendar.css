@@ -50,3 +50,28 @@ div.content-wrapper{
 .dept-black {
     border-left: none !important;
 }
+#calendarDate{
+    margin-bottom: 2.5rem;
+}
+
+.fc-toolbar.fc-header-toolbar{
+    display: none;
+}
+
+.panel.panel-default{
+    opacity: 0;
+    height: 0px;
+    margin: 0px;
+}
+
+#caldar{
+    height: 600px;
+}
+
+#calendar{
+    padding-top: 0px;
+}
+
+#side{
+    padding-top: 0px;
+}

@@ -3,13 +3,19 @@ package com.example.jhta_3team_finalproject.controller;
 import com.example.jhta_3team_finalproject.domain.User.User;
 import com.example.jhta_3team_finalproject.domain.calendar.Calendar;
 import com.example.jhta_3team_finalproject.service.calendar.CalendarService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.net.http.HttpRequest;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -24,19 +30,34 @@ public class CalendarController {
     }
 
     @RequestMapping(value = "/show", method = RequestMethod.GET)
-    public String logout() {
+    public String logout(HttpSession session) {
+        session.setAttribute("url", "cal");
         return "calendar/calendar-page";
     }
 
     @ResponseBody
     @RequestMapping(value = "/getjson", method = RequestMethod.GET)
-    public List<Calendar> json() {
+    public List<Calendar> json(String title, HttpServletRequest request, @AuthenticationPrincipal User user,
+                               HttpSession session) {
+        System.out.println("제발 와라========"+title);
+        boolean test = request.getRequestURL().toString().contains("dashboard"); //dashboard url 가져오기
+//        user.getDepartmentId();//department 값 가져오기
+        System.out.println("requet==========="+request.getRequestURL().toString());
+        System.out.println("test====="+test);
+          String url = "cal";
+          if (test){
+              url = "dashboard";
+          }//map에 저장하기
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("url", session.getAttribute("url"));
+        map.put("department_id",user.getDepartmentId());
 
-        return  cs.getlist();
+        return  cs.getlist(map);
     }
 
     @RequestMapping(value = "/mycalendar", method = RequestMethod.GET)
     public String test() {
+
         return "calendar/mycalendar";
     }
 
@@ -45,6 +66,7 @@ public class CalendarController {
     public int insert(Calendar calendar, @AuthenticationPrincipal User user) {
 
         calendar.setUsername(user.getUsername());
+
 
         return cs.insert(calendar);
     }

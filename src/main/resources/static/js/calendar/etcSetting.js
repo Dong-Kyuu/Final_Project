@@ -5,6 +5,7 @@ $('#edit-color').change(function () {
 
 //필터
 $('.filter').on('change', function () {
+    // $('select').val('홍보부')
     $('#calendar').fullCalendar('rerenderEvents');
 });
 

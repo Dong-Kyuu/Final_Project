@@ -186,7 +186,7 @@
                                         <th> 예약 상품 + 날짜</th>
                                         <th> 신청 시간</th>
                                         <th> 처리 현황</th>
-                                        <th> 관리</th>
+<!--                                        <th> 관리</th>-->
                                     </tr>
                                     </thead>
 
@@ -203,22 +203,22 @@
                                                       (purchase.status == 'REJECTED' ? '예약 거절' :
                                                       (purchase.status == 'REFUND' ? '환불' : purchase.status))))}">
                                         </td>
-                                        <td>
-                                            <div class="purchase-button">
-                                                <form th:action="@{/trip/approvePurchase}" method="post" style="display:inline;">
-                                                    <input type="hidden" name="purchaseId" th:value="${purchase.id}" />
-                                                    <input type="hidden" name="buyerNo" th:value="${purchase.buyerNo}" />
-                                                    <input type="hidden" name="tripNo" th:value="${purchase.tripNo}" />
-                                                    <button type="submit" class="btn btn-gradient-success btn-sm">승인</button>
-                                                </form>
-                                                <form th:action="@{/trip/rejectPurchase}" method="post" style="display:inline;">
-                                                    <input type="hidden" name="purchaseId" th:value="${purchase.id}" />
-                                                    <input type="hidden" name="buyerNo" th:value="${purchase.buyerNo}" />
-                                                    <input type="hidden" name="tripNo" th:value="${purchase.tripNo}" />
-                                                    <button type="submit" class="btn btn-gradient-danger btn-sm">거절</button>
-                                                </form>
-                                            </div>
-                                        </td>
+<!--                                        <td>-->
+<!--                                            <div class="purchase-button">-->
+<!--                                                <form th:action="@{/trip/approvePurchase}" method="post" style="display:inline;">-->
+<!--                                                    <input type="hidden" name="purchaseId" th:value="${purchase.id}" />-->
+<!--                                                    <input type="hidden" name="buyerNo" th:value="${purchase.buyerNo}" />-->
+<!--                                                    <input type="hidden" name="tripNo" th:value="${purchase.tripNo}" />-->
+<!--                                                    <button type="submit" class="btn btn-gradient-success btn-sm">승인</button>-->
+<!--                                                </form>-->
+<!--                                                <form th:action="@{/trip/rejectPurchase}" method="post" style="display:inline;">-->
+<!--                                                    <input type="hidden" name="purchaseId" th:value="${purchase.id}" />-->
+<!--                                                    <input type="hidden" name="buyerNo" th:value="${purchase.buyerNo}" />-->
+<!--                                                    <input type="hidden" name="tripNo" th:value="${purchase.tripNo}" />-->
+<!--                                                    <button type="submit" class="btn btn-gradient-danger btn-sm">거절</button>-->
+<!--                                                </form>-->
+<!--                                            </div>-->
+<!--                                        </td>-->
                                     </tr>
 
                                     </tbody>

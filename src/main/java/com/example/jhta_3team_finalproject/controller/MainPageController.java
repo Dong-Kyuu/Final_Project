@@ -15,6 +15,7 @@ import com.example.jhta_3team_finalproject.service.dashboard.DashTripService;
 import com.example.jhta_3team_finalproject.util.PagingUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -61,7 +59,9 @@ public class MainPageController {
     }
 
     @GetMapping("/dashboard")
-    public ModelAndView dashboard(@AuthenticationPrincipal User userDetails, ModelAndView mv) {
+    public ModelAndView dashboard(@AuthenticationPrincipal User userDetails, ModelAndView mv,
+                                  @RequestHeader(value="referer", required=false) String beforeURL,
+                                  HttpSession session) {
         User dbuser = userservice.departmentPositionInfo(userDetails.getDepartmentId(), userDetails.getPositionId());
 
         userDetails.setDepartmentName(dbuser.getDepartmentName());
@@ -81,14 +81,24 @@ public class MainPageController {
         for(int a =0;a<list.size();a++) {
             if (list.get(a).getType().equals(loginuser.getDepartmentName())){
                 mv.addObject("calenderlist", list);
+//                mv.addObject("mycalender", list);
                 logger.info("test");
             }
 
         }
-        mv.setViewName("dashboard/dashboard-page");
 
+        session.setAttribute("url", "dashboard");
+
+        mv.setViewName("dashboard/dashboard-page");
         return mv;
     }
+
+
+
+
+
+
+
 
     // 리스트 가져오기
     @RequestMapping(value = "/dashAnnounceList", method = RequestMethod.GET)
@@ -97,8 +107,6 @@ public class MainPageController {
                                   @RequestParam(value = "search", defaultValue = "") String searchWord,
                                   @RequestParam(value = "targetDepartment", defaultValue = "") String targetDepartment,
                                   ModelAndView mv) {
-
-
 
         int limit = 10; // 한 화면에 출력할 로우 갯수
         int listcount = dashAnnounceBoardService.getListCount(index, searchWord, targetDepartment); // 총 리스트 수를 받아온다.
