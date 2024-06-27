@@ -188,8 +188,8 @@
 
     <!-- 2024-06-14, 1대1 채팅방 만들기 (P2P) -->
     <insert id="createp2pChatRoom" parameterType="chatRoom">
-        INSERT INTO chat_room(chat_room_num, room_name, chat_session_id, room_create_date, room_type)
-        VALUES (NULL, #{roomName}, #{chatSessionId}, NOW(), '자유')
+        INSERT INTO chat_room(chat_room_num, room_name, chat_manager_id, room_create_date, room_type)
+        VALUES (NULL, #{roomName}, #{chatManagerId}, NOW(), '자유')
     </insert>
 
     <!-- 2024-06-14, 1대1 채팅방 만들기에서 마지막으로 생성된 채팅방 번호를 가져와서 참여 관계를 나타내는 테이블에서 사용 -->
@@ -237,7 +237,8 @@
         SELECT user_id,
                user_name,
                user_profile_picture,
-               user_chat_status_msg, user_email,
+               user_chat_status_msg,
+               user_email,
                ud.department_name
         FROM user u
         JOIN user_departments ud
