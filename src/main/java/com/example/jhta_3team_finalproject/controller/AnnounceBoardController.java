@@ -152,12 +152,6 @@ public class AnnounceBoardController {
             @RequestHeader(value = "referer", required = false) String beforeURL,
             @RequestParam(value = "notidata", defaultValue = "0") int notidata
             ) {
-		/*
-			1. String BeforeURL = request.getHeader("referer"); 의미로
-			   어느 주소에서 Detail로 이동했는지 header의 정보 중 "referer"을 통해 알 수 있다.
-			2. 수정 후 이곳으로 이동하는 경우 조회수는 증가하지 않도록 한다.
-			3. myhome4/board/list에서 제목을 클릭한 경우 조회수가 증가하도록 한다.
-		 */
 
         logger.info("referer : " + beforeURL);
         if (beforeURL != null && beforeURL.endsWith("announceList")) {

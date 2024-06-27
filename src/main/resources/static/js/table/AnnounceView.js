@@ -56,7 +56,7 @@ $(function () {
             annboardNum: $('#boardnum').val()
         },
         success: function(response) {
-            // 서버로부터 받은 데이터를 처리합니다.
+
             console.log(response);
             console.log("OX:"+ response.OX);
             if(response.OX==1){
@@ -64,7 +64,7 @@ $(function () {
             }
         },
         error: function(xhr, status, error) {
-            // 요청이 실패했을 때의 처리를 정의합니다.
+
             console.error(error);
         }
     });

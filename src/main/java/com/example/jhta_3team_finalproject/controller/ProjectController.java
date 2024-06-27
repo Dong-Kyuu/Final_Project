@@ -136,6 +136,9 @@ public class ProjectController {
         for (ProjectPeed projectPeed : projectPeeds) {
             List<ProjectComment> comments = projectService.getPeedComment(projectPeed.getProjectPeedNum(), projectPeed.getProjectNum());
             projectPeed.setComments(comments);
+
+            int checked = projectService.getCheckedPeed(loginuser.getUserNum(), projectPeed.getProjectPeedNum());
+            projectPeed.setChecked(checked);
         }
 
         if (project == null) {
@@ -280,6 +283,44 @@ public class ProjectController {
 
         response.put("result", resultAndCommentNum[0]);
         response.put("comment", projectComment);
+
+        return response;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/addCheck")
+    public Map<String, Object> addCheck(int peedNum, int projectNum, int loginNum) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        String message = "fail";
+        int result = 0;
+
+        result = projectService.addCheck(loginNum, peedNum, projectNum);
+        if(result == 1) {
+            message = "success";
+        }
+
+        response.put("result", message);
+
+        return response;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/deleteCheck")
+    public Map<String, Object> deleteCheck(int peedNum, int projectNum, int loginNum) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        String message = "fail";
+        int result = 0;
+
+        result = projectService.deleteCheck(loginNum, peedNum, projectNum);
+        if(result == 1) {
+            message = "success";
+        }
+
+        response.put("result", message);
 
         return response;
     }

@@ -328,6 +328,60 @@ $(function () {
 
         return output;
     }
+
+    $('.content-icon').on('click', '.checkBtn', function() {
+        var peedNum = $(this).closest('.card-body').find('.peedNum').val();
+        var projectNum = $('.projectNum').val();
+        var loginNum = $('#loginNum').val()
+        console.log("peedNum= " + peedNum + ", projectNum = " + projectNum + ", loginNum = " + loginNum);
+
+        if($(this).hasClass('uncheck')) {
+            $(this).removeClass();
+            $(this).addClass('mdi mdi-checkbox-blank-outline checkBtn')
+            $.ajax({
+                type: 'POST',
+                url: '../project/deleteCheck',
+                data: {
+                    peedNum : peedNum,
+                    projectNum : projectNum,
+                    loginNum : loginNum
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function(response) {
+                    console.log(response.result)
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+
+        } else {
+            $(this).removeClass();
+            $(this).addClass('mdi mdi-checkbox-marked-outline checkBtn uncheck')
+
+            $.ajax({
+                type: 'POST',
+                url: '../project/addCheck',
+                data: {
+                    peedNum : peedNum,
+                    projectNum : projectNum,
+                    loginNum : loginNum
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function(response) {
+                        console.log(response.result)
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+    })
 });
 
 function openModal() {
