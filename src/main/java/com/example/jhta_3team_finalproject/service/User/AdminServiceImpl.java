@@ -21,8 +21,8 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void updateUserInfo(User user) {
-        adminMapper.updateUserInfo(user);
+    public void updateUserInfo(int userNum,int departmentId,int positionId) {
+        adminMapper.updateUserInfo(userNum,departmentId,positionId);
     }
 
     @Override

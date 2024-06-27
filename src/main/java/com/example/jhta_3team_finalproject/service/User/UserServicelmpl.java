@@ -147,14 +147,10 @@ public class UserServicelmpl implements UserService {
 
         String startDateTimeStr = startDateStr + " 00:00:00";
         String endDateTimeStr = endDateStr + " 23:59:59";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        LocalDateTime startDate = LocalDateTime.parse(startDateTimeStr, formatter);
-        LocalDateTime endDate = LocalDateTime.parse(endDateTimeStr, formatter);
 
         Map<String, Object> params = new HashMap<>();
-        params.put("startDate", startDate);
-        params.put("endDate", endDate);
+        params.put("startDate", startDateTimeStr);
+        params.put("endDate", endDateTimeStr);
         params.put("userNum", userNum);
         return attendenceMapper.getMonthlyAttendances(params);
     }

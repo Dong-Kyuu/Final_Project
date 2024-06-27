@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -144,7 +145,7 @@ public class UserController {
         // 알림 보낼 데이터 가져오기 (예: 승인한 사람의 이름, 해당 링크 등)
         User user = userservice.getUserInfo(userNum); // 승인된 사용자 정보
         String approverName = userDetails.getUserName();
-        String notificationMessage = approverName + "님이 승인 완료 했습니다.";
+        String notificationMessage = " 승인 완료 했습니다.";
         String notificationLink = "http://43.203.196.38:9000/dashboard/user/detail/" + userNum;
 
         // 알림 전송
@@ -249,8 +250,8 @@ public class UserController {
     @GetMapping(value = "/monthlyAttendance")
     @ResponseBody
     public List<Map<String, Object>> getMonthlyAttendances(Principal principal) {
-        User userDetails = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-        int userNum = userDetails.getUserNum();
+        UserDetails userDetails = (UserDetails) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        int userNum = ((User) userDetails).getUserNum();
 
         String startDateStr = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth()).toString();
         String endDateStr = LocalDate.now().with(TemporalAdjusters.lastDayOfMonth()).toString();

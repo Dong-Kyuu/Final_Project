@@ -23,7 +23,7 @@ public interface AttendenceMapper {
     Attendence getTodayAttendance(@Param("userNum") int userNum);
 
     //한 사람의 한달 출퇴근 기록
-    List<Map<String, Object>> getMonthlyAttendances(@Param("params") Map<String, Object> params); //특정 직원의 한달 출퇴근 정보
+    List<Map<String, Object>> getMonthlyAttendances( Map<String, Object> params); //특정 직원의 한달 출퇴근 정보
 
 
     //전 직원의 한달 출퇴근 기록

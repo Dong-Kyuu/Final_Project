@@ -81,6 +81,7 @@
         select u.user_num,
                u.user_name,
                u.user_email,
+               user_gender,
                u.user_phone_number,
                u.user_created_at,
                cast(u.user_is_approved as signed) as user_is_approved,
