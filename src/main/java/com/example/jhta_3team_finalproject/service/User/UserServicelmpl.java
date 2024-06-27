@@ -69,6 +69,7 @@ public class UserServicelmpl implements UserService {
     public int join(User user) {
         try {
             user.setUserPassword(passwordEncoder.encode(user.getPassword()));
+            log.info(passwordEncoder.encode(user.getPassword()));
             userMapper.insert(user);
             return JOIN_SUCCESS;
         } catch (Exception e) {
