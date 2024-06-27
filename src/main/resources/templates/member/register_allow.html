@@ -116,6 +116,50 @@
             margin-bottom: 15px;
         }
 
+        .select-small {
+            width: auto;
+            min-width: 100px; /* 선택 박스의 최소 너비 설정 */
+        }
+
+        .modal-custom .modal-title {
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+        }
+
+        .modal-body .form-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-label {
+            margin-right: 10px;
+            white-space: nowrap;
+            text-align: right;
+            width: 60px;
+        }
+
+        .modal-body .form-group select {
+            flex-grow: 1;
+        }
+
+        .instruction-text {
+            font-size: 1.1rem;
+            color: #333;
+            text-align: center;
+        }
+        .card {
+            margin: 5px;
+            padding: 10px;
+        }
+
     </style>
 </head>
 <body>
@@ -133,6 +177,36 @@
                             <li class="breadcrumb-item active" aria-current="page">신규 등록 사원</li>
                         </ol>
                     </nav>
+                </div>
+                <div class="page-header">
+                    <div class="card" style="margin: 5px;">
+                        <div class=" col-md-6 ">
+                            <div class="card profile-card">
+                                <div class="card-body">
+                                    <h4 class="card-title">결재 현황</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" style="margin: 5px;">
+                        <div class=" col-md-6 ">
+                            <div class="card profile-card">
+                                <div class="card-body">
+                                    <h4 class="card-title">결재 현황</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" style="margin: 5px;">
+                        <div class=" col-md-6 ">
+                            <div class="card profile-card">
+                                <div class="card-body">
+                                    <h4 class="card-title">결재 현황</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
                 <div class="col-lg-12 grid-margin stretch-card">
                     <div class="card">
@@ -162,19 +236,20 @@
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 </div>
 <!-- 승인 완료 모달 -->
-<div class="modal fade modal-custom" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
+<div class="modal fade modal-custom" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="approveModalLabel">승인</h5>
+                <h5 class="modal-title text-center" id="approveModalLabel">승인</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>해당 사원의 부서와 직책을 선택해 주세요.</p>
+                <p class="instruction-text">해당 사원의 부서와 직책을 선택해 주세요.</p>
                 <form id="approveForm">
-                    <div class="form-group">
-                        <label for="departmentId">부서</label>
-                        <select class="form-control" id="departmentId" name="departmentId" required>
+                    <div class="form-group mb-3">
+                        <label for="department_id" class="form-label">부서</label>
+                        <select class="form-control select-small " id="department_id" name="department_id" required>
                             <option value="1">인사부</option>
                             <option value="2">관리부</option>
                             <option value="3">홍보부</option>
@@ -183,9 +258,9 @@
                             <option value="6">임원</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="positionId">직책</label>
-                        <select class="form-control" id="positionId" name="positionId" required>
+                    <div class="form-group mb-3">
+                        <label for="positionId" class="form-label">직책</label>
+                        <select class="form-control select-small" id="positionId" name="positionId" required>
                             <option value="1">사원</option>
                             <option value="2">팀장</option>
                             <option value="3">부장</option>
@@ -201,7 +276,8 @@
 </div>
 
 <!-- 승인 취소 모달 -->
-<div class="modal fade modal-custom modal-alert" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
+<div class="modal fade modal-custom modal-alert" id="rejectModal" tabindex="-1" role="dialog"
+     aria-labelledby="rejectModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -213,7 +289,7 @@
                 <p>승인을 거절 하시겠습니까?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary"  data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
                 <button type="button" class="btn btn-primary" id="confirmReject">승인 거절</button>
             </div>
         </div>
@@ -221,7 +297,8 @@
 </div>
 
 <!-- 저장 완료 모달 -->
-<div class="modal fade modal-custom" id="responseModal" tabindex="-1" role="dialog" aria-labelledby="responseModalLabel" aria-hidden="true">
+<div class="modal fade modal-custom" id="responseModal" tabindex="-1" role="dialog" aria-labelledby="responseModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -232,7 +309,7 @@
                 <p id="responseMessage">해당 사원의 정보가 저장되었습니다.</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary"  data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
             </div>
         </div>
     </div>
@@ -282,7 +359,8 @@
                     }
                 },  // 승인여부
 
-                {data: 'user_num', render: function (data, type, row) {
+                {
+                    data: 'user_num', render: function (data, type, row) {
                         if (row.user_is_approved === 0) {
                             return `
                                 <button type="button" class="btn btn-approve" data-id="${data}">승인</button>
@@ -317,7 +395,7 @@
                 }
             },
             lengthMenu: [10, 25, 35, 50, {label: '전체', value: -1}],
-            order: []
+            order: false,
         });
 
         $('#request_table').on('click', '.btn-approve', function () {
@@ -326,13 +404,17 @@
             $('#approveModal').modal('show');
             $('#approveForm').off('submit').on('submit', function (e) {
                 e.preventDefault();
-                var departmentId = $('#departmentId').val();
+                var departmentId = $('#department_id').val();
                 var positionId = $('#positionId').val();
-                var userNum = $(this).data('userNum');
+                // 값이 올바르게 설정되었는지 확인하는 로그 추가
+                console.log("departmentId:", departmentId);
+                console.log("positionId:", positionId);
+                console.log("userNum:", userNum);
+
                 $.ajax({
                     url: `/user/approve/${userNum}`,
                     type: 'POST',
-                    data: { departmentId: departmentId, positionId: positionId },
+                    data: {departmentId: departmentId, positionId: positionId},
                     beforeSend: function (xhr) {
                         xhr.setRequestHeader(csrfHeader, csrfToken);
                     },
