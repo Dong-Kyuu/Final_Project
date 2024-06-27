@@ -155,6 +155,7 @@
             color: #333;
             text-align: center;
         }
+
         .card {
             margin: 5px;
             padding: 10px;
@@ -178,30 +179,36 @@
                         </ol>
                     </nav>
                 </div>
-                <div class="page-header">
-                    <div class="card" style="margin: 5px;">
-                        <div class=" col-md-6 ">
+
+                <div class="page-header" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <div class="card" style="flex: 3; margin: 0;">
+                        <div class=" col-md-6">
                             <div class="card profile-card">
                                 <div class="card-body">
-                                    <h4 class="card-title">결재 현황</h4>
+                                    <h4 class="card-title">승인대기</h4>
+                                    <span id="pending-count">0</span>건
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card" style="margin: 5px;">
+                    <div class="card" style="flex: 3; margin: 0;">
                         <div class=" col-md-6 ">
                             <div class="card profile-card">
                                 <div class="card-body">
-                                    <h4 class="card-title">결재 현황</h4>
+                                    <h4 class="card-title">승인완료</h4>
+                                    <span id="approved-count">0</span>
+                                    건
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card" style="margin: 5px;">
+                    <div class="card" style="flex: 3; margin: 0;">
                         <div class=" col-md-6 ">
                             <div class="card profile-card">
                                 <div class="card-body">
-                                    <h4 class="card-title">결재 현황</h4>
+                                    <h4 class="card-title">승인거절</h4>
+                                    <span id="rejected-count">0</span>
+                                    건
                                 </div>
                             </div>
                         </div>
@@ -220,6 +227,7 @@
                                     <th>신청일자</th>
                                     <th>이메일</th>
                                     <th>전화번호</th>
+                                    <th>성별</th>
                                     <th>승인여부</th>
                                     <th>승인</th>
                                 </tr>
@@ -328,22 +336,57 @@
     $(document).ready(function () {
         var csrfToken = $("meta[name='_csrf']").attr("content");
         var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        var pendingCount = 0;
+        var approvedCount = 0;
+        var rejectedCount = 0;
 
         var requestTable = $('#request_table').DataTable({
             ajax: {
                 url: '/user/register_requests',
-                dataSrc: ''
+                dataSrc: function (data) {
+                    pendingCount = 0;
+                    approvedCount = 0;
+                    rejectedCount = 0;
+
+                    var filteredData = data.filter(function (employee) {
+                        if (employee.user_is_approved === 0) {
+                            pendingCount++;
+                        } else if (employee.user_is_approved === 1) {
+                            approvedCount++;
+                        } else if (employee.user_is_approved === 2) {
+                            rejectedCount++;
+                        }
+                        return employee.user_is_approved !== 1;
+                    });
+
+                    // Update the counts in the HTML
+                    $('#pending-count').text(pendingCount);
+                    $('#approved-count').text(approvedCount);
+                    $('#rejected-count').text(rejectedCount);
+
+                    return filteredData;
+                }
+
             },
             columns: [
                 {data: 'user_num'},
                 {data: 'user_name'},
-                {
-                    data: 'user_created_at', render: function (data, type, row) {
-                        return data.substring(0, 10);
-                    }
+                {data: 'user_created_at', render: function (data, type, row) {
+                        return data.substring(0, 10);}
                 }, // 신청일자
                 {data: 'user_email'},
                 {data: 'user_phone_number'},
+                {
+                    data: 'user_gender', render: function (data, type, row) {
+                        switch (data) {
+                            case 'M':
+                                return '남';
+                            case 'F':
+                                return '여';
+
+                        }
+                    }
+                },
                 {
                     data: 'user_is_approved', render: function (data, type, row) {
                         switch (data) {
@@ -366,6 +409,8 @@
                                 <button type="button" class="btn btn-approve" data-id="${data}">승인</button>
                                 <button type="button" class="btn btn-reject" data-id="${data}">거절</button>
                             `;
+                        } else if (row.user_is_approved === 1) {
+                            return ``;
                         } else {
                             return `
                                 <button type="button" class="btn btn-approve" data-id="${data}">승인</button>
@@ -396,7 +441,33 @@
             },
             lengthMenu: [10, 25, 35, 50, {label: '전체', value: -1}],
             order: false,
+
         });
+
+        function updateCounts() {
+            $.ajax({
+                url: '/user/register_requests',
+                success: function (data) {
+                    pendingCount = 0; // Reset counts
+                    approvedCount = 0;
+                    rejectedCount = 0;
+
+                    data.forEach(employee => {
+                        if (employee.user_is_approved === 0) {
+                            pendingCount++;
+                        } else if (employee.user_is_approved === 1) {
+                            approvedCount++;
+                        } else if (employee.user_is_approved === 2) {
+                            rejectedCount++;
+                        }
+                    });
+
+                    $('#pending-count').text(pendingCount);
+                    $('#approved-count').text(approvedCount);
+                    $('#rejected-count').text(rejectedCount);
+                }
+            });
+        }
 
         $('#request_table').on('click', '.btn-approve', function () {
             var $this = $(this);
@@ -406,10 +477,6 @@
                 e.preventDefault();
                 var departmentId = $('#department_id').val();
                 var positionId = $('#positionId').val();
-                // 값이 올바르게 설정되었는지 확인하는 로그 추가
-                console.log("departmentId:", departmentId);
-                console.log("positionId:", positionId);
-                console.log("userNum:", userNum);
 
                 $.ajax({
                     url: `/user/approve/${userNum}`,
@@ -423,6 +490,7 @@
                         $('#responseMessage').text(response.message);
                         $('#responseModal').modal('show');
                         requestTable.ajax.reload();
+                        updateCounts()
                     },
                     error: function (xhr, status, error) {
                         console.error("Error occurred: ", xhr.responseText);
@@ -449,6 +517,7 @@
                         $('#responseMessage').text(response.message);
                         $('#responseModal').modal('show');
                         requestTable.ajax.reload();
+                        updateCounts()
                     },
                     error: function (xhr, status, error) {
                         console.error("Error occurred: ", xhr.responseText);

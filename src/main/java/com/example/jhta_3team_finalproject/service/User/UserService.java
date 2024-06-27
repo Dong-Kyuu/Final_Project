@@ -26,13 +26,10 @@ public interface UserService {
 
     int join(User user);
 
-//    User user_info(String id);
 
 //    int update(User user);
 
     boolean updateUser(User user, MultipartFile uploadfile) throws IOException;
-
-//    User user_info(User user);
 
     int getListCount();
 

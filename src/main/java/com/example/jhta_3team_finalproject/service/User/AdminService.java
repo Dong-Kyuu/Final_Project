@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface AdminService {
 
-    void updateUserInfo(User user);
+    void updateUserInfo(int userNum,int departmentId,int positionId);
 
     List<User> getUsersFilter(int departmentId);
 

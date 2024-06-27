@@ -5,24 +5,25 @@
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.User.AdminMapper">
 
     <!-- 사용자 정보 업데이트 쿼리 -->
-    <update id="updateUserInfo" parameterType="User">
+    <update id="updateUserInfo" parameterType="map">
         UPDATE user
         SET department_id = #{departmentId},
             position_id   = #{positionId},
-            user_auth     = #{userAuth},
-            user_status   = CASE
-                                WHEN #{status} IS NOT NULL THEN #{status}
-                                WHEN EXISTS (SELECT 1
-                                             FROM user_attendance ua
-                                             WHERE ua.user_num = user.user_num
-                                               AND ua.check_in_time BETWEEN #{startDate} AND #{endDate}) THEN '근무중'
-                                ELSE '휴가중'
+            user_auth        = CASE
+                                   WHEN #{positionId} = 0 THEN 'ROLE_NEWBIE' -- 신입사원
+                                   WHEN #{positionId} = 1 THEN 'ROLE_MEMBER' -- 사원
+                                   WHEN #{positionId} = 2 THEN 'ROLE_TEAM' -- 팀장
+                                   WHEN #{positionId} = 3 THEN 'ROLE_HEAD' -- 부장
+                                   WHEN #{positionId} = 4 THEN 'ROLE_SUB_MASTER'-- 이사
+                                   WHEN #{positionId} = 5 THEN 'ROLE_MASTER' -- 대표
+                                   ELSE 'ROLE_NEWBIE' -- 기본값
                 END
+
         WHERE user_num = #{userNum}
     </update>
 
     <!-- 사용자 조회 쿼리 -->
-    <select id="getUsersFilter" parameterType="map" resultType="User">
+    <select id="getUsersFilter" resultType="map">
         SELECT u.user_num,
         u.user_name,
         u.user_created_at,
@@ -31,7 +32,6 @@
         u.user_email,
         u.user_gender,
         u.user_auth,
-        u.user_status,
         d.department_name,
         p.position_name
         FROM user u

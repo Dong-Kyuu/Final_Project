@@ -9,28 +9,12 @@
     <link rel="stylesheet" th:href="@{/assets/vendors/css/vendor.bundle.base.css}">
     <link rel="stylesheet" th:href="@{/css/user/userinfo.css}">
     <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/user/font.css}">
     <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <style>
-        .profile-img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            display: block;
-            margin: 0 auto;
-        }
 
-        .profile-card {
-            border: none;
-            text-align: center;
-            margin: 0 auto;
-        }
-
-        .profile-info {
-            padding: 20px;
-        }
 
         .profile-label {
             font-weight: bold;
@@ -58,10 +42,6 @@
             gap: 20px;
         }
 
-        .form-section {
-            width: 100%;
-            max-width: 800px;
-        }
 
         .page-header {
             display: flex;
@@ -93,6 +73,21 @@
         .btn-gradient-dark {
             cursor: pointer !important;
         }
+        .form-group-center {
+            text-align: center;
+        }
+        .profile-card-center-align .profile-text,
+        .profile-card-center-align .profile-label,
+        .profile-card-center-align .form-group button,
+        .profile-card-center-align .form-group p {
+            display: block;
+            text-align: center;
+            margin: 0 auto;
+        }
+        .profile-card-right-align p, .profile-card-right-align button {
+            display: block;
+            margin-left: auto;
+        }
 
 
     </style>
@@ -120,38 +115,37 @@
                     </div>
                     <div class="profile-section">
                         <div class="col-md-3 grid-margin stretch-card">
-                            <div class="card profile-card">
+                            <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title">오늘 날짜</h4>
                                     <div class="form-group">
                                         <p class="profile-text text-black" id="today-date"></p>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group form-group-center">
                                         <label class="profile-label">이름</label>
                                         <p class="profile-text text-black"
-                                           th:text="${#authentication.principal.username}"></p>
+                                           th:text="${#authentication.principal.userName}"></p>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group form-group-center">
                                         <label class="profile-label">부서</label>
                                         <p class="profile-text text-black"
                                            th:text=" ${#authentication.principal.departmentName}"></p>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group form-group-center">
                                         <button type="button" class="btn btn-gradient-dark checkIn">출근</button>
-                                        <button type="button" class="btn btn-gradient-light checkOut" disabled>퇴근
-                                        </button>
-                                        <p>오늘 출근 시간<span id="checkInTime"></span></p>
-                                        <p>오늘 퇴근 시간<span id="checkOutTime"></span></p>
+                                        <button type="button" class="btn btn-gradient-light checkOut" disabled>퇴근</button>
                                     </div>
-
-
+                                    <div class="form-group form-group-center">
+                                        <p>오늘 출근 시간 : <span id="checkInTime"></span></p>
+                                        <p>오늘 퇴근 시간 : <span id="checkOutTime"></span></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-9 grid-margin stretch-card">
-                            <div class="card">
+                            <div class="card profile-card-right-align">
                                 <div class="card-body">
-                                    <h4 class="card-title" th:text="${#authentication.principal.username} + '님'"></h4>
+                                    <h4 class="card-title" th:text="${#authentication.principal.userName} + '님'"></h4>
                                     <p class="card-description"> 한달 출퇴근 내역</p>
                                     <table class="table" id="attendance_table">
                                         <thead>
@@ -215,7 +209,6 @@
             responsive: true,
             ajax: {
                 url: '/user/monthlyAttendance',
-                data: {userNum: userNum},
                 dataSrc: ''
             },
             columns: [
@@ -236,6 +229,7 @@
                 },
                 {data: 'work_time'}
             ],
+            lengthChange: false,
             language: {
                 "decimal": "",
                 "emptyTable": "데이터가 없습니다",
@@ -254,8 +248,8 @@
                     "previous": "이전"
                 }
             },
-            lengthMenu: [10, 25, 35, 50, {label: '전체', value: -1}]
-
+            lengthMenu: [10, 25, 35, 50, {label: '전체', value: -1}],
+            order: false,
 
         });
 
@@ -275,7 +269,6 @@
     });
 
     $(".profile-section button").on("click", function () {
-
         var token = $("meta[name='_csrf']").attr("content");
         var header = $("meta[name='_csrf_header']").attr("content");
         var action = ""
