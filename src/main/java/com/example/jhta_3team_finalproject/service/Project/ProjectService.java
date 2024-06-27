@@ -61,4 +61,8 @@ public interface ProjectService {
     int getCheckedPeed(int userNum, int projectPeedNum);
 
     int deleteCheck(int loginNum, int peedNum, int projectNum);
+
+    List<ProjectMember> getCheckedMember(int peedNum, int projectNum);
+
+    List<ProjectMember> getUnCheckedMember(int peedNum, int projectNum);
 }

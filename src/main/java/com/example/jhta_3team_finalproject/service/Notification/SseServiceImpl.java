@@ -91,11 +91,10 @@ public class SseServiceImpl implements SseService {
         // 알림 받는 사용자의 승인 상태를 확인합니다.
         User toUser = userService.getUserInfo(toUserNum);
         if (toUser.getUserIsApproved() == 0) {
+
             logger.info("User with userNum: {} is not approved. No notification will be sent.", toUserNum);
 
         } else {
-
-
             //userId를 사용하여 this.emitters 맵에서 해당 사용자에 대한 SseEmitter를 가져옵니다.
             SseEmitter emitter = this.emitters.get(toUserNum);
 
@@ -153,7 +152,6 @@ public class SseServiceImpl implements SseService {
         return notificationMapper.deleteAll(userNum);
     }
 
-
     @Override
     public void sendByDepartmentAndPosition(int departmentNo, int positionNo, String message, String url) {
         // SSE 알림 보내기
@@ -168,11 +166,12 @@ public class SseServiceImpl implements SseService {
 
         int[] users = userService.getUsersByDepartmentAndPosition(departmentNo, positionNo);
 
-
         for (int toUserNum : users) {
+
             System.out.println("send to " + toUserNum);
             // 받는 사람 넘버(필수) , 보내는 사람 넘버, 보내는사람 이름(안넣으면 이상하게보임), 링크, 메세지(필수)
             sendNotification(toUserNum, fromUserNum, fromUserName, url, message);
+
         }
     }
 }
