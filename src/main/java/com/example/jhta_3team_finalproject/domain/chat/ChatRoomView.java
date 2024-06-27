@@ -8,7 +8,6 @@ import lombok.ToString;
 @Setter
 @Getter
 public class ChatRoomView {
-
     private String type;
     private String name;
     private String userButton;

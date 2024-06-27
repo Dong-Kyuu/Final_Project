@@ -320,6 +320,7 @@ public class SocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("소켓 설립");
+
         // 소켓 연결
         super.afterConnectionEstablished(session);
         boolean flag = false;

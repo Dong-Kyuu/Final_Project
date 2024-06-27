@@ -68,22 +68,16 @@ public class ChatController {
 
     @RequestMapping("getChatRoomInfo")
     public @ResponseBody Map<String, Object> getChatRoomInfo(ChatParticipate chatParticipate) {
-        Map<String, Object> chatInfoMap = new HashMap<>();
         /**
          * 2024-06-13, 채팅방 이름 가져오기
+         *             채팅방 인원 수 가져오기
+         *             해당 채팅방 참가 유저 리스트 가져오기
          */
         ChatRoom chatRoom = chatService.getChatRoomInfo(chatParticipate);
-
-        /**
-         * 2024-06-13, 채팅방 인원 수 가져오기
-         */
         int userCount = chatService.getChatRoomUserCount(chatParticipate);
-
-        /**
-         * 2024-06-13, 해당 채팅방 참가 유저 리스트 가져오기
-         */
         chatParticiPateList = chatService.getChatRoomUserList(chatParticipate);
 
+        Map<String, Object> chatInfoMap = new HashMap<>();
         chatInfoMap.put("roomName", chatRoom.getRoomName());
         chatInfoMap.put("userCount", userCount);
         chatInfoMap.put("chatRoomPartList", chatParticiPateList);

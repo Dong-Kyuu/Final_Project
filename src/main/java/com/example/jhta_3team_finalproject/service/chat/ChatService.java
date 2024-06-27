@@ -69,14 +69,15 @@ public class ChatService {
          */
         chatMessage.setTimeStamp(dao.getLastDay(chatMessage).getTimeStamp());
 
-        List<ChatMessage> temp = dao.redisSearchMessages(chatMessage);
-        List<ChatMessage> list = temp.stream().peek(chatMsg -> {
+        List<ChatMessage> chatMessageList = dao.redisSearchMessages(chatMessage).stream()
+        .map(chatMsg -> {
             if (chatMsg.getUserId() == null && chatMsg.getUsername() == null) {
                 chatMsg.setType(ChatMessage.MessageType.TIMESTAMP);
             }
+            return chatMsg;
         }).collect(Collectors.toList());
 
-        return list;
+        return chatMessageList;
     }
 
     public ChatMessage updateMsgImageUrl(ChatMessage chatMessage) throws Exception {
@@ -169,14 +170,15 @@ public class ChatService {
         /**
          * 2024-06-18, 채팅 기록 검색
          */
-        List<ChatMessage> temp = dao.searchChatMessages(chatMessage);
-        List<ChatMessage> list = temp.stream().peek(chatMsg -> {
+        List<ChatMessage> chatMessageList = dao.searchChatMessages(chatMessage).stream()
+        .map(chatMsg -> {
             if (chatMsg.getUserId() == null && chatMsg.getUsername() == null) {
                 chatMsg.setType(ChatMessage.MessageType.TIMESTAMP);
             }
+            return chatMsg;
         }).collect(Collectors.toList());
 
-        return list;
+        return chatMessageList;
     }
 
     public List<ChatParticipate> searchRoomUser(ChatRoom chatRoom) throws Exception {
