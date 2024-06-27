@@ -10,6 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/user/userinfo.css}">
     <link rel="stylesheet" th:href="@{/assets/css/style.css}">
     <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/css/user/font.css}">
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
 
@@ -29,15 +30,14 @@
             margin: 0 auto;
         }
 
-        .profile-info {
-            padding: 20px;
-        }
-
-        .profile-label {
+        .profile-label
+         {
             font-weight: bold;
             margin-top: 10px;
         }
-
+        .col-sm-3{
+            font-weight: revert;
+        }
         .profile-text {
             margin-bottom: 10px;
         }
@@ -77,13 +77,6 @@
             margin-top: 0;
         }
 
-        .no-click {
-            pointer-events: none;
-        }
-
-        .form-control.no-click {
-            background-color: white;
-        }
     </style>
 </head>
 <body>
@@ -131,69 +124,80 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">내 정보</h4>
+                                <p class="card-description"></p>
                                 <form class="forms-sample" th:action="@{/user/updateProcess}" method="post"
                                       enctype="multipart/form-data">
                                     <input type="hidden" name="userNum" th:value="${#authentication.principal.userNum}">
                                     <input type="hidden" name="userNum"
                                            th:value="${#authentication.principal.username}">
-                                    <div class="form-group">
-                                        <label for="exampleInputName1">이름</label>
-                                        <input type="text" class="form-control no-outline" id="exampleInputName1"
-                                               name="userName" th:value="${#authentication.principal.userName}">
-                                        <span id="nameError"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail3">이메일</label>
-                                        <input type="email" class="form-control no-outline" id="exampleInputEmail3"
-                                               name="userEmail" th:value="${#authentication.principal.userEmail}">
-                                        <span id="emailError"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputPhone">핸드폰 번호</label>
-                                        <input type="text" class="form-control no-outline" id="exampleInputPhone"
-                                               name="userPhoneNumber"
-                                               th:value="${#authentication.principal.userPhoneNumber}">
-                                        <span id="phoneError"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>성별</label>
-                                        <div>
-                                            <div class="form-check form-check-flat form-check-primary">
-                                                <label class="form-check-label">
-                                                    <input class="form-check-input" type="radio" name="userGender"
-                                                           id="genderMale" th:value="M"
-                                                           th:checked="${#authentication.principal.userGender == 'M'}">
-                                                    남
-                                                </label>
-                                                <label class="form-check-label">
-                                                    <input class="form-check-input" type="radio" name="userGender"
-                                                           id="genderFemale" th:value="F"
-                                                           th:checked="${#authentication.principal.userGender == 'F'}">
-                                                    여
-                                                </label>
-                                            </div>
+
+                                    <div class="form-group row">
+                                        <label for="exampleInputName1" class="col-sm-3 col-form-label">이름</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control no-outline" id="exampleInputName1"
+                                                   name="userName" th:value="${#authentication.principal.userName}">
+                                            <span id="nameError"></span>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="profileImageUpload">프로필 사진</label>
-                                        <input type="file" name="profilePictureFile" class="file-upload-default"
-                                               id="profileImageUpload" onchange="previewProfileImage(event)"
-                                               th:value="${#authentication.principal.userProfilePicture}">
-                                        <div class="input-group col-xs-12">
-                                            <input type="text" class="form-control file-upload-info no-outline"
-                                                   id="fileNameDisplay" disabled placeholder="Upload Image">
-                                            <span class="input-group-append">
+                                    <div class="form-group row">
+                                        <label for="exampleInputEmail3" class="col-sm-3 col-form-label">이메일</label>
+                                        <div class="col-sm-9">
+                                            <input type="email" class="form-control no-outline" id="exampleInputEmail3"
+                                                   name="userEmail" th:value="${#authentication.principal.userEmail}">
+                                            <span id="emailError"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="exampleInputPhone" class="col-sm-3 col-form-label">핸드폰 번호</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control no-outline" id="exampleInputPhone"
+                                                   name="userPhoneNumber"
+                                                   th:value="${#authentication.principal.userPhoneNumber}">
+                                            <span id="phoneError"></span>
+                                        </div>
+                                    </div>
+<!--                                    <div class="form-group row">-->
+<!--                                        <label>성별</label>-->
+<!--                                        <div class="col-sm-9">-->
+<!--                                            <div class="form-check form-check-flat form-check-primary">-->
+<!--                                                <label class="form-check-label">-->
+<!--                                                    <input class="form-check-input" type="radio" name="userGender"-->
+<!--                                                           id="genderMale" th:value="M"-->
+<!--                                                           th:checked="${#authentication.principal.userGender == 'M'}">남-->
+<!--                                                </label>-->
+<!--                                                <label class="form-check-label">-->
+<!--                                                    <input class="form-check-input" type="radio" name="userGender"-->
+<!--                                                           id="genderFemale" th:value="F"-->
+<!--                                                           th:checked="${#authentication.principal.userGender == 'F'}">여-->
+<!--                                                </label>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+                                    <div class="form-group row">
+                                        <label for="profileImageUpload" class="col-sm-3 col-form-label">프로필 사진</label>
+                                        <div class="col-sm-9">
+                                            <input type="file" name="profilePictureFile" class="file-upload-default"
+                                                   id="profileImageUpload" onchange="previewProfileImage(event)"
+                                                   th:value="${#authentication.principal.userProfilePicture}">
+                                            <div class="input-group col-xs-12">
+                                                <input type="text" class="form-control file-upload-info no-outline"
+                                                       id="fileNameDisplay" disabled placeholder="Upload Image">
+                                                <span class="input-group-append">
                                                 <button class="btn btn-outline-secondary btn-icon-text" type="button"
                                                         onclick="triggerFileUpload()">
                                                     <i class="mdi mdi-upload btn-icon-prepend"></i> 업로드
                                                 </button>
                                             </span>
+                                            </div>
                                         </div>
+                                        <p class="card-description"></p>
                                     </div>
+                                    <div class="form-group ">
+
                                     <button type="submit" class="btn btn-gradient-dark btn-rounded btn-fw">저장</button>
                                     <button type="reset" class="btn btn-gradient-light btn-rounded btn-fw"
-                                            onclick="location.href='/user/info'">취소
-                                    </button>
+                                            onclick="location.href='/user/info'">취소</button>
+                                    </div>
                                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                                 </form>
                             </div>

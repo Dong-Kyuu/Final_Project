@@ -21,6 +21,26 @@
         .text-primary {
             color: #007bff !important;
         }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .register-title {
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .register-subtitle {
+            font-size: 16px;
+            font-weight: normal;
+        }
+        .form-control-custom {
+            width: 80%; /* Adjust the width as needed */
+            margin: 0 auto; /* Center the input field */
+        }
     </style>
 
 </head>
@@ -33,16 +53,17 @@
                     <div class="auth-form-light text-left p-5">
                         <div class="brand-logo">
                             <img class="logo-center" th:src="@{/assets/images/LOGO_2.png}" alt="logo"/></div>
-                        <h4>회원가입 </h4>
-                        <h6 class="font-weight-light">가입을 통해 더 다양한 서비스를 만나보세요!</h6>
+                        <h4 class="register-title">회원가입</h4>
+                        <h6 class="register-subtitle font-weight-light">가입을 통해 더 다양한 서비스를 만나보세요!</h6>
                         <form class="registerForm" th:action="@{/user/joinProcess}" method="post" th:object="${user}">
 
                             <div class="form-group">
                                 <label class="id">아이디</label>
                                 <input type="text" id="id" class="form-control form-control-lg" th:field="*{userId}"
-                                       placeholder="아이디 입력(4~20자)"/>
-                                                                <span id="id_message"></span>
-                                <span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
+                                       placeholder="영 문자 4~20자로 입력 해 주세요)"/>
+                                <span id="id_message"></span>
+                                <span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"
+                                      class="error-message"></span>
                             </div>
 
                             <div class="form-group">
@@ -51,8 +72,9 @@
                                        autocomplete="new-password"
                                        placeholder="비밀번호 입력(문자,숫자 포함 4~12자)"
                                        class="form-control form-control-lg">
-                                                                <span id="passwordError"></span>
-                                <span th:if="${#fields.hasErrors('userPassword')}" th:errors="*{userPassword}"></span>
+                                <span id="passwordError"></span>
+                                <span th:if="${#fields.hasErrors('userPassword')}" th:errors="*{userPassword}"
+                                      class="error-message"></span>
                             </div>
 
                             <div class="form-group">
@@ -60,16 +82,17 @@
                                 <input type="password" id="confirmPassword" th:field="*{confirmPassword}"
                                        autocomplete="new-password"
                                        placeholder="비밀번호 재 입력" class="form-control form-control-lg">
-                                                                <span id="confirmPasswordError"></span>
+                                <span id="confirmPasswordError"></span>
                                 <span th:if="${#fields.hasErrors('confirmPassword')}"
-                                      th:errors="*{confirmPassword}"></span>
+                                      th:errors="*{confirmPassword}" class="error-message"></span>
                             </div>
                             <div class="form-group">
                                 <label for="name">이름</label>
                                 <input type="text" id="name" placeholder="이름을 입력해 주세요" th:field="*{userName}"
                                        class="form-control form-control-lg">
-                                                                <span id="nameError"></span>
-                                <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span>
+                                <span id="nameError"></span>
+                                <span th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"
+                                      class="error-message"></span>
                             </div>
 
                             <div class="form-group">
@@ -77,7 +100,8 @@
                                 <input type="email" id="email" placeholder="1111@gamil.com" th:field="*{userEmail}"
                                        class="form-control form-control-lg">
                                 <span id="emailError"></span><br>
-                                <span th:if="${#fields.hasErrors('userEmail')}" th:errors="*{userEmail}"></span>
+                                <span th:if="${#fields.hasErrors('userEmail')}" th:errors="*{userEmail}"
+                                      class="error-message"></span>
                             </div>
 
                             <div class="form-group">
@@ -86,7 +110,7 @@
                                        class="form-control form-control-lg" placeholder="010-0000-0000">
                                 <span id="phoneError"></span>
                                 <span th:if="${#fields.hasErrors('userPhoneNumber')}"
-                                      th:errors="*{userPhoneNumber}"></span>
+                                      th:errors="*{userPhoneNumber}" class="error-message"></span>
                             </div>
 
                             <div class="form-group">
@@ -106,7 +130,8 @@
                                     </div>
                                 </div>
                                 <span id="genderError"></span>
-                                <span th:if="${#fields.hasErrors('userGender')}" th:errors="*{userGender}"></span>
+                                <span th:if="${#fields.hasErrors('userGender')}" th:errors="*{userGender}"
+                                      class="error-message"></span>
                             </div>
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                             <input type="hidden" id="userProfilePicture" name="userProfilePicture"
@@ -127,7 +152,6 @@
     </div>
     <!-- page-body-wrapper ends -->
 </div>
-
 <script th:src="@{/assets/vendors/js/vendor.bundle.base.js}"></script>
 <script th:src="@{/assets/js/off-canvas.js}"></script>
 <script th:src="@{/assets/js/hoverable-collapse.js}"></script>
@@ -141,6 +165,15 @@
 
 
     $(document).ready(function () {
+
+        function hideServerErrorMessage() {
+            $(this).siblings('.error-message').hide();
+        }
+
+        // Attach the hideServerErrorMessage function to the input fields
+        $("input").on('input', hideServerErrorMessage);
+
+
         $("input[name='userId']").on('keyup', function () {
             const pattern = /^[A-Za-z]{1}[A-Za-z0-9]{3,19}$/
             const id = $(this).val();

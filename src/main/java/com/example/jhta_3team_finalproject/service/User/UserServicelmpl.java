@@ -100,6 +100,9 @@ public class UserServicelmpl implements UserService {
         }
         // 사용자 정보를 업데이트하고 업데이트 결과를 반환
         int result = userMapper.userupdate(user);
+        if(result == 1) {
+            userMapper.projectMemberUpdate(user.getUserNum(), user.getUserProfilePicture(),user.getUserName());
+        }
         return result == 1;
     }
 
