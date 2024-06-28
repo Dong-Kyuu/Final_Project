@@ -226,7 +226,7 @@ public class ProjectController {
 
         if(loginuser.getUserNum() != peedWriter) {
             sseService.sendNotification(peedWriter, loginuser.getUserNum(), loginuser.getUsername(),
-                    "http://localhost:9000/project/mainProject?projectNum=" + projectComment.getProjectNum() + "#" + projectComment.getProjectPeedNum(),
+                    "http://13.124.213.66:9000/project/mainProject?projectNum=" + projectComment.getProjectNum() + "#" + projectComment.getProjectPeedNum(),
                     "No." + projectComment.getProjectPeedNum() + "피드에 댓글을 남겼어요.");
         }
         return projectService.commentsInsert(projectComment);
