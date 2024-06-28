@@ -93,7 +93,7 @@ public class ProjectController {
             member.setProjectMemberProfile(memberProfile);
             member.setProjectMemberDepartment(memberDepartment);
             member.setProjectMemberPosition(memberPosition);
-
+            logger.info("userNum = " + userNum + ", loginUserNum = " + loginuser.getUserNum() );
             if(userNum == loginuser.getUserNum()) {
                 member.setProjectMemberMaster(1);
             }

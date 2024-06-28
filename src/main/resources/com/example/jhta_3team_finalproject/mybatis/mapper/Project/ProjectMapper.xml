@@ -56,10 +56,10 @@
     <insert id="insertMember">
         INSERT INTO project_member
         (project_num, project_member_num, project_member_name,
-        project_member_profile, project_member_department, project_member_position)
+        project_member_profile, project_member_department, project_member_position, project_member_master)
         VALUES
         (#{projectNum}, #{projectMemberNum}, #{projectMemberName},
-         #{projectMemberProfile}, #{projectMemberDepartment}, #{projectMemberPosition})
+         #{projectMemberProfile}, #{projectMemberDepartment}, #{projectMemberPosition}, #{projectMemberMaster})
     </insert>
 
     <select id="getMyProject">
