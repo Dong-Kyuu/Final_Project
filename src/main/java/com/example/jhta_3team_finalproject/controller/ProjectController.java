@@ -102,7 +102,7 @@ public class ProjectController {
 
             if(userNum != loginuser.getUserNum()) {
                 sseService.sendNotification(userNum, project.getMasterUserNum(), projectService.getUserName(project.getMasterUserNum()),
-                        "",
+                        "/project/mainProject?projectNum=" + projectNum,
                         "프로젝트 \"" + project.getProjectTitle() + "\"에 초대하셨습니다.");
             }
         }
@@ -226,7 +226,7 @@ public class ProjectController {
 
         if(loginuser.getUserNum() != peedWriter) {
             sseService.sendNotification(peedWriter, loginuser.getUserNum(), loginuser.getUsername(),
-                    "http://localhost:9000/project/mainProject?projectNum=" + projectComment.getProjectNum() + "#" + projectComment.getProjectPeedNum(),
+                    "/project/mainProject?projectNum=" + projectComment.getProjectNum() + "#" + projectComment.getProjectPeedNum(),
                     "No." + projectComment.getProjectPeedNum() + "피드에 댓글을 남겼어요.");
         }
         return projectService.commentsInsert(projectComment);
