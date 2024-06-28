@@ -1,6 +1,7 @@
 $(function () {
     let token = $("meta[name='_csrf']").attr("content");
     let header = $("meta[name='_csrf_header']").attr("content");
+    let linkUrl = window.location.origin
     var eventSource = new EventSource("../sse"); // SSE 엔드포인트 설정
 
     let notifyForm = "<a class='dropdown-item preview-item'>" +
@@ -26,9 +27,9 @@ $(function () {
             count++;
             let notifyForm = "<div class=\"dropdown-divider\"></div>"
             if(data.notificationIsread == 1){
-                notifyForm +=    "<a class='dropdown-item preview-item readNotify' id='requestLink' href='"+ data.notificationUrl + "'>"
+                notifyForm +=    "<a class='dropdown-item preview-item readNotify' id='requestLink' href='"+ linkUrl + data.notificationUrl + "'>"
             } else {
-                notifyForm +=    "<a class='dropdown-item preview-item unreadNotify' id='requestLink' href='"+ data.notificationUrl + "'>"
+                notifyForm +=    "<a class='dropdown-item preview-item unreadNotify' id='requestLink' href='"+ linkUrl + data.notificationUrl + "'>"
             }
             notifyForm +=
                 "                       <div class='preview-item-content d-flex align-items-start flex-column justify-content-center'>" +

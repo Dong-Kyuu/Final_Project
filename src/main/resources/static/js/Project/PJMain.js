@@ -405,7 +405,14 @@ let re=0;
             $("#checkGraph").css({
                 top: offset.top + dis.outerHeight() + 10 + 'px',
                 left: offset.left
-            }).slideToggle();
+            }).slideToggle('fast', function(){
+                // Check if the div is visible after toggling
+                if ($(this).is(':visible')) {
+                    $(this).css('display', 'flex'); // Show with flex display
+                } else {
+                    $(this).css('display', 'none'); // Hide
+                }
+            });
         })
         $('.checkGraph').css('width', '500px')
         // $('#doughnutChart').css('width', '400px')
