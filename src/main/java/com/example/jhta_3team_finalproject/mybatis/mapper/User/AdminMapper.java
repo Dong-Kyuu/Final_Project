@@ -10,7 +10,7 @@ import java.util.Map;
 @Mapper
 public interface AdminMapper {
 
-    void updateUserInfo(User user);
+    void updateUserInfo(int userNum,int departmentId,int positionId);
 
     List<User> getUsersFilter(int department_id);
 }

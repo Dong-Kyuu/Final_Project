@@ -167,4 +167,45 @@
                  LEFT JOIN user_departments d ON u.department_id = d.department_id
         WHERE pc.project_comment_num = #{commentNum}
     </select>
+
+    <insert id="addCheck">
+        insert into view_check(project_num, project_peed_num, user_num, checked)
+        values(#{projectNum}, #{peedNum}, #{loginNum}, 1)
+    </insert>
+
+    <select id="getCheckedPeed">
+        SELECT COALESCE(SUM(checked), 0)
+        FROM view_check
+        WHERE project_peed_num = #{projectPeedNum}
+        AND   user_num = #{userNum}
+    </select>
+
+    <delete id="deleteCheck">
+        DELETE FROM view_check
+        WHERE project_num = #{projectNum}
+        AND   project_peed_num = #{peedNum}
+        AND   user_num = #{loginNum}
+    </delete>
+
+    <select id="getCheckedMember">
+        SELECT DISTINCT pm.*
+        FROM project_member AS pm
+                 LEFT JOIN view_check AS vc ON pm.project_member_num = vc.user_num
+        WHERE vc.project_num = #{projectNum}
+        AND   pm.project_num = #{projectNum}
+        AND   vc.project_peed_num = #{peedNum}
+        AND   vc.checked = 1
+    </select>
+
+    <select id="getUnCheckedMember">
+        SELECT DISTINCT *
+        FROM project_member
+        WHERE project_num = #{projectNum}
+          AND project_member_num NOT IN (
+            SELECT user_num
+            FROM view_check
+            WHERE project_peed_num = #{peedNum}
+              AND checked = 1
+        )
+    </select>
 </mapper>

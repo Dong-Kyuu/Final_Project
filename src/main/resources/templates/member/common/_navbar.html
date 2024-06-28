@@ -9,6 +9,16 @@
     <link rel="stylesheet" th:href="@{/css/header/header.css}">
     <script th:src="@{/js/jquery-3.7.1.js}"></script>
     <script th:src="@{../js/Notification/Notification.js}"></script>
+    <style>
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -57,7 +67,7 @@
                     <i class="mdi mdi-fullscreen" id="fullscreen-button"></i>
                 </a>
             </li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown notifiList">
                 <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
                    data-bs-toggle="dropdown">
                     <i class="mdi mdi-bell-outline"></i>
@@ -69,12 +79,12 @@
                         <h6 class="p-3 mb-0">Notifications <span class="deleteNotifi">알림 모두 지우기</span></h6>
                         <div class="dropdown-divider notify-tr"></div>
 
-                    <!-- 여기에 notifyForm 추가해야함! -->
-                    <div class="dropdown-divider"></div>
-                    <h6 class="p-3 mb-0 text-center">See all notifications</h6>
+                        <!-- 여기에 notifyForm 추가해야함! -->
+
+                        <div class="dropdown-divider"></div>
+                    </div>
+                    <h6 class="p-3 mb-0 text-center see-all-notifications" style="position: absolute; bottom: 0; width: 100%; background: white;">See all notifications</h6>
                 </div>
-                </div>
-            </li>
             <li class="nav-item nav-logout d-none d-lg-block">
                 <a class="nav-link">
                     <i class="mdi mdi-power" th:href="@{/user/logout}"></i>

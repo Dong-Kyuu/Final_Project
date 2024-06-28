@@ -10,6 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/user/userinfo.css}">
     <link rel="stylesheet" th:href="@{/assets/css/style.css}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+
     <link rel="shortcut icon" th:href="@{/assets/images/favicon.ico}"/>
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
@@ -54,6 +55,119 @@
             padding: 5px 10px;
             font-size: 14px;
         }
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .breadcrumb {
+            margin-top: 0;
+        }
+
+        .filter-menu {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+        }
+
+        .filter-menu .dropdown {
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-menu .dropdown .dropdown-toggle {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .breadcrumb {
+            margin-top: 0;
+        }
+
+        .filter-menu {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+        }
+
+        .filter-menu .dropdown {
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-menu .dropdown .dropdown-toggle {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .btn-approve, .btn-reject {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection--single {
+            height: auto;
+            line-height: normal;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            border-radius: 0.375rem;
+            width: 100% !important;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+            padding-left: 0;
+        }
+
+        .select2-container--bootstrap-5 .select2-selection--single .select2-selection__arrow {
+            height: auto;
+            right: 0.375rem;
+        }
+
+
+        .btn-primary, .btn-reject {
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #138496;
+        }
+
     </style>
 </head>
 <body>
@@ -68,13 +182,33 @@
                     <h4 class="page-title">직원 정보 관리</h4>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a th:href="@{/admin/attendance/list}">근태관리</a></li>
-                            <li class="breadcrumb-item active" aria-current="page"><a th:href="@{/admin/users}">직원 정보
-                                관리</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">신규 등록 사원</li>
+                            <li class="breadcrumb-item">관리</li>
+                            <li class="breadcrumb-item active" aria-current="page">직원 정보 관리</li>
+
                         </ol>
                     </nav>
                 </div>
+                <!-- 모달 -->
+                <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="updateModalLabel">정보 수정 완료</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="d-flex align-items-center">
+                                    <i class="mdi mdi-check-circle-outline text-success" style="font-size: 2rem; margin-right: 1rem;"></i>
+                                    <span>정보 수정이 완료되었습니다.</span>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-lg-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
@@ -96,9 +230,6 @@
                                         <a class="dropdown-item filter-option" data-department-id="6" href="#">임원</a>
                                     </div>
                                 </div>
-                                <input type="date" name="startDate" id="startDate" value="2024-06-01">
-                                <input type="date" name="endDate" id="endDate" value="2024-06-30">
-                                <button id="filterButton" class="btn btn-primary">적용</button>
                             </div>
                             <table class="table" id="admin_user_table">
                                 <thead>
@@ -110,9 +241,10 @@
                                     <th>핸드폰번호</th>
                                     <th>입사일</th>
                                     <th>이메일</th>
-                                    <th>상태</th>
                                     <th>성별</th>
                                     <th>권한정보</th>
+                                    <th></th>
+
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -141,10 +273,8 @@
         var csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
         $('#filterButton').on('click', function () {
-            var startDate = $('#startDate').val();
-            var endDate = $('#endDate').val();
             var departmentId = $('#filterMenuButton').data('department-id');
-            loadUserData(startDate, endDate, departmentId);
+            loadUserData(departmentId);
         });
 
         $('.filter-option').on('click', function (e) {
@@ -152,11 +282,11 @@
             var departmentId = $(this).data('department-id');
             var filterText = $(this).text();
             $('#filterMenuButton').text(filterText).css('color', 'black').data('department-id', departmentId);
-            loadUserData( departmentId);
+            loadUserData(departmentId);
         });
 
         function loadUserData(departmentId) {
-            var url = '/admin/filterUsers?departmentId=' + departmentId ;
+            var url = '/admin/filterUsers?departmentId=' + departmentId;
 
             $.ajax({
                 url: url,
@@ -173,31 +303,36 @@
                 }
             });
         }
-
-        loadUserData( -1);
+        loadUserData(-1);
 
         var requestTable = $('#admin_user_table').DataTable({
             responsive: true,
             columns: [
-                {data: 'userNum'},
-                {data: 'username'},
-                {data: 'departmentName'},
-                {data: 'positionName'},
-                {data: 'userPhoneNumber'},
+                {data: 'user_num'},
+                {data: 'user_name'},
+                {data: 'department_name'},
+                {data: 'position_name'},
+                {data: 'user_phone_number'},
                 {
-                    data: 'userCreatedAt', render: function (data, type, row) {
+                    data: 'user_created_at', render: function (data, type, row) {
                         return data ? data.substring(0, 10) : '';
                     }
                 },
-                {data: 'userEmail'},
-                {data: 'userStatus'},
+                {data: 'user_email'},
                 {
-                    data: 'userGender', render: function (data, type, row) {
+                    data: 'user_gender', render: function (data, type, row) {
                         return data === 'M' ? '남' : data === 'F' ? '여' : '';
                     }
                 },
-                {data: 'userAuth'}
+                {data: 'user_auth', visible: false},
+                {
+                    data: null,
+                    render: function () {
+                        return '<button class="btn btn-primary btn-save">수정</button>';
+                    }
+                }
             ],
+            lengthChange: false,
             language: {
                 "decimal": "",
                 "emptyTable": "데이터가 없습니다",
@@ -216,13 +351,129 @@
                     "previous": "이전"
                 }
             },
-            lengthMenu: [10, 25, 35, 50, {label: '전체', value: -1}]
+            lengthMenu: [10, 25, 35, 50, {label: '전체', value: -1}],
+            order: false,
         });
 
+        function createDropdown(options, selectedOption) {
+            var select = $('<select class="form-control"></select>');
+            options.forEach(function (option) {
+                var optionElement = $('<option></option>').text(option.text).val(option.id);
+                if (option.text === selectedOption) {
+                    optionElement.attr('selected', 'selected');
+                }
+                select.append(optionElement);
+            });
+            return select;
+        }
 
+        // 직책 열 클릭 시 드롭다운 메뉴 표시
+        $('#admin_user_table tbody').on('click', 'td:nth-child(4)', function (event) {
+            event.stopPropagation();
+            var cell = requestTable.cell(this);
+            var originalContent = cell.data();
+            var positions = [
+                {id: 1, text: '사원'},
+                {id: 2, text: '팀장'},
+                {id: 3, text: '부장'},
+                {id: 4, text: '이사'},
+                {id: 5, text: '대표'}
+            ];
+
+            // 드롭다운 메뉴 생성
+            var select = createDropdown(positions, originalContent);
+            cell.data(select.prop('outerHTML')).draw();
+
+            // 드롭다운 메뉴 클릭 이벤트 처리
+            var $selectElement = $(cell.node()).find('select');
+            $selectElement.on('click', function (e) {
+                e.stopPropagation();
+            }).on('change', function () {
+                var newValue = $(this).find('option:selected').text();
+                var selectedValue = $(this).val();
+                cell.data(newValue).draw();
+                cell.node().dataset.selectedValue = selectedValue; // 저장할 값 저장
+            });
+
+            // 드롭다운 메뉴에 focus를 주어 유지되도록 함
+            $selectElement.focus();
+        });
+
+        // 부서 열 클릭 시 드롭다운 메뉴 표시
+        $('#admin_user_table tbody').on('click', 'td:nth-child(3)', function (event) {
+            event.stopPropagation();
+            var cell = requestTable.cell(this);
+            var originalContent = cell.data();
+            var departments = [
+                {id: 1, text: '인사부'},
+                {id: 2, text: '관리부'},
+                {id: 3, text: '홍보부'},
+                {id: 4, text: '지원부'},
+                {id: 5, text: '영업부'},
+                {id: 6, text: '임원'}
+            ];
+
+            // 드롭다운 메뉴 생성
+            var select = createDropdown(departments, originalContent);
+            cell.data(select.prop('outerHTML')).draw();
+
+            // 드롭다운 메뉴 클릭 이벤트 처리
+            var $selectElement = $(cell.node()).find('select');
+            $selectElement.on('click', function (e) {
+                e.stopPropagation();
+            }).on('change', function () {
+                var newValue = $(this).find('option:selected').text();
+                var selectedValue = $(this).val();
+                cell.data(newValue).draw();
+                cell.node().dataset.selectedValue = selectedValue; // 저장할 값 저장
+            });
+
+            // 드롭다운 메뉴에 focus를 주어 유지되도록 함
+            $selectElement.focus();
+        });
+
+        // 수정 버튼 클릭 이벤트 처리
+        $('#admin_user_table tbody').on('click', '.btn-save', function () {
+            var row = requestTable.row($(this).closest('tr'));
+            var rowData = row.data();
+            var departmentValue = row.cell(`td:nth-child(3)`).node().dataset.selectedValue;
+            var positionValue = row.cell(`td:nth-child(4)`).node().dataset.selectedValue;
+
+            $.ajax({
+                url: `/admin/updateUserInfo/${rowData.user_num}`,
+                type: 'POST',
+                data: {
+                    departmentId: departmentValue,
+                    positionId: positionValue
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function (response) {
+                    console.log('User info updated successfully');
+                    $('#updateModal').modal('show'); // 모달 창 표시
+                },
+                error: function (xhr, status, error) {
+                    console.error('Failed to update user info:', xhr.responseText);
+                    alert('수정에 실패했습니다.');
+                }
+            });
+        });
+
+        // 테이블 외부 클릭 시 드롭다운 메뉴 닫기
+        $(document).on('click', function () {
+            requestTable.cells().nodes().to$().each(function () {
+                var cell = requestTable.cell(this);
+                if ($(this).find('select').length) {
+                    var newValue = $(this).find('select').find('option:selected').text();
+                    cell.data(newValue).draw();
+                }
+            });
+        });
     });
-
 </script>
+
+
 
 </body>
 </html>

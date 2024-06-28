@@ -34,7 +34,6 @@
         SET user_name            = #{userName},
             user_email           = #{userEmail},
             user_phone_number    = #{userPhoneNumber},
-            user_gender          = #{userGender},
             user_profile_picture = #{userProfilePicture}
         WHERE user_num = #{userNum}
     </update>
@@ -42,10 +41,9 @@
     <!-- 사용자 정보 추가 -->
     <insert id="insert">
         insert into user
-        (user_num, user_id, user_password, user_email, user_name, user_phone_number, user_gender, user_profile_picture,
-         user_created_at, user_updated_at, user_auth)
+        (user_num, user_id, user_password, user_email, user_name, user_phone_number, user_gender, user_profile_picture, user_created_at, user_updated_at, user_auth, user_is_approved)
         values (#{userNum}, #{userId}, #{userPassword}, #{userEmail}, #{userName}, #{userPhoneNumber}, #{userGender},
-                #{userProfilePicture}, NOW(), NOW(), #{userAuth})
+                #{userProfilePicture}, NOW(), NOW(), #{userAuth},#{userIsApproved})
     </insert>
 
     <select id="getListCount" resultType="int">  <!-- 페이징 -->
@@ -81,6 +79,7 @@
         select u.user_num,
                u.user_name,
                u.user_email,
+               user_gender,
                u.user_phone_number,
                u.user_created_at,
                cast(u.user_is_approved as signed) as user_is_approved,

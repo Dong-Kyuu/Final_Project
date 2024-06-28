@@ -55,4 +55,14 @@ public interface ProjectService {
     int[] optionComment(String comment, int loginNum, int peedNum, int projectNum);
 
     ProjectComment getInsertComment(int commentNum);
+
+    int addCheck(int loginNum, int peedNum, int projectNum);
+
+    int getCheckedPeed(int userNum, int projectPeedNum);
+
+    int deleteCheck(int loginNum, int peedNum, int projectNum);
+
+    List<ProjectMember> getCheckedMember(int peedNum, int projectNum);
+
+    List<ProjectMember> getUnCheckedMember(int peedNum, int projectNum);
 }

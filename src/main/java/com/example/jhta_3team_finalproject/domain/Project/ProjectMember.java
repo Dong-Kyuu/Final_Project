@@ -15,5 +15,6 @@ public class ProjectMember {
     private String projectMemberProfile;
     private String projectMemberDepartment;
     private String projectMemberPosition;
+    private int projectMemberMaster;
 
 }
