@@ -9,6 +9,7 @@ import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
+import com.siot.IamportRestClient.response.PaymentCancelDetail;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -230,18 +231,47 @@ public class PaymentController {
 
 
     @PostMapping("/refund")
-    public ResponseEntity<String> refundPayment(@RequestBody Purchase refundRequest) {
-        CancelData cancelData = new CancelData(refundRequest.getImpUid(),true);
-        cancelData.setChecksum(refundRequest.getAmount()); // 환불 금액 설정
-        cancelData.setReason(refundRequest.getRejectReason()); // 환불 사유 설정
+    public ResponseEntity<String> refundPayment(@RequestBody Map<String, String> refundRequest) {
+
+        BigDecimal amount = new BigDecimal(refundRequest.get("amount"));
+
+        CancelData cancelData = new CancelData(refundRequest.get("impUid"),true,amount);
+
+        cancelData.setChecksum(amount); // 환불 금액 설정
+        cancelData.setReason(refundRequest.get("reason")); // 환불 사유 설정
+
+        System.out.println("start refund");
+        System.out.println(amount);
 
         try {
-            IamportResponse<Payment> response = iamportConfig.getIamportClient().cancelPaymentByImpUid(cancelData);
-            if ("cancelled".equals(response.getResponse().getStatus())) {
-                return ResponseEntity.ok("Payment cancelled successfully");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to cancel payment");
+            IamportResponse<Payment> iamportResponse = iamportConfig.getIamportClient().cancelPaymentByImpUid(cancelData);
+
+            if (iamportResponse == null || iamportResponse.getResponse() == null) {
+                // 응답이 null인 경우
+                System.out.println("Failed to cancel payment: Response is null");
+
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to cancel payment: Response is null");
             }
+
+            if (iamportResponse.getResponse() != null) {
+                Payment payment = iamportResponse.getResponse();
+                String status = payment.getStatus();
+                System.out.println(status);
+                if ("cancelled".equals(status)) {
+                    // 결제가 성공적으로 취소됨
+                    System.out.println("Payment cancelled successfully");
+                    return ResponseEntity.ok("Payment cancelled successfully");
+                } else {
+                    // 결제 취소 실패
+                    System.out.println("Failed to cancel payment: Payment status is not 'cancelled'");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to cancel payment: Payment status is not 'cancelled'");
+                }
+            }else{
+                //getResponse의 값이 null
+                System.out.println("Failed to cancel payment: iamportResponse.getResponse is null");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to cancel payment: iamportResponse.getResponse is null");
+            }
+
         } catch (Exception e) {
             int errorCode = extractErrorCode(e);
             String errorMessage = kakaoErrorService.handleError(errorCode);
@@ -252,14 +282,18 @@ public class PaymentController {
     //에러코드 추출
     private int extractErrorCode(Exception e) {
         String message = e.getMessage();
-        if (message != null) {
+        if (message != null && !message.isEmpty()) {
             try {
-                return Integer.parseInt(message.replaceAll("[^\\d]", ""));
+                // 숫자 이외의 문자는 모두 제거하고 숫자만 남깁니다.
+                System.out.println("message :"+message);
+                String numericPart = message.replaceAll("[^\\d]", "");
+
+                return Integer.parseInt(numericPart);
             } catch (NumberFormatException ex) {
-                ex.printStackTrace();
+                System.err.println("NumberFormatException occurred: " + e.getMessage());
             }
         }
-        return -1;
+        return -1; // 오류 코드를 추출할 수 없는 경우 -1을 반환합니다.
     }
 
     // 재시도 메서드
