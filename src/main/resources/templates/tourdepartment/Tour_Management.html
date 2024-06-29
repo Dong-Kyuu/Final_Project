@@ -19,6 +19,7 @@
     <!-- End layout styles -->
     <link rel="shortcut icon" th:href="@{../../assets/images/favicon.ico}"/>
 
+
     <style>
         #TripInfo .col-md-6 img {
             /* 이미지를 화면에 꽉 채우도록 설정 */
@@ -105,14 +106,14 @@
                         </div>
                     </div>
 
-
-
-                    <!--병훈이형 캘린더(여행부서 사람들의 일정 공유 캘린더) -->
+                    <!--구글맵 -->
                     <div class="col-lg-6 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Schedule Work</h4>
-                                </p>
+                                <h4 class="card-title">Tour Map</h4>
+                                <div id="map" style="height: 400px;">
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -293,5 +294,7 @@
     </div>
 </div>
 <!-- 거절 모달 끝 -->
+<script th:src="@{../js/Tour/GoogleMap.js}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADQ8hw4HFD_mSOCCAFp0ysgeZWEgRmWwU&callback=initMap"></script>
 </body>
 </html>

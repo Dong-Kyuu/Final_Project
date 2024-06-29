@@ -18,6 +18,8 @@
     <!-- End layout styles -->
     <link rel="shortcut icon" th:href="@{../../assets/images/favicon.ico}"/>
 
+    <script src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+
     <style>
 
         .product__item__pic img {
@@ -166,13 +168,19 @@
                                                     <input type="hidden" name="tripNo" th:value="${purchase.tripNo}" />
                                                     <button type="submit" class="btn btn-gradient-success btn-sm">재승인</button>
                                                 </form>
-                                                <form th:action="@{/api/payments/refund}" method="post" style="display:inline;">
-                                                    <input type="hidden" name="purchaseId" th:value="${purchase.id}" />
-                                                    <input type="hidden" name="buyerNo" th:value="${purchase.buyerNo}" />
-                                                    <input type="hidden" name="tripNo" th:value="${purchase.tripNo}" />
-                                                    <button type="submit" class="btn btn-gradient-danger btn-sm">환불처리</button>
-                                                </form>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <div th:id="'refundDetails'+${status.index}"
+                                                     th:data-merchant-uid="${purchase.merchantUid}"
+                                                     th:data-purchase-id="${purchase.id}"
+                                                     th:data-buyer-no="${purchase.customerNameKor}"
+                                                     th:data-trip-no="${purchase.tripNo}"
+                                                     th:data-imp-uid="${purchase.impUid}"
+                                                     th:data-amount="${purchase.amount}"
+                                                     th:data-reason="${purchase.rejectReason}">
+                                            </div>
+                                            <button th:id="'refundBtn'+${status.index}" type="button" class="btn btn-gradient-danger btn-sm" th:onclick="'handleRefund(' + ${status.index} + ')'">환불처리</button>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -270,6 +278,92 @@
 <!-- 메시지가 존재할 경우에만 alert를 띄움 -->
 <script  th:if="${message}" th:inline="javascript">
     alert([[${message}]]);
+</script>
+
+<script>
+
+function handleRefund(index) {
+    // 클릭된 버튼의 인덱스를 받아와서 처리
+    console.log('Refund button clicked for index:', index);
+    var buttonId = 'refundBtn' + index;
+    var button = document.getElementById(buttonId);
+
+    button.addEventListener('click', function () {
+
+        var IMP = window.IMP;
+        IMP.init('imp51036440');
+
+        var refundDetails = document.getElementById('refundDetails'+index);
+        var purchaseId = refundDetails.getAttribute('data-purchase-id');
+        var buyerNo = refundDetails.getAttribute('data-buyer-no');
+        var tripNo = refundDetails.getAttribute('data-trip-no');
+        var impUid = refundDetails.getAttribute('data-imp-uid');
+        var amount = refundDetails.getAttribute('data-amount');
+        var reason = refundDetails.getAttribute('data-reason');
+
+        var csrfTokenValue = $("meta[name='_csrf']").attr("content");
+        var csrfHeaderName = $("meta[name='_csrf_header']").attr("content");
+
+        console.log("purchaseId:", purchaseId);
+        console.log("buyerNo:", buyerNo);
+        console.log("tripNo:", tripNo);
+        console.log("impUid:", impUid);
+        console.log("amount:", amount);
+        console.log("reason:", reason);
+        console.log("csrfHeaderName:", csrfHeaderName);
+        console.log("csrfTokenValue:", csrfTokenValue);
+
+        IMP.request_pay({
+            pg: 'kakaopay.TC0ONETIME', // 카카오페이 사용
+            pay_method: 'card',
+            merchant_uid: 'merchant_' + new Date().getTime(),
+            name: '환불 처리',
+            amount: amount,
+            buyer_no: buyerNo,
+            trip_no: tripNo
+        }, function (rsp) {
+            if (rsp.success) {
+                $.ajax({
+                    url: "/api/payments/refund",
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+                    },
+                    data: JSON.stringify({
+                        purchaseId: purchaseId,
+                        buyerNo: buyerNo,
+                        tripNo: tripNo,
+                        impUid: impUid,
+                        amount: amount,
+                        reason: reason
+                    })
+                }).done(function (data, xhr, status, error) {
+                    if (data.success) {
+                        alert('환불이 완료되었습니다.\n환불 금액: ' + amount);
+                        window.location.href = "tripBoss";
+                    } else {
+                        console.log("Status:", status);
+                        console.log("Error:", error);
+                        console.log("Response Text:", xhr.responseText);
+                        alert('환불 처리 중 오류가 발생했습니다.');
+                    }
+                }).fail(function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    alert('서버와의 통신 중 오류가 발생했습니다.');
+                });
+            }else{
+                var msg = '환불에 실패하였습니다.';
+                msg += '에러내용 : ' + rsp.error_msg;
+
+                alert(msg);
+            }
+
+
+        });
+    })
+}
 </script>
 
 </body>
