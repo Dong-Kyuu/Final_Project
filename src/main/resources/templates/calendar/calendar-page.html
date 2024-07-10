@@ -47,7 +47,7 @@
             <div class="row"></div>
             <div class="col-12 grid-margin stretch-card">
 <!--              <th:block th:replace="~{calendar/mycalendar :: calendar}"></th:block>-->
-                <iframe style="width: 2000px; height: 1300px;" th:src="@{/cal/mycalendar}"></iframe>
+                <iframe width="2000px"  height 1000px; style="overflow-y:hidden;" th:src="@{/cal/mycalendar}"></iframe>
 
             </div>
           </div>
@@ -75,5 +75,15 @@
     <!-- End custom js for this page -->
     <th:block th:replace="~{chat/chatDrag :: chatDragJS}"></th:block>
     <!-- End custom js for this page -->
+  <script>
+      var $iframe = $('#tripFrame');
+      $iframe.on('load', function () {
+          var $iframeDoc = $iframe.contents();
+          $iframeDoc.find('.fc-header-toolbar').html("");
+        $iframeDoc.find('.panel.panel-default').html("");
+      });
+  </script>
+
+
   </body>
 </html>

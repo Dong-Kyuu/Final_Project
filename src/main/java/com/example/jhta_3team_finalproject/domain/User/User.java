@@ -4,8 +4,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,8 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Data
-@Getter
-@Setter
 @Slf4j
 public class User implements UserDetails {
     private int userNum;
@@ -54,7 +50,7 @@ public class User implements UserDetails {
     private String departmentName;
     private int positionId;
     private String positionName;
-    private int userIsApproved= 0;
+    private int userIsApproved;
     private String userCreatedAt;
     private String userUpdatedAt;
     private String userProfilePicture;
@@ -117,11 +113,5 @@ public class User implements UserDetails {
     }
     public int getDepartmentId() {return departmentId;}
 
-    public int getUserIsApproved() {
-        return userIsApproved;
-    }
 
-    public void setUserIsApproved(int userIsApproved) {
-        this.userIsApproved = userIsApproved;
-    }
 }

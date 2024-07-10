@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="font-size: 16px;">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -148,7 +148,8 @@
                     </div>
 
                     <!-- 공지사항 페이지 -->
-                    <div class="col-12 grid-margin stretch-card">
+<!--                    <input type="hidden" id="loginNum" th:value="${#authentication.principal.userNum}">-->
+                    <div class="col-12 grid-margin stretch-card" id="anno">
                         <div class="card">
                             <div class="card-body">
                                 <h4>공지사항</h4>
@@ -157,13 +158,13 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="col-lg-12 grid-margin stretch-card" id="tri">
                         <div class="card">
                             <div class="card-body" id="depart">
                                 <h4 class="card-title">결재사항</h4>
                                 <table class="table table-bordered">
                                     <thead>
-                                        <iframe id="tripFrame" style="width: 900px;height: 250px " th:src="@{/dashDepartment}"></iframe>
+                                        <iframe id="tripFrame" width="900px"  height="210px"  scrolling="no" style="overflow-y:hidden" th:src="@{/dashDepartment}"></iframe>
                                     </thead>
                                 </table>
                             </div>
@@ -203,11 +204,11 @@
 <script th:src="@{/js/calendar/etcSetting.js}"></script>
 
         <script>
-            // var $iframe = $('#calendarFrame');
-            // $iframe.on('load', function () {
-            //     var $iframeDoc = $iframe.contents();
-            //     $iframeDoc.find('.fc-header-toolbar').css("display", "none");
-            //     // $iframeDoc.find('.panel.panel-default').css("display", "none");
+            var $iframe = $('#announceFrame');
+            $iframe.on('load', function () {
+                var $iframeDoc = $iframe.contents();
+                $iframeDoc.find('.dept-black-lev3').css("border-bottom", "none !important");
+                $iframeDoc.find('.dept-black-lev3').css("background", "none !important");
             //
             //     position = $(".text-secondary").first.text()
             //     console.log(position);
@@ -215,7 +216,7 @@
             //     $iframeDoc.find('select.filter').trigger('change')
             //     $('#calendar').fullCalendar('rerenderEvents');
             //
-            // });
+            });
 
             var date = `${new Date().getFullYear()}년${new Date().getMonth() + 1}월${new Date().getDate()}일`;
             $("#calendarDate").html(date);

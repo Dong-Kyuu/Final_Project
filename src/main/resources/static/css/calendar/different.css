@@ -182,7 +182,9 @@ label.checkbox-inline{
     linear-gradient(to right, #e7ebf0, #868e96);
 }
 
-
+label.checkbox-inline {
+    width: 70px;
+}
 
 
 

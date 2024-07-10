@@ -10,8 +10,6 @@ import lombok.ToString;
 public class ViewCheck {
 
     private int announceBoardNum;
-    private int projectNum;
-    private int projectPeedNum;
     private int userNum;
     private int view;
     private int check;

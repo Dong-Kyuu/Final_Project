@@ -61,6 +61,10 @@ public class MainPageController {
     @GetMapping("/dashboard")
     public ModelAndView dashboard(@AuthenticationPrincipal User userDetails, ModelAndView mv,
                                   @RequestHeader(value="referer", required=false) String beforeURL,
+                                  @RequestParam(value = "page", defaultValue = "1") int page,
+                                  @RequestParam(value = "searchField", defaultValue = "-1") int index,
+                                  @RequestParam(value = "search", defaultValue = "") String searchWord,
+                                  @RequestParam(value = "targetDepartment", defaultValue = "") String targetDepartment,
                                   HttpSession session) {
         User dbuser = userservice.departmentPositionInfo(userDetails.getDepartmentId(), userDetails.getPositionId());
 
@@ -88,17 +92,12 @@ public class MainPageController {
         }
 
         session.setAttribute("url", "dashboard");
-
         mv.setViewName("dashboard/dashboard-page");
+
+
+
         return mv;
     }
-
-
-
-
-
-
-
 
     // 리스트 가져오기
     @RequestMapping(value = "/dashAnnounceList", method = RequestMethod.GET)

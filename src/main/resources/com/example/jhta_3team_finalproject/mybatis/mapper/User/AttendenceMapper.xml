@@ -4,6 +4,7 @@
 
 <mapper namespace="com.example.jhta_3team_finalproject.mybatis.mapper.User.AttendenceMapper">
 
+
     <!-- 출근 기록 -->
     <insert id="CheckIn" parameterType="map">
         INSERT INTO user_attendance (user_num, check_in_time)
@@ -28,10 +29,10 @@
     </select>
 
     <!-- 한 사람의 한달 출퇴근 기록 조회-->
-    <select id="getMonthlyAttendances" parameterType="map" resultType="map">
-        SELECT user_num, check_in_time, check_out_time, TIME_FORMAT(work_time, '%H:%i:%s') as work_time
-        FROM user_attendance
-        WHERE user_num = #{userNum}
+    <select id="getMonthlyAttendances" parameterType="map">
+        select *
+        from user_attendance
+        where user_num = #{userNum}
           AND check_in_time BETWEEN #{startDate} AND #{endDate}
     </select>
 

@@ -23,12 +23,12 @@ var calendar = $('#calendar').fullCalendar({
   eventLimitClick           : 'week', //popover
   navLinks                  : true,
   defaultDate               : moment('2024-06'), //실제 사용시 현재 날짜로 수정
-  timeFormat                : 'HH:mm',
+  timeFormat                : '',//HH:mm
   defaultTimedEventDuration : '01:00:00',
   editable                  : true,
   minTime                   : '00:00:00',
   maxTime                   : '24:00:00',
-  slotLabelFormat           : 'HH:mm',
+  slotLabelFormat           : '',//HH:mm
   weekends                  : true,
   nowIndicator              : true,
   dayPopoverFormat          : 'MM/DD dddd',
@@ -294,9 +294,11 @@ function getDisplayEventDate(event) {
   var displayEventDate;
 
   if (event.allDay == false) {
-    var startTimeEventInfo = moment(event.start).format('HH:mm');
-    var endTimeEventInfo = moment(event.end).format('HH:mm');
-    displayEventDate = startTimeEventInfo + " - " + endTimeEventInfo;
+    // var startTimeEventInfo = moment(event.start).format('HH:mm');
+    // var endTimeEventInfo = moment(event.end).format('HH:mm');
+      // displayEventDate = startTimeEventInfo + " - " + endTimeEventInfo;
+      var titleTimeEvent = moment(event.title).format('');
+      displayEventDate = titleTimeEvent;
   } else {
     displayEventDate = "하루종일";
   }

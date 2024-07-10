@@ -41,12 +41,6 @@ div.content-wrapper{
     margin: 13px 0 1.9rem 0;
 }
 
-.dept-black-lev3 {
-    border-left: none;
-    border-bottom: none !important;
-    background: no-repeat !important;
-}
-
 .dept-black {
     border-left: none !important;
 }
@@ -74,4 +68,28 @@ div.content-wrapper{
 
 #side{
     padding-top: 0px;
+}
+
+#tri .card .card-body{
+    height: 260px;
+}
+
+#tr-start td.dept-black-lev3 {
+    border-left: none;
+    border-bottom: none;
+    background: none;
+}
+
+.fc-row.fc-week.fc-widget-content.fc-rigid{
+    height: 70px !important;
+
+}
+
+.fc-scroller.fc-day-grid-container{
+    height: 420px !important;
+    scrollbar-width: none !important;
+}
+
+.navbar.default-layout-navbar.col-lg-12.col-12.p-0.fixed-top.d-flex.flex-row{
+    margin-bottom: 0px;
 }

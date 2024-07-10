@@ -115,7 +115,6 @@ $(function () {
             var index = chartElement._index;
 
             if (doughnutChart.data.labels && doughnutChart.data.datasets[datasetIndex]) {
-
                 var label = response.department[Math.floor(index / 2)];
                 $('#chartInfoLabel').text(label);
 
@@ -136,7 +135,7 @@ $(function () {
                 $('#User').empty();
                 if (users && users.length > 0) {
                     users.forEach(function(user) {
-                        var listItem = '<li style="margin-left:20px; margin-top:10px">'+user.userName+'<span style="color:#fe7c96; font-size:12px; font-weight: bold; margin-left:2em">'+ user.positionName +'</span></li>'
+                        var listItem = '<li style="margin-left:20px; margin-top:10px">'+user.username+'<span style="color:#fe7c96; font-size:12px; font-weight: bold; margin-left:2em">'+ user.positionName +'</span></li>'
                         $('#User').append(listItem);
                     });
                 } else {

@@ -3,8 +3,6 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Purple Admin</title>
@@ -16,8 +14,6 @@
 
     <!-- js -->
     <script th:src="@{/js/jquery-3.7.1.js}"></script>
-    <script th:src="@{../js/Project/Chart/API/PJGraph.js}"></script>
-    <script th:src="@{../js/table/Chart/chart.js/Chart.min.js}"></script>
     <script th:src="@{../js/Project/PJMain.js}"></script>
 
 </head>
@@ -67,7 +63,7 @@
                                 <img th:src="${#authentication.principal.userProfilePicture}" alt="image" style="width:30px; height:30px; border-radius: 18px; float: left; margin-top:3px; margin-right: 20px;">
                                 <div>
                                     <span class="card-title" style="font-weight: bold; font-size:14px;">
-                                        [[${#authentication.principal.userName}]]
+                                        [[${#authentication.principal.username}]]
                                     </span>
                                 </div>
                                 <p class="card-description" style="font-size:11px; margin-bottom: 5px;">
@@ -220,23 +216,15 @@
             <!--                            <div style="margin-top:14px; font-size:15px; font-weight: bold; display: flex; align-items: center">-->
             <!--                                <i class="mdi mdi-flag-outline" style="font-size:18px;"></i> <code style="color:red"></code>-->
             <!--                            </div>-->
-                                        <th:block th:if="${projectPeed.projectPeedPriority!=0 or projectPeed.projectPeedStartPeriod!=null or projectPeed.projectPeedCharge!=0}">
-                                            <hr style="margin-top:13px">
-                                        </th:block>
-
+                                        <hr style="margin-top:13px">
 
                                         <div class="workcontent">
                                             [[${projectPeed.projectPeedContent}]]
                                             <br>
                                         </div>
                                         <div class="content-icon" style="margin-top:15px; display: flex; justify-content: space-between; height: 25px; align-items: center" >
-                                            <div style="display: flex; align-items: center">
-                                                <th:block th:if="${projectPeed.checked == 1}">
-                                                    <i class="mdi mdi-checkbox-marked-outline checkBtn uncheck" style="font-size:18px;"></i> <span class="checkcheck" style="font-size:14px; margin-left: 3px;">Check</span>
-                                                </th:block>
-                                                <th:block th:if="${projectPeed.checked != 1}">
-                                                    <i class="mdi mdi-checkbox-blank-outline checkBtn" style="font-size:18px;"></i> <span class="checkcheck" style="font-size:14px; margin-left: 3px;">Check</span>
-                                                </th:block>
+                                            <div>
+                                            <i class="mdi mdi-checkbox-blank-outline" style="font-size:18px; margin-top:15px;"></i> Check
                                             </div>
                                                 <div style="color:dimgray; font-size:14px;">댓글 [[${#lists.size(projectPeed.comments)}]]</div>
                                         </div>
@@ -357,6 +345,7 @@
             </div>
             <p id="dateError" style="color:red; display:none;">프로젝트 시작 날짜는 끝나는 날짜보다 늦을 수 없습니다.</p>
 
+
             <hr style="margin-top:13px">
 
             <textarea class="workcontent" rows="14" placeholder="내용을 입력하세요!" name="projectPeedContent" style="width:100%; overflow: auto;"></textarea>
@@ -402,27 +391,6 @@
         </div>
     </th:block>
 </div>
-
-<div class="checkGraph contentGraph" id="checkGraph" style="display: flex">
-
-        <div class="card">
-            <div class="card-body chart-board">
-                <h4 class="card-title chart-title">확인 현황</h4>
-                <div style="display:flex">
-                    <canvas id="doughnutChart" style="height:300px"></canvas>
-                </div>
-            </div>
-        </div>
-        <div style="padding:20px; display: none" class="partList">
-            <div>
-                <ul class="partListItem">
-                    <li>1dadf</li>
-                </ul>
-            </div>
-        </div>
-
-</div>
-
 <script th:src="@{../assets/vendors/js/vendor.bundle.base.js}"></script>
 <script th:src="@{../assets/js/off-canvas.js}"></script>
 <script th:src="@{../assets/js/hoverable-collapse.js}"></script>

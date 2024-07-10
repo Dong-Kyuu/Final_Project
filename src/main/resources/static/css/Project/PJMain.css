@@ -354,30 +354,3 @@ body {
     max-height: 600px;
     overflow: auto;
 }
-
-.checkBtn:hover {
-    cursor: pointer;
-}
-.checkcheck:hover {
-    cursor: pointer;
-}
-
-.checkGraph {
-    display: none; /* 초기에는 숨김 */
-    position: absolute;
-    background-color: white;
-    box-shadow: 3px 2px 10px 3px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    border-radius: 10px;
-    width:500px;
-    height: 350px;
-}
-
-.partList {
-    overflow: auto;
-    max-height:350px;
-}
-
-
-
-
